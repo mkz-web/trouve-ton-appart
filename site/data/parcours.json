@@ -10,12 +10,12 @@
       {
         "titre": "1. Sécurisez votre dossier avant de chercher",
         "texte": "Un visa Visale validé (garant gratuit de l'État) et un dossier certifié DossierFacile font passer votre candidature devant les autres. C'est l'étape que tout le monde saute, à tort.",
-        "guides": ["visale", "garant-location"]
+        "guides": ["visale", "garant-location", "dossierfacile"]
       },
       {
         "titre": "2. Activez toutes les aides",
         "texte": "APL/ALS dès l'emménagement, avance Loca-Pass pour le dépôt de garantie, Mobili-Jeune si vous êtes alternant : plusieurs centaines d'euros par an sont en jeu.",
-        "guides": ["aide-logement-etudiant"]
+        "guides": ["aide-logement-etudiant", "aide-mobili-jeune"]
       },
       {
         "titre": "3. Cherchez au bon endroit selon votre situation",
@@ -46,7 +46,7 @@
       {
         "titre": "3. Situations spécifiques : dites-le explicitement",
         "texte": "Handicap, perte de logement, violences, insalubrité : ce sont des critères de priorité légaux : documentez-les dans votre demande. Urgence immédiate : le 115 / SIAO. Délai dépassé sans proposition : le recours DALO est un droit.",
-        "guides": ["demande-logement-social"]
+        "guides": ["demande-logement-social", "recours-dalo"]
       }
     ],
     "annuaireCategories": ["logement-social", "seniors-pmr", "urgence"]
@@ -71,8 +71,8 @@
       },
       {
         "titre": "3. Cherchez sur les sources fiables, jamais en versant d'argent avant le bail",
-        "texte": "Spécialistes du meublé, coliving, résidences : notre annuaire liste les acteurs établis. Règle d'or à distance : visite vidéo en direct, jamais de paiement avant signature, et méfiance absolue sur les prix trop beaux.",
-        "guides": []
+        "texte": "Spécialistes du meublé, coliving, résidences : notre annuaire liste les acteurs établis. Règle d'or à distance : visite vidéo en direct, jamais de paiement avant signature, et méfiance absolue sur les prix trop beaux. Un dossier certifié DossierFacile accélère les candidatures à distance.",
+        "guides": ["dossierfacile"]
       }
     ],
     "annuaireCategories": ["mobilite"]

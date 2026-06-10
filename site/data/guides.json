@@ -309,5 +309,183 @@
       { "label": "CDC Habitat, offres de logement intermédiaire", "url": "https://www.cdc-habitat.fr" },
       { "label": "Le logement locatif intermédiaire sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F37292" }
     ]
+  },
+  {
+    "slug": "dossierfacile",
+    "parcours": ["etudiant", "mobilite"],
+    "title": "DossierFacile : le dossier de location certifié par l'État",
+    "metaDescription": "DossierFacile certifie gratuitement votre dossier de location : pièces vérifiées, filigrane anti-fraude, lien partageable. Mode d'emploi complet.",
+    "h1": "DossierFacile : le dossier de location certifié qui rassure les bailleurs",
+    "intro": "À Paris, une annonce attire des dizaines de candidatures en quelques heures. DossierFacile, le service public gratuit du ministère du Logement, transforme vos pièces justificatives en dossier numérique vérifié, filigrané et partageable en un lien. Avec un garant Visale, c'est l'autre moitié du dossier qui passe devant les autres.",
+    "sections": [
+      {
+        "h2": "Qu'est-ce que DossierFacile ?",
+        "paragraphs": [
+          "DossierFacile est un service public en ligne, gratuit, opéré par le ministère chargé du Logement. Vous téléversez vos pièces justificatives, une équipe les contrôle (lisibilité, cohérence, conformité), puis votre dossier est certifié et accessible via un lien web à coller dans vos candidatures.",
+          "Chaque document est recouvert d'un filigrane « Document exclusivement destiné à la location ». C'est une protection concrète contre la fraude documentaire et la réutilisation de vos pièces : ne joignez plus jamais vos bulletins de salaire bruts dans un mail."
+        ]
+      },
+      {
+        "h2": "Quelles pièces préparer ?",
+        "bullets": [
+          "Pièce d'identité en cours de validité (carte d'identité, passeport, titre de séjour).",
+          "Justificatif de situation : contrat de travail ou attestation employeur, certificat de scolarité ou contrat d'alternance.",
+          "Justificatifs de ressources : trois derniers bulletins de salaire, dernier avis d'imposition, justificatifs de bourse ou de pension le cas échéant.",
+          "Justificatif de domicile actuel (quittances, attestation d'hébergement…).",
+          "Pour votre garant physique : les mêmes pièces le concernant. Un visa Visale peut remplacer le garant."
+        ],
+        "paragraphs": [
+          "Conseil : scannez des documents complets et nets (toutes les pages, sans doigt ni recadrage sauvage). Les rejets pour pièce illisible sont la première cause d'allers-retours."
+        ]
+      },
+      {
+        "h2": "Comment ça marche, étape par étape",
+        "bullets": [
+          "1. Créez votre compte sur dossierfacile.logement.gouv.fr.",
+          "2. Téléversez vos pièces, ainsi que celles de votre garant ou votre visa Visale.",
+          "3. L'équipe vérifie votre dossier, en général sous 24 à 48 heures ouvrées. Si une pièce pose problème, vous recevez une demande de correction précise.",
+          "4. Vous obtenez un lien unique vers votre dossier certifié, à coller dans chaque candidature (et un PDF complet si une agence l'exige)."
+        ]
+      },
+      {
+        "h2": "Pourquoi ça change vos candidatures, surtout en Île-de-France",
+        "paragraphs": [
+          "Les agences et bailleurs franciliens trient des piles de dossiers : un dossier certifié par l'État se lit en quelques secondes, sans pièce manquante ni doute sur l'authenticité. Plusieurs réseaux d'agences le recommandent ou l'exigent désormais.",
+          "Le combo gagnant en Île-de-France : DossierFacile pour la forme, Visale pour la caution. Les deux sont gratuits, publics, et se préparent avant même la première visite. Votre candidature arrive complète quand les autres commencent à rassembler leurs papiers."
+        ]
+      }
+    ],
+    "faq": [
+      { "q": "DossierFacile est-il vraiment gratuit ?", "a": "Oui, totalement. C'est un service public opéré par le ministère chargé du Logement, sans option payante ni publicité." },
+      { "q": "DossierFacile est-il obligatoire pour louer ?", "a": "Non. Mais un dossier certifié est lu plus vite et inspire confiance ; certaines agences le demandent explicitement." },
+      { "q": "Combien de temps prend la vérification ?", "a": "En général 24 à 48 heures ouvrées. Prévoyez la création du dossier avant de commencer vos visites." },
+      { "q": "Peut-on inclure son garant dans le dossier ?", "a": "Oui, le dossier peut intégrer les pièces de votre garant physique ou votre visa Visale si vous passez par la garantie publique." },
+      { "q": "Mes documents sont-ils protégés ?", "a": "Les pièces sont hébergées par le service public et filigranées « Document exclusivement destiné à la location », ce qui décourage toute réutilisation frauduleuse." }
+    ],
+    "sourcesOfficielles": [
+      { "label": "DossierFacile, le site officiel", "url": "https://www.dossierfacile.logement.gouv.fr" },
+      { "label": "Les pièces qu'un bailleur peut exiger, sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F1169" },
+      { "label": "visale.fr, la caution gratuite à joindre au dossier", "url": "https://www.visale.fr" }
+    ]
+  },
+  {
+    "slug": "recours-dalo",
+    "parcours": ["logement-social"],
+    "title": "Recours DALO : faire valoir son droit au logement (2026)",
+    "metaDescription": "Délai dépassé, logement insalubre, expulsion : le recours DALO oblige l'État à vous reloger. Conditions, formulaire, délais et étapes du recours.",
+    "h1": "Recours DALO : le droit au logement opposable, mode d'emploi",
+    "intro": "Depuis la loi du 5 mars 2007, l'État est garant du droit au logement. Si vos démarches n'aboutissent pas alors que votre situation est prioritaire, le recours DALO vous permet de saisir une commission qui peut obliger le préfet à vous reloger. C'est un droit, gratuit et sans avocat. L'Île-de-France concentre la majorité des recours du pays : autant le faire dans les règles.",
+    "sections": [
+      {
+        "h2": "Le DALO, c'est quoi exactement ?",
+        "paragraphs": [
+          "DALO signifie « droit au logement opposable ». Concrètement, vous déposez un recours amiable devant la commission de médiation de votre département. Si elle vous reconnaît « prioritaire et devant être logé en urgence », le préfet doit vous faire une proposition de logement adaptée à votre situation.",
+          "Si le préfet ne propose rien dans le délai imparti, vous pouvez saisir le tribunal administratif pour l'y contraindre. Toute la procédure est gratuite et ne nécessite pas d'avocat au stade de la commission."
+        ]
+      },
+      {
+        "h2": "Qui peut déposer un recours DALO ?",
+        "bullets": [
+          "Vous êtes sans domicile, ou hébergé chez un tiers ou en structure (hôtel social, CHRS…).",
+          "Vous êtes menacé d'expulsion sans solution de relogement.",
+          "Votre logement est insalubre, dangereux ou impropre à l'habitation.",
+          "Votre logement est manifestement sur-occupé ou non décent, et vous avez un enfant mineur ou une personne handicapée au foyer.",
+          "Votre demande de logement social dépasse le « délai anormalement long » de votre département sans proposition adaptée."
+        ],
+        "paragraphs": [
+          "Le délai anormalement long est fixé par chaque préfecture ; en Île-de-France, il se compte en années et figure parmi les plus longs de France. Condition commune à tous les motifs : être de bonne foi et avoir fait les démarches préalables, à commencer par une demande de logement social à jour."
+        ]
+      },
+      {
+        "h2": "La procédure, étape par étape",
+        "bullets": [
+          "1. Remplissez le formulaire de recours amiable (Cerfa) et joignez toutes les pièces qui documentent votre situation.",
+          "2. Déposez le dossier auprès de la commission de médiation (COMED) de votre département.",
+          "3. La commission statue, en principe sous 3 mois, et notifie sa décision.",
+          "4. Si vous êtes reconnu prioritaire et urgent, le préfet dispose d'un délai de 3 mois, porté à 6 mois en Île-de-France, pour vous proposer un logement adapté.",
+          "5. Sans proposition dans le délai : recours en injonction devant le tribunal administratif, qui peut condamner l'État sous astreinte."
+        ],
+        "paragraphs": [
+          "Faites-vous accompagner gratuitement : ADIL, travailleurs sociaux ou associations agréées connaissent les attentes des commissions et augmentent nettement la qualité du dossier."
+        ]
+      },
+      {
+        "h2": "Les pièges qui font échouer un recours",
+        "bullets": [
+          "Laisser expirer sa demande de logement social : le renouvellement annuel reste obligatoire pendant toute la procédure.",
+          "Un dossier sans preuves : photos, courriers au bailleur, signalements, certificats médicaux… tout ce qui documente la situation compte.",
+          "Refuser une proposition de logement adaptée : cela fait perdre le bénéfice du DALO.",
+          "Confondre DALO et DAHO : le DAHO est le recours équivalent pour obtenir un hébergement (sans condition de logement autonome). En urgence immédiate, appelez d'abord le 115."
+        ]
+      }
+    ],
+    "faq": [
+      { "q": "Faut-il un avocat pour un recours DALO ?", "a": "Non. Le recours devant la commission de médiation est gratuit et se fait avec un simple formulaire. L'accompagnement par une ADIL ou une association agréée est gratuit également." },
+      { "q": "Combien de temps prend un recours DALO ?", "a": "La commission statue en principe sous 3 mois. En cas de décision favorable, le préfet a ensuite 3 mois (6 mois en Île-de-France) pour proposer un logement." },
+      { "q": "Le DALO fonctionne-t-il vraiment en Île-de-France ?", "a": "C'est la région qui concentre le plus de recours et les délais les plus tendus, mais un dossier bien documenté sur un motif prioritaire reste l'outil juridique le plus puissant pour obtenir un relogement." },
+      { "q": "Quelle différence entre DALO et DAHO ?", "a": "Le DALO vise un logement autonome ; le DAHO vise un hébergement (structure, résidence sociale). Les deux passent par la même commission de médiation." }
+    ],
+    "sourcesOfficielles": [
+      { "label": "Le recours DALO sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F18005" },
+      { "label": "Renouveler sa demande de logement social", "url": "https://www.demande-logement-social.gouv.fr" },
+      { "label": "Trouver son ADIL (conseil juridique logement gratuit)", "url": "https://www.anil.org" }
+    ]
+  },
+  {
+    "slug": "aide-mobili-jeune",
+    "parcours": ["etudiant"],
+    "title": "Aide Mobili-Jeune : jusqu'à 100 € de loyer pris en charge",
+    "metaDescription": "L'aide Mobili-Jeune d'Action Logement paie 10 à 100 € de votre loyer chaque mois pendant l'alternance. Conditions, demande en ligne, cumul avec l'APL.",
+    "h1": "Aide Mobili-Jeune : le loyer allégé pour les alternants",
+    "intro": "Alternant de moins de 30 ans dans une entreprise privée ? L'aide Mobili-Jeune d'Action Logement prend en charge 10 à 100 € de votre loyer chaque mois pendant votre formation, en plus de l'APL. C'est l'une des aides les plus généreuses du logement des jeunes, et l'une des moins demandées.",
+    "sections": [
+      {
+        "h2": "Qu'est-ce que l'aide Mobili-Jeune ?",
+        "paragraphs": [
+          "Mobili-Jeune est une subvention d'Action Logement (ce n'est pas un prêt : rien à rembourser) destinée aux jeunes en formation en alternance. Elle couvre une partie du loyer qui reste à votre charge après déduction de l'aide au logement de la CAF, entre 10 et 100 € par mois.",
+          "Sur une année de formation, cela représente jusqu'à 1 200 € : de quoi changer l'équation d'un studio francilien."
+        ]
+      },
+      {
+        "h2": "Les conditions d'éligibilité",
+        "bullets": [
+          "Avoir moins de 30 ans à la date de la demande.",
+          "Être en contrat d'apprentissage ou de professionnalisation dans une entreprise du secteur privé non agricole (le secteur agricole a son équivalent, Agri-Mobili-Jeune).",
+          "Percevoir une rémunération inférieure ou égale au SMIC brut.",
+          "Louer un logement pendant la période de formation : bail classique, meublé, colocation, résidence, foyer ou bail mobilité.",
+          "Le logement doit être proche de votre lieu de formation ou d'emploi (c'est l'esprit du dispositif : rapprocher les alternants de leur poste)."
+        ]
+      },
+      {
+        "h2": "Quand et comment faire la demande",
+        "bullets": [
+          "La demande se fait en ligne sur actionlogement.fr, rubrique Mobili-Jeune.",
+          "Fenêtre de dépôt : jusqu'à 3 mois avant le début de votre formation et au plus tard 6 mois après son démarrage. Ne la laissez pas passer.",
+          "Pièces à prévoir : contrat d'alternance, bail signé, RIB, et votre attestation CAF (l'aide se calcule après APL).",
+          "L'aide est ensuite versée par périodes, sur justificatifs de quittances."
+        ],
+        "paragraphs": [
+          "Si votre alternance dure plusieurs années, la demande se renouvelle à chaque année de formation."
+        ]
+      },
+      {
+        "h2": "Le pack alternant complet : Mobili-Jeune + APL + Loca-Pass + Visale",
+        "paragraphs": [
+          "Les aides se cumulent, et l'ordre compte. Simulez d'abord votre APL sur caf.fr (Mobili-Jeune couvre le reliquat de loyer après APL). Financez le dépôt de garantie avec l'avance Loca-Pass (prêt à 0 €). Sécurisez la caution avec Visale, gratuite. Et présentez le tout dans un dossier certifié DossierFacile.",
+          "Ce pack complet, entièrement gratuit ou à taux zéro, peut réduire le coût réel d'un logement d'alternant de plusieurs milliers d'euros sur la durée de la formation. Détail des autres aides dans notre guide des aides au logement étudiant."
+        ]
+      }
+    ],
+    "faq": [
+      { "q": "Mobili-Jeune est-elle cumulable avec l'APL ?", "a": "Oui, c'est même son principe : elle prend en charge entre 10 et 100 € par mois sur la part de loyer qui reste après déduction de l'APL." },
+      { "q": "Un étudiant classique peut-il toucher Mobili-Jeune ?", "a": "Non, l'aide est réservée aux alternants (apprentissage ou professionnalisation) du secteur privé. Les autres aides étudiantes sont détaillées dans notre guide dédié." },
+      { "q": "Faut-il refaire la demande chaque année ?", "a": "Oui, le renouvellement se fait à chaque année de formation, dans les mêmes conditions." },
+      { "q": "Quel est le montant exact de l'aide ?", "a": "Entre 10 et 100 € par mois, selon votre loyer et le montant de votre APL. Le simulateur d'Action Logement donne le chiffre exact en quelques minutes." }
+    ],
+    "sourcesOfficielles": [
+      { "label": "L'aide Mobili-Jeune d'Action Logement", "url": "https://www.actionlogement.fr/l-aide-mobili-jeune" },
+      { "label": "Simuler et demander l'APL sur caf.fr", "url": "https://www.caf.fr" },
+      { "label": "Mon Logement Étudiant, la plateforme publique", "url": "https://monlogementetudiant.beta.gouv.fr" }
+    ]
   }
 ]
