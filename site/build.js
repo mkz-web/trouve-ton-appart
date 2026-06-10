@@ -228,13 +228,14 @@ ${cats}`;
   }), '0.9');
 })();
 
-/* Mentions légales (squelette à compléter avant mise en ligne) */
+/* Mentions légales */
 (function buildMentions() {
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › Mentions légales</nav>
 <h1>Mentions légales</h1>
-<p><strong>Éditeur du site</strong> — ${esc(SITE.organisation)} <em>(raison sociale, forme juridique, SIREN, adresse et contact à compléter avant mise en ligne)</em>.</p>
-<p><strong>Directeur de la publication</strong> — <em>à compléter</em>.</p>
+<p><strong>Éditeur du site</strong> — MKZ, société par actions simplifiée (SAS) au capital social de 1 000 €, dont le siège social est situé 1 rue Françoise Sagan, 77230 Dammartin-en-Goële. SIRET : 983 662 784 00013 · TVA intracommunautaire : FR44983662784.</p>
+<p><strong>Directeur de la publication</strong> — Mickaël Leclerc, représentant légal.</p>
+<p><strong>Contact</strong> — <a href="mailto:contact@mkz-consulting.fr">contact@mkz-consulting.fr</a></p>
 <p><strong>Hébergement</strong> — Cloudflare Pages, Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis.</p>
 <p><strong>Données personnelles</strong> — Ce site ne collecte aucune donnée personnelle et ne dépose aucun cookie de suivi sans consentement.</p>
 <p><strong>Nature du service</strong> — ${esc(SITE.name)} est un service d'information et d'orientation. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>`;
