@@ -184,7 +184,7 @@ function addPage(urlPath, html, priority) {
 <section class="hero">
   <div class="hero-text">
     <h1>Le logement en Île-de-France, enfin dans le bon ordre.</h1>
-    <p class="lead">Étudiant, demandeur de logement social, senior, salarié en mobilité&nbsp;: chaque profil a ses dispositifs, ses aides et ses guichets — souvent méconnus. ${esc(SITE.name)} vous oriente, gratuitement, vers les bonnes démarches et les sources officielles.</p>
+    <p class="lead">Étudiant, demandeur de logement social, senior, salarié en mobilité&nbsp;: chaque profil a ses dispositifs, ses aides et ses guichets, souvent méconnus. ${esc(SITE.name)} vous oriente, gratuitement, vers les bonnes démarches et les sources officielles.</p>
     <p class="hero-actions"><a class="btn" href="#parcours">Trouver mon parcours</a><a class="btn btn-ghost" href="/annuaire/">Voir les sources fiables</a></p>
   </div>
   <div class="hero-illo">${skyline()}</div>
@@ -199,10 +199,10 @@ function addPage(urlPath, html, priority) {
 </section>
 <section class="notice">
   <h2>Pourquoi ce site&nbsp;?</h2>
-  <p>Le logement francilien est éclaté entre des dizaines de plateformes, de guichets et de dispositifs. Résultat&nbsp;: des droits non utilisés (Visale, Loca-Pass, logement intermédiaire…) et des parcours subis. Nous remettons de l'ordre&nbsp;: pas d'annonces dupliquées, pas de fausses promesses — des parcours clairs et des liens directs vers les sources qui font foi.</p>
+  <p>Le logement francilien est éclaté entre des dizaines de plateformes, de guichets et de dispositifs. Résultat&nbsp;: des droits non utilisés (Visale, Loca-Pass, logement intermédiaire…) et des parcours subis. Nous remettons de l'ordre&nbsp;: pas d'annonces dupliquées, pas de fausses promesses, mais des parcours clairs et des liens directs vers les sources qui font foi.</p>
 </section>`;
   addPage('/', layout({
-    title: `${SITE.name} — ${SITE.tagline}`,
+    title: `${SITE.name} | ${SITE.tagline}`,
     metaDescription: SITE.description,
     urlPath: '/',
     content,
@@ -229,7 +229,7 @@ for (const p of PARCOURS) {
   const cats = ANNUAIRE.categories.filter(c => p.annuaireCategories.includes(c.id));
   const annuaireBlock = cats.map(c => `
   <h3>${esc(c.titre)}</h3>
-  <ul class="sources">${c.sources.map(s => `<li><a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.nom)}</a> — ${esc(s.desc)}</li>`).join('')}</ul>`).join('');
+  <ul class="sources">${c.sources.map(s => `<li><a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.nom)}</a> · ${esc(s.desc)}</li>`).join('')}</ul>`).join('');
   const t = themeOf(p.slug);
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › ${esc(p.nav)}</nav>
@@ -306,7 +306,7 @@ ${sections}
   const cats = ANNUAIRE.categories.map(c => `
   <section id="${c.id}">
     <h2>${esc(c.titre)}</h2>
-    <ul class="sources">${c.sources.map(s => `<li><a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.nom)}</a> — ${esc(s.desc)}</li>`).join('')}</ul>
+    <ul class="sources">${c.sources.map(s => `<li><a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.nom)}</a> · ${esc(s.desc)}</li>`).join('')}</ul>
   </section>`).join('');
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › Annuaire</nav>
@@ -331,14 +331,14 @@ ${cats}`;
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › Mentions légales</nav>
 <h1>Mentions légales</h1>
-<p><strong>Éditeur du site</strong> — MKZ, société par actions simplifiée (SAS) au capital social de 1 000 €, dont le siège social est situé 1 rue Françoise Sagan, 77230 Dammartin-en-Goële. SIRET : 983 662 784 00013 · TVA intracommunautaire : FR44983662784.</p>
-<p><strong>Directeur de la publication</strong> — Mickaël Leclerc, représentant légal.</p>
-<p><strong>Contact</strong> — <a href="mailto:contact@mkz-consulting.fr">contact@mkz-consulting.fr</a></p>
-<p><strong>Hébergement</strong> — Cloudflare Pages, Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis.</p>
-<p><strong>Données personnelles</strong> — Ce site ne collecte aucune donnée personnelle et ne dépose aucun cookie de suivi sans consentement.</p>
-<p><strong>Nature du service</strong> — ${esc(SITE.name)} est un service d'information et d'orientation. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>`;
+<p><strong>Éditeur du site</strong> : MKZ, société par actions simplifiée (SAS) au capital social de 1 000 €, dont le siège social est situé 1 rue Françoise Sagan, 77230 Dammartin-en-Goële. SIRET : 983 662 784 00013 · TVA intracommunautaire : FR44983662784.</p>
+<p><strong>Directeur de la publication</strong> : Mickaël Leclerc, représentant légal.</p>
+<p><strong>Contact</strong> : <a href="mailto:contact@mkz-consulting.fr">contact@mkz-consulting.fr</a></p>
+<p><strong>Hébergement</strong> : Cloudflare Pages, Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis.</p>
+<p><strong>Données personnelles</strong> : Ce site ne collecte aucune donnée personnelle et ne dépose aucun cookie de suivi sans consentement.</p>
+<p><strong>Nature du service</strong> : ${esc(SITE.name)} est un service d'information et d'orientation. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>`;
   addPage('/mentions-legales/', layout({
-    title: `Mentions légales — ${SITE.name}`,
+    title: `Mentions légales | ${SITE.name}`,
     metaDescription: `Mentions légales du site ${SITE.name}.`,
     urlPath: '/mentions-legales/',
     content

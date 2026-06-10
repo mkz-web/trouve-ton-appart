@@ -2,16 +2,16 @@
   "title": "Annuaire des sources fiables du logement en Île-de-France",
   "metaDescription": "Toutes les plateformes officielles et acteurs établis du logement en Île-de-France, classés par profil : étudiant, logement social, seniors et PMR, urgence, mobilité professionnelle.",
   "h1": "Où chercher : les sources fiables, classées par profil",
-  "intro": "Le logement francilien est éclaté entre des dizaines de sites. Voici les sources officielles et les acteurs établis — et uniquement eux —, classés par situation. Nous renvoyons toujours vers la source : c'est là que vous candidatez.",
+  "intro": "Le logement francilien est éclaté entre des dizaines de sites. Voici les sources officielles et les acteurs établis, et uniquement eux, classés par situation. Nous renvoyons toujours vers la source : c'est là que vous candidatez.",
   "categories": [
     {
       "id": "etudiant",
       "titre": "Étudiants & jeunes actifs",
       "sources": [
         { "nom": "Mon Logement Étudiant (État)", "url": "https://monlogementetudiant.beta.gouv.fr", "desc": "La plateforme publique qui regroupe CROUS, résidences et offres labellisées. Point de départ recommandé." },
-        { "nom": "Trouver un logement CROUS", "url": "https://trouverunlogement.lescrous.fr", "desc": "Les résidences universitaires publiques — loyers les plus bas du marché. Demande via le DSE (mars-mai) puis phase complémentaire." },
+        { "nom": "Trouver un logement CROUS", "url": "https://trouverunlogement.lescrous.fr", "desc": "Les résidences universitaires publiques, aux loyers les plus bas du marché. Demande via le DSE (mars-mai) puis phase complémentaire." },
         { "nom": "Lokaviz (CNOUS)", "url": "https://www.lokaviz.fr", "desc": "Annonces de logements chez l'habitant et de particuliers, labellisées par le réseau des CROUS." },
-        { "nom": "Studapart", "url": "https://www.studapart.com", "desc": "Marketplace étudiante partenaire de nombreuses écoles et universités — vérifiez si la vôtre y donne accès gratuitement." },
+        { "nom": "Studapart", "url": "https://www.studapart.com", "desc": "Marketplace étudiante partenaire de nombreuses écoles et universités. Vérifiez si la vôtre y donne accès gratuitement." },
         { "nom": "ImmoJeune", "url": "https://www.immojeune.com", "desc": "Portail spécialisé logement étudiant : studios, résidences, colocation." },
         { "nom": "La Carte des Colocs", "url": "https://www.lacartedescolocs.fr", "desc": "Référence de la colocation, forte communauté francilienne." }
       ]
@@ -21,11 +21,11 @@
       "titre": "Logement social & intermédiaire",
       "sources": [
         { "nom": "Demande de logement social (État)", "url": "https://www.demande-logement-social.gouv.fr", "desc": "LE point d'entrée : dépôt et renouvellement de la demande unique, valable auprès de tous les bailleurs d'Île-de-France." },
-        { "nom": "AL'in (Action Logement)", "url": "https://www.al-in.fr", "desc": "Le contingent réservé aux salariés d'entreprises privées cotisantes — canal souvent plus rapide que le circuit classique." },
+        { "nom": "AL'in (Action Logement)", "url": "https://www.al-in.fr", "desc": "Le contingent réservé aux salariés d'entreprises privées cotisantes, un canal souvent plus rapide que le circuit classique." },
         { "nom": "Bienvéo (Union sociale pour l'habitat)", "url": "https://www.bienveo.fr", "desc": "Les annonces de logements sociaux et intermédiaires réellement disponibles, publiées par les bailleurs." },
-        { "nom": "in'li", "url": "https://www.inli.fr", "desc": "Premier opérateur du logement intermédiaire francilien — candidature directe sur annonces, plafonds plus élevés que le HLM." },
+        { "nom": "in'li", "url": "https://www.inli.fr", "desc": "Premier opérateur du logement intermédiaire francilien. Candidature directe sur annonces, plafonds plus élevés que le HLM." },
         { "nom": "CDC Habitat", "url": "https://www.cdc-habitat.fr", "desc": "Grand bailleur national : parc social et intermédiaire, annonces en ligne." },
-        { "nom": "Ville de Paris — logement", "url": "https://www.paris.fr/pages/demander-un-logement-social-37", "desc": "Démarches parisiennes, accompagnement et rendez-vous logement." }
+        { "nom": "Ville de Paris (logement)", "url": "https://www.paris.fr/pages/demander-un-logement-social-37", "desc": "Démarches parisiennes, accompagnement et rendez-vous logement." }
       ]
     },
     {
@@ -33,7 +33,7 @@
       "titre": "Seniors & accessibilité (PMR)",
       "sources": [
         { "nom": "Pour les personnes âgées (CNSA)", "url": "https://www.pour-les-personnes-agees.gouv.fr", "desc": "Le portail public de référence : annuaires des résidences autonomie, résidences services et EHPAD, avec comparateur de prix." },
-        { "nom": "ADIL de Paris / d'Île-de-France", "url": "https://www.adil75.org", "desc": "Conseil juridique gratuit sur l'adaptation du logement, les aides et les droits — y compris pour les besoins PMR." },
+        { "nom": "ADIL de Paris / d'Île-de-France", "url": "https://www.adil75.org", "desc": "Conseil juridique gratuit sur l'adaptation du logement, les aides et les droits, y compris pour les besoins PMR." },
         { "nom": "MaPrimeAdapt'", "url": "https://france-renov.gouv.fr", "desc": "L'aide publique pour adapter un logement au vieillissement ou au handicap (via France Rénov')." },
         { "nom": "MDPH / Mon Parcours Handicap", "url": "https://www.monparcourshandicap.gouv.fr", "desc": "Droits, aides et démarches logement pour les personnes en situation de handicap." }
       ]
@@ -42,7 +42,7 @@
       "id": "urgence",
       "titre": "Urgence & accompagnement",
       "sources": [
-        { "nom": "115 — Samu social", "url": "https://www.samusocial.paris", "desc": "Hébergement d'urgence immédiat, 24h/24. Le 115 est gratuit depuis tout téléphone." },
+        { "nom": "115 / Samu social", "url": "https://www.samusocial.paris", "desc": "Hébergement d'urgence immédiat, 24h/24. Le 115 est gratuit depuis tout téléphone." },
         { "nom": "SIAO d'Île-de-France", "url": "https://www.gouvernement.fr/risques/le-115-et-les-siao", "desc": "Les services intégrés d'accueil et d'orientation coordonnent hébergement et logement accompagné par département." },
         { "nom": "Comité DALO (préfectures)", "url": "https://www.service-public.fr/particuliers/vosdroits/F18005", "desc": "Le recours quand votre demande de logement social dépasse les délais sans proposition : un droit opposable." },
         { "nom": "Soliha", "url": "https://www.soliha.fr", "desc": "Réseau associatif d'intermédiation locative et d'accompagnement au logement des publics fragiles." }
@@ -54,8 +54,8 @@
       "sources": [
         { "nom": "Lodgis", "url": "https://www.lodgis.com", "desc": "Référence du meublé moyenne et longue durée à Paris, bail mobilité courant, clientèle internationale." },
         { "nom": "Paris Attitude", "url": "https://www.parisattitude.com", "desc": "Location meublée moyen/long séjour pour expatriés et entreprises." },
-        { "nom": "Spotahome", "url": "https://www.spotahome.com", "desc": "Réservation à distance avec vérification des logements — adapté aux arrivées depuis l'étranger." },
-        { "nom": "Visale (Action Logement)", "url": "https://www.visale.fr", "desc": "La caution gratuite, compatible bail mobilité sans condition d'âge — l'atout des dossiers sans historique français." }
+        { "nom": "Spotahome", "url": "https://www.spotahome.com", "desc": "Réservation à distance avec vérification des logements, adapté aux arrivées depuis l'étranger." },
+        { "nom": "Visale (Action Logement)", "url": "https://www.visale.fr", "desc": "La caution gratuite, compatible bail mobilité sans condition d'âge. L'atout des dossiers sans historique français." }
       ]
     }
   ]

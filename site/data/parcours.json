@@ -5,11 +5,11 @@
     "title": "Logement étudiant et jeune actif en Île-de-France : par où commencer ?",
     "metaDescription": "CROUS, résidences, colocation, aides CAF, Visale, Loca-Pass : le parcours logement complet pour les étudiants et jeunes actifs en Île-de-France, dans le bon ordre.",
     "h1": "Étudiant ou jeune actif : votre parcours logement en Île-de-France",
-    "intro": "Le logement étudiant francilien est éclaté entre le CROUS, les résidences privées, la colocation et le parc classique — et les aides entre la CAF et Action Logement. Voici le parcours dans le bon ordre : sécuriser son garant, activer les aides, puis chercher au bon endroit.",
+    "intro": "Le logement étudiant francilien est éclaté entre le CROUS, les résidences privées, la colocation et le parc classique, et les aides entre la CAF et Action Logement. Voici le parcours dans le bon ordre : sécuriser son garant, activer les aides, puis chercher au bon endroit.",
     "etapes": [
       {
         "titre": "1. Sécurisez votre dossier avant de chercher",
-        "texte": "Un visa Visale validé (garant gratuit de l'État) et un dossier certifié DossierFacile font passer votre candidature devant les autres. C'est l'étape que tout le monde saute — à tort.",
+        "texte": "Un visa Visale validé (garant gratuit de l'État) et un dossier certifié DossierFacile font passer votre candidature devant les autres. C'est l'étape que tout le monde saute, à tort.",
         "guides": ["visale", "garant-location"]
       },
       {
@@ -31,7 +31,7 @@
     "title": "Logement social, seniors, PMR, urgence : vos parcours en Île-de-France",
     "metaDescription": "Demande HLM, logement intermédiaire, logement adapté PMR et seniors, hébergement d'urgence : les parcours et les bons guichets en Île-de-France, expliqués simplement.",
     "h1": "Logement social et situations spécifiques : trouver le bon guichet",
-    "intro": "Le parcours du logement social francilien est le plus opaque de tous : guichets multiples, critères complexes, délais longs. Et pour les besoins spécifiques — accessibilité PMR, seniors, urgence — les filtres n'existent tout simplement pas sur les sites classiques. On remet de l'ordre.",
+    "intro": "Le parcours du logement social francilien est le plus opaque de tous : guichets multiples, critères complexes, délais longs. Et pour les besoins spécifiques (accessibilité PMR, seniors, urgence), les filtres n'existent tout simplement pas sur les sites classiques. On remet de l'ordre.",
     "etapes": [
       {
         "titre": "1. Déposez (et renouvelez !) votre demande unique",
@@ -45,7 +45,7 @@
       },
       {
         "titre": "3. Situations spécifiques : dites-le explicitement",
-        "texte": "Handicap, perte de logement, violences, insalubrité : ce sont des critères de priorité légaux — documentez-les dans votre demande. Urgence immédiate : le 115 / SIAO. Délai dépassé sans proposition : le recours DALO est un droit.",
+        "texte": "Handicap, perte de logement, violences, insalubrité : ce sont des critères de priorité légaux : documentez-les dans votre demande. Urgence immédiate : le 115 / SIAO. Délai dépassé sans proposition : le recours DALO est un droit.",
         "guides": ["demande-logement-social"]
       }
     ],
@@ -65,7 +65,7 @@
         "guides": ["bail-mobilite"]
       },
       {
-        "titre": "2. Réglez la question du garant — surtout sans historique français",
+        "titre": "2. Réglez la question du garant, surtout sans historique français",
         "texte": "Visale couvre le bail mobilité sans condition d'âge. Profils non éligibles (indépendants, certains expatriés) : les garants payants débloquent le dossier moyennant 3 à 5 % du loyer annuel.",
         "guides": ["visale", "garant-location"]
       },
