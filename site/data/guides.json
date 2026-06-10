@@ -487,5 +487,232 @@
       { "label": "Simuler et demander l'APL sur caf.fr", "url": "https://www.caf.fr" },
       { "label": "Mon Logement Étudiant, la plateforme publique", "url": "https://monlogementetudiant.beta.gouv.fr" }
     ]
+  },
+  {
+    "slug": "avance-loca-pass",
+    "parcours": ["etudiant"],
+    "title": "Avance Loca-Pass : le dépôt de garantie financé à 0 %",
+    "metaDescription": "L'avance Loca-Pass d'Action Logement prête jusqu'à 1 200 € à taux zéro pour payer votre dépôt de garantie. Conditions, démarches, remboursement.",
+    "h1": "Avance Loca-Pass : payez votre dépôt de garantie sans avancer l'argent",
+    "intro": "Le dépôt de garantie est souvent le premier mur du parcours locatif : un à deux mois de loyer à sortir d'un coup, avant même le premier salaire. L'avance Loca-Pass d'Action Logement le finance sous forme de prêt à 0 %, sans frais de dossier, remboursable en douceur. Un dispositif simple, et pourtant largement sous-utilisé.",
+    "sections": [
+      {
+        "h2": "Qu'est-ce que l'avance Loca-Pass ?",
+        "paragraphs": [
+          "C'est un prêt à taux zéro accordé par Action Logement pour financer le dépôt de garantie demandé à la signature du bail, dans la limite de 1 200 €. Vous payez le dépôt avec ce prêt, puis vous le remboursez par petites mensualités (20 € minimum), sur une durée allant jusqu'à 25 mois, avec un différé qui laisse le temps de s'installer.",
+          "Aucun intérêt, aucun frais : vous remboursez exactement ce que vous avez emprunté. À ne pas confondre avec la garantie Visale, qui couvre les loyers impayés : les deux se cumulent très bien."
+        ]
+      },
+      {
+        "h2": "Qui peut en bénéficier ?",
+        "bullets": [
+          "Les salariés d'une entreprise du secteur privé non agricole, quel que soit leur âge.",
+          "Les jeunes de moins de 30 ans en formation professionnelle (alternance), en recherche d'emploi ou en emploi, même précaire.",
+          "Les étudiants de moins de 30 ans s'ils sont boursiers d'État, ou s'ils justifient d'un CDD d'au moins 3 mois ou d'une convention de stage d'au moins 3 mois.",
+          "Le logement doit être votre résidence principale, en location ou colocation (bail classique, meublé, résidence, foyer)."
+        ],
+        "paragraphs": [
+          "Cas particulier : avec un bail mobilité, aucun dépôt de garantie ne peut être exigé. L'avance Loca-Pass n'a alors pas d'objet, c'est la loi qui vous dispense du dépôt."
+        ]
+      },
+      {
+        "h2": "Comment faire la demande",
+        "bullets": [
+          "1. Rassemblez bail signé (ou promesse), pièce d'identité et justificatif de situation (contrat, attestation de bourse…).",
+          "2. Déposez la demande en ligne sur actionlogement.fr, rubrique avance Loca-Pass, dès la signature du bail.",
+          "3. Action Logement verse le montant, à vous ou directement selon le circuit, et le remboursement démarre après le différé."
+        ],
+        "paragraphs": [
+          "Faites la demande au plus près de l'entrée dans les lieux : le dispositif est conçu pour accompagner l'installation, pas pour refinancer un dépôt payé de longue date."
+        ]
+      },
+      {
+        "h2": "Loca-Pass, FSL ou économies : comment arbitrer ?",
+        "paragraphs": [
+          "Si vous êtes éligible à Loca-Pass, c'est en général la solution la plus rapide et la plus simple. Le Fonds de solidarité logement (FSL) de votre département peut aussi prendre en charge le dépôt de garantie, sous conditions de ressources plus strictes ; les deux dispositifs ne se cumulent pas pour financer le même dépôt. Notre guide FSL détaille ce second filet de sécurité.",
+          "Le pack complet du locataire jeune actif : avance Loca-Pass pour le dépôt, Visale pour la caution, Mobili-Jeune si vous êtes alternant, le tout présenté dans un dossier certifié DossierFacile."
+        ]
+      }
+    ],
+    "faq": [
+      { "q": "L'avance Loca-Pass est-elle vraiment gratuite ?", "a": "C'est un prêt à 0 % sans frais de dossier : vous remboursez exactement le montant emprunté, jusqu'à 1 200 €, en mensualités d'au moins 20 € sur 25 mois maximum." },
+      { "q": "Peut-on cumuler Loca-Pass et Visale ?", "a": "Oui, et c'est même recommandé : Loca-Pass finance le dépôt de garantie, Visale sécurise le bailleur contre les impayés. Les deux sont gratuits." },
+      { "q": "Un étudiant non boursier peut-il avoir Loca-Pass ?", "a": "Oui s'il justifie d'un CDD d'au moins 3 mois ou d'une convention de stage d'au moins 3 mois en cours. Sinon, le FSL départemental peut prendre le relais." },
+      { "q": "Loca-Pass fonctionne-t-il avec un bail mobilité ?", "a": "Le bail mobilité interdit le dépôt de garantie, donc l'avance n'a pas d'objet dans ce cas. C'est un avantage du bail mobilité, pas une limite de Loca-Pass." }
+    ],
+    "sourcesOfficielles": [
+      { "label": "L'avance Loca-Pass d'Action Logement", "url": "https://www.actionlogement.fr/l-avance-loca-pass" },
+      { "label": "L'avance Loca-Pass sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F18490" }
+    ]
+  },
+  {
+    "slug": "fonds-solidarite-logement",
+    "parcours": ["logement-social"],
+    "title": "Fonds de solidarité logement (FSL) : aides et démarches",
+    "metaDescription": "Le FSL aide à payer dépôt de garantie, premier loyer, dettes locatives ou factures d'énergie. Conditions et démarches en Île-de-France.",
+    "h1": "FSL : le fonds de solidarité logement, dernier filet avant la rupture",
+    "intro": "Dépôt de garantie impossible à réunir, premier loyer trop lourd, dette locative qui s'accumule, facture d'énergie impayée : le Fonds de solidarité logement existe précisément pour ces moments-là. Chaque département gère le sien, avec ses règles propres. Voici comment ça marche en Île-de-France, et comment le demander.",
+    "sections": [
+      {
+        "h2": "Le FSL, c'est quoi ?",
+        "paragraphs": [
+          "Le FSL est un fonds départemental qui accorde des aides financières, sous forme de subvention ou de prêt selon les situations, aux ménages qui rencontrent des difficultés pour accéder à un logement ou s'y maintenir.",
+          "Il intervient sur deux fronts : l'accès (dépôt de garantie, premier loyer, frais d'agence, assurance habitation, mobilier de première nécessité, frais de déménagement) et le maintien (dettes de loyers et de charges, et selon les départements, factures d'énergie et d'eau)."
+        ]
+      },
+      {
+        "h2": "Qui peut en bénéficier ?",
+        "bullets": [
+          "Locataires et sous-locataires, dans le parc privé comme dans le parc social.",
+          "Personnes hébergées en résidence sociale ou en foyer.",
+          "Propriétaires occupants en difficulté, dans certains départements.",
+          "Sous conditions de ressources : chaque département fixe ses plafonds et son règlement intérieur."
+        ],
+        "paragraphs": [
+          "En Île-de-France, chaque département (Paris, Hauts-de-Seine, Seine-Saint-Denis, Val-de-Marne, Seine-et-Marne, Yvelines, Essonne, Val-d'Oise) a son propre FSL : montants, plafonds et pièces varient. Le principe, lui, est partout le même."
+        ]
+      },
+      {
+        "h2": "Comment déposer une demande",
+        "bullets": [
+          "1. Prenez contact avec un travailleur social : services sociaux du département, CCAS de votre commune, ou service social de la CAF. C'est la porte d'entrée la plus sûre, certains départements acceptent aussi le dépôt direct en ligne.",
+          "2. Constituez le dossier avec ses pièces : ressources, charges, bail ou proposition de logement, justificatifs de la difficulté (dette, courriers…).",
+          "3. La commission FSL du département statue et notifie l'aide accordée (subvention, prêt, ou les deux)."
+        ],
+        "paragraphs": [
+          "Pour une dette de loyer, n'attendez pas l'assignation : plus la demande part tôt, plus la commission a de marges pour éviter la spirale de l'expulsion."
+        ]
+      },
+      {
+        "h2": "FSL et autres aides : comment les articuler",
+        "paragraphs": [
+          "Pour le dépôt de garantie, le FSL et l'avance Loca-Pass ne se cumulent pas sur le même objet : Loca-Pass (prêt à 0 %, sans condition de ressources strictes) est en général plus rapide si vous y êtes éligible ; le FSL prend le relais pour les ménages aux ressources modestes ou hors critères Action Logement.",
+          "Le FSL se combine en revanche très bien avec une demande de logement social en cours, un recours DALO documenté, ou les aides au logement de la CAF. En cas de menace d'expulsion, contactez aussi l'ADIL de votre département : le conseil juridique est gratuit."
+        ]
+      }
+    ],
+    "faq": [
+      { "q": "Le FSL est-il un prêt ou une subvention ?", "a": "Les deux existent : selon votre situation et le règlement de votre département, l'aide est versée en subvention (rien à rembourser), en prêt sans intérêt, ou en combinaison des deux." },
+      { "q": "Qui décide de l'attribution du FSL ?", "a": "La commission FSL de votre département, sur la base de son règlement intérieur : plafonds de ressources, nature de la difficulté, cohérence loyer/ressources." },
+      { "q": "Le FSL peut-il payer des dettes de loyer ?", "a": "Oui, le volet « maintien » du FSL traite les dettes de loyers et de charges, et selon les départements les factures d'énergie et d'eau. Plus la demande est précoce, mieux c'est." },
+      { "q": "Peut-on cumuler FSL et Loca-Pass pour le dépôt de garantie ?", "a": "Non, pas pour financer le même dépôt. Choisissez Loca-Pass si vous êtes éligible (plus rapide), le FSL sinon." }
+    ],
+    "sourcesOfficielles": [
+      { "label": "Le FSL sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F1334" },
+      { "label": "Trouver son ADIL (conseil gratuit, dettes et expulsion)", "url": "https://www.anil.org" },
+      { "label": "Demander un logement social (à maintenir en parallèle)", "url": "https://www.demande-logement-social.gouv.fr" }
+    ]
+  },
+  {
+    "slug": "foyer-jeune-travailleur",
+    "parcours": ["etudiant"],
+    "title": "Foyer de jeunes travailleurs : logement meublé à petit prix",
+    "metaDescription": "Les foyers de jeunes travailleurs logent les 16-30 ans en meublé tout compris, APL possible. Conditions, prix et candidature en Île-de-France.",
+    "h1": "Foyer de jeunes travailleurs (FJT) : le meublé tout compris pour démarrer",
+    "intro": "Premier emploi, alternance, stage long, arrivée en Île-de-France sans garant ni mobilier : le foyer de jeunes travailleurs, rebaptisé résidence Habitat Jeunes, est souvent la solution la plus rapide et la plus économique pour les 16-30 ans. Studio ou chambre meublée, redevance tout compris, APL applicable, et une vraie vie collective. Encore faut-il savoir où candidater.",
+    "sections": [
+      {
+        "h2": "Un FJT, c'est quoi exactement ?",
+        "paragraphs": [
+          "Les foyers de jeunes travailleurs sont des résidences meublées destinées aux jeunes qui démarrent leur vie active. On y loue une chambre ou un studio avec une « redevance » mensuelle qui inclut le loyer, les charges, et souvent l'accès à des espaces collectifs (cuisine, laverie, salles communes).",
+          "La redevance est éligible à l'APL, ce qui ramène le coût réel bien en dessous du marché francilien. Les résidences proposent aussi un accompagnement (budget, démarches, recherche du logement suivant) : un vrai sas vers le logement autonome."
+        ]
+      },
+      {
+        "h2": "Qui peut y vivre ?",
+        "bullets": [
+          "Les jeunes de 16 à 30 ans, en activité ou en voie d'insertion : salariés, alternants, stagiaires, intérimaires, demandeurs d'emploi.",
+          "Les étudiants peuvent être admis dans certaines résidences, en général en minorité du public accueilli.",
+          "Pas de condition de garant dans la plupart des résidences : le contrat est une convention d'occupation, plus souple qu'un bail classique.",
+          "Durée d'accueil : de quelques mois à deux ans environ, le temps de stabiliser sa situation."
+        ]
+      },
+      {
+        "h2": "Où candidater en Île-de-France",
+        "bullets": [
+          "L'ALJT, principal opérateur francilien, gère des dizaines de résidences en région parisienne : candidature directe en ligne sur aljt.com.",
+          "Le réseau national Habitat Jeunes (UNHAJ) recense les résidences par ville sur habitatjeunes.org.",
+          "Certaines résidences sont accessibles via AL'in (Action Logement) si vous êtes salarié d'une entreprise cotisante.",
+          "Candidatez sur plusieurs résidences à la fois : les listes d'attente varient fortement d'un site à l'autre."
+        ],
+        "paragraphs": [
+          "Préparez les mêmes pièces qu'une location classique (identité, situation, ressources) : un dossier complet accélère nettement l'admission."
+        ]
+      },
+      {
+        "h2": "FJT, CROUS ou studio privé : comment choisir ?",
+        "paragraphs": [
+          "Le CROUS reste imbattable sur le prix mais cible prioritairement les étudiants boursiers. Le studio privé offre l'indépendance mais exige garant, dépôt et mobilier. Le FJT se situe entre les deux : meublé, sans garant, tout compris, avec un accompagnement, idéal pour une première installation ou une alternance.",
+          "Pensez au cumul avec les aides : APL sur la redevance, Mobili-Jeune si vous êtes alternant, et avance Loca-Pass si un dépôt est demandé. Le coût mensuel réel peut descendre très bas."
+        ]
+      }
+    ],
+    "faq": [
+      { "q": "Quel est le prix d'un foyer de jeunes travailleurs ?", "a": "La redevance varie selon la résidence et le logement (chambre ou studio), charges comprises. L'APL s'y applique, ce qui réduit nettement le coût réel par rapport au marché francilien." },
+      { "q": "Faut-il un garant pour entrer en FJT ?", "a": "Dans la plupart des résidences, non : le contrat est une convention d'occupation, plus souple qu'un bail. C'est l'un des grands avantages du dispositif." },
+      { "q": "Un étudiant peut-il vivre en FJT ?", "a": "C'est possible dans certaines résidences, mais le public prioritaire reste les jeunes actifs, alternants et stagiaires. Les étudiants ont aussi le canal CROUS." },
+      { "q": "Combien de temps peut-on rester en FJT ?", "a": "L'accueil est transitoire : de quelques mois à deux ans environ, avec un accompagnement pour préparer le logement suivant." }
+    ],
+    "sourcesOfficielles": [
+      { "label": "ALJT, principal opérateur francilien", "url": "https://www.aljt.com" },
+      { "label": "Le réseau Habitat Jeunes (UNHAJ)", "url": "https://www.habitatjeunes.org" },
+      { "label": "Les FJT sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F2045" }
+    ]
+  },
+  {
+    "slug": "encadrement-des-loyers-paris",
+    "parcours": ["mobilite"],
+    "title": "Encadrement des loyers à Paris : vérifier et faire respecter",
+    "metaDescription": "Loyer de référence, complément de loyer, recours en cas de dépassement : comment vérifier que votre loyer parisien respecte l'encadrement.",
+    "h1": "Encadrement des loyers à Paris : vérifiez avant de signer",
+    "intro": "À Paris, le loyer de la plupart des locations est plafonné par un « loyer de référence majoré » fixé par arrêté, quartier par quartier. Beaucoup d'annonces le dépassent pourtant, en comptant sur l'ignorance des candidats, en particulier les nouveaux arrivants et les profils en mobilité. Vérifier prend cinq minutes et peut faire économiser des centaines d'euros par mois.",
+    "sections": [
+      {
+        "h2": "Comment fonctionne l'encadrement parisien",
+        "paragraphs": [
+          "Pour chaque quartier, type de logement (nombre de pièces, époque de construction, meublé ou non), un arrêté préfectoral fixe trois valeurs : loyer de référence, loyer de référence majoré (+20 %) et loyer de référence minoré (-30 %). Le loyer au mètre carré de votre bail ne peut pas dépasser la référence majorée.",
+          "Le dispositif s'applique aux baux d'habitation classiques, meublés (avec des références spécifiques, plus élevées) et aux baux mobilité. Le bail doit mentionner le loyer de référence majoré applicable."
+        ]
+      },
+      {
+        "h2": "Vérifier son loyer en 5 minutes",
+        "bullets": [
+          "1. Relevez la surface habitable, le nombre de pièces, l'année de construction approximative, meublé ou non, et l'adresse exacte.",
+          "2. Consultez le simulateur officiel des loyers de référence parisiens (Ville de Paris / préfecture de région).",
+          "3. Calculez : loyer hors charges ÷ surface = loyer au m². Comparez à la référence majorée du quartier.",
+          "4. Au-dessus ? Vérifiez si un « complément de loyer » est mentionné au bail, et s'il est réellement justifié."
+        ]
+      },
+      {
+        "h2": "Le complément de loyer : l'exception qui sert d'excuse",
+        "paragraphs": [
+          "Un bailleur peut dépasser la référence majorée uniquement via un complément de loyer explicite au bail, justifié par des caractéristiques de confort ou de localisation exceptionnelles par rapport aux logements comparables du quartier : grande terrasse, vue remarquable, équipement rare. Un balcon banal, une « belle luminosité » ou une rénovation standard n'en sont pas.",
+          "Le complément se conteste dans les premiers mois du bail devant la commission départementale de conciliation : c'est gratuit, et c'est au bailleur de prouver le caractère exceptionnel."
+        ]
+      },
+      {
+        "h2": "Loyer trop élevé : vos recours concrets",
+        "bullets": [
+          "Avant de signer : négociez en citant la référence majorée (l'argument juridique change le rapport de force), ou passez votre chemin.",
+          "Après signature : action en diminution de loyer, d'abord à l'amiable (courrier recommandé), puis devant la commission départementale de conciliation, gratuite et sans avocat.",
+          "Signalez le dépassement à la Ville de Paris : le bailleur s'expose à une amende administrative pouvant atteindre 5 000 € (15 000 € pour une personne morale).",
+          "L'ADIL de Paris vous conseille gratuitement à chaque étape."
+        ],
+        "paragraphs": [
+          "À noter : l'encadrement existe aussi ailleurs en Île-de-France, notamment sur les territoires d'Est Ensemble et de Plaine Commune. Le réflexe de vérification vaut au-delà du périphérique."
+        ]
+      }
+    ],
+    "faq": [
+      { "q": "L'encadrement s'applique-t-il aux meublés et au bail mobilité ?", "a": "Oui. Les meublés ont des loyers de référence spécifiques, un peu plus élevés, et le bail mobilité est soumis aux mêmes plafonds que le meublé classique." },
+      { "q": "Que faire si mon loyer dépasse la référence majorée ?", "a": "Tentez d'abord l'amiable par courrier recommandé, puis saisissez la commission départementale de conciliation (gratuite). En parallèle, le dépassement peut être signalé à la Ville de Paris, qui peut infliger une amende au bailleur." },
+      { "q": "Un complément de loyer est-il légal ?", "a": "Oui, mais seulement s'il est inscrit au bail et justifié par des caractéristiques réellement exceptionnelles par rapport aux logements comparables du quartier. Il peut être contesté en début de bail devant la commission de conciliation." },
+      { "q": "L'encadrement existe-t-il en dehors de Paris ?", "a": "Oui, notamment sur les territoires d'Est Ensemble et de Plaine Commune en Seine-Saint-Denis. Chaque territoire a ses propres références : vérifiez le simulateur local." }
+    ],
+    "sourcesOfficielles": [
+      { "label": "L'encadrement des loyers sur Paris.fr", "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-juillet-6173" },
+      { "label": "L'encadrement des loyers sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F1314" },
+      { "label": "L'ADIL de Paris, conseil juridique gratuit", "url": "https://www.adil75.org" }
+    ]
   }
 ]

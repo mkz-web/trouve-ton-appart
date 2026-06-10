@@ -15,12 +15,12 @@
       {
         "titre": "2. Activez toutes les aides",
         "texte": "APL/ALS dès l'emménagement, avance Loca-Pass pour le dépôt de garantie, Mobili-Jeune si vous êtes alternant : plusieurs centaines d'euros par an sont en jeu.",
-        "guides": ["aide-logement-etudiant", "aide-mobili-jeune"]
+        "guides": ["aide-logement-etudiant", "aide-mobili-jeune", "avance-loca-pass"]
       },
       {
         "titre": "3. Cherchez au bon endroit selon votre situation",
         "texte": "Boursier ou petit budget : CROUS d'abord (DSE entre mars et mai), puis les plateformes labellisées. Séjour court (stage, échange) : visez le bail mobilité. Les sources fiables sont listées dans notre annuaire.",
-        "guides": ["bail-mobilite"]
+        "guides": ["bail-mobilite", "foyer-jeune-travailleur"]
       }
     ],
     "annuaireCategories": ["etudiant"]
@@ -46,7 +46,7 @@
       {
         "titre": "3. Situations spécifiques : dites-le explicitement",
         "texte": "Handicap, perte de logement, violences, insalubrité : ce sont des critères de priorité légaux : documentez-les dans votre demande. Urgence immédiate : le 115 / SIAO. Délai dépassé sans proposition : le recours DALO est un droit.",
-        "guides": ["demande-logement-social", "recours-dalo"]
+        "guides": ["demande-logement-social", "recours-dalo", "fonds-solidarite-logement"]
       }
     ],
     "annuaireCategories": ["logement-social", "seniors-pmr", "urgence"]
@@ -61,8 +61,8 @@
     "etapes": [
       {
         "titre": "1. Choisissez le bon contrat",
-        "texte": "Pour 1 à 10 mois : le bail mobilité (sans dépôt de garantie, préavis 1 mois) est presque toujours le meilleur choix. Au-delà : bail meublé classique d'un an.",
-        "guides": ["bail-mobilite"]
+        "texte": "Pour 1 à 10 mois : le bail mobilité (sans dépôt de garantie, préavis 1 mois) est presque toujours le meilleur choix. Au-delà : bail meublé classique d'un an. Dans tous les cas, vérifiez l'encadrement des loyers avant de signer.",
+        "guides": ["bail-mobilite", "encadrement-des-loyers-paris"]
       },
       {
         "titre": "2. Réglez la question du garant, surtout sans historique français",
