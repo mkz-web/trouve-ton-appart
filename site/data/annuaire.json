@@ -44,7 +44,7 @@
       "sources": [
         { "nom": "115 / Samu social", "url": "https://www.samusocial.paris", "desc": "Hébergement d'urgence immédiat, 24h/24. Le 115 est gratuit depuis tout téléphone." },
         { "nom": "SIAO d'Île-de-France", "url": "https://www.gouvernement.fr/risques/le-115-et-les-siao", "desc": "Les services intégrés d'accueil et d'orientation coordonnent hébergement et logement accompagné par département." },
-        { "nom": "Comité DALO (préfectures)", "url": "https://www.service-public.fr/particuliers/vosdroits/F18005", "desc": "Le recours quand votre demande de logement social dépasse les délais sans proposition : un droit opposable." },
+        { "nom": "Comité DALO (préfectures)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F18005", "desc": "Le recours quand votre demande de logement social dépasse les délais sans proposition : un droit opposable." },
         { "nom": "Soliha", "url": "https://www.soliha.fr", "desc": "Réseau associatif d'intermédiation locative et d'accompagnement au logement des publics fragiles." }
       ]
     },

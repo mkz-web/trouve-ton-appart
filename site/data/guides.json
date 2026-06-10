@@ -53,7 +53,7 @@
     ],
     "sourcesOfficielles": [
       { "label": "visale.fr, le site officiel Action Logement", "url": "https://www.visale.fr" },
-      { "label": "La garantie Visale sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F33453" }
+      { "label": "La garantie Visale sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33453" }
     ]
   },
   {
@@ -159,8 +159,8 @@
       { "q": "Quelles aides puis-je toucher avec un bail mobilité ?", "a": "Les aides au logement (APL/ALS) sont possibles si le logement est votre résidence principale et selon vos ressources, et la garantie Visale couvre ce bail sans condition d'âge." }
     ],
     "sourcesOfficielles": [
-      { "label": "Le bail mobilité sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F34759" },
-      { "label": "L'encadrement des loyers sur Paris.fr", "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-juillet-6173" }
+      { "label": "Le bail mobilité sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34759" },
+      { "label": "L'encadrement des loyers sur Paris.fr", "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712" }
     ]
   },
   {
@@ -214,7 +214,7 @@
     "sourcesOfficielles": [
       { "label": "DossierFacile, le dossier de location certifié par l'État", "url": "https://www.dossierfacile.logement.gouv.fr" },
       { "label": "visale.fr, la caution gratuite d'Action Logement", "url": "https://www.visale.fr" },
-      { "label": "L'acte de cautionnement sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F31267" }
+      { "label": "L'acte de cautionnement sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31267" }
     ]
   },
   {
@@ -307,7 +307,7 @@
     "sourcesOfficielles": [
       { "label": "in'li, opérateur du logement intermédiaire en Île-de-France", "url": "https://www.inli.fr" },
       { "label": "CDC Habitat, offres de logement intermédiaire", "url": "https://www.cdc-habitat.fr" },
-      { "label": "Le logement locatif intermédiaire sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F37292" }
+      { "label": "Le logement locatif intermédiaire sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F37292" }
     ]
   },
   {
@@ -322,7 +322,7 @@
         "h2": "Qu'est-ce que DossierFacile ?",
         "paragraphs": [
           "DossierFacile est un service public en ligne, gratuit, opéré par le ministère chargé du Logement. Vous téléversez vos pièces justificatives, une équipe les contrôle (lisibilité, cohérence, conformité), puis votre dossier est certifié et accessible via un lien web à coller dans vos candidatures.",
-          "Chaque document est recouvert d'un filigrane « Document exclusivement destiné à la location ». C'est une protection concrète contre la fraude documentaire et la réutilisation de vos pièces : ne joignez plus jamais vos bulletins de salaire bruts dans un mail."
+          "Chaque document est recouvert d'un filigrane indiquant qu'il est réservé à un usage locatif. C'est une protection concrète contre la fraude documentaire et la réutilisation de vos pièces : ne joignez plus jamais vos bulletins de salaire bruts dans un mail."
         ]
       },
       {
@@ -343,7 +343,7 @@
         "bullets": [
           "1. Créez votre compte sur dossierfacile.logement.gouv.fr.",
           "2. Téléversez vos pièces, ainsi que celles de votre garant ou votre visa Visale.",
-          "3. L'équipe vérifie votre dossier, en général sous 24 à 48 heures ouvrées. Si une pièce pose problème, vous recevez une demande de correction précise.",
+          "3. L'équipe vérifie votre dossier sous 72 heures ouvrées au maximum, souvent plus vite. Si une pièce pose problème, vous recevez une demande de correction précise.",
           "4. Vous obtenez un lien unique vers votre dossier certifié, à coller dans chaque candidature (et un PDF complet si une agence l'exige)."
         ]
       },
@@ -358,13 +358,13 @@
     "faq": [
       { "q": "DossierFacile est-il vraiment gratuit ?", "a": "Oui, totalement. C'est un service public opéré par le ministère chargé du Logement, sans option payante ni publicité." },
       { "q": "DossierFacile est-il obligatoire pour louer ?", "a": "Non. Mais un dossier certifié est lu plus vite et inspire confiance ; certaines agences le demandent explicitement." },
-      { "q": "Combien de temps prend la vérification ?", "a": "En général 24 à 48 heures ouvrées. Prévoyez la création du dossier avant de commencer vos visites." },
+      { "q": "Combien de temps prend la vérification ?", "a": "Le service annonce une vérification sous 72 heures ouvrées au maximum, souvent plus rapide en pratique. Prévoyez la création du dossier avant de commencer vos visites." },
       { "q": "Peut-on inclure son garant dans le dossier ?", "a": "Oui, le dossier peut intégrer les pièces de votre garant physique ou votre visa Visale si vous passez par la garantie publique." },
-      { "q": "Mes documents sont-ils protégés ?", "a": "Les pièces sont hébergées par le service public et filigranées « Document exclusivement destiné à la location », ce qui décourage toute réutilisation frauduleuse." }
+      { "q": "Mes documents sont-ils protégés ?", "a": "Les pièces sont hébergées par le service public et filigranées pour un usage exclusivement locatif, ce qui décourage toute réutilisation frauduleuse." }
     ],
     "sourcesOfficielles": [
       { "label": "DossierFacile, le site officiel", "url": "https://www.dossierfacile.logement.gouv.fr" },
-      { "label": "Les pièces qu'un bailleur peut exiger, sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F1169" },
+      { "label": "Les pièces qu'un bailleur peut exiger, sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1169" },
       { "label": "visale.fr, la caution gratuite à joindre au dossier", "url": "https://www.visale.fr" }
     ]
   },
@@ -402,7 +402,7 @@
           "1. Remplissez le formulaire de recours amiable (Cerfa) et joignez toutes les pièces qui documentent votre situation.",
           "2. Déposez le dossier auprès de la commission de médiation (COMED) de votre département.",
           "3. La commission statue, en principe sous 3 mois, et notifie sa décision.",
-          "4. Si vous êtes reconnu prioritaire et urgent, le préfet dispose d'un délai de 3 mois, porté à 6 mois en Île-de-France, pour vous proposer un logement adapté.",
+          "4. Si vous êtes reconnu prioritaire et urgent, le préfet dispose d'un délai de 3 mois, pouvant être porté à 6 mois dans les départements les plus tendus, pour vous proposer un logement adapté.",
           "5. Sans proposition dans le délai : recours en injonction devant le tribunal administratif, qui peut condamner l'État sous astreinte."
         ],
         "paragraphs": [
@@ -421,12 +421,12 @@
     ],
     "faq": [
       { "q": "Faut-il un avocat pour un recours DALO ?", "a": "Non. Le recours devant la commission de médiation est gratuit et se fait avec un simple formulaire. L'accompagnement par une ADIL ou une association agréée est gratuit également." },
-      { "q": "Combien de temps prend un recours DALO ?", "a": "La commission statue en principe sous 3 mois. En cas de décision favorable, le préfet a ensuite 3 mois (6 mois en Île-de-France) pour proposer un logement." },
+      { "q": "Combien de temps prend un recours DALO ?", "a": "La commission statue en principe sous 3 mois. En cas de décision favorable, le préfet a ensuite 3 mois, jusqu'à 6 mois selon les départements, pour proposer un logement." },
       { "q": "Le DALO fonctionne-t-il vraiment en Île-de-France ?", "a": "C'est la région qui concentre le plus de recours et les délais les plus tendus, mais un dossier bien documenté sur un motif prioritaire reste l'outil juridique le plus puissant pour obtenir un relogement." },
       { "q": "Quelle différence entre DALO et DAHO ?", "a": "Le DALO vise un logement autonome ; le DAHO vise un hébergement (structure, résidence sociale). Les deux passent par la même commission de médiation." }
     ],
     "sourcesOfficielles": [
-      { "label": "Le recours DALO sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F18005" },
+      { "label": "Le recours DALO sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F18005" },
       { "label": "Renouveler sa demande de logement social", "url": "https://www.demande-logement-social.gouv.fr" },
       { "label": "Trouver son ADIL (conseil juridique logement gratuit)", "url": "https://www.anil.org" }
     ]
@@ -435,15 +435,15 @@
     "slug": "aide-mobili-jeune",
     "parcours": ["etudiant"],
     "title": "Aide Mobili-Jeune : jusqu'à 100 € de loyer pris en charge",
-    "metaDescription": "L'aide Mobili-Jeune d'Action Logement paie 10 à 100 € de votre loyer chaque mois pendant l'alternance. Conditions, demande en ligne, cumul avec l'APL.",
+    "metaDescription": "L'aide Mobili-Jeune d'Action Logement prend en charge jusqu'à 100 € de loyer par mois pendant l'alternance. Conditions, demande en ligne, cumul APL.",
     "h1": "Aide Mobili-Jeune : le loyer allégé pour les alternants",
-    "intro": "Alternant de moins de 30 ans dans une entreprise privée ? L'aide Mobili-Jeune d'Action Logement prend en charge 10 à 100 € de votre loyer chaque mois pendant votre formation, en plus de l'APL. C'est l'une des aides les plus généreuses du logement des jeunes, et l'une des moins demandées.",
+    "intro": "Alternant de moins de 30 ans dans une entreprise privée ? L'aide Mobili-Jeune d'Action Logement prend en charge jusqu'à 100 € de votre loyer par mois, versés pendant 11 mois, en plus de l'APL. C'est l'une des aides les plus généreuses du logement des jeunes, et l'une des moins demandées.",
     "sections": [
       {
         "h2": "Qu'est-ce que l'aide Mobili-Jeune ?",
         "paragraphs": [
-          "Mobili-Jeune est une subvention d'Action Logement (ce n'est pas un prêt : rien à rembourser) destinée aux jeunes en formation en alternance. Elle couvre une partie du loyer qui reste à votre charge après déduction de l'aide au logement de la CAF, entre 10 et 100 € par mois.",
-          "Sur une année de formation, cela représente jusqu'à 1 200 € : de quoi changer l'équation d'un studio francilien."
+          "Mobili-Jeune est une subvention d'Action Logement (ce n'est pas un prêt : rien à rembourser) destinée aux jeunes en formation en alternance. Elle couvre une partie du loyer qui reste à votre charge après déduction de l'aide au logement de la CAF, jusqu'à 100 € par mois versés pendant 11 mois.",
+          "Sur une année de formation, cela représente jusqu'à 1 100 € : de quoi changer l'équation d'un studio francilien."
         ]
       },
       {
@@ -451,7 +451,7 @@
         "bullets": [
           "Avoir moins de 30 ans à la date de la demande.",
           "Être en contrat d'apprentissage ou de professionnalisation dans une entreprise du secteur privé non agricole (le secteur agricole a son équivalent, Agri-Mobili-Jeune).",
-          "Percevoir une rémunération inférieure ou égale au SMIC brut.",
+          "Percevoir une rémunération d'alternant : l'aide est attribuée sous conditions de ressources, de l'ordre du SMIC.",
           "Louer un logement pendant la période de formation : bail classique, meublé, colocation, résidence, foyer ou bail mobilité.",
           "Le logement doit être proche de votre lieu de formation ou d'emploi (c'est l'esprit du dispositif : rapprocher les alternants de leur poste)."
         ]
@@ -460,7 +460,7 @@
         "h2": "Quand et comment faire la demande",
         "bullets": [
           "La demande se fait en ligne sur actionlogement.fr, rubrique Mobili-Jeune.",
-          "Fenêtre de dépôt : jusqu'à 3 mois avant le début de votre formation et au plus tard 6 mois après son démarrage. Ne la laissez pas passer.",
+          "Fenêtre de dépôt : de 3 mois avant le début du contrat d'alternance jusqu'à 5 mois après, et elle se rouvre à chaque date anniversaire du contrat. Ne la laissez pas passer.",
           "Pièces à prévoir : contrat d'alternance, bail signé, RIB, et votre attestation CAF (l'aide se calcule après APL).",
           "L'aide est ensuite versée par périodes, sur justificatifs de quittances."
         ],
@@ -480,7 +480,7 @@
       { "q": "Mobili-Jeune est-elle cumulable avec l'APL ?", "a": "Oui, c'est même son principe : elle prend en charge entre 10 et 100 € par mois sur la part de loyer qui reste après déduction de l'APL." },
       { "q": "Un étudiant classique peut-il toucher Mobili-Jeune ?", "a": "Non, l'aide est réservée aux alternants (apprentissage ou professionnalisation) du secteur privé. Les autres aides étudiantes sont détaillées dans notre guide dédié." },
       { "q": "Faut-il refaire la demande chaque année ?", "a": "Oui, le renouvellement se fait à chaque année de formation, dans les mêmes conditions." },
-      { "q": "Quel est le montant exact de l'aide ?", "a": "Entre 10 et 100 € par mois, selon votre loyer et le montant de votre APL. Le simulateur d'Action Logement donne le chiffre exact en quelques minutes." }
+      { "q": "Quel est le montant exact de l'aide ?", "a": "Jusqu'à 100 € par mois, versés pendant 11 mois, selon votre loyer et le montant de votre APL. Le simulateur d'Action Logement donne le chiffre exact en quelques minutes." }
     ],
     "sourcesOfficielles": [
       { "label": "L'aide Mobili-Jeune d'Action Logement", "url": "https://www.actionlogement.fr/l-aide-mobili-jeune" },
@@ -542,7 +542,7 @@
     ],
     "sourcesOfficielles": [
       { "label": "L'avance Loca-Pass d'Action Logement", "url": "https://www.actionlogement.fr/l-avance-loca-pass" },
-      { "label": "L'avance Loca-Pass sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F18490" }
+      { "label": "L'avance Loca-Pass sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F18490" }
     ]
   },
   {
@@ -598,7 +598,7 @@
       { "q": "Peut-on cumuler FSL et Loca-Pass pour le dépôt de garantie ?", "a": "Non, pas pour financer le même dépôt. Choisissez Loca-Pass si vous êtes éligible (plus rapide), le FSL sinon." }
     ],
     "sourcesOfficielles": [
-      { "label": "Le FSL sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F1334" },
+      { "label": "Le FSL sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1334" },
       { "label": "Trouver son ADIL (conseil gratuit, dettes et expulsion)", "url": "https://www.anil.org" },
       { "label": "Demander un logement social (à maintenir en parallèle)", "url": "https://www.demande-logement-social.gouv.fr" }
     ]
@@ -607,9 +607,9 @@
     "slug": "foyer-jeune-travailleur",
     "parcours": ["etudiant"],
     "title": "Foyer de jeunes travailleurs : logement meublé à petit prix",
-    "metaDescription": "Les foyers de jeunes travailleurs logent les 16-30 ans en meublé tout compris, APL possible. Conditions, prix et candidature en Île-de-France.",
+    "metaDescription": "Les foyers de jeunes travailleurs logent les 16-25 ans (jusqu'à 30) en meublé tout compris, APL possible. Conditions, prix et candidature en Île-de-France.",
     "h1": "Foyer de jeunes travailleurs (FJT) : le meublé tout compris pour démarrer",
-    "intro": "Premier emploi, alternance, stage long, arrivée en Île-de-France sans garant ni mobilier : le foyer de jeunes travailleurs, rebaptisé résidence Habitat Jeunes, est souvent la solution la plus rapide et la plus économique pour les 16-30 ans. Studio ou chambre meublée, redevance tout compris, APL applicable, et une vraie vie collective. Encore faut-il savoir où candidater.",
+    "intro": "Premier emploi, alternance, stage long, arrivée en Île-de-France sans garant ni mobilier : le foyer de jeunes travailleurs, rebaptisé résidence Habitat Jeunes, est souvent la solution la plus rapide et la plus économique pour les jeunes de moins de 30 ans. Studio ou chambre meublée, redevance tout compris, APL applicable, et une vraie vie collective. Encore faut-il savoir où candidater.",
     "sections": [
       {
         "h2": "Un FJT, c'est quoi exactement ?",
@@ -621,7 +621,7 @@
       {
         "h2": "Qui peut y vivre ?",
         "bullets": [
-          "Les jeunes de 16 à 30 ans, en activité ou en voie d'insertion : salariés, alternants, stagiaires, intérimaires, demandeurs d'emploi.",
+          "Les jeunes de 16 à 25 ans, et jusqu'à 30 ans dans de nombreuses résidences : salariés, alternants, stagiaires, intérimaires, demandeurs d'emploi.",
           "Les étudiants peuvent être admis dans certaines résidences, en général en minorité du public accueilli.",
           "Pas de condition de garant dans la plupart des résidences : le contrat est une convention d'occupation, plus souple qu'un bail classique.",
           "Durée d'accueil : de quelques mois à deux ans environ, le temps de stabiliser sa situation."
@@ -656,7 +656,7 @@
     "sourcesOfficielles": [
       { "label": "ALJT, principal opérateur francilien", "url": "https://www.aljt.com" },
       { "label": "Le réseau Habitat Jeunes (UNHAJ)", "url": "https://www.habitatjeunes.org" },
-      { "label": "Les FJT sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F2045" }
+      { "label": "Les FJT sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2018" }
     ]
   },
   {
@@ -687,7 +687,7 @@
         "h2": "Le complément de loyer : l'exception qui sert d'excuse",
         "paragraphs": [
           "Un bailleur peut dépasser la référence majorée uniquement via un complément de loyer explicite au bail, justifié par des caractéristiques de confort ou de localisation exceptionnelles par rapport aux logements comparables du quartier : grande terrasse, vue remarquable, équipement rare. Un balcon banal, une « belle luminosité » ou une rénovation standard n'en sont pas.",
-          "Le complément se conteste dans les premiers mois du bail devant la commission départementale de conciliation : c'est gratuit, et c'est au bailleur de prouver le caractère exceptionnel."
+          "Le complément se conteste dans les 3 mois suivant la signature du bail devant la commission départementale de conciliation : c'est gratuit, et c'est au bailleur de prouver le caractère exceptionnel."
         ]
       },
       {
@@ -710,8 +710,8 @@
       { "q": "L'encadrement existe-t-il en dehors de Paris ?", "a": "Oui, notamment sur les territoires d'Est Ensemble et de Plaine Commune en Seine-Saint-Denis. Chaque territoire a ses propres références : vérifiez le simulateur local." }
     ],
     "sourcesOfficielles": [
-      { "label": "L'encadrement des loyers sur Paris.fr", "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-juillet-6173" },
-      { "label": "L'encadrement des loyers sur Service-public.fr", "url": "https://www.service-public.fr/particuliers/vosdroits/F1314" },
+      { "label": "L'encadrement des loyers sur Paris.fr", "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712" },
+      { "label": "Paris : le montant du loyer encadré, sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34407" },
       { "label": "L'ADIL de Paris, conseil juridique gratuit", "url": "https://www.adil75.org" }
     ]
   }
