@@ -1,0 +1,80 @@
+[
+  {
+    "slug": "etudiant",
+    "nav": "Étudiant & jeune actif",
+    "title": "Logement étudiant et jeune actif en Île-de-France : par où commencer ?",
+    "metaDescription": "CROUS, résidences, colocation, aides CAF, Visale, Loca-Pass : le parcours logement complet pour les étudiants et jeunes actifs en Île-de-France, dans le bon ordre.",
+    "h1": "Étudiant ou jeune actif : votre parcours logement en Île-de-France",
+    "intro": "Le logement étudiant francilien est éclaté entre le CROUS, les résidences privées, la colocation et le parc classique — et les aides entre la CAF et Action Logement. Voici le parcours dans le bon ordre : sécuriser son garant, activer les aides, puis chercher au bon endroit.",
+    "etapes": [
+      {
+        "titre": "1. Sécurisez votre dossier avant de chercher",
+        "texte": "Un visa Visale validé (garant gratuit de l'État) et un dossier certifié DossierFacile font passer votre candidature devant les autres. C'est l'étape que tout le monde saute — à tort.",
+        "guides": ["visale", "garant-location"]
+      },
+      {
+        "titre": "2. Activez toutes les aides",
+        "texte": "APL/ALS dès l'emménagement, avance Loca-Pass pour le dépôt de garantie, Mobili-Jeune si vous êtes alternant : plusieurs centaines d'euros par an sont en jeu.",
+        "guides": ["aide-logement-etudiant"]
+      },
+      {
+        "titre": "3. Cherchez au bon endroit selon votre situation",
+        "texte": "Boursier ou petit budget : CROUS d'abord (DSE entre mars et mai), puis les plateformes labellisées. Séjour court (stage, échange) : visez le bail mobilité. Les sources fiables sont listées dans notre annuaire.",
+        "guides": ["bail-mobilite"]
+      }
+    ],
+    "annuaireCategories": ["etudiant"]
+  },
+  {
+    "slug": "logement-social",
+    "nav": "Logement social & publics spécifiques",
+    "title": "Logement social, seniors, PMR, urgence : vos parcours en Île-de-France",
+    "metaDescription": "Demande HLM, logement intermédiaire, logement adapté PMR et seniors, hébergement d'urgence : les parcours et les bons guichets en Île-de-France, expliqués simplement.",
+    "h1": "Logement social et situations spécifiques : trouver le bon guichet",
+    "intro": "Le parcours du logement social francilien est le plus opaque de tous : guichets multiples, critères complexes, délais longs. Et pour les besoins spécifiques — accessibilité PMR, seniors, urgence — les filtres n'existent tout simplement pas sur les sites classiques. On remet de l'ordre.",
+    "etapes": [
+      {
+        "titre": "1. Déposez (et renouvelez !) votre demande unique",
+        "texte": "Une seule demande en ligne vous ouvre tous les bailleurs d'Île-de-France. Le piège mortel : oublier le renouvellement annuel, qui efface toute votre ancienneté.",
+        "guides": ["demande-logement-social"]
+      },
+      {
+        "titre": "2. Activez les canaux parallèles",
+        "texte": "Salarié du privé ? Le contingent Action Logement (AL'in) est souvent plus rapide. Au-dessus des plafonds HLM ? Le logement intermédiaire (in'li, CDC Habitat) est fait pour vous, avec candidature directe.",
+        "guides": ["demande-logement-social", "logement-intermediaire"]
+      },
+      {
+        "titre": "3. Situations spécifiques : dites-le explicitement",
+        "texte": "Handicap, perte de logement, violences, insalubrité : ce sont des critères de priorité légaux — documentez-les dans votre demande. Urgence immédiate : le 115 / SIAO. Délai dépassé sans proposition : le recours DALO est un droit.",
+        "guides": ["demande-logement-social"]
+      }
+    ],
+    "annuaireCategories": ["logement-social", "seniors-pmr", "urgence"]
+  },
+  {
+    "slug": "mobilite",
+    "nav": "Mobilité pro & expat",
+    "title": "Mobilité professionnelle et expatriation : se loger en Île-de-France",
+    "metaDescription": "Mission, mutation, stage, expatriation : meublé, bail mobilité, coliving et garanties pour se loger en Île-de-France de 1 à 18 mois, sans se faire piéger sur les prix ou les arnaques.",
+    "h1": "Mobilité pro, expat : se loger de 1 à 18 mois en Île-de-France",
+    "intro": "Mission de 6 mois, mutation, VIE de retour, installation en France : le meublé francilien est cher, l'offre éclatée entre plateformes premium, et les arnaques à la réservation à distance bien réelles. Le parcours malin : bon contrat, bonne garantie, bonnes sources.",
+    "etapes": [
+      {
+        "titre": "1. Choisissez le bon contrat",
+        "texte": "Pour 1 à 10 mois : le bail mobilité (sans dépôt de garantie, préavis 1 mois) est presque toujours le meilleur choix. Au-delà : bail meublé classique d'un an.",
+        "guides": ["bail-mobilite"]
+      },
+      {
+        "titre": "2. Réglez la question du garant — surtout sans historique français",
+        "texte": "Visale couvre le bail mobilité sans condition d'âge. Profils non éligibles (indépendants, certains expatriés) : les garants payants débloquent le dossier moyennant 3 à 5 % du loyer annuel.",
+        "guides": ["visale", "garant-location"]
+      },
+      {
+        "titre": "3. Cherchez sur les sources fiables, jamais en versant d'argent avant le bail",
+        "texte": "Spécialistes du meublé, coliving, résidences : notre annuaire liste les acteurs établis. Règle d'or à distance : visite vidéo en direct, jamais de paiement avant signature, et méfiance absolue sur les prix trop beaux.",
+        "guides": []
+      }
+    ],
+    "annuaireCategories": ["mobilite"]
+  }
+]
