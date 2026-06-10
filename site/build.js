@@ -94,9 +94,26 @@ const FAVICON = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" view
 
 /* ----------------------------- Layout ------------------------------ */
 
-function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = [] }) {
+const BUILD_DATE = new Date();
+const DATE_ISO = BUILD_DATE.toISOString().slice(0, 10);
+const DATE_FR = BUILD_DATE.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+const DATE_PUBLICATION = '2026-06-10';
+
+function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = [], breadcrumbs = null }) {
   const canonical = SITE.baseUrl + urlPath;
   const nav = PARCOURS.map(p => `<a href="/${p.slug}/">${esc(p.nav)}</a>`).join('');
+  if (breadcrumbs) {
+    jsonLd = jsonLd.concat([{
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [{ name: 'Accueil', url: '/' }].concat(breadcrumbs).map((b, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: b.name,
+        ...(b.url ? { item: SITE.baseUrl + b.url } : {}),
+      })),
+    }]);
+  }
   const ld = jsonLd.map(o => `<script type="application/ld+json">${JSON.stringify(o)}</script>`).join('\n');
   const footGuides = GUIDES.map(g => `<li><a href="/guides/${g.slug}/">${esc(g.h1)}</a></li>`).join('');
   const footParcours = PARCOURS.map(p => `<li><a href="/${p.slug}/">${esc(p.nav)}</a></li>`).join('');
@@ -115,7 +132,14 @@ function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = []
 <meta property="og:description" content="${esc(metaDescription)}">
 <meta property="og:url" content="${canonical}">
 <meta property="og:locale" content="fr_FR">
-<link rel="stylesheet" href="/style.css">
+<meta property="og:image" content="${SITE.baseUrl}/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(metaDescription)}">
+<meta name="twitter:image" content="${SITE.baseUrl}/og-image.png">
+<style>${css()}</style>
 ${ld}
 </head>
 <body>
@@ -197,12 +221,20 @@ function addPage(urlPath, html, priority) {
   <h2>Les guides essentiels</h2>
   <div class="grid grid-guides">${guideCards}</div>
 </section>
+<section>
+  <h2>Comment ça marche&nbsp;?</h2>
+  <div class="steps">
+    <div class="step"><h3>Identifiez votre profil</h3><p>Étudiant ou jeune actif, demandeur de logement social, senior, personne à mobilité réduite, salarié en mission ou expatrié de retour&nbsp;: chaque situation ouvre des droits différents. Choisissez le parcours qui correspond à la vôtre.</p></div>
+    <div class="step"><h3>Suivez les étapes dans le bon ordre</h3><p>Sécuriser un garant avant de candidater, déposer sa demande unique avant de viser un bailleur précis, vérifier l'encadrement des loyers avant de signer&nbsp;: l'ordre des démarches change tout. Chaque parcours vous donne la séquence qui fonctionne.</p></div>
+    <div class="step"><h3>Candidatez à la source</h3><p>Nous ne publions pas d'annonces&nbsp;: chaque guide renvoie vers le site officiel ou la plateforme qui fait foi (CROUS, demande-logement-social.gouv.fr, Action Logement, bailleurs). Vous candidatez là où votre dossier est réellement traité.</p></div>
+  </div>
+</section>
 <section class="notice">
   <h2>Pourquoi ce site&nbsp;?</h2>
   <p>Le logement francilien est éclaté entre des dizaines de plateformes, de guichets et de dispositifs. Résultat&nbsp;: des droits non utilisés (Visale, Loca-Pass, logement intermédiaire…) et des parcours subis. Nous remettons de l'ordre&nbsp;: pas d'annonces dupliquées, pas de fausses promesses, mais des parcours clairs et des liens directs vers les sources qui font foi.</p>
 </section>`;
   addPage('/', layout({
-    title: `${SITE.name} | ${SITE.tagline}`,
+    title: `${SITE.name} : logement en Île-de-France par profil`,
     metaDescription: SITE.description,
     urlPath: '/',
     content,
@@ -213,6 +245,13 @@ function addPage(urlPath, html, priority) {
       url: SITE.baseUrl,
       description: SITE.description,
       inLanguage: 'fr-FR'
+    }, {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: SITE.name,
+      url: SITE.baseUrl,
+      logo: `${SITE.baseUrl}/og-image.png`,
+      description: SITE.description
     }]
   }), '1.0');
 })();
@@ -252,7 +291,8 @@ ${etapes}
     title: p.title,
     metaDescription: p.metaDescription,
     urlPath: `/${p.slug}/`,
-    content
+    content,
+    breadcrumbs: [{ name: p.nav, url: `/${p.slug}/` }]
   }), '0.9');
 }
 
@@ -269,6 +309,9 @@ for (const g of GUIDES) {
   const related = PARCOURS.filter(p => g.parcours.includes(p.slug))
     .map(p => `<a class="pill" href="/${p.slug}/">${esc(p.nav)}</a>`).join(' ');
   const t = guideTheme(g);
+  const aLireAussi = GUIDES.filter(x => x.slug !== g.slug && x.parcours.some(s => g.parcours.includes(s)))
+    .slice(0, 3)
+    .map(x => `<a class="pill" href="/guides/${x.slug}/">${esc(x.h1)}</a>`).join(' ');
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › Guides › ${esc(g.h1)}</nav>
 <article>
@@ -277,11 +320,13 @@ for (const g of GUIDES) {
   <div>
     <h1>${esc(g.h1)}</h1>
     <p class="lead">${esc(g.intro)}</p>
+    <p class="maj">Mis à jour le ${DATE_FR}</p>
   </div>
 </header>
 ${sections}
 <section class="faq"><h2>Questions fréquentes</h2>${faqHtml}</section>
 <section class="notice"><h2>Sources officielles</h2><ul class="sources">${srcHtml}</ul></section>
+${aLireAussi ? `<p class="pills"><strong>À lire aussi&nbsp;:</strong> ${aLireAussi}</p>` : ''}
 <p class="pills"><strong>Parcours liés&nbsp;:</strong> ${related}</p>
 </article>`;
   addPage(`/guides/${g.slug}/`, layout({
@@ -289,7 +334,20 @@ ${sections}
     metaDescription: g.metaDescription,
     urlPath: `/guides/${g.slug}/`,
     content,
+    breadcrumbs: [{ name: 'Guides' }, { name: g.h1, url: `/guides/${g.slug}/` }],
     jsonLd: [{
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: g.h1,
+      description: g.metaDescription,
+      datePublished: DATE_PUBLICATION,
+      dateModified: DATE_ISO,
+      inLanguage: 'fr-FR',
+      mainEntityOfPage: `${SITE.baseUrl}/guides/${g.slug}/`,
+      image: `${SITE.baseUrl}/og-image.png`,
+      author: { '@type': 'Organization', name: SITE.name, url: SITE.baseUrl },
+      publisher: { '@type': 'Organization', name: SITE.name, url: SITE.baseUrl, logo: { '@type': 'ImageObject', url: `${SITE.baseUrl}/og-image.png` } }
+    }, {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
       mainEntity: g.faq.map(f => ({
@@ -322,7 +380,8 @@ ${cats}`;
     title: ANNUAIRE.title,
     metaDescription: ANNUAIRE.metaDescription,
     urlPath: '/annuaire/',
-    content
+    content,
+    breadcrumbs: [{ name: 'Annuaire', url: '/annuaire/' }]
   }), '0.9');
 })();
 
@@ -341,13 +400,16 @@ ${cats}`;
     title: `Mentions légales | ${SITE.name}`,
     metaDescription: `Mentions légales du site ${SITE.name}.`,
     urlPath: '/mentions-legales/',
-    content
+    content,
+    breadcrumbs: [{ name: 'Mentions légales', url: '/mentions-legales/' }]
   }), '0.1');
 })();
 
 /* ------------------------------ CSS --------------------------------- */
 
-const CSS = `:root{--bleu:${PAL.bleu};--bleu2:${PAL.bleu2};--accent:${PAL.accent};--accent2:${PAL.accentFonce};--encre:${PAL.encre};--gris:#5b6770;--fond:#ffffff;--fond2:#f2f6fa;--ciel:${PAL.cielClair};--creme:${PAL.creme};--bord:#dde5ec}
+/* Déclaration de fonction (hoistée) : le CSS est inliné dans <head> par layout(),
+ * appelé avant ce point du fichier. Supprime la requête bloquante /style.css. */
+function css() { return `:root{--bleu:${PAL.bleu};--bleu2:${PAL.bleu2};--accent:${PAL.accent};--accent2:${PAL.accentFonce};--encre:${PAL.encre};--gris:#5b6770;--fond:#ffffff;--fond2:#f2f6fa;--ciel:${PAL.cielClair};--creme:${PAL.creme};--bord:#dde5ec}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--encre);background:var(--fond);line-height:1.65}
 .container{max-width:980px;margin:0 auto;padding:0 20px}
 a{color:var(--bleu2)}h1,h2,h3{line-height:1.25;color:var(--bleu)}
@@ -391,6 +453,8 @@ h1{font-size:clamp(1.7rem,3.6vw,2.4rem);letter-spacing:-.015em}h2{font-size:1.4r
 .step{position:relative;border:1px solid var(--bord);border-radius:14px;padding:18px 22px 16px 64px;margin:1.2rem 0;counter-increment:etape;background:var(--fond)}
 .step::before{content:counter(etape);position:absolute;left:18px;top:20px;width:30px;height:30px;border-radius:50%;background:var(--t,var(--bleu2));color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.95rem}
 .step h2{margin:.1rem 0 .5rem;font-size:1.2rem}
+.step h3{margin:.15rem 0 .5rem;font-size:1.08rem;color:var(--bleu)}
+.maj{font-size:.82rem;color:var(--gris);margin:.4rem 0 0;font-style:italic}
 /* ---- Divers ---- */
 .notice{background:var(--creme);border:1px solid #efe5d6;border-radius:16px;padding:8px 24px 20px;margin:2.2rem 0}
 .pills{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -413,7 +477,7 @@ h1{font-size:clamp(1.7rem,3.6vw,2.4rem);letter-spacing:-.015em}h2{font-size:1.4r
 .hero-illo{margin-top:.6rem}
 .page-head{flex-direction:column;gap:12px;padding:20px}
 .step{padding-left:58px}
-}`;
+}`; }
 
 /* --------------------------- Écriture ------------------------------- */
 
@@ -426,11 +490,17 @@ for (const { urlPath, html } of pages) {
   fs.writeFileSync(path.join(dir, 'index.html'), html);
 }
 
-fs.writeFileSync(path.join(DIST, 'style.css'), CSS);
+fs.writeFileSync(path.join(DIST, 'style.css'), css());
+
+/* Assets statiques (og-image.png…) copiés tels quels */
+const STATIC = path.join(ROOT, 'static');
+if (fs.existsSync(STATIC)) {
+  for (const f of fs.readdirSync(STATIC)) fs.copyFileSync(path.join(STATIC, f), path.join(DIST, f));
+}
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${pages.map(p => `  <url><loc>${SITE.baseUrl}${p.urlPath}</loc><priority>${p.priority}</priority></url>`).join('\n')}
+${pages.map(p => `  <url><loc>${SITE.baseUrl}${p.urlPath}</loc><lastmod>${DATE_ISO}</lastmod><priority>${p.priority}</priority></url>`).join('\n')}
 </urlset>`;
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
 

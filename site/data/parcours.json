@@ -2,8 +2,8 @@
   {
     "slug": "etudiant",
     "nav": "Étudiant & jeune actif",
-    "title": "Logement étudiant et jeune actif en Île-de-France : par où commencer ?",
-    "metaDescription": "CROUS, résidences, colocation, aides CAF, Visale, Loca-Pass : le parcours logement complet pour les étudiants et jeunes actifs en Île-de-France, dans le bon ordre.",
+    "title": "Logement étudiant en Île-de-France : le parcours complet",
+    "metaDescription": "CROUS, résidences, colocation, aides CAF, Visale : le parcours logement des étudiants et jeunes actifs en Île-de-France, dans le bon ordre.",
     "h1": "Étudiant ou jeune actif : votre parcours logement en Île-de-France",
     "intro": "Le logement étudiant francilien est éclaté entre le CROUS, les résidences privées, la colocation et le parc classique, et les aides entre la CAF et Action Logement. Voici le parcours dans le bon ordre : sécuriser son garant, activer les aides, puis chercher au bon endroit.",
     "etapes": [
@@ -28,8 +28,8 @@
   {
     "slug": "logement-social",
     "nav": "Logement social & publics spécifiques",
-    "title": "Logement social, seniors, PMR, urgence : vos parcours en Île-de-France",
-    "metaDescription": "Demande HLM, logement intermédiaire, logement adapté PMR et seniors, hébergement d'urgence : les parcours et les bons guichets en Île-de-France, expliqués simplement.",
+    "title": "Logement social en Île-de-France : parcours et bons guichets",
+    "metaDescription": "Demande HLM, logement intermédiaire, logement adapté PMR et seniors, hébergement d'urgence : les bons guichets en Île-de-France, expliqués simplement.",
     "h1": "Logement social et situations spécifiques : trouver le bon guichet",
     "intro": "Le parcours du logement social francilien est le plus opaque de tous : guichets multiples, critères complexes, délais longs. Et pour les besoins spécifiques (accessibilité PMR, seniors, urgence), les filtres n'existent tout simplement pas sur les sites classiques. On remet de l'ordre.",
     "etapes": [
@@ -54,8 +54,8 @@
   {
     "slug": "mobilite",
     "nav": "Mobilité pro & expat",
-    "title": "Mobilité professionnelle et expatriation : se loger en Île-de-France",
-    "metaDescription": "Mission, mutation, stage, expatriation : meublé, bail mobilité, coliving et garanties pour se loger en Île-de-France de 1 à 18 mois, sans se faire piéger sur les prix ou les arnaques.",
+    "title": "Mobilité pro, expat : se loger 1 à 18 mois en Île-de-France",
+    "metaDescription": "Mission, mutation, stage, expatriation : meublé, bail mobilité, coliving et garanties pour se loger en Île-de-France sans se faire piéger.",
     "h1": "Mobilité pro, expat : se loger de 1 à 18 mois en Île-de-France",
     "intro": "Mission de 6 mois, mutation, VIE de retour, installation en France : le meublé francilien est cher, l'offre éclatée entre plateformes premium, et les arnaques à la réservation à distance bien réelles. Le parcours malin : bon contrat, bonne garantie, bonnes sources.",
     "etapes": [

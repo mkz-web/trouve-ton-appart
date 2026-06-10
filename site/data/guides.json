@@ -2,8 +2,8 @@
   {
     "slug": "visale",
     "parcours": ["etudiant", "mobilite"],
-    "title": "Garantie Visale : conditions, démarches et plafonds en Île-de-France (2026)",
-    "metaDescription": "La garantie Visale d'Action Logement remplace gratuitement un garant pour louer un logement. Qui y a droit, comment l'obtenir, quels plafonds à Paris et en Île-de-France : le guide complet.",
+    "title": "Garantie Visale : conditions et démarches en Île-de-France",
+    "metaDescription": "La garantie Visale remplace gratuitement un garant pour louer. Qui y a droit, comment l'obtenir, quels plafonds à Paris et en Île-de-France.",
     "h1": "Garantie Visale : le garant gratuit pour louer en Île-de-France",
     "intro": "Pas de garant ? La garantie Visale d'Action Logement se porte caution gratuitement pour votre location. C'est le dispositif le plus puissant, et le plus recherché, pour débloquer un dossier de location, en particulier à Paris où les bailleurs exigent presque toujours une caution solide.",
     "sections": [
@@ -59,8 +59,8 @@
   {
     "slug": "demande-logement-social",
     "parcours": ["logement-social"],
-    "title": "Demande de logement social en Île-de-France : démarches, délais, priorités (2026)",
-    "metaDescription": "Comment faire une demande de logement social à Paris et en Île-de-France : dossier unique en ligne, plafonds de ressources, délais réels, dispositifs prioritaires (DALO, Action Logement) et erreurs à éviter.",
+    "title": "Demande de logement social en Île-de-France : le guide 2026",
+    "metaDescription": "Demande de logement social à Paris et en Île-de-France : dossier unique en ligne, plafonds, délais réels, DALO et erreurs à éviter.",
     "h1": "Demande de logement social en Île-de-France : le guide complet",
     "intro": "Une seule demande en ligne suffit pour candidater auprès de tous les bailleurs sociaux d'Île-de-France. Mais entre le dépôt du dossier, les plafonds de ressources, les délais réels et les canaux d'accélération méconnus (Action Logement, DALO), le parcours reste opaque. Voici comment le prendre dans le bon ordre.",
     "sections": [
@@ -117,8 +117,8 @@
   {
     "slug": "bail-mobilite",
     "parcours": ["mobilite", "etudiant"],
-    "title": "Bail mobilité : durée, conditions, loyers. Le guide 2026 pour l'Île-de-France",
-    "metaDescription": "Le bail mobilité permet de louer un meublé de 1 à 10 mois sans dépôt de garantie pour un stage, une mission, une formation ou des études. Conditions, encadrement des loyers à Paris, compatibilité Visale.",
+    "title": "Bail mobilité : durée, conditions, loyers (guide 2026)",
+    "metaDescription": "Le bail mobilité : un meublé de 1 à 10 mois sans dépôt de garantie. Conditions, encadrement des loyers à Paris, compatibilité Visale.",
     "h1": "Bail mobilité : louer un meublé de 1 à 10 mois en Île-de-France",
     "intro": "Stage, alternance, mission, mutation, semestre d'échange : le bail mobilité est le contrat taillé pour les séjours de 1 à 10 mois en meublé, sans dépôt de garantie. Il représente désormais près d'un quart des locations meublées signées en Île-de-France. Voici comment il fonctionne, et ses pièges.",
     "sections": [
@@ -166,8 +166,8 @@
   {
     "slug": "garant-location",
     "parcours": ["etudiant", "mobilite"],
-    "title": "Garant pour une location : qui peut se porter caution et quelles alternatives (2026) ?",
-    "metaDescription": "Pas de garant pour louer ? Garant familial, Visale gratuite, garants payants (GarantMe…), caution bancaire : toutes les solutions comparées pour faire accepter votre dossier de location, notamment à Paris.",
+    "title": "Garant de location : solutions et alternatives (2026)",
+    "metaDescription": "Pas de garant pour louer ? Visale gratuite, garants payants, caution bancaire : les solutions comparées pour faire accepter votre dossier.",
     "h1": "Garant de location : solutions et alternatives quand on n'en a pas",
     "intro": "À Paris et en Île-de-France, un dossier sans garant part avec un handicap majeur. Bonne nouvelle : le garant familial n'est plus la seule option. Tour d'horizon des solutions, de la plus économique à la plus coûteuse.",
     "sections": [
@@ -220,8 +220,8 @@
   {
     "slug": "aide-logement-etudiant",
     "parcours": ["etudiant"],
-    "title": "Aides au logement étudiant en Île-de-France : APL, Loca-Pass, Mobili-Jeune (2026)",
-    "metaDescription": "APL et ALS de la CAF, avance Loca-Pass pour le dépôt de garantie, aide Mobili-Jeune pour les alternants, FSL : toutes les aides au logement étudiant en Île-de-France et comment les cumuler.",
+    "title": "Aides au logement étudiant : APL, Loca-Pass, Mobili-Jeune",
+    "metaDescription": "APL, ALS, avance Loca-Pass, aide Mobili-Jeune, FSL : toutes les aides au logement étudiant en Île-de-France et comment les cumuler.",
     "h1": "Aides au logement étudiant : ce que vous pouvez vraiment toucher",
     "intro": "Entre la CAF, Action Logement et les dispositifs régionaux, un étudiant francilien peut réduire son coût de logement de plusieurs centaines d'euros par an, à condition de connaître les guichets et l'ordre des démarches. Le point, aide par aide.",
     "sections": [
@@ -270,8 +270,8 @@
   {
     "slug": "logement-intermediaire",
     "parcours": ["logement-social", "mobilite"],
-    "title": "Logement locatif intermédiaire (LLI) en Île-de-France : pour qui, où candidater (2026) ?",
-    "metaDescription": "Le logement locatif intermédiaire propose des loyers 10 à 15 % sous le marché pour les classes moyennes trop « riches » pour le HLM. Plafonds, opérateurs franciliens (in'li, CDC Habitat) et candidature.",
+    "title": "Logement intermédiaire (LLI) : pour qui, où candidater ?",
+    "metaDescription": "Le logement locatif intermédiaire : des loyers 10 à 15 % sous le marché. Plafonds, opérateurs franciliens (in'li, CDC Habitat), candidature.",
     "h1": "Logement intermédiaire : le chaînon manquant entre HLM et marché libre",
     "intro": "Trop de revenus pour le logement social, pas assez pour le marché libre parisien : c'est exactement la cible du logement locatif intermédiaire (LLI). Loyers 10 à 15 % sous le marché, immeubles récents, et des plafonds de ressources qui couvrent une grande partie des salariés franciliens, souvent sans qu'ils le sachent.",
     "sections": [
