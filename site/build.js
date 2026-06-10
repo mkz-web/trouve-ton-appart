@@ -361,10 +361,10 @@ h1{font-size:clamp(1.7rem,3.6vw,2.4rem);letter-spacing:-.015em}h2{font-size:1.4r
 .main-nav a{color:#fff;text-decoration:none;font-size:.93rem;opacity:.92;padding:6px 12px;border-radius:8px;transition:background .15s}
 .main-nav a:hover{background:rgba(255,255,255,.14);opacity:1}
 /* ---- Hero ---- */
-.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:24px 40px;align-items:center;background:linear-gradient(180deg,var(--ciel),#fff 130%);border-radius:20px;padding:34px 38px 26px;margin:1.6rem 0 .6rem}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px 36px;align-items:end;background:linear-gradient(180deg,var(--ciel),#fff 130%);border-radius:20px;padding:34px 38px 26px;margin:1.6rem 0 .6rem}
 .hero h1{margin:.2rem 0 .8rem}
 .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:1.4rem}
-.hero-illo svg{display:block;width:100%;height:auto}
+.hero-illo svg{display:block;width:100%;max-width:330px;height:auto;margin:0 0 .2rem auto}
 .btn{display:inline-block;background:var(--accent2);color:#fff;font-weight:600;text-decoration:none;padding:11px 22px;border-radius:10px;font-size:.97rem;transition:background .15s,transform .15s}
 .btn:hover{background:#a8492f;transform:translateY(-1px)}
 .btn-ghost{background:transparent;color:var(--bleu);box-shadow:inset 0 0 0 2px var(--bleu2)}
@@ -375,15 +375,15 @@ h1{font-size:clamp(1.7rem,3.6vw,2.4rem);letter-spacing:-.015em}h2{font-size:1.4r
 .card:hover{box-shadow:0 10px 28px rgba(31,78,121,.14);transform:translateY(-3px);border-color:var(--t,var(--bleu2))}
 .card h3{margin:0 0 .5rem;font-size:1.06rem}.card p{margin:0;color:var(--gris);font-size:.92rem}
 .card-parcours::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--t,var(--bleu2))}
-.card-icon{display:inline-flex;width:58px;height:58px;border-radius:14px;background:var(--tbg,var(--ciel));padding:11px;margin-bottom:14px}
+.card-icon{display:inline-flex;width:42px;height:42px;border-radius:11px;background:var(--tbg,var(--ciel));padding:8px;margin-bottom:10px}
 .card-icon svg{width:100%;height:100%}
 .card-cta{display:inline-block;margin-top:.9rem;color:var(--t,var(--bleu2));font-weight:650;font-size:.9rem}
 .grid-guides{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 .card-guide{display:flex;gap:14px;align-items:flex-start}
-.card-icon-sm{flex:none;width:46px;height:46px;border-radius:12px;padding:9px;margin:0}
+.card-icon-sm{flex:none;width:36px;height:36px;border-radius:10px;padding:7px;margin:2px 0 0}
 /* ---- Têtes de page illustrées ---- */
-.page-head{display:flex;gap:22px;align-items:flex-start;background:linear-gradient(135deg,var(--tbg,var(--ciel)),#fff 125%);border:1px solid var(--bord);border-left:6px solid var(--t,var(--bleu2));border-radius:18px;padding:26px 28px;margin:0 0 1.8rem}
-.page-head-icon{flex:none;width:64px;height:64px;background:#fff;border-radius:16px;padding:12px;box-shadow:0 4px 14px rgba(31,78,121,.12)}
+.page-head{display:flex;gap:18px;align-items:flex-start;background:linear-gradient(135deg,var(--tbg,var(--ciel)),#fff 125%);border:1px solid var(--bord);border-left:6px solid var(--t,var(--bleu2));border-radius:18px;padding:22px 26px;margin:0 0 1.8rem}
+.page-head-icon{flex:none;width:46px;height:46px;background:#fff;border-radius:12px;padding:9px;box-shadow:0 3px 10px rgba(31,78,121,.12);margin-top:4px}
 .page-head-icon svg{width:100%;height:100%}
 .page-head h1{margin:.1rem 0 .5rem}.page-head .lead{margin:0}
 /* ---- Étapes numérotées ---- */
