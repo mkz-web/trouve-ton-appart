@@ -837,7 +837,7 @@ ${legende}
     metaDescription: `Combien de logements sociaux par commune ? Loyers au m², vacance, taux SRU : les chiffres officiels au 1ᵉʳ janvier 2024 pour ${fmt(nbCommunes)} communes d'Île-de-France.`,
     urlPath: '/logement-social/chiffres/',
     content: hubContent,
-    breadcrumbs: [{ name: 'Logement social & publics spécifiques', url: '/logement-social/' }, { name: 'Les chiffres', url: '/logement-social/chiffres/' }],
+    breadcrumbs: [{ name: 'Logement social & situations spécifiques', url: '/logement-social/' }, { name: 'Les chiffres', url: '/logement-social/chiffres/' }],
     jsonLd: [datasetLd(LS_COMMUNES._meta, {
       name: 'Le logement social par commune en Île-de-France (RPLS, SRU, zonage ABC)',
       description: 'Parc locatif social, loyers au m², vacance, taux SRU et zonage ABC pour les communes d\'Île-de-France, consolidés depuis les données publiques.',
