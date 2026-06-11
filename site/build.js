@@ -1136,10 +1136,34 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .result-list li{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--bord);border-radius:12px;padding:10px 16px;margin:.55rem 0;background:var(--surface)}
 .result-list small{color:var(--gris)}
 .badge-cat{flex:none;background:var(--ciel);color:var(--bleu);border-radius:6px;padding:2px 8px;font-size:.72rem;font-weight:650;margin-top:2px;white-space:nowrap}
+/* ---- Animations (CSS pur, désactivées si reduced-motion) ---- */
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes drift{from{transform:translateX(-6px)}to{transform:translateX(10px)}}
+.hero-text h1{animation:rise .55s .05s cubic-bezier(.2,.7,.3,1) both}
+.hero-text .lead{animation:rise .55s .15s cubic-bezier(.2,.7,.3,1) both}
+.hero-actions{animation:rise .55s .25s cubic-bezier(.2,.7,.3,1) both}
+.hero-illo{animation:rise .6s .2s cubic-bezier(.2,.7,.3,1) both}
+.illo-skyline g[fill="#fff"]{animation:drift 16s ease-in-out infinite alternate}
+.page-head-icon{animation:rise .45s cubic-bezier(.2,.7,.3,1) both}
+.page-head>div{animation:rise .5s .08s cubic-bezier(.2,.7,.3,1) both}
+.page-illu{animation:fadein .6s .15s ease-out both}
+.card-icon{transition:transform .2s}
+.card:hover .card-icon{transform:scale(1.07) rotate(-3deg)}
+.faq details[open] p{animation:rise .3s ease-out both}
+.result-list li{animation:rise .3s ease-out both}
+.result-list li:nth-child(2){animation-delay:.04s}.result-list li:nth-child(3){animation-delay:.08s}.result-list li:nth-child(4){animation-delay:.12s}.result-list li:nth-child(5){animation-delay:.16s}
+.tool-result{animation:rise .35s ease-out both}
+/* Révélation au défilement (Chromium ; statique ailleurs). Opacité seule sur
+ * .card : un transform en fill bloquerait le translateY du survol. */
+@supports(animation-timeline:view()){
+.grid .card{animation:fadein both;animation-timeline:view();animation-range:entry 0% entry 35%}
+.steps .step,.dir-item{animation:rise both;animation-timeline:view();animation-range:entry 0% entry 32%}
+}
 /* ---- Global a11y ---- */
 :focus-visible{outline:3px solid var(--bleu2);outline-offset:2px}
 ::selection{background:var(--ciel)}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}.card:hover,.btn:hover,.card:hover .card-cta{transform:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.card:hover,.btn:hover,.card:hover .card-cta,.card:hover .card-icon{transform:none}}
 /* ---- Responsive ---- */
 @media(max-width:760px){
 .hero{grid-template-columns:1fr;padding:24px 22px 20px;gap:8px}
