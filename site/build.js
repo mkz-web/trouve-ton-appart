@@ -524,6 +524,29 @@ function sourceNotice(meta) {
   return `<p class="maj">${esc(meta.attribution)} · données extraites le ${esc(dateFrOf(meta.collectedAt))}. Les informations évoluent&nbsp;: vérifiez toujours auprès de l'établissement ou de la source officielle.</p>`;
 }
 
+/* JSON-LD schema.org/Dataset pour les hubs construits sur l'open data (GEO :
+ * les moteurs IA et Google Dataset Search lisent licence, source et date). */
+const LICENSE_URLS = {
+  'Licence Ouverte / Open Licence v2.0 (Etalab)': 'https://www.etalab.gouv.fr/licence-ouverte-open-licence',
+  'Licence Ouverte / Open Licence (Etalab)': 'https://www.etalab.gouv.fr/licence-ouverte-open-licence',
+  'Open Database License (ODbL)': 'https://opendatacommons.org/licenses/odbl/1-0/',
+};
+function datasetLd(meta, { name, description, urlPath }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name,
+    description,
+    url: SITE.baseUrl + urlPath,
+    license: LICENSE_URLS[meta.license] || meta.license,
+    creator: { '@type': 'Organization', name: SITE.name, url: SITE.baseUrl },
+    isBasedOn: String(meta.sourceUrl).split(' | '),
+    dateModified: String(meta.collectedAt).slice(0, 10),
+    spatialCoverage: 'Île-de-France, France',
+    inLanguage: 'fr-FR',
+  };
+}
+
 /**
  * Annuaire générique : une page hub + une page par département.
  * cfg : { data, baseSlug, iconName, themeSlug, nom, nomPluriel, title,
@@ -571,6 +594,7 @@ function buildDirectory(cfg) {
     urlPath: `/${baseSlug}/`,
     content: hubContent,
     breadcrumbs: [{ name: cfg.h1, url: `/${baseSlug}/` }],
+    jsonLd: [datasetLd(data._meta, { name: cfg.h1, description: cfg.metaDescription, urlPath: `/${baseSlug}/` })],
   }), '0.8');
 
   /* Pages département */
@@ -774,6 +798,11 @@ ${legende}
     urlPath: '/logement-social/chiffres/',
     content: hubContent,
     breadcrumbs: [{ name: 'Logement social & publics spécifiques', url: '/logement-social/' }, { name: 'Les chiffres', url: '/logement-social/chiffres/' }],
+    jsonLd: [datasetLd(LS_COMMUNES._meta, {
+      name: 'Le logement social par commune en Île-de-France (RPLS, SRU, zonage ABC)',
+      description: 'Parc locatif social, loyers au m², vacance, taux SRU et zonage ABC pour les communes d\'Île-de-France, consolidés depuis les données publiques.',
+      urlPath: '/logement-social/chiffres/',
+    })],
   }), '0.8');
 
   /* Pages département */
@@ -929,6 +958,18 @@ inp.focus();
   }), '0.3');
 })();
 
+/* Page 404 — sa présence désactive aussi le fallback SPA de Cloudflare Pages
+ * (sans elle, toute URL inconnue renvoyait l'accueil en 200 : soft-404). */
+const HTML_404 = layout({
+  title: `Page introuvable | ${SITE.name}`,
+  metaDescription: 'Cette page n\'existe pas ou plus.',
+  urlPath: '/404/',
+  content: `
+<h1>Page introuvable</h1>
+<p class="lead">Cette adresse ne correspond à aucune page du site. Le contenu a peut-être été déplacé.</p>
+<p class="hero-actions"><a class="btn" href="/recherche/">Rechercher sur le site</a><a class="btn btn-ghost" href="/">Retour à l'accueil</a></p>`,
+}).replace('<link rel="canonical" href="https://trouve-ton-appart.fr/404/">', '<meta name="robots" content="noindex">');
+
 /* Mentions légales */
 (function buildMentions() {
   const content = `
@@ -1061,7 +1102,15 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 
 /* --------------------------- Écriture ------------------------------- */
 
-fs.rmSync(DIST, { recursive: true, force: true });
+/* OneDrive ou l'antivirus peuvent tenir un verrou sur le dossier dist/ lui-même
+ * (EPERM Windows) : on retente, puis on se rabat sur un vidage du contenu. */
+try {
+  fs.rmSync(DIST, { recursive: true, force: true, maxRetries: 8, retryDelay: 250 });
+} catch {
+  for (const f of fs.readdirSync(DIST)) {
+    fs.rmSync(path.join(DIST, f), { recursive: true, force: true, maxRetries: 8, retryDelay: 250 });
+  }
+}
 fs.mkdirSync(DIST, { recursive: true });
 
 for (const { urlPath, html } of pages) {
@@ -1087,6 +1136,106 @@ if (ENCADREMENT) {
 }
 fs.writeFileSync(path.join(DIST, 'search-index.json'), JSON.stringify(SEARCH_INDEX));
 
+fs.writeFileSync(path.join(DIST, '404.html'), HTML_404);
+
+/* ---------------- GEO : llms.txt et llms-full.txt -------------------- */
+/* llms.txt (llmstxt.org) : index du site pour les moteurs IA — qui nous
+ * sommes, ce qui fait foi, et où aller chercher quoi. llms-full.txt : le
+ * contenu intégral en texte brut, citable, avec sources et dates. */
+const B = SITE.baseUrl;
+const llms = [];
+llms.push(`# ${SITE.name}`);
+llms.push('');
+llms.push(`> ${SITE.tagline}. ${SITE.description}`);
+llms.push('');
+llms.push(`Service d'orientation indépendant et gratuit (éditeur : MKZ SAS) : pas d'annonces, des parcours par profil de vie et des liens vers les guichets officiels où candidater. Périmètre : Paris et Île-de-France. Nos annuaires et chiffres sont construits sur les données publiques (Licence Ouverte Etalab ; encadrement des loyers : ODbL Ville de Paris) — citez la source et la date en cas de réutilisation. Contenu mis à jour le ${DATE_FR}.`);
+llms.push('');
+llms.push('## Parcours par profil');
+for (const p of PARCOURS) llms.push(`- [${p.h1}](${B}/${p.slug}/): ${p.metaDescription}`);
+llms.push('');
+llms.push('## Guides pratiques');
+for (const g of GUIDES) llms.push(`- [${g.h1}](${B}/guides/${g.slug}/): ${g.metaDescription}`);
+llms.push('');
+llms.push('## Annuaires et chiffres (données publiques)');
+if (CROUS) llms.push(`- [Résidences CROUS d'Île-de-France](${B}/residences-crous/): les ${CROUS.records.length} résidences universitaires publiques, adresses et contacts par département (source : CNOUS).`);
+if (FJT) llms.push(`- [Foyers de jeunes travailleurs](${B}/foyers-jeunes-travailleurs/): les ${FJT.records.length} FJT franciliens pour les 16-25 ans, adresses et téléphones (source : FINESS).`);
+if (RES_AUTONOMIE) llms.push(`- [Résidences autonomie (seniors)](${B}/residences-autonomie/): les ${RES_AUTONOMIE.records.length} résidences pour seniors autonomes (source : FINESS).`);
+if (LS_COMMUNES) llms.push(`- [Le logement social en chiffres](${B}/logement-social/chiffres/): parc, loyers au m², vacance et taux SRU, commune par commune (sources : RPLS Insee-SDES 01/01/2024, inventaire SRU, zonage ABC).`);
+if (ENCADREMENT) llms.push(`- [Vérificateur d'encadrement des loyers à Paris](${B}/guides/encadrement-des-loyers-paris/): les ${ENCADREMENT.records.length} loyers de référence ${ENCADREMENT._meta.millesime} (80 quartiers × pièces × époque × meublé). Grille complète en JSON : ${B}/data/encadrement-loyers-paris.json (ODbL, Ville de Paris).`);
+llms.push('');
+llms.push('## Divers');
+llms.push(`- [Annuaire des sources fiables](${B}/annuaire/): ${ANNUAIRE.metaDescription}`);
+llms.push(`- [Recherche](${B}/recherche/): commune, résidence, dispositif — index JSON : ${B}/search-index.json`);
+llms.push(`- [Contenu intégral pour les LLM](${B}/llms-full.txt)`);
+llms.push(`- [Mentions légales](${B}/mentions-legales/)`);
+fs.writeFileSync(path.join(DIST, 'llms.txt'), llms.join('\n') + '\n');
+
+const full = [];
+full.push(`# ${SITE.name} — contenu intégral (llms-full.txt)`);
+full.push('');
+full.push(`Généré le ${DATE_ISO}. Site : ${B} — ${SITE.tagline}.`);
+full.push(`${SITE.description} Service d'orientation indépendant (MKZ SAS) : nous ne publions pas d'annonces, nous orientons vers les guichets officiels. Les chiffres ci-dessous proviennent de données publiques ; citez la source et la date.`);
+full.push('');
+full.push('## PARCOURS');
+for (const p of PARCOURS) {
+  full.push('');
+  full.push(`### ${p.h1} — ${B}/${p.slug}/`);
+  full.push(p.intro);
+  for (const e of p.etapes) full.push(`${e.titre} ${e.texte}`);
+}
+full.push('');
+full.push('## GUIDES');
+for (const g of GUIDES) {
+  full.push('');
+  full.push(`### ${g.h1} — ${B}/guides/${g.slug}/`);
+  full.push(`Mis à jour le ${DATE_FR}.`);
+  full.push(g.intro);
+  for (const s of g.sections) {
+    full.push(`#### ${s.h2}`);
+    if (s.paragraphs) for (const t of s.paragraphs) full.push(t);
+    if (s.bullets) for (const b of s.bullets) full.push(`- ${b}`);
+  }
+  full.push('FAQ :');
+  for (const f of g.faq) { full.push(`Q : ${f.q}`); full.push(`R : ${f.a}`); }
+  full.push(`Sources officielles : ${g.sourcesOfficielles.map(s => `${s.label} (${s.url})`).join(' · ')}`);
+}
+if (LS_COMMUNES) {
+  full.push('');
+  full.push(`## DONNÉES — LOGEMENT SOCIAL PAR COMMUNE (Île-de-France)`);
+  full.push(`${LS_COMMUNES._meta.attribution}. Extraction du ${dateFrOf(LS_COMMUNES._meta.collectedAt)}. Détail et définitions : ${B}/logement-social/chiffres/`);
+  full.push(`Avertissement : parc RPLS et décompte SRU reposent sur des assiettes différentes, ne pas les additionner. Loyers en €/m² de surface habitable, hors charges.`);
+  for (const r of LS_COMMUNES.records) {
+    const parts = [
+      r.nbLogementsSociaux != null ? `${fmt(r.nbLogementsSociaux)} logements sociaux (RPLS 01/01/2024)` : null,
+      r.loyerMedian != null ? `loyer médian ${fmt(r.loyerMedian, 2)} €/m²` : null,
+      r.txVacance != null ? `vacance ${fmt(r.txVacance, 1)} %` : null,
+      r.tauxSRU != null ? `taux SRU ${fmt(r.tauxSRU, 1)} %` : null,
+      r.zone ? `zone ${r.zone}` : null,
+      r.carencee ? 'commune carencée (SRU)' : (r.deficitaire ? 'commune déficitaire (SRU)' : null),
+    ].filter(Boolean).join(', ');
+    full.push(`- ${r.nom} (${r.arrondissement ? '75, arrondissement' : r.dep}) : ${parts || 'données non disponibles'}.${r.note ? ` Note : ${r.note}` : ''}`);
+  }
+}
+const fullDir = (data, titre, urlPath) => {
+  full.push('');
+  full.push(`## DONNÉES — ${titre} (${data.records.length})`);
+  full.push(`${data._meta.attribution}. Extraction du ${dateFrOf(data._meta.collectedAt)}. Annuaire complet : ${B}${urlPath}`);
+  for (const r of data.records) {
+    full.push(`- ${r.nom} — ${[r.adresse, [r.cp, r.commune].filter(Boolean).join(' ')].filter(Boolean).join(', ')} (${r.dep})${r.tel ? ` — ${r.tel}` : ''}`);
+  }
+};
+if (CROUS) fullDir(CROUS, 'RÉSIDENCES CROUS', '/residences-crous/');
+if (FJT) fullDir(FJT, 'FOYERS DE JEUNES TRAVAILLEURS (FJT)', '/foyers-jeunes-travailleurs/');
+if (RES_AUTONOMIE) fullDir(RES_AUTONOMIE, 'RÉSIDENCES AUTONOMIE (SENIORS)', '/residences-autonomie/');
+if (ENCADREMENT) {
+  const majores = ENCADREMENT.records.map(r => r.refMajore);
+  full.push('');
+  full.push(`## DONNÉES — ENCADREMENT DES LOYERS À PARIS (références ${ENCADREMENT._meta.millesime})`);
+  full.push(`${ENCADREMENT._meta.attribution}. ${ENCADREMENT.records.length} références officielles (80 quartiers × 1-4 pièces × 4 époques × meublé/non meublé). Plafonds légaux (loyer de référence majoré) : de ${fmt(Math.min(...majores), 2)} à ${fmt(Math.max(...majores), 2)} €/m² hors charges selon le profil du logement.`);
+  full.push(`Vérificateur interactif : ${B}/guides/encadrement-des-loyers-paris/ · grille complète en JSON : ${B}/data/encadrement-loyers-paris.json`);
+}
+fs.writeFileSync(path.join(DIST, 'llms-full.txt'), full.join('\n') + '\n');
+
 /* Assets statiques (og-image.png…) copiés tels quels */
 const STATIC = path.join(ROOT, 'static');
 if (fs.existsSync(STATIC)) {
@@ -1099,7 +1248,7 @@ ${pages.map(p => `  <url><loc>${SITE.baseUrl}${p.urlPath}</loc><lastmod>${DATE_I
 </urlset>`;
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
 
-fs.writeFileSync(path.join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE.baseUrl}/sitemap.xml\n`);
+fs.writeFileSync(path.join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE.baseUrl}/sitemap.xml\n\n# Index pour les moteurs IA : ${SITE.baseUrl}/llms.txt\n`);
 
 console.log(`OK — ${pages.length} pages générées dans dist/ (+ sitemap.xml, robots.txt, style.css)`);
 pages.forEach(p => console.log('  ' + p.urlPath));
