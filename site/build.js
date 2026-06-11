@@ -89,12 +89,16 @@ const PAL = {
   accent: '#e07a5f', accentFonce: '#c2563c', sauge: '#3d8b6e', saugeClair: '#e9f4ef',
 };
 
+/* Thème par parcours : c = couleur pleine, txt = variante texte (contraste AA
+ * sur fond clair), bg = fond pâle, soft = ombre teintée (rgba précalculée —
+ * changer une couleur de thème ⇒ régénérer sa rgba soft). */
 const THEMES = {
-  'etudiant':        { c: PAL.bleu2,       bg: PAL.cielClair },
-  'logement-social': { c: PAL.sauge,       bg: PAL.saugeClair },
-  'mobilite':        { c: PAL.accentFonce, bg: '#fbeee9' },
+  'etudiant':        { c: PAL.bleu2,       txt: PAL.bleu2,   bg: PAL.cielClair, soft: 'rgba(46,116,181,.30)' },
+  'logement-social': { c: PAL.sauge,       txt: '#2e7050',   bg: PAL.saugeClair, soft: 'rgba(61,139,110,.28)' },
+  'mobilite':        { c: PAL.accentFonce, txt: '#a8492f',   bg: '#fbeee9',     soft: 'rgba(194,86,60,.28)' },
 };
-const themeOf = (slug) => THEMES[slug] || { c: PAL.bleu, bg: PAL.cielClair };
+const themeOf = (slug) => THEMES[slug] || { c: PAL.bleu, txt: PAL.bleu2, bg: PAL.cielClair, soft: 'rgba(31,78,121,.30)' };
+const themeStyle = (t) => `--t:${t.c};--ttx:${t.txt};--tbg:${t.bg};--ts:${t.soft}`;
 
 /* Pictogrammes 48×48, flat, deux tons (couleur du thème + accent). */
 function icon(name, c) {
@@ -222,6 +226,7 @@ ${ld}
 <main class="container">
 ${content}
 </main>
+<svg class="roofline" viewBox="0 0 640 22" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path fill="#1c2733" d="M0 22V13h26l7-7 7 7h46V7h34l9-5 9 5h50v7h38l11-9 11 9h56V6h42l8-6 8 6h46v9h40l9-7 9 7h52V8h38l9-6 9 6h66v14z"/></svg>
 <footer class="site-footer">
   <div class="container footer-grid">
     <div>
@@ -260,7 +265,7 @@ function addPage(urlPath, html, priority) {
   const cards = PARCOURS.map(p => {
     const t = themeOf(p.slug);
     return `
-  <a class="card card-parcours" href="/${p.slug}/" style="--t:${t.c};--tbg:${t.bg}">
+  <a class="card card-parcours" href="/${p.slug}/" style="${themeStyle(t)}">
     <span class="card-icon">${icon(p.slug, t.c)}</span>
     <h3>${esc(p.nav)}</h3>
     <p>${esc(p.intro.split('. ')[0])}.</p>
@@ -270,7 +275,7 @@ function addPage(urlPath, html, priority) {
   const guideCards = GUIDES.map(g => {
     const t = guideTheme(g);
     return `
-  <a class="card card-guide" href="/guides/${g.slug}/" style="--t:${t.c};--tbg:${t.bg}">
+  <a class="card card-guide" href="/guides/${g.slug}/" style="${themeStyle(t)}">
     <span class="card-icon card-icon-sm">${icon(g.slug, t.c)}</span>
     <div><h3>${esc(g.h1)}</h3>
     <p>${esc(g.metaDescription.split('. ')[0])}.</p></div>
@@ -361,15 +366,16 @@ for (const p of PARCOURS) {
   const t = themeOf(p.slug);
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › ${esc(p.nav)}</nav>
-<header class="page-head" style="--t:${t.c};--tbg:${t.bg}">
+<header class="page-head" style="${themeStyle(t)}">
   <span class="page-head-icon">${icon(p.slug, t.c)}</span>
   <div>
+    <p class="kicker">Parcours</p>
     <h1>${esc(p.h1)}</h1>
     <p class="lead">${esc(p.intro)}</p>
   </div>
   ${ILLUS[p.slug] || ''}
 </header>
-<div class="steps" style="--t:${t.c};--tbg:${t.bg}">
+<div class="steps" style="${themeStyle(t)}">
 ${etapes}
 </div>
 <section class="notice">
@@ -408,9 +414,10 @@ for (const g of GUIDES) {
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/guides/">Guides</a> › ${esc(g.h1)}</nav>
 <article>
-<header class="page-head" style="--t:${t.c};--tbg:${t.bg}">
+<header class="page-head" style="${themeStyle(t)}">
   <span class="page-head-icon">${icon(g.slug, t.c)}</span>
   <div>
+    <p class="kicker">Guide pratique</p>
     <h1>${esc(g.h1)}</h1>
     <p class="lead">${esc(g.intro)}</p>
     <p class="maj">Mis à jour le ${DATE_FR}</p>
@@ -459,7 +466,7 @@ ${aLireAussi ? `<p class="pills"><strong>À lire aussi&nbsp;:</strong> ${aLireAu
   const cards = GUIDES.map(g => {
     const t = guideTheme(g);
     return `
-  <a class="card card-guide" href="/guides/${g.slug}/" style="--t:${t.c};--tbg:${t.bg}">
+  <a class="card card-guide" href="/guides/${g.slug}/" style="${themeStyle(t)}">
     <span class="card-icon card-icon-sm">${icon(g.slug, t.c)}</span>
     <div><h3>${esc(g.h1)}</h3>
     <p>${esc(g.metaDescription.split('. ')[0])}.</p></div>
@@ -467,7 +474,7 @@ ${aLireAussi ? `<p class="pills"><strong>À lire aussi&nbsp;:</strong> ${aLireAu
   }).join('');
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › Guides</nav>
-<header class="page-head" style="--t:${PAL.bleu};--tbg:${PAL.cielClair}">
+<header class="page-head" style="${themeStyle(themeOf())}">
   <span class="page-head-icon">${icon('annuaire', PAL.bleu)}</span>
   <div>
     <h1>Les guides pratiques du logement en Île-de-France</h1>
@@ -506,9 +513,10 @@ ${aLireAussi ? `<p class="pills"><strong>À lire aussi&nbsp;:</strong> ${aLireAu
   </section>` : '';
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › Annuaire</nav>
-<header class="page-head" style="--t:${PAL.bleu2};--tbg:${PAL.cielClair}">
+<header class="page-head" style="${themeStyle(themeOf())}">
   <span class="page-head-icon">${icon('annuaire', PAL.bleu2)}</span>
   <div>
+    <p class="kicker">Annuaire</p>
     <h1>${esc(ANNUAIRE.h1)}</h1>
     <p class="lead">${esc(ANNUAIRE.intro)}</p>
   </div>
@@ -578,16 +586,17 @@ function buildDirectory(cfg) {
 
   /* Hub */
   const depCards = DEPS_IDF.filter(d => byDep.get(d).length).map(d => `
-  <a class="card card-parcours" href="/${baseSlug}/${DEP_SLUGS[d]}/" style="--t:${t.c};--tbg:${t.bg}">
+  <a class="card card-parcours" href="/${baseSlug}/${DEP_SLUGS[d]}/" style="${themeStyle(t)}">
     <h3>${esc(DEP_NOMS[d])} (${d})</h3>
     <p>${byDep.get(d).length} ${byDep.get(d).length > 1 ? cfg.nomPluriel : cfg.nom}</p>
     <span class="card-cta">Voir la liste →</span>
   </a>`).join('');
   const hubContent = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › ${esc(cfg.h1)}</nav>
-<header class="page-head" style="--t:${t.c};--tbg:${t.bg}">
+<header class="page-head" style="${themeStyle(t)}">
   <span class="page-head-icon">${icon(cfg.iconName, t.c)}</span>
   <div>
+    <p class="kicker">Annuaire · données publiques</p>
     <h1>${esc(cfg.h1)}</h1>
     <p class="lead">${esc(cfg.intro)}</p>
   </div>
@@ -622,14 +631,15 @@ function buildDirectory(cfg) {
       .map(x => `<a class="pill" href="/${baseSlug}/${DEP_SLUGS[x]}/">${esc(DEP_NOMS[x])} (${x})</a>`).join(' ');
     const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/${baseSlug}/">${esc(cfg.h1)}</a> › ${esc(DEP_NOMS[d])}</nav>
-<header class="page-head" style="--t:${t.c};--tbg:${t.bg}">
+<header class="page-head" style="${themeStyle(t)}">
   <span class="page-head-icon">${icon(cfg.iconName, t.c)}</span>
   <div>
+    <p class="kicker">Annuaire · données publiques</p>
     <h1>${esc(h1)}</h1>
     <p class="lead">${items.length} ${items.length > 1 ? cfg.nomPluriel : cfg.nom} ${DEP_PREP[d]}, d'après ${esc(data._meta.source.split('(')[0].trim())}.</p>
   </div>
 </header>
-<ul class="dir-list" style="--t:${t.c};--tbg:${t.bg}">
+<ul class="dir-list" style="${themeStyle(t)}">
 ${items.map(cfg.renderItem).join('\n')}
 </ul>
 <section class="notice">
@@ -761,8 +771,8 @@ if (LS_COMMUNES) {
     <td${r.note ? ` title="${esc(r.note)}"` : ''}>${esc(r.nom)}${r.note ? '&nbsp;*' : ''}</td>
     <td class="num">${fmt(r.nbLogementsSociaux)}</td>
     <td class="num">${fmt(r.loyerMedian, 2)}</td>
-    <td class="num">${fmt(r.txVacance, 1)}</td>
-    <td class="num">${r.tauxSRU == null ? '—' : fmt(r.tauxSRU, 1) + ' %'}</td>
+    <td class="num bar"${r.txVacance != null ? ` style="--pct:${Math.min(r.txVacance * 10, 100).toFixed(0)}%"` : ''}>${fmt(r.txVacance, 1)}</td>
+    <td class="num bar"${r.tauxSRU != null ? ` style="--pct:${Math.min(r.tauxSRU, 100).toFixed(0)}%"` : ''}>${r.tauxSRU == null ? '—' : fmt(r.tauxSRU, 1) + ' %'}</td>
     <td>${esc(r.zone || '—')}</td>
     <td>${statut(r)}</td>
   </tr>`;
@@ -794,9 +804,10 @@ if (LS_COMMUNES) {
   }).join('');
   const hubContent = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/logement-social/">Logement social</a> › Chiffres</nav>
-<header class="page-head" style="--t:${t.c};--tbg:${t.bg}">
+<header class="page-head" style="${themeStyle(t)}">
   <span class="page-head-icon">${icon('demande-logement-social', t.c)}</span>
   <div>
+    <p class="kicker">Données officielles</p>
     <h1>Le logement social en Île-de-France, en chiffres</h1>
     <p class="lead">Plus de ${fmt(Math.floor(parcIdf / 100000) * 100000)} logements locatifs sociaux sont recensés en Île-de-France (RPLS, 1ᵉʳ janvier 2024). Parc, loyers au m², vacance et taux SRU&nbsp;: les chiffres officiels, commune par commune — pour savoir où votre demande a le plus de chances d'aboutir.</p>
   </div>
@@ -838,9 +849,10 @@ ${legende}
       .map(x => `<a class="pill" href="/logement-social/chiffres/${DEP_SLUGS[x]}/">${esc(DEP_NOMS[x])} (${x})</a>`).join(' ');
     const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/logement-social/chiffres/">Logement social en chiffres</a> › ${esc(DEP_NOMS[d])}</nav>
-<header class="page-head" style="--t:${t.c};--tbg:${t.bg}">
+<header class="page-head" style="${themeStyle(t)}">
   <span class="page-head-icon">${icon('demande-logement-social', t.c)}</span>
   <div>
+    <p class="kicker">Données officielles</p>
     <h1>${h1}</h1>
     <p class="lead">Parc social, loyers au m², vacance et statut SRU ${d === '75' ? 'des 20 arrondissements parisiens' : `des ${sorted.length} communes du département couvertes par les données publiques`}. Repérez les communes où le parc est important et la rotation réelle.</p>
   </div>
@@ -926,7 +938,7 @@ function upd(){
 (function buildRecherche() {
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › Recherche</nav>
-<header class="page-head" style="--t:${PAL.bleu2};--tbg:${PAL.cielClair}">
+<header class="page-head" style="${themeStyle(themeOf())}">
   <span class="page-head-icon">${icon('annuaire', PAL.bleu2)}</span>
   <div>
     <h1>Rechercher sur ${esc(SITE.name)}</h1>
@@ -1013,74 +1025,84 @@ const HTML_404 = layout({
 
 /* Déclaration de fonction (hoistée) : le CSS est inliné dans <head> par layout(),
  * appelé avant ce point du fichier. Supprime la requête bloquante /style.css. */
-function css() { return `:root{--bleu:${PAL.bleu};--bleu2:${PAL.bleu2};--accent:${PAL.accent};--accent2:${PAL.accentFonce};--encre:${PAL.encre};--gris:#5b6770;--fond:#ffffff;--fond2:#f2f6fa;--ciel:${PAL.cielClair};--creme:${PAL.creme};--bord:#dde5ec}
+function css() { return `:root{--bleu:${PAL.bleu};--bleu2:${PAL.bleu2};--accent:${PAL.accent};--accent2:${PAL.accentFonce};--cta:#b04a30;--encre:${PAL.encre};--gris:#5b6770;--fond:#fdfbf7;--surface:#ffffff;--fond2:#f2f6fa;--ciel:${PAL.cielClair};--creme:${PAL.creme};--bord:#dde5ec}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--encre);background:var(--fond);line-height:1.65}
 .container{max-width:980px;margin:0 auto;padding:0 20px}
 a{color:var(--bleu2)}h1,h2,h3{line-height:1.25;color:var(--bleu)}
-h1{font-size:clamp(1.7rem,3.6vw,2.4rem);letter-spacing:-.015em}h2{font-size:1.4rem;margin-top:2.4rem}
-.lead{font-size:1.13rem;color:var(--gris)}
+h1{font-size:clamp(1.75rem,3.6vw,2.5rem);line-height:1.15;font-weight:800;letter-spacing:-.022em}
+h2{font-size:clamp(1.32rem,2.2vw,1.55rem);line-height:1.25;font-weight:700;letter-spacing:-.012em;margin-top:2.6rem}
+h3{font-size:1.08rem;line-height:1.35;font-weight:650}
+.lead{font-size:1.14rem;line-height:1.6;color:var(--gris)}
+.kicker{font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ttx,var(--bleu2));margin:0 0 .2rem}
 /* ---- Header ---- */
-.site-header{background:linear-gradient(135deg,#163a5c,var(--bleu) 60%,#26619a);padding:16px 0;box-shadow:inset 0 -3px 0 var(--accent)}
+.site-header{background:linear-gradient(135deg,#163a5c,var(--bleu) 60%,#26619a);padding:16px 0 0}
+.site-header::after{content:"";display:block;height:4px;margin-top:14px;background:linear-gradient(90deg,var(--bleu2) 0 34%,var(--accent) 34% 67%,#3d8b6e 67%)}
+.main-nav a:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .site-header .container{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;justify-content:space-between}
 .brand{color:#fff;font-weight:700;font-size:1.18rem;text-decoration:none}.brand-sub{display:block;font-size:.68rem;font-weight:500;opacity:.75;letter-spacing:.14em;text-transform:uppercase}
 .main-nav{display:flex;flex-wrap:wrap;gap:4px 6px}
 .main-nav a{color:#fff;text-decoration:none;font-size:.93rem;opacity:.92;padding:6px 12px;border-radius:8px;transition:background .15s}
 .main-nav a:hover{background:rgba(255,255,255,.14);opacity:1}
 /* ---- Hero ---- */
-.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px 36px;align-items:end;background:linear-gradient(180deg,var(--ciel),#fff 130%);border-radius:20px;padding:34px 38px 26px;margin:1.6rem 0 .6rem}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px 36px;align-items:end;background:radial-gradient(420px 260px at 84% 22%,rgba(224,122,95,.12),transparent 70%),linear-gradient(160deg,#e8f1f9,#f7fbfe 60%,#fdfbf7 120%);border:1px solid #dbe7f1;border-radius:22px;box-shadow:0 18px 44px -28px rgba(31,78,121,.35);padding:40px 42px 28px;margin:1.6rem 0 .6rem}
 .hero h1{margin:.2rem 0 .8rem}
 .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:1.4rem}
 .hero-illo svg{display:block;width:100%;max-width:330px;height:auto;margin:0 0 .2rem auto}
-.btn{display:inline-block;background:var(--accent2);color:#fff;font-weight:600;text-decoration:none;padding:11px 22px;border-radius:10px;font-size:.97rem;transition:background .15s,transform .15s}
-.btn:hover{background:#a8492f;transform:translateY(-1px)}
+.btn{display:inline-block;background:var(--cta);color:#fff;font-weight:600;text-decoration:none;padding:11px 22px;border-radius:10px;font-size:.97rem;box-shadow:0 8px 20px -10px rgba(176,74,48,.55);transition:background .15s,transform .15s}
+.btn:hover{background:#9a3f27;transform:translateY(-1px)}.btn:active{transform:none}
 .btn-ghost{background:transparent;color:var(--bleu);box-shadow:inset 0 0 0 2px var(--bleu2)}
 .btn-ghost:hover{background:var(--ciel);transform:translateY(-1px)}
 /* ---- Cartes ---- */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;margin:1.2rem 0 2.2rem}
-.card{display:block;border:1px solid var(--bord);border-radius:16px;padding:22px;text-decoration:none;color:inherit;background:var(--fond);transition:box-shadow .18s,transform .18s,border-color .18s;position:relative;overflow:hidden}
-.card:hover{box-shadow:0 10px 28px rgba(31,78,121,.14);transform:translateY(-3px);border-color:var(--t,var(--bleu2))}
+.card{display:block;border:1px solid var(--bord);border-radius:16px;padding:22px;text-decoration:none;color:inherit;background:var(--surface);box-shadow:0 1px 2px rgba(22,51,82,.05),0 6px 18px -12px rgba(22,51,82,.10);transition:box-shadow .18s,transform .18s,border-color .18s;position:relative;overflow:hidden}
+.card:hover{box-shadow:0 16px 36px -14px var(--ts,rgba(31,78,121,.30));transform:translateY(-3px);border-color:var(--t,var(--bleu2))}
 .card h3{margin:0 0 .5rem;font-size:1.06rem}.card p{margin:0;color:var(--gris);font-size:.92rem}
 .card-parcours::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--t,var(--bleu2))}
 .card-icon{display:inline-flex;width:42px;height:42px;border-radius:11px;background:var(--tbg,var(--ciel));padding:8px;margin-bottom:10px}
 .card-icon svg{width:100%;height:100%}
-.card-cta{display:inline-block;margin-top:.9rem;color:var(--t,var(--bleu2));font-weight:650;font-size:.9rem}
+.card-cta{display:inline-block;margin-top:.9rem;color:var(--ttx,var(--bleu2));font-weight:650;font-size:.9rem;transition:transform .18s}
+.card:hover .card-cta{transform:translateX(3px)}
 .grid-guides{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 .card-guide{display:flex;gap:14px;align-items:flex-start}
 .card-icon-sm{flex:none;width:36px;height:36px;border-radius:10px;padding:7px;margin:2px 0 0}
 /* ---- Têtes de page illustrées ---- */
-.page-head{display:flex;gap:18px;align-items:flex-start;background:linear-gradient(135deg,var(--tbg,var(--ciel)),#fff 125%);border:1px solid var(--bord);border-left:6px solid var(--t,var(--bleu2));border-radius:18px;padding:22px 26px;margin:0 0 1.8rem}
-.page-head-icon{flex:none;width:46px;height:46px;background:#fff;border-radius:12px;padding:9px;box-shadow:0 3px 10px rgba(31,78,121,.12);margin-top:4px}
+.page-head{display:flex;gap:18px;align-items:flex-start;background:linear-gradient(135deg,var(--tbg,var(--ciel)),#fff 85%);border:1px solid var(--bord);border-left:6px solid var(--t,var(--bleu2));border-radius:18px;padding:22px 26px;margin:0 0 1.8rem;box-shadow:0 14px 34px -24px var(--ts,rgba(31,78,121,.30))}
+.page-head-icon{flex:none;width:46px;height:46px;background:#fff;border-radius:12px;padding:9px;box-shadow:0 4px 12px var(--ts,rgba(31,78,121,.18));margin-top:4px}
 .page-head-icon svg{width:100%;height:100%}
-.page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 17px 17px 0;margin:-22px -26px -22px 8px}
+.page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 17px 17px 0;margin:-22px -26px -22px 8px;box-shadow:-14px 0 24px -18px rgba(31,78,121,.25)}
 .page-head h1{margin:.1rem 0 .5rem}.page-head .lead{margin:0}
 /* ---- Étapes numérotées ---- */
 .steps{counter-reset:etape}
-.step{position:relative;border:1px solid var(--bord);border-radius:14px;padding:18px 22px 16px 64px;margin:1.2rem 0;counter-increment:etape;background:var(--fond)}
-.step::before{content:counter(etape);position:absolute;left:18px;top:20px;width:30px;height:30px;border-radius:50%;background:var(--t,var(--bleu2));color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+.step{position:relative;border:1px solid var(--bord);border-radius:14px;padding:18px 22px 16px 64px;margin:1.2rem 0;counter-increment:etape;background:var(--surface)}
+.step::before{content:counter(etape);position:absolute;left:18px;top:20px;width:30px;height:30px;border-radius:50%;background:var(--ttx,var(--bleu2));color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.95rem;box-shadow:0 0 0 5px var(--tbg,var(--ciel))}
+.step:not(:last-child)::after{content:"";position:absolute;left:31px;top:54px;bottom:-1.3rem;width:3px;border-radius:2px;background:linear-gradient(180deg,var(--ts,rgba(46,116,181,.30)),transparent)}
 .step h2{margin:.1rem 0 .5rem;font-size:1.2rem}
 .step h3{margin:.15rem 0 .5rem;font-size:1.08rem;color:var(--bleu)}
 .maj{font-size:.82rem;color:var(--gris);margin:.4rem 0 0;font-style:italic}
 /* ---- Divers ---- */
 .notice{background:var(--creme);border:1px solid #efe5d6;border-radius:16px;padding:8px 24px 20px;margin:2.2rem 0}
 .pills{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.pill{display:inline-block;background:var(--fond);border:1px solid var(--bord);border-radius:999px;padding:6px 15px;font-size:.85rem;text-decoration:none;transition:border-color .15s,background .15s}
-.pill:hover{border-color:var(--bleu2);background:var(--ciel)}
+.pill{display:inline-block;background:var(--surface);border:1px solid var(--bord);border-radius:999px;padding:6px 15px;font-size:.85rem;text-decoration:none;transition:border-color .15s,background .15s}
+.pill:hover{border-color:var(--t,var(--bleu2));background:var(--tbg,var(--ciel))}
 .sources{padding-left:1.1rem}.sources li{margin:.5rem 0}
 .breadcrumb{font-size:.85rem;color:var(--gris);margin:1.3rem 0 1rem}.breadcrumb a{color:var(--gris)}
-.faq details{border:1px solid var(--bord);border-radius:12px;padding:12px 18px;margin:.7rem 0;background:var(--fond);transition:border-color .15s}
-.faq details[open]{border-color:var(--bleu2);background:var(--ciel)}
+.faq details{border:1px solid var(--bord);border-radius:12px;padding:12px 18px;margin:.7rem 0;background:var(--surface);transition:border-color .15s}
+.faq details[open]{border-color:var(--bleu2);background:linear-gradient(180deg,var(--ciel),#fff 140%)}
 .faq summary{cursor:pointer;font-weight:600;color:var(--bleu)}
+.faq summary::marker{color:var(--accent)}
 /* ---- Footer ---- */
-.site-footer{background:var(--encre);color:#cdd6de;margin-top:3.5rem;padding:2.4rem 0 1rem;font-size:.88rem;border-top:4px solid var(--accent)}
+.roofline{display:block;width:100%;height:22px;margin-top:3.5rem}
+.site-footer{background:linear-gradient(180deg,#1c2733,#16202a);color:#cdd6de;margin-top:0;padding:2.4rem 0 1rem;font-size:.88rem}
 .footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}
-.footer-brand{color:#fff;font-weight:700;font-size:1.05rem}.footer-title{color:#fff;font-weight:600}
+.footer-brand{color:#fff;font-weight:700;font-size:1.05rem}
+.footer-title{font-size:.78rem;font-weight:650;text-transform:uppercase;letter-spacing:.08em;color:#9fb3c8;margin-bottom:.4rem}
 .site-footer ul{list-style:none;padding:0;margin:0}.site-footer li{margin:.38rem 0}.site-footer a{color:#9fc1e0;text-decoration:none}.site-footer a:hover{text-decoration:underline;color:#cfe3f4}
 .footer-legal{border-top:1px solid #33414e;margin-top:1.6rem;padding-top:1rem;color:#8a98a5}
 /* ---- Annuaires de données (Phase 2) ---- */
 [id]{scroll-margin-top:16px}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .dir-list{list-style:none;padding:0;margin:1.2rem 0}
-.dir-item{border:1px solid var(--bord);border-left:5px solid var(--t,var(--bleu2));border-radius:14px;padding:14px 20px;margin:.8rem 0;background:var(--fond)}
+.dir-item{border:1px solid var(--bord);border-left:5px solid var(--t,var(--bleu2));border-radius:14px;padding:14px 20px;margin:.8rem 0;background:var(--surface)}
 .dir-item h3{margin:.05rem 0 .3rem;font-size:1.05rem}
 .dir-addr{margin:.15rem 0;color:var(--gris)}
 .dir-meta{margin:.15rem 0;font-size:.92rem}
@@ -1088,30 +1110,36 @@ h1{font-size:clamp(1.7rem,3.6vw,2.4rem);letter-spacing:-.015em}h2{font-size:1.4r
 .dir-tags span{display:inline-block;background:var(--fond2);border:1px solid var(--bord);border-radius:999px;padding:2px 10px;font-size:.76rem;margin:2px 5px 2px 0;color:var(--gris)}
 .dir-links{margin:.4rem 0 .1rem;font-size:.92rem}
 /* ---- Tableaux de données ---- */
-.table-wrap{overflow-x:auto;margin:1.2rem 0;border:1px solid var(--bord);border-radius:14px}
-table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(--fond)}
-.data th{background:var(--ciel);color:var(--bleu);text-align:left;padding:9px 12px;white-space:nowrap}
+.table-wrap{overflow-x:auto;margin:1.2rem 0;border:1px solid var(--bord);border-radius:14px;box-shadow:0 1px 2px rgba(22,51,82,.05),0 6px 18px -12px rgba(22,51,82,.10)}
+table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(--surface)}
+.data th{background:linear-gradient(#edf4fa,#dfecf7);border-bottom:2px solid #c9dcec;color:var(--bleu);text-align:left;padding:9px 12px;white-space:nowrap;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}
 .data td{border-top:1px solid var(--bord);padding:7px 12px}
+.data tbody tr:nth-child(even) td{background:#f8fbfd}
 .data tbody tr:hover td{background:var(--fond2)}
 .data td.num,.data th.num{text-align:right;font-variant-numeric:tabular-nums}
+.data td.bar{background-image:linear-gradient(90deg,var(--tbg,var(--ciel)) var(--pct,0%),transparent 0);background-origin:content-box;background-repeat:no-repeat}
 .badge{display:inline-block;border-radius:6px;padding:1px 8px;font-size:.74rem;font-weight:650;white-space:nowrap}
 .badge-def{background:#fdecdd;color:#a8492f}
-.badge-car{background:#c2563c;color:#fff}
+.badge-car{background:#b04a30;color:#fff}
 /* ---- Outil encadrement ---- */
 .tool{background:var(--ciel);border:1px solid var(--bord);border-radius:16px;padding:10px 24px 18px;margin:0 0 2rem}
 .tool-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:1rem 0}
 .tool-form label{font-size:.82rem;font-weight:650;color:var(--bleu);display:block;margin-bottom:3px}
-.tool-form select,.tool-form input{width:100%;padding:8px 10px;border:1px solid var(--bord);border-radius:8px;font:inherit;background:#fff}
+.tool-form select,.tool-form input{width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--bord);border-radius:8px;font:inherit;background:#fff}
 .tool-result{background:#fff;border:1px solid var(--bord);border-left:5px solid var(--accent);border-radius:12px;padding:12px 18px;margin:.8rem 0}
 .enc-ok{color:#2e7050;font-weight:650}.enc-ko{color:#b3261e;font-weight:650}
 /* ---- Recherche ---- */
-.search-input{width:100%;font-size:1.02rem;padding:11px 16px;border:2px solid var(--bleu2);border-radius:12px;font-family:inherit}
+.search-input{width:100%;min-height:44px;font-size:1.02rem;padding:11px 16px;border:2px solid var(--bleu2);border-radius:12px;font-family:inherit}
 .search-inline{max-width:340px;display:inline-block;padding:8px 12px;font-size:.95rem;border-width:1px;border-color:var(--bord)}
 .result-count{color:var(--gris);font-size:.88rem}
 .result-list{list-style:none;padding:0}
-.result-list li{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--bord);border-radius:12px;padding:10px 16px;margin:.55rem 0}
+.result-list li{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--bord);border-radius:12px;padding:10px 16px;margin:.55rem 0;background:var(--surface)}
 .result-list small{color:var(--gris)}
 .badge-cat{flex:none;background:var(--ciel);color:var(--bleu);border-radius:6px;padding:2px 8px;font-size:.72rem;font-weight:650;margin-top:2px;white-space:nowrap}
+/* ---- Global a11y ---- */
+:focus-visible{outline:3px solid var(--bleu2);outline-offset:2px}
+::selection{background:var(--ciel)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}.card:hover,.btn:hover,.card:hover .card-cta{transform:none}}
 /* ---- Responsive ---- */
 @media(max-width:760px){
 .hero{grid-template-columns:1fr;padding:24px 22px 20px;gap:8px}
@@ -1119,6 +1147,7 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .page-head{flex-direction:column;gap:12px;padding:20px}
 .page-illu{width:calc(100% + 40px);max-width:none;margin:0 -20px -20px;border-radius:0 0 17px 17px;max-height:240px}
 .step{padding-left:58px}
+.step:not(:last-child)::after{display:none}
 }`; }
 
 /* --------------------------- Écriture ------------------------------- */
