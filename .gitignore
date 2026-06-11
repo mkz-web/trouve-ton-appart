@@ -2,3 +2,4 @@ site/dist/
 site/ingest/.cache/
 *.docx
 ~$*
+site/_illus-work/

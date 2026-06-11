@@ -64,6 +64,18 @@ const safeUrl = (u) => (/^(https?:|mailto:)/i.test(String(u || '')) ? u : '#');
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+/* Illustrations Gemini des pages piliers (site/static/illu-*.webp, recadrées
+ * du watermark). Rendu vide si le fichier manque : le build n'en dépend pas. */
+function illu(name, alt, h = 952) {
+  if (!fs.existsSync(path.join(ROOT, 'static', `${name}.webp`))) return '';
+  return `<img class="page-illu" src="/${name}.webp" alt="${esc(alt)}" width="1024" height="${h}" loading="lazy">`;
+}
+const ILLUS = {
+  etudiant: illu('illu-etudiant', 'Illustration : une étudiante avec ses cartons devant une résidence étudiante parisienne', 732),
+  'logement-social': illu('illu-logement-social', 'Illustration : une famille reçoit les clés de son logement'),
+  mobilite: illu('illu-mobilite', 'Illustration : un professionnel en mobilité arrive à Paris avec sa valise'),
+};
+
 /* ------------------------ Direction artistique ----------------------- */
 /* Palette : bleu confiance (institutionnel) + terracotta (chaleur, CTA)
  * + vert sauge. Un thème couleur par parcours pour le repérage visuel.
@@ -355,6 +367,7 @@ for (const p of PARCOURS) {
     <h1>${esc(p.h1)}</h1>
     <p class="lead">${esc(p.intro)}</p>
   </div>
+  ${ILLUS[p.slug] || ''}
 </header>
 <div class="steps" style="--t:${t.c};--tbg:${t.bg}">
 ${etapes}
@@ -460,6 +473,7 @@ ${aLireAussi ? `<p class="pills"><strong>À lire aussi&nbsp;:</strong> ${aLireAu
     <h1>Les guides pratiques du logement en Île-de-France</h1>
     <p class="lead">${GUIDES.length} guides pour activer les bons dispositifs dans le bon ordre&nbsp;: garanties, aides, logement social, encadrement des loyers. Chacun renvoie vers les sources officielles qui font foi.</p>
   </div>
+  ${illu('illu-guides', 'Illustration : un personnage consulte une carte à un carrefour de panneaux indiquant différents logements')}
 </header>
 <div class="grid grid-guides">${cards}</div>`;
   pushIndex('Les guides pratiques', '/guides/', `Les ${GUIDES.length} guides logement Île-de-France.`, 'Page');
@@ -577,6 +591,7 @@ function buildDirectory(cfg) {
     <h1>${esc(cfg.h1)}</h1>
     <p class="lead">${esc(cfg.intro)}</p>
   </div>
+  ${cfg.illu || ''}
 </header>
 <section>
   <h2>Choisissez votre département</h2>
@@ -655,6 +670,7 @@ if (CROUS) {
     nomPluriel: 'résidences CROUS',
     nomPlurielCap: 'Résidences CROUS',
     titleShort: 'Résidences CROUS',
+    illu: illu('illu-residences-crous', 'Illustration : une résidence universitaire animée, étudiants et vélos'),
     title: `Résidences CROUS en Île-de-France : la liste des ${CROUS.records.length}`,
     metaDescription: `La liste des ${CROUS.records.length} résidences universitaires CROUS d'Île-de-France : adresses, services, contact et demande de logement, département par département.`,
     metaSuffix: 'Données officielles CNOUS.',
@@ -684,6 +700,7 @@ if (FJT) {
     nomPluriel: 'foyers de jeunes travailleurs',
     nomPlurielCap: 'Foyers de jeunes travailleurs (FJT)',
     titleShort: 'FJT',
+    illu: illu('illu-fjt', 'Illustration : trois jeunes actifs devant un foyer de jeunes travailleurs'),
     title: `FJT en Île-de-France : l'annuaire des ${FJT.records.length} foyers`,
     metaDescription: `${FJT.records.length} foyers de jeunes travailleurs (FJT) en Île-de-France : adresses et téléphones, département par département. Logement meublé tout compris pour les 16-25 ans.`,
     metaSuffix: 'Répertoire officiel FINESS.',
@@ -711,6 +728,7 @@ if (RES_AUTONOMIE) {
     nomPluriel: 'résidences autonomie',
     nomPlurielCap: 'Résidences autonomie',
     titleShort: 'Résidences autonomie',
+    illu: illu('illu-residences-autonomie', "Illustration : deux seniors sur un banc dans le jardin d'une résidence autonomie"),
     title: `Résidences autonomie en Île-de-France : l'annuaire (${RES_AUTONOMIE.records.length})`,
     metaDescription: `${RES_AUTONOMIE.records.length} résidences autonomie (ex foyers-logements) pour seniors en Île-de-France : adresses et téléphones par département. Loyers modérés, logement indépendant.`,
     metaSuffix: 'Répertoire officiel FINESS.',
@@ -782,6 +800,7 @@ if (LS_COMMUNES) {
     <h1>Le logement social en Île-de-France, en chiffres</h1>
     <p class="lead">Plus de ${fmt(Math.floor(parcIdf / 100000) * 100000)} logements locatifs sociaux sont recensés en Île-de-France (RPLS, 1ᵉʳ janvier 2024). Parc, loyers au m², vacance et taux SRU&nbsp;: les chiffres officiels, commune par commune — pour savoir où votre demande a le plus de chances d'aboutir.</p>
   </div>
+  ${illu('illu-chiffres', 'Illustration : des immeubles et des barres de graphique, le logement social en chiffres')}
 </header>
 <div class="table-wrap"><table class="data">
   <caption class="visually-hidden">Logement social par département en Île-de-France (RPLS au 1ᵉʳ janvier 2024)</caption>
@@ -1032,6 +1051,7 @@ h1{font-size:clamp(1.7rem,3.6vw,2.4rem);letter-spacing:-.015em}h2{font-size:1.4r
 .page-head{display:flex;gap:18px;align-items:flex-start;background:linear-gradient(135deg,var(--tbg,var(--ciel)),#fff 125%);border:1px solid var(--bord);border-left:6px solid var(--t,var(--bleu2));border-radius:18px;padding:22px 26px;margin:0 0 1.8rem}
 .page-head-icon{flex:none;width:46px;height:46px;background:#fff;border-radius:12px;padding:9px;box-shadow:0 3px 10px rgba(31,78,121,.12);margin-top:4px}
 .page-head-icon svg{width:100%;height:100%}
+.page-illu{flex:none;width:230px;height:auto;border-radius:14px;margin-left:auto;align-self:center;box-shadow:0 6px 18px rgba(31,78,121,.14)}
 .page-head h1{margin:.1rem 0 .5rem}.page-head .lead{margin:0}
 /* ---- Étapes numérotées ---- */
 .steps{counter-reset:etape}
@@ -1097,6 +1117,7 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .hero{grid-template-columns:1fr;padding:24px 22px 20px;gap:8px}
 .hero-illo{margin-top:.6rem}
 .page-head{flex-direction:column;gap:12px;padding:20px}
+.page-illu{width:100%;max-width:320px;margin:0 auto}
 .step{padding-left:58px}
 }`; }
 
