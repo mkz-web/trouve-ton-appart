@@ -24,6 +24,44 @@ const GUIDES = read('guides.json');
 const PARCOURS = read('parcours.json');
 const ANNUAIRE = read('annuaire.json');
 
+/* ---- Snapshots open data (Phase 2, produits par ingest/ingest.js) ----
+ * Optionnels : si un snapshot manque, les pages correspondantes sont
+ * simplement omises et le reste du site se construit normalement. */
+const readOpen = (f) => {
+  try { return JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'open', `${f}.json`), 'utf8')); }
+  catch { return null; }
+};
+const CROUS = readOpen('crous-residences');
+const FJT = readOpen('fjt');
+const RES_AUTONOMIE = readOpen('residences-autonomie');
+const LS_COMMUNES = readOpen('logement-social-communes');
+const ENCADREMENT = readOpen('encadrement-loyers-paris');
+
+const DEPS_IDF = ['75', '77', '78', '91', '92', '93', '94', '95'];
+const DEP_NOMS = {
+  75: 'Paris', 77: 'Seine-et-Marne', 78: 'Yvelines', 91: 'Essonne',
+  92: 'Hauts-de-Seine', 93: 'Seine-Saint-Denis', 94: 'Val-de-Marne', 95: "Val-d'Oise",
+};
+const DEP_SLUGS = {
+  75: 'paris-75', 77: 'seine-et-marne-77', 78: 'yvelines-78', 91: 'essonne-91',
+  92: 'hauts-de-seine-92', 93: 'seine-saint-denis-93', 94: 'val-de-marne-94', 95: 'val-d-oise-95',
+};
+const fmt = (n, dec = 0) => (n == null ? '—' : n.toLocaleString('fr-FR', { minimumFractionDigits: dec, maximumFractionDigits: dec }));
+const dateFrOf = (iso) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+/* Époques de construction de l'encadrement, dans l'ordre canonique du dataset
+ * (« Apres 1990 » sans accent : clé de données, pas un libellé d'affichage). */
+const EPOQUES = ['Avant 1946', '1946-1970', '1971-1990', 'Apres 1990'];
+
+/* Index de la recherche client-side : alimenté par chaque constructeur de
+ * page, écrit dans dist/search-index.json. */
+const SEARCH_INDEX = [];
+const pushIndex = (t, u, d, c) => SEARCH_INDEX.push({ t, u, d, c });
+/* Catégories « données » de l'index (vs pages éditoriales). */
+const DATA_SEARCH_CATS = ['Résidence CROUS', 'FJT', 'Résidence autonomie', 'Commune'];
+
+/* Liens sortants issus de l'open data : seuls les schémas sûrs passent. */
+const safeUrl = (u) => (/^(https?:|mailto:)/i.test(String(u || '')) ? u : '#');
+
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 /* ------------------------ Direction artistique ----------------------- */
@@ -121,9 +159,22 @@ function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = []
       })),
     }]);
   }
-  const ld = jsonLd.map(o => `<script type="application/ld+json">${JSON.stringify(o)}</script>`).join('\n');
+  /* Échappement spécifique au contexte <script> : JSON.stringify ne protège
+   * ni « < » ni « </script> » — une donnée open data hostile pourrait sinon
+   * fermer la balise et injecter du HTML. Le JSON reste strictement valide. */
+  const ldEsc = (o) => JSON.stringify(o)
+    .replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026')
+    .replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+  const ld = jsonLd.map(o => `<script type="application/ld+json">${ldEsc(o)}</script>`).join('\n');
   const footGuides = GUIDES.map(g => `<li><a href="/guides/${g.slug}/">${esc(g.h1)}</a></li>`).join('');
   const footParcours = PARCOURS.map(p => `<li><a href="/${p.slug}/">${esc(p.nav)}</a></li>`).join('');
+  const footData = [
+    CROUS && '<li><a href="/residences-crous/">Résidences CROUS</a></li>',
+    FJT && '<li><a href="/foyers-jeunes-travailleurs/">Foyers de jeunes travailleurs</a></li>',
+    RES_AUTONOMIE && '<li><a href="/residences-autonomie/">Résidences autonomie (seniors)</a></li>',
+    LS_COMMUNES && '<li><a href="/logement-social/chiffres/">Le logement social en chiffres</a></li>',
+    '<li><a href="/recherche/">Rechercher sur le site</a></li>',
+  ].filter(Boolean).join('');
   return `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -153,7 +204,7 @@ ${ld}
 <header class="site-header">
   <div class="container">
     <a class="brand" href="/">${esc(SITE.name)}<span class="brand-sub">Île-de-France</span></a>
-    <nav class="main-nav">${nav}<a href="/annuaire/">Annuaire</a></nav>
+    <nav class="main-nav">${nav}<a href="/annuaire/">Annuaire</a><a href="/recherche/">Rechercher</a></nav>
   </div>
 </header>
 <main class="container">
@@ -168,6 +219,8 @@ ${content}
     <div>
       <p class="footer-title">Parcours</p>
       <ul>${footParcours}<li><a href="/annuaire/">Annuaire des sources fiables</a></li></ul>
+      <p class="footer-title">Données &amp; annuaires</p>
+      <ul>${footData}</ul>
     </div>
     <div>
       <p class="footer-title">Guides pratiques</p>
@@ -227,6 +280,7 @@ function addPage(urlPath, html, priority) {
 <section>
   <h2>Les guides essentiels</h2>
   <div class="grid grid-guides">${guideCards}</div>
+  <p><a href="/guides/">Voir tous les guides →</a></p>
 </section>
 <section>
   <h2>Comment ça marche&nbsp;?</h2>
@@ -240,6 +294,7 @@ function addPage(urlPath, html, priority) {
   <h2>Pourquoi ce site&nbsp;?</h2>
   <p>Le logement francilien est éclaté entre des dizaines de plateformes, de guichets et de dispositifs. Résultat&nbsp;: des droits non utilisés (Visale, Loca-Pass, logement intermédiaire…) et des parcours subis. Nous remettons de l'ordre&nbsp;: pas d'annonces dupliquées, pas de fausses promesses, mais des parcours clairs et des liens directs vers les sources qui font foi.</p>
 </section>`;
+  pushIndex(`${SITE.name} — accueil`, '/', SITE.description, 'Page');
   addPage('/', layout({
     title: `${SITE.name} : logement en Île-de-France par profil`,
     metaDescription: SITE.description,
@@ -276,6 +331,21 @@ for (const p of PARCOURS) {
   const annuaireBlock = cats.map(c => `
   <h3>${esc(c.titre)}</h3>
   <ul class="sources">${c.sources.map(s => `<li><a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.nom)}</a> · ${esc(s.desc)}</li>`).join('')}</ul>`).join('');
+  /* Liens vers nos annuaires issus de l'open data (Phase 2) */
+  const dataLinksOf = {
+    etudiant: [
+      CROUS && { u: '/residences-crous/', t: `Les ${CROUS.records.length} résidences CROUS d'Île-de-France` },
+      FJT && { u: '/foyers-jeunes-travailleurs/', t: 'Les foyers de jeunes travailleurs (FJT)' },
+    ],
+    'logement-social': [
+      LS_COMMUNES && { u: '/logement-social/chiffres/', t: 'Le logement social commune par commune : parc, loyers, vacance' },
+      RES_AUTONOMIE && { u: '/residences-autonomie/', t: `Les ${RES_AUTONOMIE.records.length} résidences autonomie (seniors)` },
+      FJT && { u: '/foyers-jeunes-travailleurs/', t: 'Les foyers de jeunes travailleurs (FJT)' },
+    ],
+    mobilite: [],
+  };
+  const dataLinks = (dataLinksOf[p.slug] || []).filter(Boolean)
+    .map(l => `<a class="pill" href="${l.u}">${esc(l.t)}</a>`).join(' ');
   const t = themeOf(p.slug);
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › ${esc(p.nav)}</nav>
@@ -292,8 +362,10 @@ ${etapes}
 <section class="notice">
   <h2>Où chercher&nbsp;: les sources fiables pour ce profil</h2>
   ${annuaireBlock}
+  ${dataLinks ? `<h3>Nos annuaires (données publiques)</h3><p class="pills">${dataLinks}</p>` : ''}
   <p><a href="/annuaire/">Voir l'annuaire complet →</a></p>
 </section>`;
+  pushIndex(p.h1, `/${p.slug}/`, p.metaDescription, 'Parcours');
   addPage(`/${p.slug}/`, layout({
     title: p.title,
     metaDescription: p.metaDescription,
@@ -319,8 +391,9 @@ for (const g of GUIDES) {
   const aLireAussi = GUIDES.filter(x => x.slug !== g.slug && x.parcours.some(s => g.parcours.includes(s)))
     .slice(0, 3)
     .map(x => `<a class="pill" href="/guides/${x.slug}/">${esc(x.h1)}</a>`).join(' ');
+  const outil = (g.slug === 'encadrement-des-loyers-paris' && ENCADREMENT) ? encadrementWidget() : '';
   const content = `
-<nav class="breadcrumb"><a href="/">Accueil</a> › Guides › ${esc(g.h1)}</nav>
+<nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/guides/">Guides</a> › ${esc(g.h1)}</nav>
 <article>
 <header class="page-head" style="--t:${t.c};--tbg:${t.bg}">
   <span class="page-head-icon">${icon(g.slug, t.c)}</span>
@@ -330,18 +403,20 @@ for (const g of GUIDES) {
     <p class="maj">Mis à jour le ${DATE_FR}</p>
   </div>
 </header>
+${outil}
 ${sections}
 <section class="faq"><h2>Questions fréquentes</h2>${faqHtml}</section>
 <section class="notice"><h2>Sources officielles</h2><ul class="sources">${srcHtml}</ul></section>
 ${aLireAussi ? `<p class="pills"><strong>À lire aussi&nbsp;:</strong> ${aLireAussi}</p>` : ''}
 <p class="pills"><strong>Parcours liés&nbsp;:</strong> ${related}</p>
 </article>`;
+  pushIndex(g.h1, `/guides/${g.slug}/`, g.metaDescription, 'Guide');
   addPage(`/guides/${g.slug}/`, layout({
     title: g.title,
     metaDescription: g.metaDescription,
     urlPath: `/guides/${g.slug}/`,
     content,
-    breadcrumbs: [{ name: 'Guides' }, { name: g.h1, url: `/guides/${g.slug}/` }],
+    breadcrumbs: [{ name: 'Guides', url: '/guides/' }, { name: g.h1, url: `/guides/${g.slug}/` }],
     jsonLd: [{
       '@context': 'https://schema.org',
       '@type': 'Article',
@@ -366,6 +441,37 @@ ${aLireAussi ? `<p class="pills"><strong>À lire aussi&nbsp;:</strong> ${aLireAu
   }), '0.8');
 }
 
+/* Hub des guides — cible du fil d'Ariane « Guides » et page de maillage. */
+(function buildGuidesHub() {
+  const cards = GUIDES.map(g => {
+    const t = guideTheme(g);
+    return `
+  <a class="card card-guide" href="/guides/${g.slug}/" style="--t:${t.c};--tbg:${t.bg}">
+    <span class="card-icon card-icon-sm">${icon(g.slug, t.c)}</span>
+    <div><h3>${esc(g.h1)}</h3>
+    <p>${esc(g.metaDescription.split('. ')[0])}.</p></div>
+  </a>`;
+  }).join('');
+  const content = `
+<nav class="breadcrumb"><a href="/">Accueil</a> › Guides</nav>
+<header class="page-head" style="--t:${PAL.bleu};--tbg:${PAL.cielClair}">
+  <span class="page-head-icon">${icon('annuaire', PAL.bleu)}</span>
+  <div>
+    <h1>Les guides pratiques du logement en Île-de-France</h1>
+    <p class="lead">${GUIDES.length} guides pour activer les bons dispositifs dans le bon ordre&nbsp;: garanties, aides, logement social, encadrement des loyers. Chacun renvoie vers les sources officielles qui font foi.</p>
+  </div>
+</header>
+<div class="grid grid-guides">${cards}</div>`;
+  pushIndex('Les guides pratiques', '/guides/', `Les ${GUIDES.length} guides logement Île-de-France.`, 'Page');
+  addPage('/guides/', layout({
+    title: `Guides du logement en Île-de-France : aides et démarches`,
+    metaDescription: `${GUIDES.length} guides pratiques pour se loger en Île-de-France : Visale, dossier, logement social, DALO, FJT, encadrement des loyers… avec les sources officielles.`,
+    urlPath: '/guides/',
+    content,
+    breadcrumbs: [{ name: 'Guides', url: '/guides/' }],
+  }), '0.7');
+})();
+
 /* Annuaire */
 (function buildAnnuaire() {
   const cats = ANNUAIRE.categories.map(c => `
@@ -373,6 +479,17 @@ ${aLireAussi ? `<p class="pills"><strong>À lire aussi&nbsp;:</strong> ${aLireAu
     <h2>${esc(c.titre)}</h2>
     <ul class="sources">${c.sources.map(s => `<li><a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.nom)}</a> · ${esc(s.desc)}</li>`).join('')}</ul>
   </section>`).join('');
+  const notres = [
+    CROUS && { u: '/residences-crous/', t: `Résidences CROUS (${CROUS.records.length})`, d: 'Les résidences universitaires publiques d’Île-de-France : adresses, services, contact.' },
+    FJT && { u: '/foyers-jeunes-travailleurs/', t: `Foyers de jeunes travailleurs (${FJT.records.length})`, d: 'Les FJT franciliens pour les 16-25 ans (jusqu’à 30 ans) : adresses et téléphones.' },
+    RES_AUTONOMIE && { u: '/residences-autonomie/', t: `Résidences autonomie (${RES_AUTONOMIE.records.length})`, d: 'Les résidences pour seniors autonomes, aux loyers modérés.' },
+    LS_COMMUNES && { u: '/logement-social/chiffres/', t: 'Le logement social en chiffres', d: 'Parc, loyers moyens, vacance et taux SRU, commune par commune.' },
+  ].filter(Boolean);
+  const notresBlock = notres.length ? `
+  <section class="notice">
+    <h2>Nos annuaires, construits sur les données publiques</h2>
+    <ul class="sources">${notres.map(n => `<li><a href="${n.u}">${esc(n.t)}</a> · ${esc(n.d)}</li>`).join('')}</ul>
+  </section>` : '';
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › Annuaire</nav>
 <header class="page-head" style="--t:${PAL.bleu2};--tbg:${PAL.cielClair}">
@@ -382,7 +499,9 @@ ${aLireAussi ? `<p class="pills"><strong>À lire aussi&nbsp;:</strong> ${aLireAu
     <p class="lead">${esc(ANNUAIRE.intro)}</p>
   </div>
 </header>
+${notresBlock}
 ${cats}`;
+  pushIndex(ANNUAIRE.h1, '/annuaire/', ANNUAIRE.metaDescription, 'Annuaire');
   addPage('/annuaire/', layout({
     title: ANNUAIRE.title,
     metaDescription: ANNUAIRE.metaDescription,
@@ -390,6 +509,424 @@ ${cats}`;
     content,
     breadcrumbs: [{ name: 'Annuaire', url: '/annuaire/' }]
   }), '0.9');
+})();
+
+/* ------------------ Pages données (Phase 2 open data) ------------------ */
+
+/* « à Paris », « dans les Yvelines »… pour des H1 naturels. */
+const DEP_PREP = {
+  75: 'à Paris', 77: 'en Seine-et-Marne', 78: 'dans les Yvelines', 91: 'en Essonne',
+  92: 'dans les Hauts-de-Seine', 93: 'en Seine-Saint-Denis', 94: 'dans le Val-de-Marne', 95: "dans le Val-d'Oise",
+};
+
+/** Bandeau source/licence commun aux pages construites sur l'open data. */
+function sourceNotice(meta) {
+  return `<p class="maj">${esc(meta.attribution)} · données extraites le ${esc(dateFrOf(meta.collectedAt))}. Les informations évoluent&nbsp;: vérifiez toujours auprès de l'établissement ou de la source officielle.</p>`;
+}
+
+/**
+ * Annuaire générique : une page hub + une page par département.
+ * cfg : { data, baseSlug, iconName, themeSlug, nom, nomPluriel, title,
+ *        metaDescription, h1, intro, comment (HTML), guides (slugs),
+ *        renderItem (record → HTML <li>), searchCat }
+ */
+function buildDirectory(cfg) {
+  const { data, baseSlug } = cfg;
+  const t = themeOf(cfg.themeSlug);
+  const byDep = new Map(DEPS_IDF.map(d => [d, data.records.filter(r => r.dep === d)]));
+  const guidePills = (cfg.guides || []).map(slug => {
+    const g = GUIDES.find(x => x.slug === slug);
+    return g ? `<a class="pill" href="/guides/${g.slug}/">${esc(g.h1)}</a>` : '';
+  }).filter(Boolean).join(' ');
+
+  /* Hub */
+  const depCards = DEPS_IDF.filter(d => byDep.get(d).length).map(d => `
+  <a class="card card-parcours" href="/${baseSlug}/${DEP_SLUGS[d]}/" style="--t:${t.c};--tbg:${t.bg}">
+    <h3>${esc(DEP_NOMS[d])} (${d})</h3>
+    <p>${byDep.get(d).length} ${byDep.get(d).length > 1 ? cfg.nomPluriel : cfg.nom}</p>
+    <span class="card-cta">Voir la liste →</span>
+  </a>`).join('');
+  const hubContent = `
+<nav class="breadcrumb"><a href="/">Accueil</a> › ${esc(cfg.h1)}</nav>
+<header class="page-head" style="--t:${t.c};--tbg:${t.bg}">
+  <span class="page-head-icon">${icon(cfg.iconName, t.c)}</span>
+  <div>
+    <h1>${esc(cfg.h1)}</h1>
+    <p class="lead">${esc(cfg.intro)}</p>
+  </div>
+</header>
+<section>
+  <h2>Choisissez votre département</h2>
+  <div class="grid">${depCards}</div>
+</section>
+<section class="notice">
+  ${cfg.comment}
+  ${guidePills ? `<p class="pills"><strong>Guides utiles&nbsp;:</strong> ${guidePills}</p>` : ''}
+  ${sourceNotice(data._meta)}
+</section>`;
+  pushIndex(cfg.h1, `/${baseSlug}/`, cfg.metaDescription, 'Annuaire');
+  addPage(`/${baseSlug}/`, layout({
+    title: cfg.title,
+    metaDescription: cfg.metaDescription,
+    urlPath: `/${baseSlug}/`,
+    content: hubContent,
+    breadcrumbs: [{ name: cfg.h1, url: `/${baseSlug}/` }],
+  }), '0.8');
+
+  /* Pages département */
+  for (const d of DEPS_IDF) {
+    const items = byDep.get(d);
+    if (!items.length) continue;
+    const urlPath = `/${baseSlug}/${DEP_SLUGS[d]}/`;
+    const h1 = `${cfg.nomPlurielCap} ${DEP_PREP[d]} (${d})`;
+    const others = DEPS_IDF.filter(x => x !== d && byDep.get(x).length)
+      .map(x => `<a class="pill" href="/${baseSlug}/${DEP_SLUGS[x]}/">${esc(DEP_NOMS[x])} (${x})</a>`).join(' ');
+    const content = `
+<nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/${baseSlug}/">${esc(cfg.h1)}</a> › ${esc(DEP_NOMS[d])}</nav>
+<header class="page-head" style="--t:${t.c};--tbg:${t.bg}">
+  <span class="page-head-icon">${icon(cfg.iconName, t.c)}</span>
+  <div>
+    <h1>${esc(h1)}</h1>
+    <p class="lead">${items.length} ${items.length > 1 ? cfg.nomPluriel : cfg.nom} ${DEP_PREP[d]}, d'après ${esc(data._meta.source.split('(')[0].trim())}.</p>
+  </div>
+</header>
+<ul class="dir-list" style="--t:${t.c};--tbg:${t.bg}">
+${items.map(cfg.renderItem).join('\n')}
+</ul>
+<section class="notice">
+  ${cfg.comment}
+  ${guidePills ? `<p class="pills"><strong>Guides utiles&nbsp;:</strong> ${guidePills}</p>` : ''}
+  ${sourceNotice(data._meta)}
+</section>
+<p class="pills"><strong>Autres départements&nbsp;:</strong> ${others}</p>`;
+    for (const r of items) {
+      pushIndex(r.nom, `${urlPath}#r-${r.finess || r.id}`, [r.adresse, r.cp, r.commune].filter(Boolean).join(', '), cfg.searchCat);
+    }
+    addPage(urlPath, layout({
+      title: `${cfg.titleShort} ${DEP_PREP[d]} (${d}) : la liste`,
+      metaDescription: `${items.length} ${cfg.nomPluriel} ${DEP_PREP[d]} : adresses, contact. ${cfg.metaSuffix}`,
+      urlPath,
+      content,
+      breadcrumbs: [{ name: cfg.h1, url: `/${baseSlug}/` }, { name: DEP_NOMS[d], url: urlPath }],
+      jsonLd: [{
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: h1,
+        numberOfItems: items.length,
+        itemListElement: items.map((r, i) => ({ '@type': 'ListItem', position: i + 1, name: r.nom })),
+      }],
+    }), '0.6');
+  }
+}
+
+const osmLink = (r) => (r.lat != null ? ` · <a href="https://www.openstreetmap.org/?mlat=${r.lat}&amp;mlon=${r.lon}#map=17/${r.lat}/${r.lon}" rel="noopener" target="_blank">voir sur la carte</a>` : '');
+
+if (CROUS) {
+  buildDirectory({
+    data: CROUS,
+    baseSlug: 'residences-crous',
+    iconName: 'etudiant',
+    themeSlug: 'etudiant',
+    nom: 'résidence CROUS',
+    nomPluriel: 'résidences CROUS',
+    nomPlurielCap: 'Résidences CROUS',
+    titleShort: 'Résidences CROUS',
+    title: `Résidences CROUS en Île-de-France : la liste des ${CROUS.records.length}`,
+    metaDescription: `La liste des ${CROUS.records.length} résidences universitaires CROUS d'Île-de-France : adresses, services, contact et demande de logement, département par département.`,
+    metaSuffix: 'Données officielles CNOUS.',
+    h1: "Les résidences CROUS d'Île-de-France",
+    intro: `${CROUS.records.length} résidences universitaires publiques, aux loyers les plus bas du marché francilien. Voici la liste officielle complète, avec adresses, services et liens de candidature.`,
+    comment: `<h2>Comment obtenir une chambre CROUS&nbsp;?</h2>
+  <p>On ne candidate pas auprès d'une résidence&nbsp;: tout passe par le <strong>Dossier social étudiant (DSE)</strong>, à constituer entre mars et mai sur messervices.etudiant.gouv.fr, puis par les vœux sur <a href="https://trouverunlogement.lescrous.fr" rel="noopener" target="_blank">trouverunlogement.lescrous.fr</a>. Une phase complémentaire ouvre en juillet pour les logements restés vacants, accessible aussi aux non-boursiers.</p>`,
+    guides: ['aide-logement-etudiant', 'visale', 'dossierfacile'],
+    searchCat: 'Résidence CROUS',
+    renderItem: (r) => `<li class="dir-item" id="r-${r.id}">
+  <h3>${esc(r.nom)}</h3>
+  <p class="dir-addr">${esc(r.adresse)}${osmLink(r)}</p>
+  ${(r.tel || r.mail) ? `<p class="dir-meta">${[r.tel && esc(r.tel), r.mail && `<a href="mailto:${esc(r.mail)}">${esc(r.mail)}</a>`].filter(Boolean).join(' · ')}</p>` : ''}
+  ${r.services.length ? `<p class="dir-tags">${r.services.map(s => `<span>${esc(s)}</span>`).join('')}</p>` : ''}
+  <p class="dir-links"><a href="${esc(safeUrl(r.bookingUrl || 'https://trouverunlogement.lescrous.fr'))}" rel="noopener" target="_blank">Demander un logement</a>${r.url ? ` · <a href="${esc(safeUrl(r.url))}" rel="noopener" target="_blank">site du CROUS</a>` : ''}</p>
+</li>`,
+  });
+}
+
+if (FJT) {
+  buildDirectory({
+    data: FJT,
+    baseSlug: 'foyers-jeunes-travailleurs',
+    iconName: 'foyer-jeune-travailleur',
+    themeSlug: 'etudiant',
+    nom: 'foyer de jeunes travailleurs',
+    nomPluriel: 'foyers de jeunes travailleurs',
+    nomPlurielCap: 'Foyers de jeunes travailleurs (FJT)',
+    titleShort: 'FJT',
+    title: `FJT en Île-de-France : l'annuaire des ${FJT.records.length} foyers`,
+    metaDescription: `${FJT.records.length} foyers de jeunes travailleurs (FJT) en Île-de-France : adresses et téléphones, département par département. Logement meublé tout compris pour les 16-25 ans.`,
+    metaSuffix: 'Répertoire officiel FINESS.',
+    h1: 'Les foyers de jeunes travailleurs (FJT) en Île-de-France',
+    intro: `${FJT.records.length} FJT accueillent en Île-de-France les jeunes de 16 à 25 ans (parfois jusqu'à 30 ans) en activité, alternance ou insertion : logement meublé tout compris, redevance modérée, APL possible. Contrairement au CROUS, on candidate directement auprès de chaque foyer.`,
+    comment: `<h2>Comment entrer en FJT&nbsp;?</h2>
+  <p>Chaque foyer gère ses admissions&nbsp;: contactez directement ceux qui vous intéressent (téléphone ci-dessus), ou passez par les gestionnaires majeurs (ALJT, CLLAJ locaux, habitat jeunes). Les délais varient de quelques jours à quelques mois selon les secteurs. Notre guide détaille conditions, redevances et pièges&nbsp;à éviter.</p>`,
+    guides: ['foyer-jeune-travailleur', 'aide-mobili-jeune', 'visale'],
+    searchCat: 'FJT',
+    renderItem: (r) => `<li class="dir-item" id="r-${r.finess}">
+  <h3>${esc(r.nom)}</h3>
+  <p class="dir-addr">${esc([r.adresse, [r.cp, r.commune].filter(Boolean).join(' ')].filter(Boolean).join(', '))}${osmLink(r)}</p>
+  ${r.tel ? `<p class="dir-meta">${esc(r.tel)}</p>` : ''}
+</li>`,
+  });
+}
+
+if (RES_AUTONOMIE) {
+  buildDirectory({
+    data: RES_AUTONOMIE,
+    baseSlug: 'residences-autonomie',
+    iconName: 'logement-social',
+    themeSlug: 'logement-social',
+    nom: 'résidence autonomie',
+    nomPluriel: 'résidences autonomie',
+    nomPlurielCap: 'Résidences autonomie',
+    titleShort: 'Résidences autonomie',
+    title: `Résidences autonomie en Île-de-France : l'annuaire (${RES_AUTONOMIE.records.length})`,
+    metaDescription: `${RES_AUTONOMIE.records.length} résidences autonomie (ex foyers-logements) pour seniors en Île-de-France : adresses et téléphones par département. Loyers modérés, logement indépendant.`,
+    metaSuffix: 'Répertoire officiel FINESS.',
+    h1: "Les résidences autonomie d'Île-de-France (seniors)",
+    intro: `Les résidences autonomie (anciens foyers-logements) proposent aux seniors autonomes un logement indépendant à loyer modéré, avec services collectifs. L'Île-de-France en compte ${RES_AUTONOMIE.records.length} : voici l'annuaire complet, département par département.`,
+    comment: `<h2>Comment obtenir une place&nbsp;?</h2>
+  <p>La demande se fait directement auprès de la résidence ou du CCAS de la commune (beaucoup sont gérées par les CCAS). Les loyers sont modérés et ouvrent droit aux aides au logement. Le portail public <a href="https://www.pour-les-personnes-agees.gouv.fr" rel="noopener" target="_blank">pour-les-personnes-agees.gouv.fr</a> propose un comparateur de prix officiel.</p>`,
+    guides: ['demande-logement-social', 'fonds-solidarite-logement'],
+    searchCat: 'Résidence autonomie',
+    renderItem: (r) => `<li class="dir-item" id="r-${r.finess}">
+  <h3>${esc(r.nom)}</h3>
+  <p class="dir-addr">${esc([r.adresse, [r.cp, r.commune].filter(Boolean).join(' ')].filter(Boolean).join(', '))}${osmLink(r)}</p>
+  ${r.tel ? `<p class="dir-meta">${esc(r.tel)}</p>` : ''}
+</li>`,
+  });
+}
+
+/* ---- Le logement social en chiffres : hub + 1 page par département ---- */
+if (LS_COMMUNES) {
+  const recs = LS_COMMUNES.records;
+  const communesOf = (d) => recs.filter(r => r.dep === d && (d === '75' ? r.arrondissement || r.code === '75056' : !r.arrondissement));
+  const parcOf = (rows) => rows.filter(r => !r.arrondissement).reduce((s, r) => s + (r.nbLogementsSociaux || 0), 0);
+  const parcIdf = parcOf(recs);
+  const nbCommunes = recs.filter(r => !r.arrondissement).length;
+  const t = themeOf('logement-social');
+
+  const statut = (r) => (r.carencee ? '<span class="badge badge-car" title="Commune carencée au titre de la loi SRU : objectifs non tenus, sanctions renforcées">carencée</span>'
+    : r.deficitaire ? '<span class="badge badge-def" title="Commune en dessous de son objectif légal de logements sociaux (loi SRU)">déficitaire</span>' : '');
+  const rowOf = (r) => `<tr id="c-${r.code}" data-n="${esc(r.nom.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''))}">
+    <td${r.note ? ` title="${esc(r.note)}"` : ''}>${esc(r.nom)}${r.note ? '&nbsp;*' : ''}</td>
+    <td class="num">${fmt(r.nbLogementsSociaux)}</td>
+    <td class="num">${fmt(r.loyerMedian, 2)}</td>
+    <td class="num">${fmt(r.txVacance, 1)}</td>
+    <td class="num">${r.tauxSRU == null ? '—' : fmt(r.tauxSRU, 1) + ' %'}</td>
+    <td>${esc(r.zone || '—')}</td>
+    <td>${statut(r)}</td>
+  </tr>`;
+  const tableHead = `<thead><tr><th scope="col">Commune</th><th scope="col" class="num">Parc social (RPLS)</th><th scope="col" class="num">Loyer médian €/m²</th><th scope="col" class="num">Vacance %</th><th scope="col" class="num">Taux SRU</th><th scope="col">Zone</th><th scope="col">Statut SRU</th></tr></thead>`;
+  const legende = `
+<section class="notice">
+  <h2>Comment lire ces chiffres</h2>
+  <ul>
+    <li><strong>Parc social (RPLS)</strong>&nbsp;: logements locatifs des bailleurs sociaux au 1ᵉʳ janvier 2024 (répertoire RPLS, Insee–SDES). Les communes sans découpage IRIS ne sont pas couvertes par ce fichier («&nbsp;—&nbsp;»).</li>
+    <li><strong>Loyer médian</strong>&nbsp;: en €/m² de surface habitable, charges non comprises — à comparer aux 25-35&nbsp;€/m² du parc privé parisien.</li>
+    <li><strong>Vacance</strong>&nbsp;: part des logements vacants — sous 3&nbsp;%, le parc est saturé.</li>
+    <li><strong>Taux SRU</strong>&nbsp;: part de logements sociaux au sens de la loi SRU (inventaire au 1ᵉʳ janvier 2024, assiette plus large que le RPLS&nbsp;: ne pas additionner les deux). Une commune «&nbsp;déficitaire&nbsp;» est en dessous de son objectif légal&nbsp;; «&nbsp;carencée&nbsp;», elle est sanctionnée — des arguments utiles pour votre dossier.</li>
+    <li><strong>Zone</strong>&nbsp;: zonage ABC (Abis = Paris…)&nbsp;: il fixe les plafonds de loyers et de ressources de nombreux dispositifs.</li>
+  </ul>
+  <p class="maj">${esc(LS_COMMUNES._meta.attribution)} · données extraites le ${esc(dateFrOf(LS_COMMUNES._meta.collectedAt))}.</p>
+</section>`;
+
+  /* Hub régional */
+  const depRows = DEPS_IDF.map(d => {
+    const rows = communesOf(d);
+    const parc = d === '75' ? (recs.find(r => r.code === '75056') || {}).nbLogementsSociaux : parcOf(rows);
+    const deficitaires = rows.filter(r => r.deficitaire).length;
+    return `<tr>
+      <td><a href="/logement-social/chiffres/${DEP_SLUGS[d]}/">${esc(DEP_NOMS[d])} (${d})</a></td>
+      <td class="num">${fmt(parc)}</td>
+      <td class="num">${d === '75' ? 1 : rows.length}</td>
+      <td class="num">${fmt(deficitaires)}</td>
+    </tr>`;
+  }).join('');
+  const hubContent = `
+<nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/logement-social/">Logement social</a> › Chiffres</nav>
+<header class="page-head" style="--t:${t.c};--tbg:${t.bg}">
+  <span class="page-head-icon">${icon('demande-logement-social', t.c)}</span>
+  <div>
+    <h1>Le logement social en Île-de-France, en chiffres</h1>
+    <p class="lead">Plus de ${fmt(Math.floor(parcIdf / 100000) * 100000)} logements locatifs sociaux sont recensés en Île-de-France (RPLS, 1ᵉʳ janvier 2024). Parc, loyers au m², vacance et taux SRU&nbsp;: les chiffres officiels, commune par commune — pour savoir où votre demande a le plus de chances d'aboutir.</p>
+  </div>
+</header>
+<div class="table-wrap"><table class="data">
+  <caption class="visually-hidden">Logement social par département en Île-de-France (RPLS au 1ᵉʳ janvier 2024)</caption>
+  <thead><tr><th scope="col">Département</th><th scope="col" class="num">Parc social (RPLS)</th><th scope="col" class="num">Communes couvertes</th><th scope="col" class="num">Communes déficitaires (SRU)</th></tr></thead>
+  <tbody>${depRows}</tbody>
+</table></div>
+<p>Choisissez un département pour le détail commune par commune, ou utilisez la <a href="/recherche/">recherche</a> pour aller directement à votre commune.</p>
+${legende}
+<p class="pills"><strong>Guides utiles&nbsp;:</strong> <a class="pill" href="/guides/demande-logement-social/">Demande de logement social</a> <a class="pill" href="/guides/recours-dalo/">Recours DALO</a> <a class="pill" href="/guides/logement-intermediaire/">Logement intermédiaire</a></p>`;
+  pushIndex('Le logement social en Île-de-France, en chiffres', '/logement-social/chiffres/', 'Parc, loyers, vacance et taux SRU commune par commune.', 'Chiffres');
+  addPage('/logement-social/chiffres/', layout({
+    title: 'Logement social en Île-de-France : les chiffres par commune',
+    metaDescription: `Combien de logements sociaux par commune ? Loyers au m², vacance, taux SRU : les chiffres officiels au 1ᵉʳ janvier 2024 pour ${fmt(nbCommunes)} communes d'Île-de-France.`,
+    urlPath: '/logement-social/chiffres/',
+    content: hubContent,
+    breadcrumbs: [{ name: 'Logement social & publics spécifiques', url: '/logement-social/' }, { name: 'Les chiffres', url: '/logement-social/chiffres/' }],
+  }), '0.8');
+
+  /* Pages département */
+  const filterScript = `<script>(function(){var i=document.getElementById('filtre');if(!i)return;var rs=[].slice.call(document.querySelectorAll('tbody tr'));function n(s){return s.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'')}i.addEventListener('input',function(){var q=n(i.value.trim());rs.forEach(function(r){r.style.display=!q||r.getAttribute('data-n').indexOf(q)>=0?'':'none'})})})();</script>`;
+  for (const d of DEPS_IDF) {
+    const rows = communesOf(d);
+    if (!rows.length) continue;
+    const urlPath = `/logement-social/chiffres/${DEP_SLUGS[d]}/`;
+    const h1 = `Le logement social ${DEP_PREP[d]} (${d})&nbsp;: les chiffres`;
+    const sumArr = recs.filter(r => r.arrondissement).reduce((s, r) => s + (r.nbLogementsSociaux || 0), 0);
+    const parisNote = d === '75' ? `<p>Paris compte <strong>${fmt((recs.find(r => r.code === '75056') || {}).nbLogementsSociaux)}</strong> logements sociaux RPLS (${fmt((recs.find(r => r.code === '75056') || {}).tauxSRU, 1)}&nbsp;% au sens SRU). Le détail ci-dessous est par arrondissement&nbsp;; les taux SRU ne sont publiés qu'à l'échelle de la commune entière. La somme des 20 arrondissements (${fmt(sumArr)}) diffère légèrement du total communal&nbsp;: traitements statistiques de l'Insee entre niveaux d'agrégation.</p>` : '';
+    const sorted = d === '75' ? rows.filter(r => r.arrondissement) : rows.slice().sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+    const others = DEPS_IDF.filter(x => x !== d)
+      .map(x => `<a class="pill" href="/logement-social/chiffres/${DEP_SLUGS[x]}/">${esc(DEP_NOMS[x])} (${x})</a>`).join(' ');
+    const content = `
+<nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/logement-social/chiffres/">Logement social en chiffres</a> › ${esc(DEP_NOMS[d])}</nav>
+<header class="page-head" style="--t:${t.c};--tbg:${t.bg}">
+  <span class="page-head-icon">${icon('demande-logement-social', t.c)}</span>
+  <div>
+    <h1>${h1}</h1>
+    <p class="lead">Parc social, loyers au m², vacance et statut SRU ${d === '75' ? 'des 20 arrondissements parisiens' : `des ${sorted.length} communes du département couvertes par les données publiques`}. Repérez les communes où le parc est important et la rotation réelle.</p>
+  </div>
+</header>
+${parisNote}
+<p><label for="filtre"><strong>Filtrer&nbsp;:</strong></label> <input id="filtre" type="search" placeholder="Nom de ${d === '75' ? "l'arrondissement" : 'la commune'}…" class="search-input search-inline"></p>
+<div class="table-wrap"><table class="data">
+  <caption class="visually-hidden">Logement social par ${d === '75' ? 'arrondissement' : 'commune'} — ${esc(DEP_NOMS[d])} (${d})</caption>
+  ${tableHead}
+  <tbody>${sorted.map(rowOf).join('')}</tbody>
+</table></div>
+${sorted.filter(r => r.note).map(r => `<p class="maj">* ${esc(r.nom)}&nbsp;: ${esc(r.note)}</p>`).join('')}
+${filterScript}
+${legende}
+<p class="pills"><strong>Autres départements&nbsp;:</strong> ${others}</p>`;
+    for (const r of sorted) {
+      pushIndex(r.nom + (r.arrondissement ? '' : ` (${r.dep})`), `${urlPath}#c-${r.code}`,
+        `Logement social : ${r.nbLogementsSociaux != null ? fmt(r.nbLogementsSociaux) + ' logements' : 'chiffres'}${r.loyerMedian != null ? `, loyer médian ${fmt(r.loyerMedian, 2)} €/m²` : ''}${r.tauxSRU != null ? `, taux SRU ${fmt(r.tauxSRU, 1)} %` : ''}.`, 'Commune');
+    }
+    addPage(urlPath, layout({
+      title: `Logement social ${DEP_PREP[d]} (${d}) : parc et loyers`,
+      metaDescription: `Le logement social ${DEP_PREP[d]} : parc, loyer médian au m², vacance et taux SRU ${d === '75' ? 'par arrondissement' : 'commune par commune'}. Données officielles au 1ᵉʳ janvier 2024.`,
+      urlPath,
+      content,
+      breadcrumbs: [{ name: 'Logement social en chiffres', url: '/logement-social/chiffres/' }, { name: DEP_NOMS[d], url: urlPath }],
+    }), '0.6');
+  }
+}
+
+/* --------- Outil : vérificateur d'encadrement des loyers (Paris) -------- */
+
+function encadrementWidget() {
+  const m = ENCADREMENT._meta;
+  const quartiers = [...new Map(ENCADREMENT.records.map(r => [r.quartierId, r.quartier])).entries()]
+    .sort((a, b) => a[1].localeCompare(b[1], 'fr'));
+  const optQ = quartiers.map(([id, nom]) => `<option value="${id}">${esc(nom)}</option>`).join('');
+  const optE = EPOQUES.map((e, i) => `<option value="${i}">${esc(e.replace('Apres', 'Après'))}</option>`).join('');
+  return `
+<section class="tool" id="verifier">
+  <h2>Vérifiez votre loyer&nbsp;: les références ${esc(m.millesime)}, quartier par quartier</h2>
+  <p>Les loyers de référence officiels (arrêté préfectoral, références ${esc(m.millesime)}) pour chacun des 80 quartiers de Paris. Sélectionnez les caractéristiques du logement&nbsp;:</p>
+  <div class="tool-form">
+    <div><label for="enc-q">Quartier</label><select id="enc-q"><option value="">— Choisir —</option>${optQ}</select></div>
+    <div><label for="enc-p">Pièces</label><select id="enc-p"><option value="">—</option><option value="1">1 pièce</option><option value="2">2 pièces</option><option value="3">3 pièces</option><option value="4">4 pièces et plus</option></select></div>
+    <div><label for="enc-e">Construction</label><select id="enc-e"><option value="">—</option>${optE}</select></div>
+    <div><label for="enc-m">Location</label><select id="enc-m"><option value="">—</option><option value="0">Non meublée</option><option value="1">Meublée</option></select></div>
+    <div><label for="enc-s">Surface (m², optionnel)</label><input id="enc-s" type="number" min="6" max="400" step="0.5" placeholder="ex. 32"></div>
+    <div><label for="enc-l">Loyer mensuel hors charges (€, optionnel)</label><input id="enc-l" type="number" min="1" step="1" placeholder="ex. 1200"></div>
+  </div>
+  <div class="tool-result" id="enc-result" hidden></div>
+  <noscript><p>Cet outil a besoin de JavaScript. Sans lui, consultez la grille officielle sur <a href="https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712" rel="noopener" target="_blank">paris.fr</a>.</p></noscript>
+  <p class="maj">${esc(m.attribution)} · références ${esc(m.millesime)}, extraites le ${esc(dateFrOf(m.collectedAt))}. Le quartier administratif peut différer du «&nbsp;quartier d'usage&nbsp;»&nbsp;: vérifiez sur la carte officielle en cas de doute.</p>
+  <script>
+(function(){
+var G=null;
+function $(i){return document.getElementById(i)}
+function num(v){var n=parseFloat(String(v).replace(',','.'));return isFinite(n)&&n>0?n:null}
+function fr(n,d){return n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d})}
+function upd(){
+ var q=$('enc-q').value,p=$('enc-p').value,e=$('enc-e').value,mb=$('enc-m').value,res=$('enc-result');
+ if(q===''||p===''||e===''||mb===''){res.hidden=true;return}
+ if(!G){res.hidden=false;res.innerHTML='Chargement des références…';
+  fetch('/data/encadrement-loyers-paris.json').then(function(r){return r.json()}).then(function(j){G=j;upd()})
+  .catch(function(){res.innerHTML='Impossible de charger les références. Réessayez ou consultez paris.fr.'});return}
+ var v=G.grille[q+'|'+p+'|'+e+'|'+mb];
+ if(!v){res.hidden=false;res.innerHTML='Référence introuvable pour cette combinaison.';return}
+ var s=num($('enc-s').value),l=num($('enc-l').value);
+ var h='<p><strong>Plafond légal (référence majorée)&nbsp;: '+fr(v[1],2)+' €/m²</strong><br>Loyer de référence&nbsp;: '+fr(v[0],2)+' €/m² · référence minorée&nbsp;: '+fr(v[2],2)+' €/m²</p>';
+ if(s){h+='<p>Pour '+fr(s,1)+' m²&nbsp;: plafond de <strong>'+fr(v[1]*s,0)+' € hors charges par mois</strong> (hors complément de loyer).</p>'}
+ if(s&&l){var pm2=l/s;
+  h+=pm2<=v[1]?'<p class="enc-ok">✓ Votre loyer ('+fr(pm2,2)+' €/m²) respecte le plafond.</p>'
+   :'<p class="enc-ko">✗ Votre loyer ('+fr(pm2,2)+' €/m²) dépasse le plafond d\\'environ '+fr(l-v[1]*s,0)+' € par mois. Sans complément de loyer justifié au bail, ce dépassement est contestable (voir les recours ci-dessous).</p>'}
+ res.hidden=false;res.innerHTML=h;
+}
+['enc-q','enc-p','enc-e','enc-m','enc-s','enc-l'].forEach(function(i){$(i).addEventListener('input',upd)});
+})();
+  </script>
+</section>`;
+}
+
+/* ----------------------- Recherche client-side ----------------------- */
+
+(function buildRecherche() {
+  const content = `
+<nav class="breadcrumb"><a href="/">Accueil</a> › Recherche</nav>
+<header class="page-head" style="--t:${PAL.bleu2};--tbg:${PAL.cielClair}">
+  <span class="page-head-icon">${icon('annuaire', PAL.bleu2)}</span>
+  <div>
+    <h1>Rechercher sur ${esc(SITE.name)}</h1>
+    <p class="lead">Une commune, une résidence, un foyer, un dispositif ou une aide&nbsp;: tout le contenu du site est cherchable ici, y compris les ${fmt(SEARCH_INDEX.filter(e => DATA_SEARCH_CATS.includes(e.c)).length)} entrées de nos annuaires de données publiques.</p>
+  </div>
+</header>
+<p><input id="q" type="search" class="search-input" aria-label="Rechercher sur le site" placeholder="Ex. : Massy, résidence CROUS, FJT, Visale, encadrement…" autocomplete="off"></p>
+<p class="result-count" id="count"></p>
+<ul class="result-list" id="results"></ul>
+<noscript><p>La recherche a besoin de JavaScript. Sans lui, parcourez les <a href="/annuaire/">annuaires</a> ou les <a href="/">parcours</a>.</p></noscript>
+<script>
+(function(){
+var IDX=null,inp=document.getElementById('q'),out=document.getElementById('results'),cnt=document.getElementById('count');
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'')}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function run(){
+ var q=norm(inp.value.trim());
+ if(q.length<2){out.innerHTML='';cnt.textContent='';return}
+ if(!IDX){cnt.textContent='Chargement de l\\'index…';
+  fetch('/search-index.json').then(function(r){return r.json()}).then(function(j){
+   IDX=j.map(function(e){e.nt=norm(e.t);e.nd=norm(e.d||'');e.nc=norm(e.c||'');return e});run()})
+  .catch(function(){cnt.textContent='Impossible de charger l\\'index de recherche.'});return}
+ var toks=q.split(/\\s+/).filter(Boolean),res=[];
+ for(var i=0;i<IDX.length;i++){var e=IDX[i],score=0,ok=true;
+  for(var j=0;j<toks.length;j++){var t=toks[j];
+   if(e.nt.indexOf(t)>=0){score+=e.nt.indexOf(t)===0?4:3}
+   else if(e.nd.indexOf(t)>=0){score+=1}
+   else if(e.nc.indexOf(t)>=0){score+=1}
+   else{ok=false;break}}
+  if(ok){res.push([score,e])}}
+ res.sort(function(a,b){return b[0]-a[0]});
+ cnt.textContent=res.length?res.length+' résultat'+(res.length>1?'s':''):'Aucun résultat. Essayez un nom de commune, de résidence ou de dispositif.';
+ out.innerHTML=res.slice(0,60).map(function(r){var e=r[1];
+  return '<li><span class="badge-cat">'+esc(e.c)+'</span><div><a href="'+esc(e.u)+'">'+esc(e.t)+'</a>'+(e.d?'<br><small>'+esc(e.d)+'</small>':'')+'</div></li>'}).join('');
+}
+var deb;inp.addEventListener('input',function(){clearTimeout(deb);deb=setTimeout(run,120)});
+var m=location.search.match(/[?&]q=([^&]+)/);
+if(m){inp.value=decodeURIComponent(m[1].replace(/\\+/g,' '));run()}
+inp.focus();
+})();
+</script>`;
+  addPage('/recherche/', layout({
+    title: `Rechercher | ${SITE.name}`,
+    metaDescription: `Recherchez une commune, une résidence CROUS, un FJT, une résidence autonomie, un dispositif ou une aide au logement en Île-de-France.`,
+    urlPath: '/recherche/',
+    content,
+    breadcrumbs: [{ name: 'Recherche', url: '/recherche/' }],
+  }), '0.3');
 })();
 
 /* Mentions légales */
@@ -478,6 +1015,42 @@ h1{font-size:clamp(1.7rem,3.6vw,2.4rem);letter-spacing:-.015em}h2{font-size:1.4r
 .footer-brand{color:#fff;font-weight:700;font-size:1.05rem}.footer-title{color:#fff;font-weight:600}
 .site-footer ul{list-style:none;padding:0;margin:0}.site-footer li{margin:.38rem 0}.site-footer a{color:#9fc1e0;text-decoration:none}.site-footer a:hover{text-decoration:underline;color:#cfe3f4}
 .footer-legal{border-top:1px solid #33414e;margin-top:1.6rem;padding-top:1rem;color:#8a98a5}
+/* ---- Annuaires de données (Phase 2) ---- */
+[id]{scroll-margin-top:16px}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.dir-list{list-style:none;padding:0;margin:1.2rem 0}
+.dir-item{border:1px solid var(--bord);border-left:5px solid var(--t,var(--bleu2));border-radius:14px;padding:14px 20px;margin:.8rem 0;background:var(--fond)}
+.dir-item h3{margin:.05rem 0 .3rem;font-size:1.05rem}
+.dir-addr{margin:.15rem 0;color:var(--gris)}
+.dir-meta{margin:.15rem 0;font-size:.92rem}
+.dir-tags{margin:.4rem 0 .1rem}
+.dir-tags span{display:inline-block;background:var(--fond2);border:1px solid var(--bord);border-radius:999px;padding:2px 10px;font-size:.76rem;margin:2px 5px 2px 0;color:var(--gris)}
+.dir-links{margin:.4rem 0 .1rem;font-size:.92rem}
+/* ---- Tableaux de données ---- */
+.table-wrap{overflow-x:auto;margin:1.2rem 0;border:1px solid var(--bord);border-radius:14px}
+table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(--fond)}
+.data th{background:var(--ciel);color:var(--bleu);text-align:left;padding:9px 12px;white-space:nowrap}
+.data td{border-top:1px solid var(--bord);padding:7px 12px}
+.data tbody tr:hover td{background:var(--fond2)}
+.data td.num,.data th.num{text-align:right;font-variant-numeric:tabular-nums}
+.badge{display:inline-block;border-radius:6px;padding:1px 8px;font-size:.74rem;font-weight:650;white-space:nowrap}
+.badge-def{background:#fdecdd;color:#a8492f}
+.badge-car{background:#c2563c;color:#fff}
+/* ---- Outil encadrement ---- */
+.tool{background:var(--ciel);border:1px solid var(--bord);border-radius:16px;padding:10px 24px 18px;margin:0 0 2rem}
+.tool-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:1rem 0}
+.tool-form label{font-size:.82rem;font-weight:650;color:var(--bleu);display:block;margin-bottom:3px}
+.tool-form select,.tool-form input{width:100%;padding:8px 10px;border:1px solid var(--bord);border-radius:8px;font:inherit;background:#fff}
+.tool-result{background:#fff;border:1px solid var(--bord);border-left:5px solid var(--accent);border-radius:12px;padding:12px 18px;margin:.8rem 0}
+.enc-ok{color:#2e7050;font-weight:650}.enc-ko{color:#b3261e;font-weight:650}
+/* ---- Recherche ---- */
+.search-input{width:100%;font-size:1.02rem;padding:11px 16px;border:2px solid var(--bleu2);border-radius:12px;font-family:inherit}
+.search-inline{max-width:340px;display:inline-block;padding:8px 12px;font-size:.95rem;border-width:1px;border-color:var(--bord)}
+.result-count{color:var(--gris);font-size:.88rem}
+.result-list{list-style:none;padding:0}
+.result-list li{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--bord);border-radius:12px;padding:10px 16px;margin:.55rem 0}
+.result-list small{color:var(--gris)}
+.badge-cat{flex:none;background:var(--ciel);color:var(--bleu);border-radius:6px;padding:2px 8px;font-size:.72rem;font-weight:650;margin-top:2px;white-space:nowrap}
 /* ---- Responsive ---- */
 @media(max-width:760px){
 .hero{grid-template-columns:1fr;padding:24px 22px 20px;gap:8px}
@@ -498,6 +1071,21 @@ for (const { urlPath, html } of pages) {
 }
 
 fs.writeFileSync(path.join(DIST, 'style.css'), css());
+
+/* Données consommées côté client (outil encadrement, recherche) */
+if (ENCADREMENT) {
+  const grille = {};
+  for (const r of ENCADREMENT.records) {
+    grille[`${r.quartierId}|${r.pieces}|${EPOQUES.indexOf(r.epoque)}|${r.meuble ? 1 : 0}`] = [r.ref, r.refMajore, r.refMinore];
+  }
+  fs.mkdirSync(path.join(DIST, 'data'), { recursive: true });
+  fs.writeFileSync(path.join(DIST, 'data', 'encadrement-loyers-paris.json'), JSON.stringify({
+    millesime: ENCADREMENT._meta.millesime,
+    attribution: ENCADREMENT._meta.attribution,
+    grille,
+  }));
+}
+fs.writeFileSync(path.join(DIST, 'search-index.json'), JSON.stringify(SEARCH_INDEX));
 
 /* Assets statiques (og-image.png…) copiés tels quels */
 const STATIC = path.join(ROOT, 'static');

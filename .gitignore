@@ -1,3 +1,4 @@
 site/dist/
+site/ingest/.cache/
 *.docx
 ~$*
