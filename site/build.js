@@ -1051,7 +1051,7 @@ h1{font-size:clamp(1.7rem,3.6vw,2.4rem);letter-spacing:-.015em}h2{font-size:1.4r
 .page-head{display:flex;gap:18px;align-items:flex-start;background:linear-gradient(135deg,var(--tbg,var(--ciel)),#fff 125%);border:1px solid var(--bord);border-left:6px solid var(--t,var(--bleu2));border-radius:18px;padding:22px 26px;margin:0 0 1.8rem}
 .page-head-icon{flex:none;width:46px;height:46px;background:#fff;border-radius:12px;padding:9px;box-shadow:0 3px 10px rgba(31,78,121,.12);margin-top:4px}
 .page-head-icon svg{width:100%;height:100%}
-.page-illu{flex:none;width:230px;height:auto;border-radius:14px;margin-left:auto;align-self:center;box-shadow:0 6px 18px rgba(31,78,121,.14)}
+.page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 17px 17px 0;margin:-22px -26px -22px 8px}
 .page-head h1{margin:.1rem 0 .5rem}.page-head .lead{margin:0}
 /* ---- Étapes numérotées ---- */
 .steps{counter-reset:etape}
@@ -1117,7 +1117,7 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .hero{grid-template-columns:1fr;padding:24px 22px 20px;gap:8px}
 .hero-illo{margin-top:.6rem}
 .page-head{flex-direction:column;gap:12px;padding:20px}
-.page-illu{width:100%;max-width:320px;margin:0 auto}
+.page-illu{width:calc(100% + 40px);max-width:none;margin:0 -20px -20px;border-radius:0 0 17px 17px;max-height:240px}
 .step{padding-left:58px}
 }`; }
 
