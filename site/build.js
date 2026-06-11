@@ -156,10 +156,12 @@ const FAVICON = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" view
 /* Marque du header : tuile « verre » + maison blanche, porte terracotta
  * (même langage que le favicon). La porte s'éclaire au survol. */
 const BRAND_MARK = `<svg class="brand-mark" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#fff" opacity=".13"/><rect x="1" y="1" width="30" height="30" rx="7" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/><path d="M16 6.5l10.5 8.4h-3.1v9.6h-5.5v-6.2h-3.8v6.2H8.6v-9.6H5.5z" fill="#fff"/><path d="M19.4 18.3h2.5v6.2h-2.5z" class="brand-door" fill="${PAL.accent}"/></svg>`;
-/* Wordmark : dernier mot du nom en accent. */
+/* Wordmark : dernier mot du nom en accent, son « A » initial remplacé par
+ * une maison-lettre (pignon = chapeau du A, porte = contrepoinçon). */
+const BRAND_A = `<svg class="brand-a" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12 1l11 9.5V25h-7v-7.6H8V25H1V10.5z" fill="currentColor"/></svg>`;
 const brandWords = SITE.name.split(' ');
 const brandLastWord = brandWords.pop();
-const BRAND_HTML = `${esc(brandWords.join(' '))} <em>${esc(brandLastWord)}</em>`;
+const BRAND_HTML = `${esc(brandWords.join(' '))} <em>${brandLastWord.startsWith('A') ? BRAND_A + esc(brandLastWord.slice(1)) : esc(brandLastWord)}</em>`;
 
 /* ----------------------------- Layout ------------------------------ */
 
@@ -227,7 +229,7 @@ ${ld}
 <body>
 <header class="site-header">
   <div class="container">
-    <a class="brand" href="/" aria-label="${esc(SITE.name)} — accueil">${BRAND_MARK}<span class="brand-text">${BRAND_HTML}<span class="brand-sub">Île-de-France</span></span></a>
+    <a class="brand" href="/" aria-label="${esc(SITE.name)} — accueil">${BRAND_MARK}<span class="brand-text" aria-hidden="true">${BRAND_HTML}<span class="brand-sub">Île-de-France</span></span></a>
     <nav class="main-nav">${nav}<a href="/annuaire/">Annuaire</a><a href="/recherche/">Rechercher</a></nav>
   </div>
 </header>
@@ -1054,6 +1056,7 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .brand:hover .brand-door{fill:#ffb39e}
 .brand-text{font-weight:800;font-size:1.22rem;letter-spacing:-.015em;line-height:1.15}
 .brand-text em{font-style:normal;color:#f3a18b}
+.brand-a{height:.78em;width:auto;margin-right:.02em}
 .brand-sub{display:block;font-size:.64rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#9fc1e0}
 .main-nav{display:flex;flex-wrap:wrap;gap:4px 6px}
 .main-nav a{color:#fff;text-decoration:none;font-size:.93rem;opacity:.92;padding:6px 12px;border-radius:8px;transition:background .15s}

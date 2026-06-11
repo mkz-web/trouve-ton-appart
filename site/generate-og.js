@@ -34,21 +34,23 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 *{margin:0;box-sizing:border-box}
 body{width:1200px;height:630px;font-family:"Segoe UI",system-ui,Arial,sans-serif;
 background:linear-gradient(160deg,#e8f1f9 0%,#ffffff 70%);overflow:hidden;position:relative}
-.bar{position:absolute;top:0;left:0;right:0;height:14px;background:linear-gradient(90deg,#1f4e79 60%,#e07a5f)}
-.txt{position:absolute;left:80px;top:130px;max-width:640px}
-h1{font-size:64px;color:#1f4e79;letter-spacing:-1px;line-height:1.1}
+.bar{position:absolute;top:0;left:0;right:0;height:14px;background:linear-gradient(90deg,#2e74b5 0 34%,#e07a5f 34% 67%,#3d8b6e 67%)}
+.txt{position:absolute;left:80px;top:118px;max-width:660px}
+h1{font-size:68px;color:#1f4e79;letter-spacing:-1.5px;line-height:1.1;font-weight:800}
+h1 em{font-style:normal;color:#c2563c}
+h1 svg{height:50px;width:auto;margin-right:2px}
 p{font-size:30px;color:#5b6770;margin-top:26px;line-height:1.4}
 .tag{display:inline-block;margin-top:34px;background:#c2563c;color:#fff;font-size:26px;font-weight:600;
 padding:14px 30px;border-radius:12px}
-svg{position:absolute;right:40px;bottom:0;width:430px}
+.skyline{position:absolute;right:40px;bottom:0;width:430px}
 </style></head><body>
 <div class="bar"></div>
 <div class="txt">
-  <h1>Trouve Ton Appart</h1>
+  <h1>Trouve Ton <em><svg viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg"><path d="M12 1l11 9.5V25h-7v-7.6H8V25H1V10.5z" fill="currentColor"/></svg>ppart</em></h1>
   <p>Le bon guichet du logement en Île-de-France, selon votre profil&nbsp;: étudiant, logement social, mobilité pro.</p>
   <span class="tag">trouve-ton-appart.fr</span>
 </div>
-<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg">
+<svg class="skyline" viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg">
   <circle cx="566" cy="54" r="26" fill="#e07a5f"/>
   <g fill="#cfe3f4"><polygon points="92,28 98,28 122,238 68,238"/><rect x="70" y="118" width="50" height="7" rx="3"/><rect x="78" y="170" width="35" height="6" rx="3"/><rect x="91" y="14" width="8" height="18" rx="2"/></g>
   <g><rect x="150" y="104" width="92" height="134" fill="#2e74b5"/><polygon points="150,104 242,104 232,82 160,82" fill="#1f4e79"/><rect x="188" y="206" width="18" height="32" rx="2" fill="#e07a5f"/></g>
