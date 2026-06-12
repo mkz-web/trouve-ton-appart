@@ -672,7 +672,27 @@ ${items.map(cfg.renderItem).join('\n')}
         '@type': 'ItemList',
         name: h1,
         numberOfItems: items.length,
-        itemListElement: items.map((r, i) => ({ '@type': 'ListItem', position: i + 1, name: r.nom })),
+        /* Google exige un `item` complet dans chaque ListItem (erreur GSC
+         * « Champ item manquant » sinon). Residence = sous-type de Place. */
+        itemListElement: items.map((r, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          item: {
+            '@type': 'Residence',
+            name: r.nom,
+            url: `${SITE.baseUrl}${urlPath}#r-${r.finess || r.id}`,
+            ...(r.adresse || r.cp || r.commune ? {
+              address: {
+                '@type': 'PostalAddress',
+                ...(r.adresse ? { streetAddress: r.adresse } : {}),
+                ...(r.cp ? { postalCode: r.cp } : {}),
+                ...(r.commune ? { addressLocality: r.commune } : {}),
+                addressCountry: 'FR',
+              },
+            } : {}),
+            ...(r.tel ? { telephone: r.tel } : {}),
+          },
+        })),
       }],
     }), '0.6');
   }
