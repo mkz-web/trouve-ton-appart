@@ -859,5 +859,527 @@
       { "label": "Numéros d'urgence et d'écoute (Service-public.fr)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33954" },
       { "label": "DRIHL Île-de-France : le cadre unifié d'intervention des SIAO", "url": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/cadre-unifie-d-intervention-des-siao-a1305.html" }
     ]
+  },
+  {
+    "slug": "solibail",
+    "parcours": [
+      "logement-social"
+    ],
+    "title": "Solibail : conditions, démarches et loyers garantis (2026)",
+    "metaDescription": "Solibail loge des ménages modestes dans le parc privé et garantit le loyer au propriétaire. Conditions, entrée via le SIAO, avantage fiscal : le guide 2026.",
+    "h1": "Solibail : l'intermédiation locative qui loge les ménages et sécurise les propriétaires",
+    "intro": "Un ménage modeste qui sort d'hébergement et ne trouve rien sur le marché. Un propriétaire qui hésite à louer par peur des impayés. Solibail répond aux deux à la fois : une association agréée par l'État loue le logement au propriétaire, le paie chaque mois et y loge une famille qu'elle accompagne vers un logement durable. Voici comment ce dispositif d'intermédiation locative fonctionne en Île-de-France, côté ménage comme côté bailleur.",
+    "sections": [
+      {
+        "h2": "L'essentiel en 30 secondes",
+        "bullets": [
+          "Solibail est un dispositif d'intermédiation locative piloté par l'État en Île-de-France via la DRIHL : une association agréée loue un logement privé au propriétaire, puis y loge un ménage modeste qu'elle accompagne (DRIHL, consulté en juillet 2026).",
+          "Côté ménage, on ne candidate pas directement : l'orientation passe par un travailleur social, qui saisit une évaluation sociale dans la plateforme SI-SIAO avec la préconisation « Solibail » (SIAO Paris, consulté en juillet 2026).",
+          "L'occupation est temporaire : 18 mois, renouvelables 18 mois sous conditions, avec un accompagnement vers un logement définitif, le plus souvent dans le parc social (SIAO Paris, consulté en juillet 2026).",
+          "Côté propriétaire : loyer et charges garantis, gestion et entretien courant assurés par l'association, remise en état en cas de dégradation, bail de 3 ans minimum (DRIHL et ministère chargé du Logement, consultés en juillet 2026).",
+          "Un avantage fiscal peut s'y ajouter via Loc'Avantages : en intermédiation locative, la réduction d'impôt atteindrait 20 à 65 % des loyers bruts, sous conditions (Service-public.fr, fiche vérifiée en mars 2026).",
+          "À Paris intra-muros, Solibail ne s'applique pas : le dispositif équivalent s'appelle « Louez solidaire et sans risque » et il est piloté par la Ville de Paris (Ville de Paris, consulté en juillet 2026)."
+        ]
+      },
+      {
+        "h2": "Solibail, comment ça marche",
+        "paragraphs": [
+          "Le principe de l'intermédiation locative tient en une phrase : un tiers social s'intercale entre le bailleur et l'occupant pour sécuriser les deux. Dans la formule Solibail, dite de location et sous-location, le propriétaire signe un bail avec une association conventionnée par la préfecture de région. C'est l'association qui est locataire en titre : elle verse le loyer et les charges, assure l'entretien courant et reste l'unique interlocuteur du propriétaire (DRIHL et ministère chargé du Logement, consultés en juillet 2026).",
+          "L'association loge dans l'appartement un ménage aux revenus modestes, jusque-là hébergé de façon précaire (hôtel, centre d'hébergement d'urgence), et l'accompagne pendant toute l'occupation. L'objectif est le rebond : préparer l'accès à un logement pérenne. Les résultats sont documentés : en 2016, 1 018 ménages sont sortis de Solibail et 90 % ont ensuite accédé à un logement pérenne (ministère chargé du Logement).",
+          "Solibail couvre l'Île-de-France, hors Paris intra-muros. Des dispositifs équivalents existent dans les autres régions, et Paris a le sien, « Louez solidaire et sans risque », détaillé plus bas ([ministère chargé du Logement](https://www.ecologie.gouv.fr/politiques-publiques/dispositifs-dintermediation-locative), consulté en juillet 2026)."
+        ]
+      },
+      {
+        "h2": "Ménages : qui est logé, et comment entrer dans le dispositif",
+        "paragraphs": [
+          "Solibail s'adresse aux ménages qui sortent d'un hébergement précaire et dont les ressources ne permettent pas d'accéder au marché classique. À Paris, le SIAO précise que le dispositif vise les familles et les couples, sans condition minimale de ressources dès lors que le ménage dispose du « reste-pour-vivre » minimum requis (SIAO Paris, consulté en juillet 2026).",
+          "Il n'y a pas de dossier à déposer soi-même : l'entrée passe obligatoirement par un travailleur social (CCAS, service social de secteur, structure d'hébergement, association agréée). C'est lui qui saisit votre évaluation sociale dans la plateforme SI-SIAO avec la préconisation « Solibail » : c'est cette saisie qui oriente votre ménage vers le dispositif (SIAO Paris, consulté en juillet 2026). Le rôle exact de ce service est expliqué dans notre [guide SIAO et 115](/guides/siao-115-hebergement-urgence/).",
+          "Une fois logé, le ménage n'est pas locataire du propriétaire : il est occupant, lié à l'association par une convention d'occupation. Il verse à l'association une redevance, et l'État verse à l'association le complément (SIAO Paris, consulté en juillet 2026)."
+        ]
+      },
+      {
+        "h2": "Combien de temps reste-t-on dans un logement Solibail ?",
+        "paragraphs": [
+          "L'occupation est temporaire par construction : la convention d'occupation est conclue pour 18 mois, renouvelable 18 mois sous conditions, et la durée moyenne de présence constatée est de 18 mois (SIAO Paris, consulté en juillet 2026).",
+          "Ces mois servent à préparer la sortie : l'association accompagne le ménage dans sa recherche d'un logement définitif dans le parc social (SIAO Paris). Réflexe indispensable : déposez ou renouvelez votre [demande de logement social](/guides/demande-logement-social/) dès l'entrée dans les lieux, car l'ancienneté de la demande compte. Pour repérer les communes où le parc est le plus développé, consultez [nos chiffres du logement social commune par commune](/logement-social/chiffres/).",
+          "Au moment de l'entrée dans le logement définitif, le [Fonds de solidarité logement](/guides/fonds-solidarite-logement/) peut financer le dépôt de garantie et le premier loyer."
+        ]
+      },
+      {
+        "h2": "Propriétaires : ce que Solibail garantit, et ce qu'on attend de vous",
+        "bullets": [
+          "Paiement garanti : la garantie du paiement des loyers et des charges est au cœur du dispositif, l'association locataire versant le loyer chaque mois (ministère chargé du Logement, consulté en juillet 2026).",
+          "Gestion déléguée : signature du bail, état des lieux, gestion locative courante et suivi social du ménage ; l'association est votre unique interlocuteur (DRIHL, consulté en juillet 2026).",
+          "Remise en état : l'association réalise l'état des lieux avec le propriétaire et prend en charge la remise en état du logement en cas de dégradation (DRIHL et ministère chargé du Logement, consultés en juillet 2026).",
+          "Engagement : un bail de 3 ans minimum avec l'association conventionnée (DRIHL, consulté en juillet 2026)."
+        ],
+        "paragraphs": [
+          "Le logement attendu : un appartement libre, non meublé, du T2 au T5, conforme aux normes d'habitabilité, situé en Île-de-France hors Paris. Le loyer est fixé par référence aux prix du marché, puis plafonné : c'est le prix de la sécurité (DRIHL, consulté en juillet 2026).",
+          "Pour proposer un logement, la DRIHL centralise les contacts au 0 810 90 18 85 (Numéro Azur, prix d'un appel local) et à l'adresse contact-solibail.drihl@developpement-durable.gouv.fr (DRIHL, consulté en juillet 2026). Le détail du dispositif est publié sur [la page Solibail de la DRIHL](https://www.drihl.ile-de-france.developpement-durable.gouv.fr/solibail-a325.html)."
+        ]
+      },
+      {
+        "h2": "L'avantage fiscal Loc'Avantages, à vérifier avant de signer",
+        "paragraphs": [
+          "Solibail n'emporte aucun avantage fiscal automatique. En revanche, un propriétaire qui loue via l'intermédiation locative pourrait le cumuler avec le dispositif Loc'Avantages, à condition de signer une convention avec l'Anah et de respecter des plafonds de loyers et de ressources ([fiche F34115 de Service-public.fr](https://www.service-public.gouv.fr/particuliers/vosdroits/F34115), vérifiée en mars 2026).",
+          "Selon cette même fiche, la réduction d'impôt serait de 20 % (niveau Loc1), 40 % (Loc2) ou 65 % (Loc3) des loyers bruts lorsque le logement est loué en intermédiation locative, contre 15 % et 35 % sans elle, le niveau Loc3 étant réservé à l'intermédiation. En contrepartie, le loyer serait plafonné de 15 % à 45 % sous les loyers du marché selon le niveau choisi, et la location aux membres de votre foyer fiscal, à vos ascendants ou descendants serait exclue. La demande de convention devrait être déposée avant le 31 décembre 2027 sur [monprojet.anah.gouv.fr](https://monprojet.anah.gouv.fr/).",
+          "Les règles fiscales évoluent régulièrement : vérifiez la fiche à jour et faites valider votre situation précise avant de vous engager."
+        ]
+      },
+      {
+        "h2": "Louer solidaire à Paris",
+        "paragraphs": [
+          "Paris intra-muros n'est pas couvert par Solibail : la Ville y pilote son propre dispositif d'intermédiation locative, « Louez solidaire et sans risque ». Le principe est le même. Vous confiez votre logement à un organisme agréé, pour 3 ou 6 ans, qui garantit le paiement du loyer et des charges, la gestion et l'accompagnement de l'occupant, et la remise en état des dégradations à la restitution (Ville de Paris, consulté en juillet 2026).",
+          "Le dispositif loge des familles qui sortent d'un hébergement à l'hôtel, des jeunes issus de l'aide sociale à l'enfance et des réfugiés. Le logement doit être situé à Paris et offrir une surface d'au moins 14 m². Depuis 2007, plus de 3 700 ménages ont été accueillis, et le parc compte environ 1 200 logements (Ville de Paris, consulté en juillet 2026). L'association SOLIHA Grand Paris gère le programme pour la Ville : renseignements au 0 800 50 05 45, numéro gratuit, ou sur [paris.fr](https://www.paris.fr/pages/louez-solidaire-142).",
+          "Un repère pour le bailleur parisien : une location classique reste soumise aux plafonds de l'[encadrement des loyers à Paris](/guides/encadrement-des-loyers-paris/). La réduction d'impôt Loc'Avantages, de 20 à 65 % selon la Ville de Paris, peut compenser une partie de la décote de loyer consentie en louant solidaire ; la Ville la conditionne à un engagement de 6 ans."
+        ],
+        "table": {
+          "caption": "Solibail ou Louez solidaire : le bon dispositif selon la localisation du logement (DRIHL et Ville de Paris, consultés en juillet 2026)",
+          "headers": [
+            "Critère",
+            "Solibail",
+            "Louez solidaire et sans risque"
+          ],
+          "rows": [
+            [
+              "Territoire",
+              "Île-de-France, hors Paris",
+              "Paris uniquement"
+            ],
+            [
+              "Pilote",
+              "État (DRIHL Île-de-France)",
+              "Ville de Paris"
+            ],
+            [
+              "Engagement du propriétaire",
+              "Bail de 3 ans minimum avec une association conventionnée",
+              "3 ou 6 ans avec un organisme agréé"
+            ],
+            [
+              "Logement attendu",
+              "Appartement vide, du T2 au T5, aux normes d'habitabilité",
+              "À Paris, 14 m² minimum, aux normes de décence"
+            ],
+            [
+              "Contact",
+              "0 810 90 18 85 (appel local) · [DRIHL](https://www.drihl.ile-de-france.developpement-durable.gouv.fr/solibail-a325.html)",
+              "0 800 50 05 45 (gratuit) · [paris.fr](https://www.paris.fr/pages/louez-solidaire-142)"
+            ]
+          ]
+        }
+      },
+      {
+        "h2": "Les limites à connaître avant de s'engager",
+        "bullets": [
+          "Pour le propriétaire, le loyer est plafonné sous les prix du marché (DRIHL, consulté en juillet 2026) : Solibail est un arbitrage, de la rentabilité contre la sécurité et l'utilité sociale.",
+          "L'engagement est long : 3 ans minimum côté Solibail, 3 ou 6 ans côté Louez solidaire. Le dispositif ne convient pas à un bien que vous comptez vendre ou récupérer à court terme.",
+          "Pour le ménage, Solibail n'est pas un logement définitif : 18 mois renouvelables, dans une logique de transition vers le parc social (SIAO Paris, consulté en juillet 2026).",
+          "Les studios ne sont pas repris par Solibail, qui commence au T2 (DRIHL) : le dispositif s'adresse, selon le SIAO Paris, exclusivement aux familles et aux couples. Personne isolée, orientez-vous plutôt vers la demande de logement social et les résidences sociales.",
+          "L'avantage fiscal n'a rien d'automatique : sans convention Anah signée dans les règles, pas de réduction d'impôt. Sur les sujets fiscaux, faites vérifier votre cas précis."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "C'est quoi un logement Solibail ?",
+        "a": "C'est un logement du parc privé loué par son propriétaire à une association agréée par l'État, qui y loge un ménage modeste sortant d'un hébergement précaire. L'association paie le loyer au propriétaire, accompagne le ménage et sert d'intermédiaire entre les deux : c'est le principe de l'intermédiation locative."
+      },
+      {
+        "q": "Comment faire une demande de logement Solibail ?",
+        "a": "Il n'existe pas de candidature directe. L'entrée passe par un travailleur social (CCAS, service social de secteur, structure d'hébergement, association agréée) qui saisit votre évaluation sociale dans la plateforme SI-SIAO avec la préconisation « Solibail ». C'est cette saisie qui oriente votre ménage vers le dispositif."
+      },
+      {
+        "q": "Quelle est la durée d'un Solibail ?",
+        "a": "Deux durées coexistent. Côté ménage, la convention d'occupation est conclue pour 18 mois, renouvelable 18 mois sous conditions, avec une présence moyenne de 18 mois. Côté propriétaire, le bail signé avec l'association court sur 3 ans minimum."
+      },
+      {
+        "q": "Quels sont les inconvénients du Solibail ?",
+        "a": "Pour le propriétaire : un loyer plafonné, inférieur aux prix du marché, et un engagement de 3 ans minimum. Pour le ménage : un logement temporaire, qui ne remplace pas la demande de logement social. En échange, chacun gagne en sécurité : loyer garanti d'un côté, logement décent et accompagnement de l'autre."
+      },
+      {
+        "q": "Solibail est-il un logement social ?",
+        "a": "Non. Le logement reste privé : il appartient à un bailleur particulier, et le ménage n'est pas locataire HLM mais occupant accompagné par une association. Solibail sert justement de passerelle vers le logement social : la demande de logement social doit être déposée et maintenue en parallèle."
+      },
+      {
+        "q": "Quel est le montant du loyer dans un logement Solibail ?",
+        "a": "Côté propriétaire, le loyer est fixé par référence aux prix du marché puis plafonné. Côté ménage, la participation prend la forme d'une redevance versée à l'association, l'État versant à celle-ci le complément."
+      }
+    ],
+    "sourcesOfficielles": [
+      {
+        "label": "Solibail sur le site de la DRIHL Île-de-France",
+        "url": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/solibail-a325.html"
+      },
+      {
+        "label": "Les dispositifs d'intermédiation locative (ministère chargé du Logement)",
+        "url": "https://www.ecologie.gouv.fr/politiques-publiques/dispositifs-dintermediation-locative"
+      },
+      {
+        "label": "Solibail, le bail solidaire (SIAO Paris)",
+        "url": "https://www.siao.paris/actualites/solibail-le-bail-solidaire"
+      },
+      {
+        "label": "« Louez solidaire et sans risque » (Ville de Paris)",
+        "url": "https://www.paris.fr/pages/louez-solidaire-142"
+      },
+      {
+        "label": "La réduction d'impôt Loc'Avantages (Service-public.fr, fiche F34115)",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34115"
+      }
+    ]
+  },
+  {
+    "slug": "residence-sociale",
+    "parcours": [
+      "logement-social"
+    ],
+    "title": "Résidence sociale : conditions, redevance et demande (2026)",
+    "metaDescription": "Logement meublé tout compris, redevance éligible APL : qui peut vivre en résidence sociale, comment candidater (Adoma, SIAO, Action Logement), combien de temps.",
+    "h1": "Résidence sociale : le logement meublé tremplin, mode d'emploi",
+    "intro": "Studio meublé, redevance unique toutes charges comprises, APL, contrat souple : la résidence sociale est l'une des solutions les plus méconnues pour se loger quand le marché classique ferme ses portes. Elle loge le temps de rebondir : ménages modestes, personnes seules, salariés en mobilité. Ce guide couvre le dispositif dans son ensemble : qui y a droit, combien ça coûte, et surtout comment candidater, canal par canal.",
+    "sections": [
+      {
+        "h2": "L'essentiel en 30 secondes",
+        "bullets": [
+          "Une résidence sociale est un logement-foyer : des logements meublés associés à des espaces collectifs, réservés aux personnes qui ne peuvent pas accéder tout de suite à un logement ordinaire (ministère chargé du Logement, fiche de mai 2021).",
+          "Vous payez une redevance unique, l'équivalent d'un loyer toutes charges comprises : eau, électricité, chauffage, parfois wifi (monparcourshandicap.gouv.fr, décembre 2025). Elle ouvre droit à l'APL.",
+          "Le contrat d'occupation est signé pour un mois et se renouvelle par tacite reconduction ; l'accueil varie en général de un mois à deux ans (ministère chargé du Logement, 2021).",
+          "Des ressources stables, même modestes, sont nécessaires : salaire, AAH, RSA, indemnisation chômage (monparcourshandicap.gouv.fr, 2025).",
+          "Trois canaux de candidature : en direct auprès des gestionnaires comme Adoma, via un travailleur social et le SIAO, ou via Action Logement si vous êtes salarié.",
+          "La France comptait 140 322 places en résidences sociales au 30 juin 2020, foyers de jeunes travailleurs, pensions de famille et résidences accueil compris (ministère chargé du Logement, mai 2021)."
+        ]
+      },
+      {
+        "h2": "Une résidence sociale, c'est quoi exactement ?",
+        "paragraphs": [
+          "La résidence sociale est une modalité de logement-foyer : une forme d'habitat qui associe sur un même site des logements privatifs meublés et des espaces collectifs, décrite par la [fiche pratique du ministère chargé du Logement](https://www.financement-logement-social.logement.gouv.fr/IMG/pdf/16_fiche_pratique-les_residences_sociales__rs_-mai_2021_cle246381.pdf) (mai 2021). Nées en 1995 dans le prolongement de la loi Besson sur le droit au logement, ces résidences offrent une solution temporaire aux personnes qui ne peuvent pas accéder à court terme à un logement décent et indépendant (Unafo).",
+          "Concrètement : vous occupez un studio ou un petit logement meublé, vous signez un contrat d'occupation d'un mois renouvelé par tacite reconduction, et vous versez une redevance qui couvre le loyer et toutes les charges (monparcourshandicap.gouv.fr, décembre 2025). Les résidences sociales sont conventionnées à l'APL : la redevance ouvre droit aux aides au logement (ministère chargé du Logement, 2021).",
+          "Ne confondez pas « sociale » et « HLM ». Le logement social classique se loue vide, avec un bail durable. La résidence sociale, elle, est meublée, temporaire, et s'accompagne d'une gestion locative sociale : animation de la vie collective, lutte contre l'isolement, prévention des impayés, médiation avec les services extérieurs (même fiche)."
+        ]
+      },
+      {
+        "h2": "Qui peut y vivre ? Les conditions d'accès",
+        "bullets": [
+          "La définition légale est large : toute personne ou famille éprouvant des difficultés particulières, en raison de ses ressources ou de ses conditions d'existence, pour accéder à un logement décent et indépendant (ministère chargé du Logement, 2021).",
+          "Les logements conviennent surtout aux petits ménages : personnes isolées, familles monoparentales, couples avec un enfant au maximum (même fiche).",
+          "Les personnes en mobilité, en formation professionnelle et les jeunes travailleurs font explicitement partie des publics visés, tout comme les salariés en CDD ou les personnes en situation de handicap (ministère, 2021 ; monparcourshandicap.gouv.fr, 2025).",
+          "Des ressources stables sont nécessaires pour payer la redevance : revenus d'activité, allocation adulte handicapé, RSA, indemnisation chômage (monparcourshandicap.gouv.fr, décembre 2025).",
+          "Chez Adoma, il faut une pièce d'identité ou un titre de séjour en cours de validité, occuper le logement en résidence principale et respecter les plafonds de ressources du logement social (adoma.cdc-habitat.fr, 2026)."
+        ],
+        "paragraphs": [
+          "Chaque résidence définit son public dans son « projet social » : certaines accueillent tous les profils, d'autres sont spécialisées (ministère chargé du Logement, 2021). D'où l'intérêt de candidater sur plusieurs résidences à la fois."
+        ]
+      },
+      {
+        "h2": "Combien ça coûte : la redevance, tout compris",
+        "paragraphs": [
+          "En résidence sociale, pas de loyer, de charges et de factures séparés : vous versez une redevance unique. Elle correspond à un loyer toutes charges comprises (électricité, eau, chauffage, wifi selon les résidences), plus la rémunération de prestations diverses (monparcourshandicap.gouv.fr, décembre 2025).",
+          "Le montant dépend de la résidence et de la taille du logement. Surtout, la redevance ouvre droit aux aides au logement : l'APL, versée par la CAF (ou la MSA pour le régime agricole), vient en déduction et réduit nettement le coût réel (ministère chargé du Logement, 2021).",
+          "Pas de mobilier à acheter, pas d'abonnements à souscrire, pas de garant personnel à trouver comme dans le parc privé (un dépôt de garantie peut en revanche être demandé par le gestionnaire) : pour une installation rapide ou un budget serré, c'est l'un des grands atouts du dispositif."
+        ]
+      },
+      {
+        "h2": "Comment obtenir une place : les trois canaux réels",
+        "bullets": [
+          "1. La candidature directe auprès des gestionnaires. Adoma, opérateur de référence du logement accompagné rattaché au groupe CDC Habitat, avec plus de 83 500 logements, prend les demandes entièrement en ligne sur [ddl.adoma.cdc-habitat.fr](https://ddl.adoma.cdc-habitat.fr/homepage) ; la demande reste valable 6 mois, renouvelable (adoma.cdc-habitat.fr, 2026). D'autres gestionnaires associatifs, comme Coallia ou les Apprentis d'Auteuil, reçoivent les candidatures résidence par résidence.",
+          "2. Le travailleur social et le SIAO. Dans chaque résidence, 30 % des places relèvent du contingent de l'État et sont attribuées uniquement sur orientation du SIAO, le service qui centralise les demandes d'hébergement et de logement accompagné (ministère chargé du Logement, 2021). Si vous êtes hébergé, à l'hôtel ou à la rue, c'est le canal principal : prenez rendez-vous avec un travailleur social (CCAS, service social départemental) et lisez notre [guide du SIAO et du 115](/guides/siao-115-hebergement-urgence/).",
+          "3. Action Logement, si vous êtes salarié. La plateforme [logement-actionlogement.fr](https://logement-actionlogement.fr/) référence des logements temporaires meublés, dont des places en résidences sociales, pour les salariés des entreprises privées de 10 salariés et plus, ou agricoles de 50 salariés et plus (CDI, CDD, intérim, alternance, stage rémunéré). Le service est gratuit (actionlogement.fr, 2026)."
+        ],
+        "paragraphs": [
+          "Ces canaux ne s'excluent pas : activez-les en parallèle. Et méfiez-vous de toute demande d'argent pour « réserver » un logement : Action Logement rappelle que ses services sont strictement gratuits et invite à signaler les fraudes (actionlogement.fr, 2026)."
+        ]
+      },
+      {
+        "h2": "Combien de temps peut-on rester ?",
+        "paragraphs": [
+          "Le contrat d'occupation est signé pour un mois et se renouvelle par tacite reconduction. La réglementation n'impose aucune durée maximale ; dans les faits, l'accueil varie selon les situations de un mois à deux ans (ministère chargé du Logement, fiche de mai 2021).",
+          "La logique du dispositif reste le passage : la résidence sociale vous loge le temps de stabiliser votre situation, pas définitivement. D'où l'importance d'anticiper la sortie dès le premier mois, comme détaillé plus bas."
+        ]
+      },
+      {
+        "h2": "Résidence sociale, FJT, pension de famille, résidence autonomie : le comparatif",
+        "paragraphs": [
+          "La résidence sociale est la catégorie générique. Le foyer de jeunes travailleurs en est la déclinaison réservée aux jeunes : il cumule le statut de résidence sociale et celui d'établissement social et médico-social (ministère chargé du Logement, 2021). Notre [guide des FJT](/guides/foyer-jeune-travailleur/) lui est consacré. La pension de famille en est une autre forme, pensée pour durer (Unafo). La résidence autonomie, elle, relève du champ des personnes âgées."
+        ],
+        "table": {
+          "caption": "Résidence sociale, FJT, pension de famille, résidence autonomie : qui, combien de temps, où chercher (sources officielles, 2020-2026)",
+          "headers": [
+            "Dispositif",
+            "Public",
+            "Durée de séjour",
+            "Où chercher"
+          ],
+          "rows": [
+            [
+              "Résidence sociale « classique »",
+              "Ménages modestes : personnes isolées, familles monoparentales, personnes en mobilité ou en formation",
+              "Temporaire : de 1 mois à 2 ans en général",
+              "Gestionnaires (Adoma…), SIAO, Action Logement"
+            ],
+            [
+              "Foyer de jeunes travailleurs",
+              "Jeunes de 16 à 25 ans, jusqu'à 30 ans selon les foyers",
+              "Contrat d'un mois reconduit automatiquement",
+              "[Notre annuaire des FJT franciliens](/foyers-jeunes-travailleurs/)"
+            ],
+            [
+              "Pension de famille",
+              "Personnes très isolées, souvent après un parcours de rue ou d'hébergement",
+              "Sans limitation : vocation pérenne",
+              "Orientation par le SIAO, via un travailleur social"
+            ],
+            [
+              "Résidence autonomie",
+              "En principe, personnes de 60 ans et plus, autonomes (GIR 5 ou 6)",
+              "Durable : contrat de séjour, admission sur dossier",
+              "[Notre annuaire des résidences autonomie](/residences-autonomie/)"
+            ]
+          ]
+        }
+      },
+      {
+        "h2": "Préparer la suite : du logement temporaire au logement durable",
+        "paragraphs": [
+          "Le meilleur réflexe s'active le jour de l'entrée : déposez ou renouvelez votre [demande de logement social](/guides/demande-logement-social/). L'ancienneté de la demande compte dans l'attribution, et la résidence sociale est précisément conçue comme un sas vers le parc classique.",
+          "Au moment de la sortie, le [Fonds de solidarité logement](/guides/fonds-solidarite-logement/) peut financer le dépôt de garantie, le premier loyer ou l'assurance habitation du logement suivant : les personnes hébergées en résidence sociale ou en foyer font partie de ses publics. L'équipe de gestion locative sociale de votre résidence est aussi là pour accompagner ces démarches : sollicitez-la."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "C'est quoi, une résidence sociale ?",
+        "a": "Un logement-foyer : une résidence de logements meublés, avec des espaces collectifs, destinée aux personnes qui ne peuvent pas accéder immédiatement à un logement ordinaire. On y paye une redevance tout compris, éligible à l'APL, et on y reste en général de un mois à deux ans."
+      },
+      {
+        "q": "Comment obtenir une résidence sociale ?",
+        "a": "Trois canaux : candidater directement auprès des gestionnaires (Adoma prend les demandes en ligne), passer par un travailleur social qui saisit le SIAO (30 % des places de chaque résidence sont attribuées sur orientation du SIAO), ou utiliser la plateforme logement d'Action Logement si vous êtes salarié d'une entreprise privée de 10 salariés et plus."
+      },
+      {
+        "q": "Quelle est la mission d'une résidence sociale ?",
+        "a": "Offrir un logement meublé temporaire aux personnes dont les ressources ou les difficultés sociales ne permettent pas d'accéder tout de suite à un logement ordinaire, avec une gestion locative sociale : régulation de la vie collective, lutte contre l'isolement, prévention des impayés. C'est un tremplin vers le logement durable."
+      },
+      {
+        "q": "Quelle est la différence entre une résidence sociale et un logement social HLM ?",
+        "a": "Le logement social HLM se loue vide, avec un bail sans limite de durée. La résidence sociale est meublée, se paye par une redevance tout compris et repose sur un contrat d'occupation d'un mois renouvelable : c'est une solution transitoire, pas un logement définitif."
+      },
+      {
+        "q": "A-t-on droit aux aides de la CAF en résidence sociale ?",
+        "a": "Oui. Les résidences sociales sont conventionnées à l'APL : la redevance ouvre droit aux aides au logement, versées par la CAF (ou la MSA), ce qui réduit nettement le coût réel du logement."
+      },
+      {
+        "q": "Adoma, c'est quoi ?",
+        "a": "L'opérateur de référence du logement accompagné en France, rattaché au groupe CDC Habitat, avec plus de 83 500 logements. Adoma gère des résidences sociales dans toute la France et prend les demandes de logement directement en ligne, sans intermédiaire obligatoire."
+      }
+    ],
+    "sourcesOfficielles": [
+      {
+        "label": "Fiche « Résidence sociale classique », ministère chargé du Logement (PDF, mai 2021)",
+        "url": "https://www.financement-logement-social.logement.gouv.fr/IMG/pdf/16_fiche_pratique-les_residences_sociales__rs_-mai_2021_cle246381.pdf"
+      },
+      {
+        "label": "Louer en résidence sociale (monparcourshandicap.gouv.fr)",
+        "url": "https://www.monparcourshandicap.gouv.fr/logement/louer-en-residence-sociale-que-faut-il-savoir"
+      },
+      {
+        "label": "Les résidences sociales, par l'Unafo (union du logement accompagné)",
+        "url": "https://www.unafo.org/le-logement-accompagne/les-residences-sociales/"
+      },
+      {
+        "label": "La demande de logement chez Adoma",
+        "url": "https://www.adoma.cdc-habitat.fr/tout-savoir-demande-logement/"
+      },
+      {
+        "label": "Le logement temporaire d'Action Logement",
+        "url": "https://www.actionlogement.fr/logement-temporaire"
+      }
+    ]
+  },
+  {
+    "slug": "logement-fonctionnaire",
+    "parcours": [
+      "logement-social",
+      "mobilite"
+    ],
+    "title": "Logement fonctionnaire : qui a droit à quoi (guide 2026)",
+    "metaDescription": "BALAE, AIP, logement social, LLI : les solutions de logement fonctionnaire en Île-de-France selon votre versant, État, territorial ou hospitalier.",
+    "h1": "Logement fonctionnaire : les vraies portes d'entrée en Île-de-France",
+    "intro": "Contrairement à une idée répandue, il n'existe pas de parc « logement fonctionnaire » unique où il suffirait de candidater. Il existe des dispositifs, réels mais éclatés, selon votre fonction publique : d'État, territoriale ou hospitalière. Un agent de ministère muté à Paris ne frappe pas aux mêmes portes qu'un adjoint territorial ou qu'une infirmière. Voici qui a droit à quoi, où candidater, et ce qui ne fonctionne pas pour les agents publics.",
+    "sections": [
+      {
+        "h2": "L'essentiel en 30 secondes",
+        "bullets": [
+          "Il n'y a pas un « logement fonctionnaire » : les dispositifs dépendent de votre versant (État, territoriale, hospitalière) et souvent de votre lieu d'affectation.",
+          "Agents de l'État affectés en Île-de-France : la bourse Balae publie les logements sociaux réservés par l'État pour ses agents, quel que soit leur ministère (DRIHL, 2026).",
+          "L'AIP rembourse jusqu'à 1 500 € de frais d'installation en zone tendue (700 € ailleurs), y compris pour les contractuels d'au moins un an (préfecture de région, 2026).",
+          "Hospitaliers : le CGOS propose une aide remboursable de 400 à 8 000 € et, depuis septembre 2024, un traitement prioritaire chez CDC Habitat (portail de la fonction publique, 2026).",
+          "Territoriaux : pas de bourse nationale ; la voie principale reste la demande de logement social de droit commun, complétée par le logement intermédiaire.",
+          "Action Logement (AL'in, Loca-Pass) est réservé aux salariés du privé ; la garantie Visale reste en revanche ouverte à tout agent de moins de 30 ans (Service-public.fr, 2026)."
+        ]
+      },
+      {
+        "h2": "Pas un guichet, trois versants : qui a droit à quoi",
+        "paragraphs": [
+          "La fonction publique compte trois versants : l'État (ministères, enseignants, police, justice, préfectures), la territoriale (communes, départements, régions) et l'hospitalière. Chaque dispositif logement est attaché à un versant, parfois à une seule région. Le [portail officiel du logement des agents publics](https://www.logement.fonction-publique.gouv.fr/), géré par la DGAFP, les recense tous et propose un simulateur d'éligibilité, en location comme en accession.",
+          "À ne pas confondre avec le logement de fonction : on n'y candidate pas. Il est attaché à certains postes et attribué par l'administration, soit en concession pour nécessité absolue de service (logement nu gratuit lorsque la fonction exige de résider sur place), soit en convention d'occupation précaire avec astreinte, moyennant une redevance de 50 % de la valeur locative réelle (code général de la propriété des personnes publiques, articles R2124-64 et suivants)."
+        ],
+        "table": {
+          "caption": "Les dispositifs logement selon votre versant de la fonction publique (sources officielles, vérifiées en juillet 2026)",
+          "headers": [
+            "Dispositif",
+            "Qui y a droit",
+            "Où s'adresser"
+          ],
+          "rows": [
+            [
+              "Bourse Balae (logements sociaux réservés)",
+              "Agents publics de l'État affectés en Île-de-France, sous condition de ressources",
+              "[balae.logement.gouv.fr](https://www.balae.logement.gouv.fr/)"
+            ],
+            [
+              "AIP (aide à l'installation, jusqu'à 1 500 €)",
+              "Agents de l'État : stagiaires, titulaires, contractuels d'au moins un an, sous plafond de revenu",
+              "[aip-fonctionpublique.fr](https://www.aip-fonctionpublique.fr/)"
+            ],
+            [
+              "Prestations SRIAS (urgence, accompagnement)",
+              "Agents de l'État en Île-de-France",
+              "[srias.ile-de-france.gouv.fr](https://srias.ile-de-france.gouv.fr/)"
+            ],
+            [
+              "Aides logement du CGOS",
+              "Agents hospitaliers des établissements adhérents (la plupart, hors AP-HP)",
+              "[Le CGOS sur le portail logement](https://www.logement.fonction-publique.gouv.fr/cgos)"
+            ],
+            [
+              "Logement social classique",
+              "Tous les versants, sous plafonds de ressources",
+              "[Notre guide de la demande](/guides/demande-logement-social/)"
+            ],
+            [
+              "Logement locatif intermédiaire (LLI)",
+              "Tous les versants, plafonds plus élevés que le HLM",
+              "[Notre guide du LLI](/guides/logement-intermediaire/)"
+            ],
+            [
+              "Garantie Visale (caution gratuite)",
+              "Tout agent de moins de 30 ans ; au-delà, réservée pour l'essentiel aux salariés du privé",
+              "[Notre guide Visale](/guides/visale/)"
+            ]
+          ]
+        }
+      },
+      {
+        "h2": "Balae : la bourse au logement des agents de l'État en Île-de-France",
+        "paragraphs": [
+          "Il existe des logements sociaux spécifiquement réservés aux agents de l'État en Île-de-France, quel que soit leur ministère (DRIHL, 2026). La bourse Balae les publie en ligne : vous candidatez vous-même sur les annonces, et un indice de priorité, calculé selon des règles identiques pour tous, départage les candidats.",
+          "Elle s'adresse aux agents publics de l'État affectés en Île-de-France, sous condition de ressources ; son extension à d'autres territoires est à l'étude (portail de la fonction publique, juillet 2026). L'accès se fait en trois étapes :"
+        ],
+        "bullets": [
+          "1. Déposez d'abord une demande de logement social classique, en ligne sur [demande-logement-social.gouv.fr](https://www.demande-logement-social.gouv.fr/) : elle vous attribue le numéro unique régional exigé par Balae. Elle est valable un an, à mettre à jour à chaque changement de situation (DRIHL, 2026).",
+          "2. Transmettez la « fiche de situation demandeur de logement, agent de l'État » au correspondant logement de votre ministère, avec les justificatifs : c'est lui qui ouvre vos droits d'accès à la bourse.",
+          "3. Candidatez sur [balae.logement.gouv.fr](https://www.balae.logement.gouv.fr/) : la plateforme, modernisée le 22 juin 2026, affiche votre indice de priorité, vous notifie à chaque étape et permet d'annuler une candidature dans les 7 jours (DRIHL, juin 2026)."
+        ]
+      },
+      {
+        "h2": "La demande de logement social : la voie principale, tous versants confondus",
+        "paragraphs": [
+          "Beaucoup d'agents s'en croient exclus à tort. En 2026, une personne seule peut prétendre à un logement PLS à Paris et en Île-de-France jusqu'à 34 996 € de revenu fiscal de référence, un couple jusqu'à 52 303 € (Service-public.fr, 2026, revenus 2024). Une grande partie des grilles de rémunération publiques passe sous ces plafonds.",
+          "La démarche est la même pour tous les versants : notre [guide de la demande de logement social](/guides/demande-logement-social/) détaille le dossier, le renouvellement et les pièges à éviter. Pour cibler les communes où le parc est le plus développé, appuyez-vous sur [nos chiffres commune par commune](/logement-social/chiffres/) : taille du parc, loyers médians, vacance."
+        ]
+      },
+      {
+        "h2": "Au-dessus des plafonds HLM : le logement intermédiaire",
+        "paragraphs": [
+          "Si vos revenus dépassent les plafonds du logement social, le logement locatif intermédiaire prend le relais : loyers 10 à 15 % sous le marché, plafonds nettement plus élevés, candidature directe auprès des opérateurs (in'li, CDC Habitat), sans numéro unique ni commission. Pour un agent de catégorie A ou un couple bi-actif en petite couronne, c'est souvent la piste la plus rapide : notre [guide du logement intermédiaire](/guides/logement-intermediaire/) détaille plafonds et opérateurs."
+        ]
+      },
+      {
+        "h2": "L'AIP : jusqu'à 1 500 € pour financer votre installation",
+        "paragraphs": [
+          "L'aide à l'installation des personnels de l'État (AIP) rembourse une partie de vos frais d'entrée dans une location, vide ou meublée : premier mois de loyer avec charges, frais d'agence et de rédaction de bail, dépôt de garantie, frais de déménagement (SRIAS Île-de-France, 2026). Elle s'ajoute aux aides au logement de la CAF, ouvertes quel que soit votre statut.",
+          "Point d'attention : à l'été 2026, le dépôt en ligne sur aip-fonctionpublique.fr est momentanément suspendu (changement de prestataire, constaté en juillet 2026) ; les délais prolongés ci-dessous compensent. L'AIP reste cumulable avec un prêt d'installation (préfecture de région, 2026)."
+        ],
+        "bullets": [
+          "Jusqu'à 1 500 € en zone tendue dite « ALUR », ce qui couvre l'agglomération parisienne, et pour l'AIP-Ville (quartiers prioritaires) ; jusqu'à 700 € ailleurs (préfecture de région, 2026).",
+          "Ouverte aux fonctionnaires et magistrats stagiaires et titulaires, et, depuis la circulaire du 11 août 2023, aux contractuels dont le contrat atteint au moins un an (SRIAS Île-de-France, 2026).",
+          "Sous plafond de revenu fiscal de référence, celui de l'année n-2 : 28 047 € pour une part fiscale, 41 383 € pour deux parts (préfecture de région, montants constatés en juillet 2026).",
+          "À demander dans les 24 mois suivant l'affectation et les 12 mois suivant la signature du bail ; délais temporairement portés à 27 et 15 mois (SRIAS Île-de-France, juillet 2026)."
+        ]
+      },
+      {
+        "h2": "Hospitaliers : le CGOS est votre porte d'entrée",
+        "paragraphs": [
+          "Le versant hospitalier a son propre opérateur d'action sociale : le CGOS. En dehors de l'AP-HP, la plupart des établissements de santé y adhèrent (portail de la fonction publique, 2026). Si le vôtre n'adhère pas, renseignez-vous auprès de son service d'action sociale, et gardez dans tous les cas les deux voies communes actives : logement social et logement intermédiaire."
+        ],
+        "bullets": [
+          "Une aide remboursable de 400 € à 8 000 € pour des frais d'installation, d'accession ou de travaux, attribuée par la commission régionale du CGOS.",
+          "Une aide exceptionnelle non remboursable en cas de graves difficultés financières, notamment pour des factures d'énergie.",
+          "Depuis septembre 2024, une convention avec CDC Habitat assure un traitement prioritaire des candidatures des agents hospitaliers, via un service dédié."
+        ]
+      },
+      {
+        "h2": "Territoriaux : pas de bourse nationale, mais des leviers réels",
+        "paragraphs": [
+          "Soyons directs : il n'existe ni Balae ni AIP pour la fonction publique territoriale. Chaque collectivité définit sa propre action sociale : certaines proposent des aides à l'installation ou des logements réservés à leurs agents, d'autres rien. Premier réflexe : interrogez votre DRH ou votre comité d'œuvres sociales.",
+          "Les leviers solides restent les voies communes : [demande de logement social](/guides/demande-logement-social/), [logement intermédiaire](/guides/logement-intermediaire/), et garantie Visale avant 30 ans. Les collectivités qui financent le parc social détiennent par ailleurs des droits de réservation sur les logements, comme la Ville de Paris (Paris.fr, 2026) ; certaines en font bénéficier leurs agents : posez la question en interne."
+        ]
+      },
+      {
+        "h2": "Muté en Île-de-France : les solutions transitoires",
+        "paragraphs": [
+          "Une mutation cumule deux urgences : un toit rapidement, et un dossier crédible sans historique francilien. Un point d'abord, qui évite de perdre des semaines : Action Logement (plateforme AL'in, avance Loca-Pass) est financé par les entreprises privées et réservé à leurs salariés ; un agent public titulaire n'y a en principe pas accès. Côté Action Logement, seule l'avance Loca-Pass reste ouverte aux moins de 30 ans en emploi non permanent, tous secteurs, donc à certains contractuels courts ; la garantie Visale, elle, fait exception (Service-public.fr, 2026). Trois outils fonctionnent :"
+        ],
+        "bullets": [
+          "Un logement meublé temporaire du parc interministériel, accessible via Balae pour les agents de l'État (guide demandeur Balae, DRIHL) : le temps de chercher ensuite en connaissance de cause.",
+          "Le [bail mobilité](/guides/bail-mobilite/) : un bail meublé de 1 à 10 mois, sans dépôt de garantie, taillé pour une prise de poste ou une mutation.",
+          "La [garantie Visale](/guides/visale/) : caution gratuite via Action Logement, ouverte à tous les statuts avant 30 ans, donc aux agents publics ; au-delà, réservée pour l'essentiel aux salariés du privé (Service-public.fr, 2026)."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "Comment trouver un logement quand on est fonctionnaire ?",
+        "a": "Commencez par le portail officiel logement.fonction-publique.gouv.fr, qui recense les dispositifs et teste votre éligibilité. Puis selon votre versant : bourse Balae pour les agents de l'État en Île-de-France, aides du CGOS pour les hospitaliers, action sociale de la collectivité pour les territoriaux. Dans tous les cas, déposez une demande de logement social et regardez le logement intermédiaire : les deux voies ouvertes à tous."
+      },
+      {
+        "q": "Quelle est l'aide au logement pour les fonctionnaires ?",
+        "a": "La principale aide spécifique est l'AIP : jusqu'à 1 500 € en zone tendue (700 € ailleurs) pour premier loyer, frais d'agence, dépôt de garantie et déménagement, ouverte aux agents de l'État, contractuels d'au moins un an compris. Les hospitaliers ont les aides du CGOS (400 à 8 000 € remboursables). S'ajoutent les aides de droit commun, comme les aides au logement de la CAF, indépendantes du statut."
+      },
+      {
+        "q": "Comment bénéficier d'un logement de fonction ?",
+        "a": "On ne candidate pas à un logement de fonction : il est attaché à certains postes et attribué par l'administration. Deux régimes existent pour les agents de l'État : la concession pour nécessité absolue de service (logement nu gratuit, quand la fonction exige de résider sur place) et la convention d'occupation précaire avec astreinte, moyennant une redevance de 50 % de la valeur locative réelle (code général de la propriété des personnes publiques, articles R2124-64 et suivants)."
+      },
+      {
+        "q": "Qu'est-ce que la bourse Balae ?",
+        "a": "Balae est la plateforme officielle qui publie les logements sociaux réservés par l'État pour ses agents affectés en Île-de-France, tous ministères confondus. On y candidate soi-même, avec un indice de priorité calculé selon des règles identiques pour tous. Deux préalables : une demande de logement social active (numéro unique régional) et l'ouverture de vos droits d'accès par le correspondant logement de votre ministère."
+      },
+      {
+        "q": "Un fonctionnaire territorial a-t-il droit aux mêmes dispositifs ?",
+        "a": "Non : Balae et l'AIP sont réservées aux agents de l'État. Un agent territorial passe par la demande de logement social classique, le logement intermédiaire, la garantie Visale avant 30 ans, et l'action sociale propre à sa collectivité (aides ou logements réservés, selon l'employeur) : renseignez-vous auprès de votre DRH."
+      }
+    ],
+    "sourcesOfficielles": [
+      {
+        "label": "Le portail logement des agents de la fonction publique (DGAFP)",
+        "url": "https://www.logement.fonction-publique.gouv.fr/"
+      },
+      {
+        "label": "DRIHL Île-de-France : comment accéder à Balae",
+        "url": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/comment-acceder-a-balae-a423.html"
+      },
+      {
+        "label": "SRIAS Île-de-France : l'aide à l'installation des personnels (AIP)",
+        "url": "https://srias.ile-de-france.gouv.fr/fre/LOGEMENT/Aide-a-l-installation-AIP"
+      },
+      {
+        "label": "Le CGOS et le logement des agents hospitaliers (portail officiel)",
+        "url": "https://www.logement.fonction-publique.gouv.fr/cgos"
+      },
+      {
+        "label": "La garantie Visale sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33453"
+      }
+    ]
   }
 ]
