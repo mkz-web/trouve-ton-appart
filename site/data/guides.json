@@ -714,5 +714,150 @@
       { "label": "Paris : le montant du loyer encadré, sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34407" },
       { "label": "L'ADIL de Paris, conseil juridique gratuit", "url": "https://www.adil75.org" }
     ]
+  },
+  {
+    "slug": "siao-115-hebergement-urgence",
+    "parcours": ["logement-social"],
+    "title": "SIAO et 115 : obtenir un hébergement d'urgence (guide 2026)",
+    "metaDescription": "Le 115 oriente, le SIAO attribue les places. Qui est prioritaire, que faire si ça ne répond pas, comment passer de l'urgence au logement : le guide complet.",
+    "h1": "SIAO et 115 : l'hébergement d'urgence, mode d'emploi réaliste",
+    "intro": "Le 115 ne loge personne : il oriente. Derrière ce numéro gratuit, le SIAO de votre département attribue les places d'hébergement d'urgence selon des priorités précises. Le système est saturé, autant vous le dire. Mais comprendre sa mécanique (qui est prioritaire, comment monter le bon dossier, quoi faire quand ça ne répond pas) augmente concrètement vos chances d'être mis à l'abri, puis d'en sortir par le haut.",
+    "sections": [
+      {
+        "h2": "L'essentiel en 30 secondes",
+        "bullets": [
+          "Le 115 est le numéro d'urgence gratuit des personnes sans abri : ouvert 24h/24, tous les jours, partout en France, il fonctionne même sans crédit ni forfait, tant qu'une carte SIM est dans le téléphone.",
+          "Il ne possède aucune chambre : il transmet votre demande au SIAO (Service intégré d'accueil et d'orientation) de votre département, qui attribue les places disponibles selon un ordre de priorité défini.",
+          "L'accueil d'urgence est inconditionnel : sans condition de nationalité, de situation familiale ou de statut administratif (article L345-2-2 du Code de l'action sociale et des familles).",
+          "Une fois hébergé, vous pouvez en principe rester jusqu'à ce qu'une orientation adaptée vous soit proposée : c'est le principe de continuité (article L345-2-3).",
+          "La demande d'hébergement stable (le « dossier SIAO ») ne se fait pas au téléphone : elle passe obligatoirement par un travailleur social.",
+          "Si aucune proposition adaptée ne vient, le recours DAHO permet de saisir une commission qui peut contraindre l'État à vous héberger."
+        ]
+      },
+      {
+        "h2": "Le 115, à quoi il sert vraiment",
+        "paragraphs": [
+          "Le 115 est le numéro d'urgence et d'accueil des personnes sans abri. L'appel est gratuit depuis un fixe ou un mobile, en métropole comme en outre-mer, tous les jours et 24h/24, et il n'apparaît pas sur les factures (Service-public.fr, 2025). Comme les autres numéros d'urgence, il reste joignable même sans crédit ni forfait, tant qu'une carte SIM est présente dans le téléphone.",
+          "Au bout du fil, un écoutant évalue votre situation, vous informe sur vos droits, les accueils de jour ou les distributions de repas, puis recherche une place d'hébergement d'urgence disponible. Vous pouvez appeler pour vous-même ou pour signaler une personne en difficulté. À Paris, le signalement peut aussi se faire en ligne sur [samusocial.paris](https://www.samusocial.paris/signaler-une-personne-a-la-rue/).",
+          "Ne confondez pas 115 et Samu social : le Samu social est un opérateur de terrain (maraudes, plateforme d'écoute) qui, dans certains départements comme Paris, gère le 115. Le numéro, lui, est national : où que vous soyez, il vous met en relation avec le dispositif de votre département."
+        ]
+      },
+      {
+        "h2": "Le SIAO : le service qui décide derrière le 115",
+        "paragraphs": [
+          "Dans chaque département, un Service intégré d'accueil et d'orientation centralise toutes les demandes d'hébergement et de logement adapté, recense les places et décide des orientations. Le 115 en est la porte d'entrée « urgence ». Le même service gère aussi le volet « insertion », celui qui mène vers un hébergement stable puis un logement. L'Île-de-France compte huit SIAO, un par département, coordonnés par la DRIHL.",
+          "Le SI-SIAO, dont vous croiserez le nom, est la plateforme informatique nationale où vivent les demandes. Vous n'y accédez pas vous-même : c'est un travailleur social qui crée et met à jour votre dossier. « Faire une demande SIAO » signifie donc concrètement : prendre rendez-vous avec un travailleur social (CCAS de votre commune, service social départemental, accueil de jour, association agréée) pour qu'il enregistre et documente votre situation."
+        ]
+      },
+      {
+        "h2": "Qui est prioritaire pour une place ?",
+        "paragraphs": [
+          "En Île-de-France, un cadre unifié, en vigueur depuis le 1er janvier 2024 (DRIHL), définit l'ordre dans lequel le 115 attribue les mises à l'abri. Les places disponibles vont d'abord aux situations les plus vulnérables.",
+          "Être en priorité 3 ou 4 ne signifie pas « aucune chance », mais une attente plus longue. D'où l'importance de faire évaluer précisément votre situation : une vulnérabilité de santé documentée, par exemple, peut changer votre niveau de priorité."
+        ],
+        "table": {
+          "caption": "Ordre de priorité des mises à l'abri par le 115 en Île-de-France (cadre unifié des SIAO franciliens, en vigueur depuis le 1er janvier 2024, détaillé par le SIAO 95 en juillet 2024)",
+          "headers": ["Niveau", "Publics concernés"],
+          "rows": [
+            ["P1", "Familles avec enfant(s) de moins de 3 mois, femmes enceintes de plus de 6 mois, personnes victimes de violences en danger immédiat"],
+            ["P2", "Familles avec enfant(s) de moins de 3 ans, jeunes de 18 à 25 ans à la rue, victimes de violences, problématiques de santé importantes"],
+            ["P3", "Personnes de plus de 65 ans, personnes sans enfant cumulant des vulnérabilités fortes, familles en détresse avec enfant(s) de plus de 3 ans"],
+            ["P4", "Familles avec adolescents (13 à 18 ans), personnes isolées, couples et groupes sans enfant"]
+          ]
+        }
+      },
+      {
+        "h2": "Appeler le 115 : ce qui se passe, étape par étape",
+        "bullets": [
+          "1. Vous composez le 115. L'attente peut être longue et beaucoup d'appels n'aboutissent pas du premier coup : rappelez, y compris plusieurs fois par jour. C'est la norme, pas l'exception.",
+          "2. Un écoutant recueille votre situation : composition familiale, lieu où vous vous trouvez, santé, ressources. Soyez précis sur les vulnérabilités : ce sont elles qui déterminent votre priorité.",
+          "3. Votre demande est enregistrée dans le SI-SIAO et confrontée aux places disponibles.",
+          "4. Si une place existe, on vous indique la structure (centre d'hébergement d'urgence, nuitée d'hôtel) et comment vous y rendre.",
+          "5. S'il n'y a pas de place, la demande reste enregistrée mais ne crée pas de file d'attente automatique : il faut rappeler les jours suivants."
+        ],
+        "paragraphs": [
+          "Il faut le dire sans détour : la demande dépasse l'offre. Le 115 de Paris a reçu en 2025 environ 3 100 appels par jour en moyenne, pour environ 740 traités (Samusocial de Paris). À la veille de la rentrée 2025, au moins 2 159 enfants ont dormi à la rue faute de place, selon le baromètre UNICEF France et Fédération des acteurs de la solidarité (août 2025). C'est précisément pour cela que le plan B et le dossier d'insertion, ci-dessous, comptent autant que l'appel lui-même."
+        ]
+      },
+      {
+        "h2": "Le 115 ne répond pas ou n'a plus de place : le plan B",
+        "bullets": [
+          "Rappelez matin et soir : des places se libèrent au fil de la journée, et une demande du jour non pourvue ne vous inscrit pas automatiquement pour le lendemain.",
+          "Poussez la porte d'un accueil de jour : repos, repas, laverie, domiciliation, et surtout des travailleurs sociaux qui peuvent monter votre dossier SIAO. L'annuaire solidaire [Soliguide](https://soliguide.fr) recense les lieux d'aide près de chez vous.",
+          "Prenez rendez-vous au CCAS de votre commune ou au service social de votre département : c'est la porte d'entrée du dossier SIAO insertion, celui qui débouche sur un hébergement stable.",
+          "Signalez votre situation aux maraudes, coordonnées par le SIAO. À Paris, toute personne à la rue peut être signalée en ligne sur samusocial.paris.",
+          "Femme victime de violences : appelez aussi le 3919 (Violences Femmes Info), des places d'hébergement dédiées existent en dehors du circuit classique du 115. En danger immédiat, composez le 17."
+        ]
+      },
+      {
+        "h2": "Du 115 au logement : le dossier SIAO insertion",
+        "paragraphs": [
+          "L'hébergement d'urgence est une mise à l'abri, pas une destination. La sortie par le haut s'appelle le volet insertion du SIAO : un dossier, monté avec un travailleur social, qui vous oriente vers un hébergement stable ou un logement adapté : CHRS (hébergement avec accompagnement social), hébergement de stabilisation, résidence sociale ou logement-foyer, pension de famille, intermédiation locative (ministère du Logement).",
+          "Ce dossier est votre levier principal, pour trois raisons. Il est examiné en continu, pas seulement le soir de l'appel. Il documente votre situation, donc votre niveau de priorité. Et il vous inscrit dans les objectifs officiels de sortie vers le logement : l'instruction interministérielle du 24 juillet 2025 vise 7 % des attributions de logements sociaux d'Île-de-France pour les ménages hébergés, contre 6,4 % réalisés en 2024.",
+          "Le réflexe complémentaire : déposez ou renouvelez votre [demande de logement social](/guides/demande-logement-social/) en parallèle. Les deux démarches se renforcent : l'ancienneté de la demande compte, et un dossier SIAO solide appuie une labellisation prioritaire.",
+          "Vous avez moins de 30 ans et une activité, une alternance ou un parcours d'insertion ? Les [foyers de jeunes travailleurs](/foyers-jeunes-travailleurs/) sont une porte de sortie fréquente de l'urgence, avec candidature directe auprès de chaque foyer."
+        ]
+      },
+      {
+        "h2": "Combien de temps pour une orientation SIAO ?",
+        "paragraphs": [
+          "Il n'existe aucun délai garanti : l'orientation dépend des places qui se libèrent et de votre niveau de priorité. La mise à l'abri par le 115 se joue au jour le jour ; une orientation vers un hébergement d'insertion ou un logement adapté se compte le plus souvent en mois.",
+          "Deux leviers raccourcissent l'attente : un dossier SIAO complet et tenu à jour (chaque changement de situation doit y être signalé à votre travailleur social), et des vulnérabilités documentées : certificats médicaux, attestations, jugements, mains courantes."
+        ]
+      },
+      {
+        "h2": "Vos droits une fois hébergé",
+        "bullets": [
+          "Accueil inconditionnel : « toute personne sans abri en situation de détresse médicale, psychique ou sociale » a accès au dispositif, sans condition de nationalité, de situation familiale ou de statut administratif (article L345-2-2 du CASF, ministère du Logement).",
+          "La structure doit assurer « le gîte, le couvert et l'hygiène », une première évaluation médicale, psychique et sociale, puis une orientation adaptée (même article). Depuis 2018, la loi prévoit aussi la prise en compte des animaux de compagnie.",
+          "Principe de continuité : vous pouvez demeurer dans la structure, si vous le souhaitez, jusqu'à ce qu'une orientation adaptée vous soit proposée (article L345-2-3). Une remise à la rue « sèche », sans proposition, n'est en principe pas conforme à la loi.",
+          "En pratique, ce droit connaît des accrocs, notamment à la fin des renforts hivernaux. Si cela vous arrive, faites documenter la situation par un travailleur social ou une association : c'est la base d'un recours."
+        ]
+      },
+      {
+        "h2": "Votre SIAO en Île-de-France, département par département",
+        "paragraphs": [
+          "Le contact usager universel reste le 115, gratuit et ouvert 24h/24 : aucun SIAO francilien ne prend de demande d'hébergement directement via son site. Les sites ci-dessous servent à comprendre le dispositif de votre département ; la demande, elle, passe par le 115 (urgence) ou par un travailleur social (insertion)."
+        ],
+        "table": {
+          "caption": "Les huit SIAO d'Île-de-France : opérateurs et sites officiels (vérifiés en juillet 2026)",
+          "headers": ["Département", "Opérateur du SIAO", "Site officiel", "Contact usager"],
+          "rows": [
+            ["Paris (75)", "Samusocial de Paris", "[siao.paris](https://www.siao.paris/) · [115.paris](https://115.paris/)", "115"],
+            ["Seine-et-Marne (77)", "Equalis", "[siao77.fr](https://siao77.fr/)", "115"],
+            ["Yvelines (78)", "Croix-Rouge française", "[siao78.fr](https://siao78.fr/)", "115"],
+            ["Essonne (91)", "Croix-Rouge française", "[siao91.fr](https://siao91.fr/)", "115"],
+            ["Hauts-de-Seine (92)", "GCSMS SIAO 92", "[siao92.fr](https://siao92.fr/)", "115"],
+            ["Seine-Saint-Denis (93)", "Interlogement93", "[interlogement93.net](https://www.interlogement93.net/)", "115"],
+            ["Val-de-Marne (94)", "Croix-Rouge française", "[siao94.fr](https://www.siao94.fr/)", "115"],
+            ["Val-d'Oise (95)", "Espérer 95", "[siao.esperer-95.org](https://siao.esperer-95.org/)", "115"]
+          ]
+        }
+      },
+      {
+        "h2": "Aucune solution ne vient : le recours DAHO",
+        "paragraphs": [
+          "Si vous avez demandé un hébergement et n'avez reçu aucune proposition adaptée, le droit à l'hébergement opposable (DAHO) permet de saisir la commission de médiation de votre département. C'est le cousin du DALO, appliqué à l'hébergement : pas de condition de ressources et, pour une structure d'hébergement classique, pas de titre de séjour à fournir (fiche Service-public F20343, vérifiée en novembre 2025).",
+          "La commission se prononce sous 6 semaines. Si elle vous reconnaît prioritaire et que rien ne suit, vous pouvez saisir le tribunal administratif dans un délai de 4 mois ; il statue sous 2 mois et peut ordonner votre hébergement sous astreinte. La démarche est gratuite et gagne à être accompagnée : notre [guide du recours DALO](/guides/recours-dalo/) détaille le fonctionnement de cette même commission.",
+          "Enfin, la sortie durable passe par le logement. Gardez votre demande de logement social à jour, mobilisez le [Fonds de solidarité logement](/guides/fonds-solidarite-logement/) pour financer dépôt de garantie et premier loyer au moment de l'entrée dans un logement, et repérez où le parc social est le plus accessible avec [nos chiffres commune par commune](/logement-social/chiffres/)."
+        ]
+      }
+    ],
+    "faq": [
+      { "q": "Est-ce que le 115 peut me trouver un logement ?", "a": "Non : le 115 propose des mises à l'abri de courte durée (centre d'hébergement d'urgence, nuitée d'hôtel). L'accès à un hébergement stable ou à un logement passe par le dossier SIAO insertion, monté avec un travailleur social, et par la demande de logement social menée en parallèle." },
+      { "q": "Qui est prioritaire au 115 ?", "a": "En Île-de-France, le cadre unifié des SIAO place en priorité 1 les familles avec un enfant de moins de 3 mois, les femmes enceintes de plus de 6 mois et les personnes victimes de violences en danger immédiat. Viennent ensuite les familles avec enfants de moins de 3 ans, les jeunes de 18 à 25 ans à la rue et les situations de santé préoccupantes." },
+      { "q": "Quelle est la différence entre le Samu social et le 115 ?", "a": "Le 115 est le numéro national d'urgence sociale. Le Samu social est un opérateur de terrain (maraudes, plateforme d'écoute) qui, dans certains départements comme Paris, gère la plateforme 115. Composer le 115 vous met en relation avec le dispositif de votre département." },
+      { "q": "Combien de temps peut-on rester dans un hébergement d'urgence ?", "a": "Il n'y a pas de durée unique : elle varie selon la structure. La loi pose en revanche un principe de continuité : vous pouvez y demeurer, si vous le souhaitez, jusqu'à ce qu'une orientation adaptée vous soit proposée (article L345-2-3 du Code de l'action sociale et des familles)." },
+      { "q": "Comment faire une demande de logement auprès du SIAO ?", "a": "Jamais en direct : la demande est créée dans la plateforme SI-SIAO par un travailleur social (CCAS, service social de secteur, accueil de jour, association agréée). Prenez rendez-vous, apportez tout ce qui documente votre situation, et faites mettre le dossier à jour à chaque changement." },
+      { "q": "Qui a droit à un hébergement via le SIAO ?", "a": "L'accueil d'urgence est inconditionnel : toute personne sans abri en situation de détresse y a accès, sans condition de nationalité ou de statut administratif. Pour les orientations vers le logement adapté (résidence sociale, pension de famille), l'admission dépend ensuite des conditions propres à chaque structure." }
+    ],
+    "sourcesOfficielles": [
+      { "label": "Hébergement d'une personne en situation de précarité (Service-public.fr)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2003" },
+      { "label": "Le recours DAHO sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F20343" },
+      { "label": "Article L345-2-2 du CASF : l'accueil inconditionnel", "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000037670338" },
+      { "label": "Article L345-2-3 du CASF : le principe de continuité", "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000020459026" },
+      { "label": "Numéros d'urgence et d'écoute (Service-public.fr)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33954" },
+      { "label": "DRIHL Île-de-France : le cadre unifié d'intervention des SIAO", "url": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/cadre-unifie-d-intervention-des-siao-a1305.html" }
+    ]
   }
 ]

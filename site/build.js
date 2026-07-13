@@ -63,6 +63,12 @@ const DATA_SEARCH_CATS = ['Résidence CROUS', 'FJT', 'Résidence autonomie', 'Co
 const safeUrl = (u) => (/^(https?:|mailto:)/i.test(String(u || '')) ? u : '#');
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+/* Liens [label](url) dans les contenus de guides, transformés APRÈS échappement.
+ * Autorisés : chemins internes (/…) et https:// uniquement — tout le reste reste du texte. */
+const inline = (s) => esc(s).replace(/\[([^\]]+)\]\((\/[^\s)]*|https:\/\/[^\s)]+)\)/g,
+  (m, label, url) => (url.startsWith('/')
+    ? `<a href="${url}">${label}</a>`
+    : `<a href="${url}" rel="noopener" target="_blank">${label}</a>`));
 
 /* Illustrations Gemini des pages piliers (site/static/illu-*.webp, recadrées
  * du watermark). Rendu vide si le fichier manque : le build n'en dépend pas. */
@@ -121,6 +127,7 @@ function icon(name, c) {
     'fonds-solidarite-logement': `<circle cx="24" cy="24" r="17" fill="${c}"/><circle cx="24" cy="24" r="8" fill="#fff"/>${[0, 45, 90, 135].map(a => `<rect x="22.6" y="4" width="2.8" height="7" rx="1.4" fill="#fff" opacity=".6" transform="rotate(${a} 24 24)"/><rect x="22.6" y="37" width="2.8" height="7" rx="1.4" fill="#fff" opacity=".6" transform="rotate(${a} 24 24)"/>`).join('')}<circle cx="24" cy="24" r="4" fill="${A}"/>`,
     'foyer-jeune-travailleur': `<rect x="12" y="8" width="26" height="31" rx="2" fill="${c}"/>${[13, 20, 27].map(y => [17, 25.5].map(x => `<rect x="${x}" y="${y}" width="5" height="4.5" rx="1" fill="#fff" opacity=".8"/>`).join('')).join('')}<circle cx="11" cy="27" r="4.5" fill="${A}"/><path d="M3.5 41c.5-5.5 3.6-8.5 7.5-8.5s7 3 7.5 8.5z" fill="${A}"/>`,
     'encadrement-des-loyers-paris': `<path d="M8 10a3 3 0 0 1 3-3h12l17 17a3 3 0 0 1 0 4.2L29.2 39a3 3 0 0 1-4.2 0L8 22z" fill="${c}"/><circle cx="16" cy="15" r="3" fill="#fff"/><text x="27" y="29" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="system-ui,Arial">€</text><line x1="40" y1="8" x2="40" y2="20" stroke="${A}" stroke-width="2.5" stroke-linecap="round"/><path d="M36 16l4 5 4-5" fill="none" stroke="${A}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+    'siao-115-hebergement-urgence': `<path d="M24 6L43 23h-5v15a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V23H5z" fill="${c}"/><rect x="19.5" y="28" width="9" height="12" rx="1.5" fill="#fff" opacity=".85"/><circle cx="38" cy="34" r="9.5" fill="${A}"/><text x="38" y="38" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff" font-family="system-ui,Arial">115</text>`,
   };
   return `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">${shapes[name] || shapes.annuaire}</svg>`;
 }
@@ -229,7 +236,7 @@ ${ld}
 <body>
 <header class="site-header">
   <div class="container">
-    <a class="brand" href="/" aria-label="${esc(SITE.name)} — accueil">${BRAND_MARK}<span class="brand-text" aria-hidden="true">${BRAND_HTML}<span class="brand-sub">Île-de-France</span></span></a>
+    <a class="brand" href="/" aria-label="${esc(SITE.name)}, accueil">${BRAND_MARK}<span class="brand-text" aria-hidden="true">${BRAND_HTML}<span class="brand-sub">Île-de-France</span></span></a>
     <nav class="main-nav">${nav}<a href="/annuaire/">Annuaire</a><a href="/recherche/">Rechercher</a></nav>
   </div>
 </header>
@@ -321,7 +328,7 @@ function addPage(urlPath, html, priority) {
   <h2>Pourquoi ce site&nbsp;?</h2>
   <p>Le logement francilien est éclaté entre des dizaines de plateformes, de guichets et de dispositifs. Résultat&nbsp;: des droits non utilisés (Visale, Loca-Pass, logement intermédiaire…) et des parcours subis. Nous remettons de l'ordre&nbsp;: pas d'annonces dupliquées, pas de fausses promesses, mais des parcours clairs et des liens directs vers les sources qui font foi.</p>
 </section>`;
-  pushIndex(`${SITE.name} — accueil`, '/', SITE.description, 'Page');
+  pushIndex(`${SITE.name}, accueil`, '/', SITE.description, 'Page');
   addPage('/', layout({
     title: `${SITE.name} : logement en Île-de-France par profil`,
     metaDescription: SITE.description,
@@ -408,8 +415,13 @@ ${etapes}
 for (const g of GUIDES) {
   const sections = g.sections.map(s => {
     let html = `<h2>${esc(s.h2)}</h2>`;
-    if (s.paragraphs) html += s.paragraphs.map(t => `<p>${esc(t)}</p>`).join('');
-    if (s.bullets) html += `<ul>${s.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>`;
+    if (s.paragraphs) html += s.paragraphs.map(t => `<p>${inline(t)}</p>`).join('');
+    if (s.bullets) html += `<ul>${s.bullets.map(b => `<li>${inline(b)}</li>`).join('')}</ul>`;
+    if (s.table) html += `<div class="table-wrap"><table class="data">
+  <caption class="visually-hidden">${esc(s.table.caption)}</caption>
+  <thead><tr>${s.table.headers.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>
+  <tbody>${s.table.rows.map(r => `<tr>${r.map(c => `<td>${inline(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+</table></div>`;
     return html;
   }).join('');
   const faqHtml = g.faq.map(f => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('');
@@ -1308,6 +1320,7 @@ for (const g of GUIDES) {
     full.push(`#### ${s.h2}`);
     if (s.paragraphs) for (const t of s.paragraphs) full.push(t);
     if (s.bullets) for (const b of s.bullets) full.push(`- ${b}`);
+    if (s.table) { full.push(s.table.caption); for (const r of s.table.rows) full.push(`- ${r.join(' · ')}`); }
   }
   full.push('FAQ :');
   for (const f of g.faq) { full.push(`Q : ${f.q}`); full.push(`R : ${f.a}`); }
