@@ -136,7 +136,8 @@ function icon(name, c) {
 }
 
 /* Skyline parisienne du hero : façades haussmanniennes stylisées,
- * tour Eiffel en silhouette, soleil terracotta. */
+ * tour Eiffel en silhouette, soleil terracotta. La porte terracotta
+ * s'éclaire au survol du CTA principal (même langage que la marque). */
 function skyline() {
   const win = (x0, y0, cols, rows, fill, w = 8, h = 11, gx = 16, gy = 19) => {
     let s = '';
@@ -148,7 +149,7 @@ function skyline() {
   <circle cx="566" cy="54" r="26" fill="${PAL.accent}"/>
   <g fill="#fff" opacity=".9"><ellipse cx="120" cy="44" rx="34" ry="11"/><ellipse cx="148" cy="38" rx="22" ry="9"/><ellipse cx="448" cy="70" rx="30" ry="10"/></g>
   <g fill="${PAL.ciel}"><polygon points="92,28 98,28 122,238 68,238"/><rect x="70" y="118" width="50" height="7" rx="3"/><rect x="78" y="170" width="35" height="6" rx="3"/><rect x="91" y="14" width="8" height="18" rx="2"/></g>
-  <g><rect x="150" y="104" width="92" height="134" fill="${PAL.bleu2}"/><polygon points="150,104 242,104 232,82 160,82" fill="${PAL.bleu}"/><rect x="168" y="70" width="7" height="16" fill="${PAL.bleu}"/>${win(162, 116, 5, 5, PAL.cielClair)}<rect x="188" y="206" width="18" height="32" rx="2" fill="${PAL.accent}"/></g>
+  <g><rect x="150" y="104" width="92" height="134" fill="${PAL.bleu2}"/><polygon points="150,104 242,104 232,82 160,82" fill="${PAL.bleu}"/><rect x="168" y="70" width="7" height="16" fill="${PAL.bleu}"/>${win(162, 116, 5, 5, PAL.cielClair)}<rect class="porte" x="188" y="206" width="18" height="32" rx="2" fill="${PAL.accent}"/><ellipse class="porte-lueur" cx="197" cy="239" rx="18" ry="4" fill="${PAL.accent}"/></g>
   <g><rect x="256" y="64" width="106" height="174" fill="${PAL.bleuClair}"/><polygon points="256,64 362,64 350,40 268,40" fill="${PAL.bleu2}"/><rect x="282" y="28" width="7" height="16" fill="${PAL.bleu2}"/>${win(268, 76, 6, 7, PAL.blanc)}<rect x="296" y="210" width="20" height="28" rx="2" fill="${PAL.bleu}"/></g>
   <g><rect x="376" y="118" width="96" height="120" fill="#4a7fae"/><polygon points="376,118 472,118 462,96 386,96" fill="${PAL.bleu}"/>${win(388, 130, 5, 4, PAL.cielClair)}<rect x="408" y="206" width="18" height="32" rx="2" fill="${PAL.creme}"/></g>
   <g><rect x="486" y="92" width="88" height="146" fill="${PAL.bleu}"/><polygon points="486,92 574,92 564,70 496,70" fill="#163a5c"/><rect x="540" y="58" width="7" height="16" fill="#163a5c"/>${win(497, 104, 5, 5, PAL.ciel)}</g>
@@ -182,7 +183,15 @@ const DATE_PUBLICATION = '2026-06-10';
 
 function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = [], breadcrumbs = null }) {
   const canonical = SITE.baseUrl + urlPath;
-  const nav = PARCOURS.map(p => `<a href="/${p.slug}/">${esc(p.nav)}</a>`).join('');
+  /* aria-current : annonce « page courante » aux lecteurs d'écran ; porte
+   * aussi l'état visuel « vous êtes ici » du menu (pilule + barre).
+   * « page » = correspondance exacte seulement ; une sous-page de la
+   * section (ex. /logement-social/chiffres/) reçoit « true » (spec ARIA). */
+  const navLink = (href, label) => {
+    const cur = urlPath === href ? 'page' : urlPath.startsWith(href) ? 'true' : '';
+    return `<a href="${href}"${cur ? ` aria-current="${cur}"` : ''}>${label}</a>`;
+  };
+  const nav = PARCOURS.map(p => navLink(`/${p.slug}/`, esc(p.nav))).join('');
   if (breadcrumbs) {
     jsonLd = jsonLd.concat([{
       '@context': 'https://schema.org',
@@ -240,7 +249,7 @@ ${ld}
 <header class="site-header">
   <div class="container">
     <a class="brand" href="/" aria-label="${esc(SITE.name)}, accueil">${BRAND_MARK}<span class="brand-text" aria-hidden="true">${BRAND_HTML}<span class="brand-sub">Île-de-France</span></span></a>
-    <nav class="main-nav">${nav}<a href="/annuaire/">Annuaire</a><a href="/recherche/">Rechercher</a></nav>
+    <nav class="main-nav">${nav}${navLink('/annuaire/', 'Annuaire')}${navLink('/recherche/', 'Rechercher')}</nav>
   </div>
 </header>
 <main class="container">
@@ -268,6 +277,7 @@ ${content}
     <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/">Mentions légales</a></p>
   </div>
 </footer>
+<script>/* iOS n'applique :active au tactile que si un listener touchstart existe. */document.addEventListener('touchstart',function(){},{passive:true})</script>
 </body>
 </html>`;
 }
@@ -289,7 +299,7 @@ function addPage(urlPath, html, priority) {
     <span class="card-icon">${icon(p.slug, t.c)}</span>
     <h3>${esc(p.nav)}</h3>
     <p>${esc(p.intro.split('. ')[0])}.</p>
-    <span class="card-cta">Voir le parcours →</span>
+    <span class="card-cta"><span class="cta-label">Voir le parcours</span> <span class="cta-arrow" aria-hidden="true">→</span></span>
   </a>`;
   }).join('');
   const guideCards = GUIDES.map(g => {
@@ -317,7 +327,7 @@ function addPage(urlPath, html, priority) {
 <section>
   <h2>Les guides essentiels</h2>
   <div class="grid grid-guides">${guideCards}</div>
-  <p><a href="/guides/">Voir tous les guides →</a></p>
+  <p><a href="/guides/">Voir tous les guides <span class="cta-arrow" aria-hidden="true">→</span></a></p>
 </section>
 <section>
   <h2>Comment ça marche&nbsp;?</h2>
@@ -402,7 +412,7 @@ ${etapes}
   <h2>Où chercher&nbsp;: les sources fiables pour ce profil</h2>
   ${annuaireBlock}
   ${dataLinks ? `<h3>Nos annuaires (données publiques)</h3><p class="pills">${dataLinks}</p>` : ''}
-  <p><a href="/annuaire/">Voir l'annuaire complet →</a></p>
+  <p><a href="/annuaire/">Voir l'annuaire complet <span class="cta-arrow" aria-hidden="true">→</span></a></p>
 </section>`;
   pushIndex(p.h1, `/${p.slug}/`, p.metaDescription, 'Parcours');
   addPage(`/${p.slug}/`, layout({
@@ -415,9 +425,25 @@ ${etapes}
 }
 
 /* Guides */
+
+/* Ancre stable dérivée d'un titre de section (sommaire actif des guides). */
+const DIACRITIQUES = new RegExp('[\\u0300-\\u036f]', 'g');
+function anchorOf(txt, used) {
+  let id = txt.toLowerCase().normalize('NFD').replace(DIACRITIQUES, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'section';
+  const base = id;
+  for (let n = 2; used.has(id); n++) id = `${base}-${n}`;
+  used.add(id);
+  return id;
+}
+
 for (const g of GUIDES) {
+  const usedIds = new Set(['faq', 'verifier']);
+  const tocItems = [];
   const sections = g.sections.map(s => {
-    let html = `<h2>${esc(s.h2)}</h2>`;
+    const id = anchorOf(s.h2, usedIds);
+    tocItems.push(`<li><a href="#${id}">${esc(s.h2)}</a></li>`);
+    let html = `<h2 id="${id}">${esc(s.h2)}</h2>`;
     if (s.paragraphs) html += s.paragraphs.map(t => `<p>${inline(t)}</p>`).join('');
     if (s.bullets) html += `<ul>${s.bullets.map(b => `<li>${inline(b)}</li>`).join('')}</ul>`;
     if (s.table) html += `<div class="table-wrap"><table class="data">
@@ -436,7 +462,14 @@ for (const g of GUIDES) {
     .slice(0, 3)
     .map(x => `<a class="pill" href="/guides/${x.slug}/">${esc(x.h1)}</a>`).join(' ');
   const outil = (g.slug === 'encadrement-des-loyers-paris' && ENCADREMENT) ? encadrementWidget() : '';
+  if (outil) tocItems.unshift('<li><a href="#verifier">Vérifier votre loyer</a></li>');
+  tocItems.push('<li><a href="#faq">Questions fréquentes</a></li>');
+  /* Sommaire actif : sticky en desktop, replié en mobile par un micro-script
+   * placé JUSTE APRÈS le nav (repli avant le paint du corps : pas de flash) ;
+   * sans JS, il reste déplié : fallback sain. Le scroll-spy en fin de page
+   * pose .on + aria-current="location" sur l'entrée visible. */
   const content = `
+<div class="lecture-bar" aria-hidden="true"></div>
 <nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/guides/">Guides</a> › ${esc(g.h1)}</nav>
 <article>
 <header class="page-head" style="${themeStyle(t)}">
@@ -448,13 +481,39 @@ for (const g of GUIDES) {
     <p class="maj">Mis à jour le ${DATE_FR}</p>
   </div>
 </header>
+<div class="guide-layout">
+<nav class="guide-toc" aria-label="Sommaire du guide"><details class="toc-box" open><summary>Dans ce guide</summary><ol>${tocItems.join('')}</ol></details></nav>
+<script>if(!matchMedia('(min-width:1020px)').matches){var tocD=document.querySelector('.guide-toc details');if(tocD)tocD.removeAttribute('open')}</script>
+<div class="guide-body">
 ${outil}
 ${sections}
-<section class="faq"><h2>Questions fréquentes</h2>${faqHtml}</section>
+<section class="faq" id="faq"><h2>Questions fréquentes</h2>${faqHtml}</section>
 <section class="notice"><h2>Sources officielles</h2><ul class="sources">${srcHtml}</ul></section>
 ${aLireAussi ? `<p class="pills"><strong>À lire aussi&nbsp;:</strong> ${aLireAussi}</p>` : ''}
 <p class="pills"><strong>Parcours liés&nbsp;:</strong> ${related}</p>
-</article>`;
+</div>
+</div>
+</article>
+<script>
+(function(){
+var toc=document.querySelector('.guide-toc');if(!toc)return;
+var links={},ordre=[],vis={},cur=null;
+toc.querySelectorAll('a[href^="#"]').forEach(function(a){var id=a.getAttribute('href').slice(1);links[id]=a;ordre.push(id)});
+function on(id){var a=links[id];if(!a||a===cur)return;
+ if(cur){cur.classList.remove('on');cur.removeAttribute('aria-current')}
+ cur=a;a.classList.add('on');a.setAttribute('aria-current','location')}
+/* Bande d'activation : tiers haut du viewport (un h2 posé en haut de page
+ * par un clic sommaire reste dedans) ; on surligne toujours la PLUS HAUTE
+ * section visible dans l'ordre du sommaire, jamais la dernière notifiée. */
+var io=new IntersectionObserver(function(es){
+ es.forEach(function(en){vis[en.target.id]=en.isIntersecting});
+ for(var i=0;i<ordre.length;i++){if(vis[ordre[i]]){on(ordre[i]);return}}
+},{rootMargin:'0px 0px -65% 0px'});
+ordre.forEach(function(id){var el=document.getElementById(id);if(el)io.observe(el)});
+toc.addEventListener('click',function(e){var a=e.target.closest('a[href^="#"]');if(a)on(a.getAttribute('href').slice(1))});
+if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
+})();
+</script>`;
   pushIndex(g.h1, `/guides/${g.slug}/`, g.metaDescription, 'Guide');
   addPage(`/guides/${g.slug}/`, layout({
     title: g.title,
@@ -616,7 +675,7 @@ function buildDirectory(cfg) {
   <a class="card card-parcours" href="/${baseSlug}/${DEP_SLUGS[d]}/" style="${themeStyle(t)}">
     <h3>${esc(DEP_NOMS[d])} (${d})</h3>
     <p>${byDep.get(d).length} ${byDep.get(d).length > 1 ? cfg.nomPluriel : cfg.nom}</p>
-    <span class="card-cta">Voir la liste →</span>
+    <span class="card-cta"><span class="cta-label">Voir la liste</span> <span class="cta-arrow" aria-hidden="true">→</span></span>
   </a>`).join('');
   const hubContent = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › ${esc(cfg.h1)}</nav>
@@ -949,7 +1008,9 @@ function encadrementWidget() {
     <div><label for="enc-s">Surface (m², optionnel)</label><input id="enc-s" type="number" min="6" max="400" step="0.5" placeholder="ex. 32"></div>
     <div><label for="enc-l">Loyer mensuel hors charges (€, optionnel)</label><input id="enc-l" type="number" min="1" step="1" placeholder="ex. 1200"></div>
   </div>
-  <div class="tool-result" id="enc-result" hidden></div>
+  <!-- Région live sur un parent JAMAIS masqué : un élément hidden sort de
+       l'arbre d'accessibilité et ses annonces se perdent. -->
+  <div aria-live="polite" aria-atomic="true"><div class="tool-result" id="enc-result" hidden></div></div>
   <noscript><p>Cet outil a besoin de JavaScript. Sans lui, consultez la grille officielle sur <a href="https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712" rel="noopener" target="_blank">paris.fr</a>.</p></noscript>
   <p class="maj">${esc(m.attribution)} · références ${esc(m.millesime)}, extraites le ${esc(dateFrOf(m.collectedAt))}. Le quartier administratif peut différer du «&nbsp;quartier d'usage&nbsp;»&nbsp;: vérifiez sur la carte officielle en cas de doute.</p>
   <script>
@@ -967,14 +1028,19 @@ function upd(){
  var v=G.grille[q+'|'+p+'|'+e+'|'+mb];
  if(!v){res.hidden=false;res.innerHTML='Référence introuvable pour cette combinaison.';return}
  var s=num($('enc-s').value),l=num($('enc-l').value);
+ var verd=null,pm2=null;
+ if(s&&l){pm2=l/s;verd=pm2<=v[1]?'ok':'ko'}
+ var stamp=verd&&verd!==lastV?' stamp':'';
  var h='<p><strong>Plafond légal (référence majorée)&nbsp;: '+fr(v[1],2)+' €/m²</strong><br>Loyer de référence&nbsp;: '+fr(v[0],2)+' €/m² · référence minorée&nbsp;: '+fr(v[2],2)+' €/m²</p>';
  if(s){h+='<p>Pour '+fr(s,1)+' m²&nbsp;: plafond de <strong>'+fr(v[1]*s,0)+' € hors charges par mois</strong> (hors complément de loyer).</p>'}
- if(s&&l){var pm2=l/s;
-  h+=pm2<=v[1]?'<p class="enc-ok">✓ Votre loyer ('+fr(pm2,2)+' €/m²) respecte le plafond.</p>'
-   :'<p class="enc-ko">✗ Votre loyer ('+fr(pm2,2)+' €/m²) dépasse le plafond d\\'environ '+fr(l-v[1]*s,0)+' € par mois. Sans complément de loyer justifié au bail, ce dépassement est contestable (voir les recours ci-dessous).</p>'}
+ if(verd==='ok'){h+='<p class="enc-ok'+stamp+'">✓ Votre loyer ('+fr(pm2,2)+' €/m²) respecte le plafond.</p>'}
+ if(verd==='ko'){h+='<p class="enc-ko'+stamp+'">✗ Votre loyer ('+fr(pm2,2)+' €/m²) dépasse le plafond d\\'environ '+fr(l-v[1]*s,0)+' € par mois. Sans complément de loyer justifié au bail, ce dépassement est contestable (voir les recours ci-dessous).</p>'}
+ lastV=verd;
  res.hidden=false;res.innerHTML=h;
 }
-['enc-q','enc-p','enc-e','enc-m','enc-s','enc-l'].forEach(function(i){$(i).addEventListener('input',upd)});
+var lastV=null;
+['enc-q','enc-p','enc-e','enc-m'].forEach(function(i){$(i).addEventListener('input',upd)});
+var deb;['enc-s','enc-l'].forEach(function(i){$(i).addEventListener('input',function(){clearTimeout(deb);deb=setTimeout(upd,150)})});
 })();
   </script>
 </section>`;
@@ -993,7 +1059,7 @@ function upd(){
   </div>
 </header>
 <p><input id="q" type="search" class="search-input" aria-label="Rechercher sur le site" placeholder="Ex. : Massy, résidence CROUS, FJT, Visale, encadrement…" autocomplete="off"></p>
-<p class="result-count" id="count"></p>
+<p class="result-count" id="count" aria-live="polite"></p>
 <ul class="result-list" id="results"></ul>
 <noscript><p>La recherche a besoin de JavaScript. Sans lui, parcourez les <a href="/annuaire/">annuaires</a> ou les <a href="/">parcours</a>.</p></noscript>
 <script>
@@ -1097,16 +1163,29 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .brand-sub{display:block;font-size:.64rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#9fc1e0}
 .main-nav{display:flex;flex-wrap:wrap;gap:4px 6px}
 .main-nav a{color:#fff;text-decoration:none;font-size:.93rem;opacity:.92;padding:6px 12px;border-radius:8px;transition:background .15s}
+.main-nav a[aria-current]{background:rgba(255,255,255,.16);opacity:1;position:relative}
+/* État de repos = barre visible ; l'animation ne fait qu'ARRIVER dessus
+ * (from scaleX(0)) : sous reduced-motion, l'indicateur reste affiché. */
+.main-nav a[aria-current]::after{content:"";position:absolute;left:12px;right:12px;bottom:2px;height:2px;border-radius:1px;background:#f3a18b;transform-origin:left;animation:nav-actif .26s ease-out .15s both}
 .main-nav a:hover{background:rgba(255,255,255,.14);opacity:1}
 /* ---- Hero ---- */
 .hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px 36px;align-items:end;background:radial-gradient(420px 260px at 84% 22%,rgba(224,122,95,.12),transparent 70%),linear-gradient(160deg,#e8f1f9,#f7fbfe 60%,#fdfbf7 120%);border:1px solid #dbe7f1;border-radius:22px;box-shadow:0 18px 44px -28px rgba(31,78,121,.35);padding:40px 42px 28px;margin:1.6rem 0 .6rem}
 .hero h1{margin:.2rem 0 .8rem}
 .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:1.4rem}
 .hero-illo svg{display:block;width:100%;max-width:330px;height:auto;margin:0 0 .2rem auto}
-.btn{display:inline-block;background:var(--cta);color:#fff;font-weight:600;text-decoration:none;padding:11px 22px;border-radius:10px;font-size:.97rem;box-shadow:0 8px 20px -10px rgba(176,74,48,.55);transition:background .15s,transform .15s}
-.btn:hover{background:#9a3f27;transform:translateY(-1px)}.btn:active{transform:none}
+/* La porte s'éclaire au survol/focus du CTA principal (retour plus lent
+ * que l'aller pour éviter le clignotement). Sans :has() : rien, aucun bris. */
+.porte{transition:filter .4s ease-out}
+.porte-lueur{opacity:0;transition:opacity .4s ease-out}
+.hero:has(.hero-actions .btn:not(.btn-ghost):hover) .porte,.hero:has(.hero-actions .btn:not(.btn-ghost):focus-visible) .porte{filter:brightness(1.45) saturate(1.15);transition-duration:.25s}
+.hero:has(.hero-actions .btn:not(.btn-ghost):hover) .porte-lueur,.hero:has(.hero-actions .btn:not(.btn-ghost):focus-visible) .porte-lueur{opacity:.5;transition-duration:.25s}
+.btn{display:inline-block;background:var(--cta);color:#fff;font-weight:600;text-decoration:none;padding:11px 22px;border-radius:10px;font-size:.97rem;box-shadow:0 8px 20px -10px rgba(176,74,48,.55);transition:background .15s,transform .15s,box-shadow .15s}
+.btn:hover{background:#9a3f27;transform:translateY(-1px)}
+/* Press state : descente rapide (80 ms), remontée douce (150 ms de base). */
+.btn:active{transform:translateY(1px) scale(.985);box-shadow:0 3px 8px -6px rgba(176,74,48,.55);transition-duration:.15s,.08s,.15s}
 .btn-ghost{background:transparent;color:var(--bleu);box-shadow:inset 0 0 0 2px var(--bleu2)}
 .btn-ghost:hover{background:var(--ciel);transform:translateY(-1px)}
+.btn-ghost:active{transform:translateY(1px) scale(.985);box-shadow:inset 0 0 0 2px var(--bleu2)}
 /* ---- Cartes ---- */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;margin:1.2rem 0 2.2rem}
 .card{display:block;border:1px solid var(--bord);border-radius:16px;padding:22px;text-decoration:none;color:inherit;background:var(--surface);box-shadow:0 1px 2px rgba(22,51,82,.05),0 6px 18px -12px rgba(22,51,82,.10);transition:box-shadow .18s,transform .18s,border-color .18s;position:relative;overflow:hidden}
@@ -1115,8 +1194,13 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .card-parcours::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--t,var(--bleu2))}
 .card-icon{display:inline-flex;width:42px;height:42px;border-radius:11px;background:var(--tbg,var(--ciel));padding:8px;margin-bottom:10px}
 .card-icon svg{width:100%;height:100%}
-.card-cta{display:inline-block;margin-top:.9rem;color:var(--ttx,var(--bleu2));font-weight:650;font-size:.9rem;transition:transform .18s}
-.card:hover .card-cta{transform:translateX(3px)}
+.card-cta{display:inline-block;margin-top:.9rem;color:var(--ttx,var(--bleu2));font-weight:650;font-size:.9rem}
+/* Flèche autonome : seule la flèche glisse, seul le LIBELLÉ (.cta-label) se
+ * souligne (un background sur le span entier passerait sous la flèche). */
+.cta-label{padding-bottom:2px;background:linear-gradient(currentColor,currentColor) no-repeat 0 100%/0 1.5px;transition:background-size .25s}
+.card:hover .cta-label,.card:focus-visible .cta-label{background-size:100% 1.5px}
+.cta-arrow{display:inline-block;transition:transform .24s cubic-bezier(.34,1.4,.5,1)}
+.card:hover .cta-arrow,.card:focus-visible .cta-arrow,a:hover>.cta-arrow,a:focus-visible>.cta-arrow{transform:translateX(5px)}
 .grid-guides{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 .card-guide{display:flex;gap:14px;align-items:flex-start}
 .card-icon-sm{flex:none;width:36px;height:36px;border-radius:10px;padding:7px;margin:2px 0 0}
@@ -1140,11 +1224,35 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .pill{display:inline-block;background:var(--surface);border:1px solid var(--bord);border-radius:999px;padding:6px 15px;font-size:.85rem;text-decoration:none;transition:border-color .15s,background .15s}
 .pill:hover{border-color:var(--t,var(--bleu2));background:var(--tbg,var(--ciel))}
 .sources{padding-left:1.1rem}.sources li{margin:.5rem 0}
+/* Liens de prose : le soulignement s'épaissit et passe au terracotta.
+ * :not([class]) exclut pills, boutons et CTA de composants. */
+main p a:not([class]),main li a:not([class]){text-decoration-thickness:1px;text-underline-offset:2px;transition:text-decoration-color .18s,text-decoration-thickness .18s,text-underline-offset .18s}
+main p a:not([class]):hover,main li a:not([class]):hover,main p a:not([class]):focus-visible,main li a:not([class]):focus-visible{text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
 .breadcrumb{font-size:.85rem;color:var(--gris);margin:1.3rem 0 1rem}.breadcrumb a{color:var(--gris)}
 .faq details{border:1px solid var(--bord);border-radius:12px;padding:12px 18px;margin:.7rem 0;background:var(--surface);transition:border-color .15s}
 .faq details[open]{border-color:var(--bleu2);background:linear-gradient(180deg,var(--ciel),#fff 140%)}
-.faq summary{cursor:pointer;font-weight:600;color:var(--bleu)}
-.faq summary::marker{color:var(--accent)}
+/* Chevron accent commun FAQ + sommaire de guide (le marker natif saute). */
+.faq summary,.toc-box summary{cursor:pointer;font-weight:600;color:var(--bleu);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker,.toc-box summary::-webkit-details-marker{display:none}
+.faq summary::after,.toc-box summary::after{content:"";flex:none;width:9px;height:9px;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg);transition:transform .25s ease-out}
+.faq details[open] summary::after,.toc-box[open] summary::after{transform:rotate(225deg)}
+/* ---- Sommaire de guide + barre de lecture ---- */
+.guide-toc{margin:0 0 1.4rem}
+.toc-box{border:1px solid var(--bord);border-radius:12px;background:var(--surface);padding:2px 18px}
+.toc-box summary{font-size:.92rem;padding:11px 0}
+.toc-box ol{margin:.15rem 0 .8rem;padding-left:1.3rem;font-size:.88rem}
+.toc-box li{margin:.32rem 0}
+.toc-box a{color:var(--gris);text-decoration:none;display:inline-block;padding:1px 7px;margin-left:-7px;border-radius:6px;transition:background .2s,color .2s}
+.toc-box a:hover{color:var(--bleu2)}
+.toc-box a.on{background:var(--ciel);color:var(--bleu);font-weight:600}
+/* Filet de progression de lecture (guides) : scroll-driven, Chromium.
+ * Ailleurs (et sous reduced-motion) : scaleX(0), invisible, assumé. */
+.lecture-bar{position:fixed;top:0;left:0;width:100%;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left;pointer-events:none;z-index:9}
+@supports(animation-timeline:scroll()){.lecture-bar{animation:lecture linear both;animation-timeline:scroll(root)}}
+@media(min-width:1020px){
+.guide-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:0 36px;align-items:start}
+.guide-toc{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+}
 /* ---- Footer ---- */
 .roofline{display:block;width:100%;height:22px;margin-top:3.5rem}
 .site-footer{background:linear-gradient(180deg,#1c2733,#16202a);color:#cdd6de;margin-top:0;padding:2.4rem 0 1rem;font-size:.88rem}
@@ -1182,7 +1290,12 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .tool-form label{font-size:.82rem;font-weight:650;color:var(--bleu);display:block;margin-bottom:3px}
 .tool-form select,.tool-form input{width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--bord);border-radius:8px;font:inherit;background:#fff}
 .tool-result{background:#fff;border:1px solid var(--bord);border-left:5px solid var(--accent);border-radius:12px;padding:12px 18px;margin:.8rem 0}
-.enc-ok{color:#2e7050;font-weight:650}.enc-ko{color:#b3261e;font-weight:650}
+/* Verdict « tampon » : ne rejoue qu'au CHANGEMENT de verdict (classe stamp
+ * posée par le JS), pas à chaque frappe, sinon clignotement pendant la saisie.
+ * Jamais de count-up sur un plafond légal : le chiffre s'affiche entier. */
+.enc-ok,.enc-ko{font-weight:650;padding:8px 14px;border-radius:10px;transform-origin:left center}
+.enc-ok.stamp,.enc-ko.stamp{animation:tampon .38s cubic-bezier(.2,.8,.3,1.1) both}
+.enc-ok{color:#2e7050;background:#e9f4ef}.enc-ko{color:#b3261e;background:#fdecdd}
 /* ---- Recherche ---- */
 .search-input{width:100%;min-height:44px;font-size:1.02rem;padding:11px 16px;border:2px solid var(--bleu2);border-radius:12px;font-family:inherit}
 .search-inline{max-width:340px;display:inline-block;padding:8px 12px;font-size:.95rem;border-width:1px;border-color:var(--bord)}
@@ -1195,6 +1308,9 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 @keyframes drift{from{transform:translateX(-6px)}to{transform:translateX(10px)}}
+@keyframes nav-actif{from{transform:scaleX(0)}}
+@keyframes tampon{from{opacity:0;transform:scale(.94)}70%{transform:scale(1.015)}to{opacity:1;transform:none}}
+@keyframes lecture{0%{transform:scaleX(0);opacity:0}4%{opacity:1}100%{transform:scaleX(1);opacity:1}}
 .hero-text h1{animation:rise .55s .05s cubic-bezier(.2,.7,.3,1) both}
 .hero-text .lead{animation:rise .55s .15s cubic-bezier(.2,.7,.3,1) both}
 .hero-actions{animation:rise .55s .25s cubic-bezier(.2,.7,.3,1) both}
@@ -1217,8 +1333,12 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 }
 /* ---- Global a11y ---- */
 :focus-visible{outline:3px solid var(--bleu2);outline-offset:2px}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 ::selection{background:var(--ciel)}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.card:hover,.btn:hover,.card:hover .card-cta,.card:hover .card-icon{transform:none}}
+/* Kill switch : le sélecteur * seul ne matche PAS les pseudo-éléments
+ * (chevron FAQ, barre du menu, liserets) — ils continueraient d'animer.
+ * La barre de lecture reste à scaleX(0) : invisible sous reduced-motion, assumé. */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card:hover,.btn:hover,.btn:active,.card:hover .card-icon,.card:hover .cta-arrow,.card:focus-visible .cta-arrow,a:hover>.cta-arrow,a:focus-visible>.cta-arrow,.brand:hover .brand-mark{transform:none}}
 /* ---- Responsive ---- */
 @media(max-width:760px){
 .hero{grid-template-columns:1fr;padding:24px 22px 20px;gap:8px}
