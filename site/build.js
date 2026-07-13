@@ -587,6 +587,8 @@ function datasetLd(meta, { name, description, urlPath }) {
  */
 function buildDirectory(cfg) {
   const { data, baseSlug } = cfg;
+  /* Année des données (pas de l'exécution du build) : suit les snapshots open data. */
+  const anneeData = String(data._meta.collectedAt || DATE_PUBLICATION).slice(0, 4);
   const t = themeOf(cfg.themeSlug);
   const byDep = new Map(DEPS_IDF.map(d => [d, data.records.filter(r => r.dep === d)]));
   const guidePills = (cfg.guides || []).map(slug => {
@@ -662,8 +664,8 @@ ${items.map(cfg.renderItem).join('\n')}
       pushIndex(r.nom, `${urlPath}#r-${r.finess || r.id}`, [r.adresse, r.cp, r.commune].filter(Boolean).join(', '), cfg.searchCat);
     }
     addPage(urlPath, layout({
-      title: `${cfg.titleShort} ${DEP_PREP[d]} (${d}) : la liste`,
-      metaDescription: `${items.length} ${cfg.nomPluriel} ${DEP_PREP[d]} : adresses, contact. ${cfg.metaSuffix}`,
+      title: `${cfg.titleShort} ${DEP_PREP[d]} (${d}) : ${items.length} adresses`,
+      metaDescription: `${items.length} ${cfg.nomPluriel} ${DEP_PREP[d]} : l'annuaire ${anneeData} avec adresses, contacts et démarches de candidature. ${cfg.metaSuffix}`,
       urlPath,
       content,
       breadcrumbs: [{ name: cfg.h1, url: `/${baseSlug}/` }, { name: DEP_NOMS[d], url: urlPath }],
