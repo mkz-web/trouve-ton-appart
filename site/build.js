@@ -137,17 +137,35 @@ function icon(name, c) {
 
 /* Skyline parisienne du hero : façades haussmanniennes stylisées,
  * tour Eiffel en silhouette, soleil terracotta. La porte terracotta
- * s'éclaire au survol du CTA principal (même langage que la marque). */
+ * s'éclaire au survol du CTA principal (même langage que la marque).
+ * Deux plans (ciel lointain / façades) pour la parallaxe au scroll ;
+ * le drift des nuages vit sur le g interne, jamais sur le wrapper
+ * (deux animations sur le même élément se neutraliseraient). */
 function skyline() {
+  let wi = 0;
+  /* 1 fenêtre sur 3 reçoit un rect jumeau « allumé » (crème chaud), délai
+   * calculé de bas en haut : la ville s'habite dans l'ordre, une fois,
+   * puis reste allumée. Délais déterministes : build reproductible. */
   const win = (x0, y0, cols, rows, fill, w = 8, h = 11, gx = 16, gy = 19) => {
     let s = '';
-    for (let r = 0; r < rows; r++) for (let col = 0; col < cols; col++)
-      s += `<rect x="${x0 + col * gx}" y="${y0 + r * gy}" width="${w}" height="${h}" rx="1.5" fill="${fill}"/>`;
+    for (let r = 0; r < rows; r++) for (let col = 0; col < cols; col++) {
+      const base = `x="${x0 + col * gx}" y="${y0 + r * gy}" width="${w}" height="${h}" rx="1.5"`;
+      s += `<rect ${base} fill="${fill}"/>`;
+      if (wi % 3 === 0) {
+        const del = (0.9 + (rows - 1 - r) * 0.18 + ((wi * 37) % 120) / 1000).toFixed(2);
+        s += `<rect class="w-lit" style="animation-delay:${del}s" ${base} fill="#ffdfae"/>`;
+      }
+      wi++;
+    }
     return s;
   };
   return `<svg viewBox="0 0 640 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" class="illo-skyline">
-  <circle cx="566" cy="54" r="26" fill="${PAL.accent}"/>
+  <g class="plan-ciel">
+  <circle class="soleil-halo" cx="566" cy="54" r="34" fill="${PAL.accent}" opacity=".22"/>
+  <circle class="soleil" cx="566" cy="54" r="26" fill="${PAL.accent}"/>
   <g fill="#fff" opacity=".9"><ellipse cx="120" cy="44" rx="34" ry="11"/><ellipse cx="148" cy="38" rx="22" ry="9"/><ellipse cx="448" cy="70" rx="30" ry="10"/></g>
+  </g>
+  <g class="plan-facades">
   <g fill="${PAL.ciel}"><polygon points="92,28 98,28 122,238 68,238"/><rect x="70" y="118" width="50" height="7" rx="3"/><rect x="78" y="170" width="35" height="6" rx="3"/><rect x="91" y="14" width="8" height="18" rx="2"/></g>
   <g><rect x="150" y="104" width="92" height="134" fill="${PAL.bleu2}"/><polygon points="150,104 242,104 232,82 160,82" fill="${PAL.bleu}"/><rect x="168" y="70" width="7" height="16" fill="${PAL.bleu}"/>${win(162, 116, 5, 5, PAL.cielClair)}<rect class="porte" x="188" y="206" width="18" height="32" rx="2" fill="${PAL.accent}"/><ellipse class="porte-lueur" cx="197" cy="239" rx="18" ry="4" fill="${PAL.accent}"/></g>
   <g><rect x="256" y="64" width="106" height="174" fill="${PAL.bleuClair}"/><polygon points="256,64 362,64 350,40 268,40" fill="${PAL.bleu2}"/><rect x="282" y="28" width="7" height="16" fill="${PAL.bleu2}"/>${win(268, 76, 6, 7, PAL.blanc)}<rect x="296" y="210" width="20" height="28" rx="2" fill="${PAL.bleu}"/></g>
@@ -156,6 +174,7 @@ function skyline() {
   <g><circle cx="606" cy="206" r="18" fill="${PAL.sauge}"/><rect x="603" y="216" width="6" height="22" rx="2" fill="#7a5c43"/></g>
   <g><circle cx="38" cy="212" r="14" fill="${PAL.sauge}"/><rect x="35.5" y="220" width="5" height="18" rx="2" fill="#7a5c43"/></g>
   <rect x="0" y="236" width="640" height="5" rx="2.5" fill="${PAL.ciel}"/>
+  </g>
 </svg>`;
 }
 
@@ -175,6 +194,55 @@ const brandLastWord = brandWords.pop();
 const BRAND_HTML = `${esc(brandWords.join(' '))} <em>${brandLastWord.startsWith('A') ? BRAND_A + esc(brandLastWord.slice(1)) : esc(brandLastWord)}</em>`;
 
 /* ----------------------------- Layout ------------------------------ */
+
+/* View Transitions cross-document : fondu-glissé court entre pages, header
+ * et footer épinglés (immobiles), pilule du menu qui morphe. Chromium 126+
+ * et Safari 18.2+ ; ailleurs, navigation classique. Les pseudo-éléments
+ * ::view-transition échappent au kill switch reduced-motion : TOUT le bloc
+ * doit vivre sous no-preference. Exclu des pages tableaux 464 lignes
+ * (coût de snapshot) : sans opt-in des deux côtés, pas de transition. */
+const VT_CSS = `<style>@media(prefers-reduced-motion:no-preference){
+@view-transition{navigation:auto}
+.site-header{view-transition-name:site-header}
+.site-footer{view-transition-name:site-footer}
+.main-nav a[aria-current]{view-transition-name:nav-actif}
+::view-transition-old(root){animation-duration:.18s}
+::view-transition-new(root){animation:vt-in .24s cubic-bezier(.2,.7,.3,1)}
+@keyframes vt-in{from{opacity:0;transform:translateY(8px)}}
+}</style>`;
+
+/* Compteurs, jauges et pause de la skyline : IntersectionObserver uniquement,
+ * garde matchMedia obligatoire (le kill switch CSS ne coupe jamais un rAF). */
+const ANIM_JS = `<script>
+/* iOS n'applique :active au tactile que si un listener touchstart existe. */
+document.addEventListener('touchstart',function(){},{passive:true});
+(function(){
+if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window))return;
+/* Compteurs : la valeur finale est déjà dans le HTML ; on la rejoue
+ * visuellement, largeur figée avant (zéro CLS), texte d'origine restauré. */
+var cpt=document.querySelectorAll('.compte');
+if(cpt.length){var cio=new IntersectionObserver(function(es){es.forEach(function(en){
+ if(!en.isIntersecting)return;cio.unobserve(en.target);
+ var el=en.target,fin=parseFloat(el.getAttribute('data-compte')),txt=el.textContent,t0=null;
+ el.style.display='inline-block';el.style.minWidth=el.offsetWidth+'px';
+ function tick(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/900,1);
+  el.textContent=p<1?Math.round(fin*(1-Math.pow(2,-10*p))).toLocaleString('fr-FR'):txt;
+  if(p<1)requestAnimationFrame(tick)}
+ requestAnimationFrame(tick)})},{threshold:.6});
+ cpt.forEach(function(e){cio.observe(e)})}
+/* Jauges des tableaux : jauge-anim met les barres à zéro, in-view les libère. */
+var rows=[];
+document.querySelectorAll('table.data').forEach(function(t){
+ if(t.querySelector('td.bar')){t.classList.add('jauge-anim');rows.push.apply(rows,t.querySelectorAll('tbody tr'))}});
+if(rows.length){var jio=new IntersectionObserver(function(es){es.forEach(function(en){
+ if(en.isIntersecting){en.target.classList.add('in-view');jio.unobserve(en.target)}})},{rootMargin:'0px 0px -8% 0px'});
+ rows.forEach(function(r){jio.observe(r)})}
+/* Skyline : boucles (nuages, halo) en pause hors viewport (batterie). */
+var illo=document.querySelector('.illo-skyline');
+if(illo){new IntersectionObserver(function(es){es.forEach(function(en){
+ illo.classList.toggle('pause',!en.isIntersecting)})}).observe(illo)}
+})();
+</script>`;
 
 const BUILD_DATE = new Date();
 const DATE_ISO = BUILD_DATE.toISOString().slice(0, 10);
@@ -243,6 +311,7 @@ function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = []
 <meta name="twitter:description" content="${esc(metaDescription)}">
 <meta name="twitter:image" content="${SITE.baseUrl}/og-image.png">
 <style>${css()}</style>
+${urlPath.startsWith('/logement-social/chiffres/') ? '' : VT_CSS}
 ${ld}
 </head>
 <body>
@@ -277,7 +346,7 @@ ${content}
     <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/">Mentions légales</a></p>
   </div>
 </footer>
-<script>/* iOS n'applique :active au tactile que si un listener touchstart existe. */document.addEventListener('touchstart',function(){},{passive:true})</script>
+${ANIM_JS}
 </body>
 </html>`;
 }
@@ -322,7 +391,7 @@ function addPage(urlPath, html, priority) {
 </section>
 <section id="parcours">
   <h2>Quelle est votre situation&nbsp;?</h2>
-  <div class="grid">${cards}</div>
+  <div class="grid grid-accueil">${cards}</div>
 </section>
 <section>
   <h2>Les guides essentiels</h2>
@@ -653,6 +722,13 @@ function datasetLd(meta, { name, description, urlPath }) {
   };
 }
 
+/* Compteur animable : la valeur finale reste DANS le HTML (SEO, lecteurs
+ * d'écran, no-JS) ; le JS de layout ne la rejoue que visuellement.
+ * Sous 10, un count-up serait ridicule : nombre nu. */
+const compteur = (n) => n >= 10
+  ? `<span class="compte" data-compte="${n}">${fmt(n)}</span>`
+  : fmt(n);
+
 /**
  * Annuaire générique : une page hub + une page par département.
  * cfg : { data, baseSlug, iconName, themeSlug, nom, nomPluriel, title,
@@ -674,7 +750,7 @@ function buildDirectory(cfg) {
   const depCards = DEPS_IDF.filter(d => byDep.get(d).length).map(d => `
   <a class="card card-parcours" href="/${baseSlug}/${DEP_SLUGS[d]}/" style="${themeStyle(t)}">
     <h3>${esc(DEP_NOMS[d])} (${d})</h3>
-    <p>${byDep.get(d).length} ${byDep.get(d).length > 1 ? cfg.nomPluriel : cfg.nom}</p>
+    <p>${compteur(byDep.get(d).length)} ${byDep.get(d).length > 1 ? cfg.nomPluriel : cfg.nom}</p>
     <span class="card-cta"><span class="cta-label">Voir la liste</span> <span class="cta-arrow" aria-hidden="true">→</span></span>
   </a>`).join('');
   const hubContent = `
@@ -722,7 +798,7 @@ function buildDirectory(cfg) {
   <div>
     <p class="kicker">Annuaire · données publiques</p>
     <h1>${esc(h1)}</h1>
-    <p class="lead">${items.length} ${items.length > 1 ? cfg.nomPluriel : cfg.nom} ${DEP_PREP[d]}, d'après ${esc(data._meta.source.split('(')[0].trim())}.</p>
+    <p class="lead">${compteur(items.length)} ${items.length > 1 ? cfg.nomPluriel : cfg.nom} ${DEP_PREP[d]}, d'après ${esc(data._meta.source.split('(')[0].trim())}.</p>
   </div>
 </header>
 <ul class="dir-list" style="${themeStyle(t)}">
@@ -915,7 +991,7 @@ if (LS_COMMUNES) {
   <div>
     <p class="kicker">Données officielles</p>
     <h1>Le logement social en Île-de-France, en chiffres</h1>
-    <p class="lead">Plus de ${fmt(Math.floor(parcIdf / 100000) * 100000)} logements locatifs sociaux sont recensés en Île-de-France (RPLS, 1ᵉʳ janvier 2024). Parc, loyers au m², vacance et taux SRU&nbsp;: les chiffres officiels, commune par commune — pour savoir où votre demande a le plus de chances d'aboutir.</p>
+    <p class="lead">Plus de ${compteur(Math.floor(parcIdf / 100000) * 100000)} logements locatifs sociaux sont recensés en Île-de-France (RPLS, 1ᵉʳ janvier 2024). Parc, loyers au m², vacance et taux SRU&nbsp;: les chiffres officiels, commune par commune, pour savoir où votre demande a le plus de chances d'aboutir.</p>
   </div>
   ${illu('illu-chiffres', 'Illustration : des immeubles et des barres de graphique, le logement social en chiffres')}
 </header>
@@ -1015,16 +1091,29 @@ function encadrementWidget() {
   <p class="maj">${esc(m.attribution)} · références ${esc(m.millesime)}, extraites le ${esc(dateFrOf(m.collectedAt))}. Le quartier administratif peut différer du «&nbsp;quartier d'usage&nbsp;»&nbsp;: vérifiez sur la carte officielle en cas de doute.</p>
   <script>
 (function(){
-var G=null;
+var G=null,Gq=false;
 function $(i){return document.getElementById(i)}
 function num(v){var n=parseFloat(String(v).replace(',','.'));return isFinite(n)&&n>0?n:null}
 function fr(n,d){return n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function upd(){
  var q=$('enc-q').value,p=$('enc-p').value,e=$('enc-e').value,mb=$('enc-m').value,res=$('enc-result');
  if(q===''||p===''||e===''||mb===''){res.hidden=true;return}
- if(!G){res.hidden=false;res.innerHTML='Chargement des références…';
-  fetch('/data/encadrement-loyers-paris.json').then(function(r){return r.json()}).then(function(j){G=j;upd()})
-  .catch(function(){res.innerHTML='Impossible de charger les références. Réessayez ou consultez paris.fr.'});return}
+ if(!G){
+  /* Skeleton seulement après 180 ms de latence réelle (sur cache disque, un
+   * skeleton qui flashe 50 ms est pire que rien), et seulement si les champs
+   * sont toujours complets quand le timer tombe. Le span masqué rend le
+   * chargement audible aux lecteurs d'écran (région live parente, pas
+   * d'aria-busy : il étoufferait justement cette annonce). */
+  if(!Gq){Gq=true;
+   var sk=setTimeout(function(){
+    if($('enc-q').value===''||$('enc-p').value===''||$('enc-e').value===''||$('enc-m').value==='')return;
+    res.hidden=false;
+    res.innerHTML='<span class="visually-hidden">Chargement des références…</span><div class="sk"></div><div class="sk sk-2"></div>'},180);
+   fetch('/data/encadrement-loyers-paris.json').then(function(r){return r.json()}).then(function(j){
+    clearTimeout(sk);G=j;upd()})
+   .catch(function(){Gq=false;clearTimeout(sk);
+    res.hidden=false;res.innerHTML='Impossible de charger les références. Réessayez ou consultez paris.fr.'})}
+  return}
  var v=G.grille[q+'|'+p+'|'+e+'|'+mb];
  if(!v){res.hidden=false;res.innerHTML='Référence introuvable pour cette combinaison.';return}
  var s=num($('enc-s').value),l=num($('enc-l').value);
@@ -1055,10 +1144,11 @@ var deb;['enc-s','enc-l'].forEach(function(i){$(i).addEventListener('input',func
   <span class="page-head-icon">${icon('annuaire', PAL.bleu2)}</span>
   <div>
     <h1>Rechercher sur ${esc(SITE.name)}</h1>
-    <p class="lead">Une commune, une résidence, un foyer, un dispositif ou une aide&nbsp;: tout le contenu du site est cherchable ici, y compris les ${fmt(SEARCH_INDEX.filter(e => DATA_SEARCH_CATS.includes(e.c)).length)} entrées de nos annuaires de données publiques.</p>
+    <p class="lead">Une commune, une résidence, un foyer, un dispositif ou une aide&nbsp;: tout le contenu du site est cherchable ici, y compris les ${compteur(SEARCH_INDEX.filter(e => DATA_SEARCH_CATS.includes(e.c)).length)} entrées de nos annuaires de données publiques.</p>
   </div>
 </header>
 <p><input id="q" type="search" class="search-input" aria-label="Rechercher sur le site" placeholder="Ex. : Massy, résidence CROUS, FJT, Visale, encadrement…" autocomplete="off"></p>
+<p class="pills"><small>Essayez&nbsp;:</small> <button type="button" class="pill ex" data-q="Massy">Massy</button> <button type="button" class="pill ex" data-q="garant Visale">garant Visale</button> <button type="button" class="pill ex" data-q="résidence CROUS">résidence CROUS</button> <button type="button" class="pill ex" data-q="encadrement des loyers">encadrement des loyers</button></p>
 <p class="result-count" id="count" aria-live="polite"></p>
 <ul class="result-list" id="results"></ul>
 <noscript><p>La recherche a besoin de JavaScript. Sans lui, parcourez les <a href="/annuaire/">annuaires</a> ou les <a href="/">parcours</a>.</p></noscript>
@@ -1084,10 +1174,15 @@ function run(){
   if(ok){res.push([score,e])}}
  res.sort(function(a,b){return b[0]-a[0]});
  cnt.textContent=res.length?res.length+' résultat'+(res.length>1?'s':''):'Aucun résultat. Essayez un nom de commune, de résidence ou de dispositif.';
- out.innerHTML=res.slice(0,60).map(function(r){var e=r[1];
-  return '<li><span class="badge-cat">'+esc(e.c)+'</span><div><a href="'+esc(e.u)+'">'+esc(e.t)+'</a>'+(e.d?'<br><small>'+esc(e.d)+'</small>':'')+'</div></li>'}).join('');
+ var vide=!out.children.length;
+ out.innerHTML=res.slice(0,60).map(function(r,idx){var e=r[1];
+  return '<li style="--i:'+(idx<8?idx:8)+'"><span class="badge-cat">'+esc(e.c)+'</span><div><a href="'+esc(e.u)+'">'+esc(e.t)+'</a>'+(e.d?'<br><small>'+esc(e.d)+'</small>':'')+'</div></li>'}).join('');
+ /* Cascade au premier rendu (ou au passage vide -> rempli) seulement :
+  * rejouer a chaque frappe ferait scintiller la liste. */
+ if(vide&&res.length){out.classList.add('anim')}else{out.classList.remove('anim')}
 }
 var deb;inp.addEventListener('input',function(){clearTimeout(deb);deb=setTimeout(run,120)});
+document.querySelectorAll('.pill.ex').forEach(function(b){b.addEventListener('click',function(){inp.value=b.getAttribute('data-q');run();inp.focus()})});
 var m=location.search.match(/[?&]q=([^&]+)/);
 if(m){inp.value=decodeURIComponent(m[1].replace(/\\+/g,' '));run()}
 inp.focus();
@@ -1175,6 +1270,17 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .hero-illo svg{display:block;width:100%;max-width:330px;height:auto;margin:0 0 .2rem auto}
 /* La porte s'éclaire au survol/focus du CTA principal (retour plus lent
  * que l'aller pour éviter le clignotement). Sans :has() : rien, aucun bris. */
+/* Fenêtres qui s'allument une fois, de bas en haut (délais posés au build) ;
+ * sous reduced-motion, la règle dédiée du bloc reduce les sert allumées. */
+.w-lit{opacity:0;animation:allumer .35s ease-out both}
+.soleil,.soleil-halo{transform-box:fill-box;transform-origin:center}
+/* 6 itérations et non infinite : la respiration s'éteint d'elle-même après
+ * ~1 min (WCAG 2.2.2, pas de mouvement parallèle au contenu sans fin). */
+.soleil{animation:respire 9s ease-in-out 6 alternate}
+.soleil-halo{animation:halo 9s ease-in-out 6 alternate}
+/* Pause hors viewport (batterie) : seulement les boucles temporelles, pas
+ * les plans scroll-driven ni les fenêtres déjà allumées (micro-saut sinon). */
+.illo-skyline.pause :is(.soleil,.soleil-halo,g[fill="#fff"]){animation-play-state:paused}
 .porte{transition:filter .4s ease-out}
 .porte-lueur{opacity:0;transition:opacity .4s ease-out}
 .hero:has(.hero-actions .btn:not(.btn-ghost):hover) .porte,.hero:has(.hero-actions .btn:not(.btn-ghost):focus-visible) .porte{filter:brightness(1.45) saturate(1.15);transition-duration:.25s}
@@ -1191,7 +1297,16 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .card{display:block;border:1px solid var(--bord);border-radius:16px;padding:22px;text-decoration:none;color:inherit;background:var(--surface);box-shadow:0 1px 2px rgba(22,51,82,.05),0 6px 18px -12px rgba(22,51,82,.10);transition:box-shadow .18s,transform .18s,border-color .18s;position:relative;overflow:hidden}
 .card:hover{box-shadow:0 16px 36px -14px var(--ts,rgba(31,78,121,.30));transform:translateY(-3px);border-color:var(--t,var(--bleu2))}
 .card h3{margin:0 0 .5rem;font-size:1.06rem}.card p{margin:0;color:var(--gris);font-size:.92rem}
-.card-parcours::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--t,var(--bleu2))}
+.card-parcours::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--t,var(--bleu2));transform-origin:top left;transition:transform .22s cubic-bezier(.2,.7,.3,1)}
+.card-parcours:hover::before,.card-parcours:focus-visible::before{transform:scaleY(1.8)}
+/* Ouverture en escalier des 3 parcours (accueil). Fill BACKWARDS uniquement :
+ * un fill forwards sur transform tuerait le lift et le scaleY du survol. */
+.grid-accueil .card{animation:rise .5s cubic-bezier(.2,.7,.3,1) .32s backwards}
+.grid-accueil .card:nth-child(2){animation-delay:.4s}
+.grid-accueil .card:nth-child(3){animation-delay:.48s}
+.grid-accueil .card-parcours::before{animation:drawx .35s ease-out .32s backwards}
+.grid-accueil .card-parcours:nth-child(2)::before{animation-delay:.4s}
+.grid-accueil .card-parcours:nth-child(3)::before{animation-delay:.48s}
 .card-icon{display:inline-flex;width:42px;height:42px;border-radius:11px;background:var(--tbg,var(--ciel));padding:8px;margin-bottom:10px}
 .card-icon svg{width:100%;height:100%}
 .card-cta{display:inline-block;margin-top:.9rem;color:var(--ttx,var(--bleu2));font-weight:650;font-size:.9rem}
@@ -1222,6 +1337,10 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .notice{background:var(--creme);border:1px solid #efe5d6;border-radius:16px;padding:8px 24px 20px;margin:2.2rem 0}
 .pills{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .pill{display:inline-block;background:var(--surface);border:1px solid var(--bord);border-radius:999px;padding:6px 15px;font-size:.85rem;text-decoration:none;transition:border-color .15s,background .15s}
+/* Pills bouton = vraies cibles tactiles : min 44px (les pills lien restent
+ * des tags secondaires au gabarit historique). */
+button.pill{font:inherit;font-size:.85rem;color:var(--encre);cursor:pointer;padding:11px 16px;min-height:44px}
+.compte{font-variant-numeric:tabular-nums}
 .pill:hover{border-color:var(--t,var(--bleu2));background:var(--tbg,var(--ciel))}
 .sources{padding-left:1.1rem}.sources li{margin:.5rem 0}
 /* Liens de prose : le soulignement s'épaissit et passe au terracotta.
@@ -1265,7 +1384,12 @@ main p a:not([class]):hover,main li a:not([class]):hover,main p a:not([class]):f
 [id]{scroll-margin-top:16px}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .dir-list{list-style:none;padding:0;margin:1.2rem 0}
-.dir-item{border:1px solid var(--bord);border-left:5px solid var(--t,var(--bleu2));border-radius:14px;padding:14px 20px;margin:.8rem 0;background:var(--surface)}
+.dir-item{position:relative;border:1px solid var(--bord);border-left:5px solid var(--t,var(--bleu2));border-radius:14px;padding:14px 20px;margin:.8rem 0;background:var(--surface)}
+/* Projecteur : halo 1,5 s sur la fiche visée en arrivant de la recherche.
+ * z-index:0 sur le parent crée le stacking context qui place le ::after
+ * z-index:-1 AU-DESSUS du fond du parent mais SOUS son texte. */
+.dir-item:target{z-index:0}
+.dir-item:target::after{content:"";position:absolute;inset:-2px;border-radius:14px;background:var(--tbg,var(--ciel));opacity:0;pointer-events:none;z-index:-1;animation:spot 1.5s ease-out .15s both}
 .dir-item h3{margin:.05rem 0 .3rem;font-size:1.05rem}
 .dir-addr{margin:.15rem 0;color:var(--gris)}
 .dir-meta{margin:.15rem 0;font-size:.92rem}
@@ -1281,6 +1405,16 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .data tbody tr:hover td{background:var(--fond2)}
 .data td.num,.data th.num{text-align:right;font-variant-numeric:tabular-nums}
 .data td.bar{background-image:linear-gradient(90deg,var(--tbg,var(--ciel)) var(--pct,0%),transparent 0);background-origin:content-box;background-repeat:no-repeat}
+/* Jauges animées : --pct enregistrée pour être interpolable ; la classe
+ * jauge-anim (posée par JS, donc jamais en no-JS ni reduced-motion) met les
+ * barres à zéro et in-view les libère. Le !important est nécessaire pour
+ * primer sur le style inline --pct posé par le build. Sans @property
+ * (vieux navigateurs) : remplissage instantané, aucun bris. */
+@property --pct{syntax:'<percentage>';initial-value:0%;inherits:false}
+.jauge-anim tbody tr.in-view td.bar{transition:--pct .8s cubic-bezier(.25,.7,.3,1)}
+.jauge-anim tbody tr:not(.in-view) td.bar{--pct:0%!important}
+.jauge-anim tbody tr:not(.in-view) .badge{opacity:0}
+.jauge-anim tbody tr.in-view .badge{animation:badgepop .45s .5s cubic-bezier(.34,1.56,.64,1) backwards}
 .badge{display:inline-block;border-radius:6px;padding:1px 8px;font-size:.74rem;font-weight:650;white-space:nowrap}
 .badge-def{background:#fdecdd;color:#a8492f}
 .badge-car{background:#b04a30;color:#fff}
@@ -1290,6 +1424,12 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .tool-form label{font-size:.82rem;font-weight:650;color:var(--bleu);display:block;margin-bottom:3px}
 .tool-form select,.tool-form input{width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--bord);border-radius:8px;font:inherit;background:#fff}
 .tool-result{background:#fff;border:1px solid var(--bord);border-left:5px solid var(--accent);border-radius:12px;padding:12px 18px;margin:.8rem 0}
+/* Skeleton du widget (affiché après 180 ms de latence réelle seulement) ;
+ * min-height : le passage skeleton -> verdict ne doit pas décaler la page. */
+#enc-result:not([hidden]){min-height:74px}
+.sk{height:18px;border-radius:8px;background:var(--ciel);margin:8px 0;position:relative;overflow:hidden}
+.sk-2{width:70%;height:12px}
+.sk::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);animation:reflet 1.2s linear infinite}
 /* Verdict « tampon » : ne rejoue qu'au CHANGEMENT de verdict (classe stamp
  * posée par le JS), pas à chaque frappe, sinon clignotement pendant la saisie.
  * Jamais de count-up sur un plafond légal : le chiffre s'affiche entier. */
@@ -1311,6 +1451,19 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 @keyframes nav-actif{from{transform:scaleX(0)}}
 @keyframes tampon{from{opacity:0;transform:scale(.94)}70%{transform:scale(1.015)}to{opacity:1;transform:none}}
 @keyframes lecture{0%{transform:scaleX(0);opacity:0}4%{opacity:1}100%{transform:scaleX(1);opacity:1}}
+@keyframes allumer{to{opacity:.95}}
+@keyframes respire{to{transform:scale(1.03)}}
+@keyframes halo{to{transform:scale(1.18);opacity:.1}}
+@keyframes drawx{from{transform:scaleX(0)}}
+@keyframes trace{from{transform:scaleY(0)}}
+/* ignite : transform seul. Interpoler le fond clair vers le bleu croisait la
+ * couleur du chiffre (contraste 1:1 à mi-course, état gelable au scroll). */
+@keyframes ignite{from{transform:scale(.85)}}
+@keyframes badgepop{from{opacity:0;transform:scale(.55)}60%{transform:scale(1.12)}}
+@keyframes spot{20%{opacity:.55}}
+@keyframes reflet{to{transform:translateX(100%)}}
+@keyframes par-ciel{to{transform:translateY(-6px)}}
+@keyframes par-fac{to{transform:translateY(-16px)}}
 .hero-text h1{animation:rise .55s .05s cubic-bezier(.2,.7,.3,1) both}
 .hero-text .lead{animation:rise .55s .15s cubic-bezier(.2,.7,.3,1) both}
 .hero-actions{animation:rise .55s .25s cubic-bezier(.2,.7,.3,1) both}
@@ -1322,14 +1475,28 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .card-icon{transition:transform .2s}
 .card:hover .card-icon{transform:scale(1.07) rotate(-3deg)}
 .faq details[open] p{animation:rise .3s ease-out both}
-.result-list li{animation:rise .3s ease-out both}
-.result-list li:nth-child(2){animation-delay:.04s}.result-list li:nth-child(3){animation-delay:.08s}.result-list li:nth-child(4){animation-delay:.12s}.result-list li:nth-child(5){animation-delay:.16s}
+/* Cascade des résultats : premier rendu seulement (classe anim posée par le
+ * JS de recherche), plafonnée à 8 items via la variable --i posée inline. */
+.result-list.anim li{animation:rise .22s ease-out both;animation-delay:calc(var(--i,0)*25ms)}
 .tool-result{animation:rise .35s ease-out both}
 /* Révélation au défilement (Chromium ; statique ailleurs). Opacité seule sur
  * .card : un transform en fill bloquerait le translateY du survol. */
 @supports(animation-timeline:view()){
-.grid .card{animation:fadein both;animation-timeline:view();animation-range:entry 0% entry 35%}
+/* La grille de l'accueil est EXCLUE : son escalier a ses propres délais,
+ * que le shorthand animation de cette règle réinitialiserait. */
+.grid:not(.grid-accueil) .card{animation:fadein both;animation-timeline:view();animation-range:entry 0% entry 35%}
 .steps .step,.dir-item{animation:rise both;animation-timeline:view();animation-range:entry 0% entry 32%}
+/* « Dans le bon ordre » : la ligne se trace et chaque pastille s'allume au
+ * fil du scroll. Fallback (autres moteurs, reduced-motion) : état plein. */
+.step:not(:last-child)::after{transform-origin:top;animation:trace both;animation-timeline:view();animation-range:entry 10% entry 75%}
+.step::before{animation:ignite both;animation-timeline:view();animation-range:entry 15% entry 45%}
+}
+@supports(animation-timeline:scroll()){
+/* Parallaxe de la skyline sur les 600 premiers px de scroll : le proche
+ * (façades) bouge plus que le lointain (ciel), 16 px et 6 px, plafonds durs
+ * (risque vestibulaire). La tour Eiffel vit avec les façades : ligne de sol. */
+.plan-ciel{animation:par-ciel linear both;animation-timeline:scroll(root);animation-range:0px 600px}
+.plan-facades{animation:par-fac linear both;animation-timeline:scroll(root);animation-range:0px 600px}
 }
 /* ---- Global a11y ---- */
 :focus-visible{outline:3px solid var(--bleu2);outline-offset:2px}
@@ -1338,7 +1505,9 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 /* Kill switch : le sélecteur * seul ne matche PAS les pseudo-éléments
  * (chevron FAQ, barre du menu, liserets) — ils continueraient d'animer.
  * La barre de lecture reste à scaleX(0) : invisible sous reduced-motion, assumé. */
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card:hover,.btn:hover,.btn:active,.card:hover .card-icon,.card:hover .cta-arrow,.card:focus-visible .cta-arrow,a:hover>.cta-arrow,a:focus-visible>.cta-arrow,.brand:hover .brand-mark{transform:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card:hover,.btn:hover,.btn:active,.card:hover .card-icon,.card:hover .cta-arrow,.card:focus-visible .cta-arrow,a:hover>.cta-arrow,a:focus-visible>.cta-arrow,.brand:hover .brand-mark,.card-parcours:hover::before,.card-parcours:focus-visible::before{transform:none}
+/* Les états finaux portés par une animation doivent être servis en statique. */
+.w-lit{opacity:.95}}
 /* ---- Responsive ---- */
 @media(max-width:760px){
 .hero{grid-template-columns:1fr;padding:24px 22px 20px;gap:8px}
