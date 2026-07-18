@@ -106,9 +106,9 @@
       "id": "d-chiffres",
       "bloc": "demarches",
       "titre": "Ciblez les communes où votre demande a ses chances",
-      "texte": "Parc social, loyers médians, vacance et taux SRU pour 464 communes : les chiffres officiels pour choisir où candidater, plutôt qu'au hasard.",
-      "lien": "/logement-social/chiffres/",
-      "lienLabel": "Les chiffres commune par commune",
+      "texte": "Le délai médian d'attribution va de 10 à 57 mois selon la commune, et la pression de la demande varie tout autant. Regardez les chiffres officiels avant de choisir où candidater, plutôt qu'au hasard.",
+      "lien": "/logement-social/delais/",
+      "lienLabel": "Les délais et la pression, commune par commune",
       "regles": [
         { "si": { "revenus": ["r1", "r2", "r3"], "duree": ["durable"] }, "pourquoi": "Bien choisir ses communes est le levier le plus sous-estimé d'une demande de logement social." }
       ]

@@ -43,6 +43,17 @@ const TENSION = readOpen('tension-communes');
  * valeurs null et doivent afficher « — », jamais un ratio recalculé. */
 const TENSION_BY_CODE = TENSION ? new Map(TENSION.records.map(r => [r.code, r])) : null;
 const tensionOf = (code) => (TENSION_BY_CODE ? TENSION_BY_CODE.get(code) || null : null);
+/* Seuil d'attributions des classements : au-dessous, un délai médian n'est pas
+ * un signal fiable. Même valeur ici et sur la page /logement-social/delais/. */
+const SEUIL_CLASSEMENT = 50;
+const TENSION_CLASSABLES = TENSION ? TENSION.records.filter(t =>
+  t.delaiMois != null && t.tension != null && t.attributions != null
+  && t.attributions >= SEUIL_CLASSEMENT && t.code !== '75056') : [];
+const delaisTries = TENSION_CLASSABLES
+  .map(t => (t.delaiMoisExact != null ? t.delaiMoisExact : t.delaiMois))
+  .sort((a, b) => a - b);
+const statsMin = delaisTries.length ? Math.round(delaisTries[0]) : null;
+const statsMax = delaisTries.length ? Math.round(delaisTries[delaisTries.length - 1]) : null;
 
 const DEPS_IDF = ['75', '77', '78', '91', '92', '93', '94', '95'];
 const DEP_NOMS = {
@@ -54,6 +65,13 @@ const DEP_SLUGS = {
   92: 'hauts-de-seine-92', 93: 'seine-saint-denis-93', 94: 'val-de-marne-94', 95: 'val-d-oise-95',
 };
 const fmt = (n, dec = 0) => (n == null ? '—' : n.toLocaleString('fr-FR', { minimumFractionDigits: dec, maximumFractionDigits: dec }));
+/* Compteur animable : la valeur finale reste DANS le HTML (SEO, lecteurs
+ * d'écran, no-JS) ; le JS de layout ne la rejoue que visuellement.
+ * Sous 10, un count-up serait ridicule : nombre nu.
+ * Défini ici (et non plus bas) : la page d'accueil s'en sert. */
+const compteur = (n) => n >= 10
+  ? `<span class="compte" data-compte="${n}">${fmt(n)}</span>`
+  : fmt(n);
 const dateFrOf = (iso) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 /* AAAA-MM-JJ dans le même fuseau que dateFrOf (heure de Paris) : le JSON-LD et
  * le texte visible doivent annoncer la même date d'extraction. */
@@ -297,6 +315,7 @@ function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = []
     FJT && '<li><a href="/foyers-jeunes-travailleurs/">Foyers de jeunes travailleurs</a></li>',
     RES_AUTONOMIE && '<li><a href="/residences-autonomie/">Résidences autonomie (seniors)</a></li>',
     LS_COMMUNES && '<li><a href="/logement-social/chiffres/">Le logement social en chiffres</a></li>',
+    TENSION && '<li><a href="/logement-social/delais/">Délais du logement social</a></li>',
     '<li><a href="/diagnostic/">Diagnostic logement (2 min)</a></li>',
     '<li><a href="/recherche/">Rechercher sur le site</a></li>',
   ].filter(Boolean).join('');
@@ -410,6 +429,21 @@ function addPage(urlPath, html, priority) {
   <div class="grid grid-guides">${guideCards}</div>
   <p><a href="/guides/">Voir tous les guides <span class="cta-arrow" aria-hidden="true">→</span></a></p>
 </section>
+${TENSION && TENSION._meta.region ? `
+<section class="stats-bloc">
+  <div class="stats-head">
+    <p class="kicker">Observatoire · données officielles</p>
+    <h2>Combien de temps attend-on un logement social&nbsp;?</h2>
+    <p>La question que tout le monde pose, et à laquelle presque personne ne répond avec des chiffres. Nous les publions, commune par commune.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><strong class="stat-n">${compteur(TENSION._meta.region.delaiMois)}</strong><span class="stat-u">mois</span><span class="stat-l">de délai médian en Île-de-France</span></div>
+    <div class="stat"><strong class="stat-n">${fmt(TENSION._meta.region.tension, 1)}</strong><span class="stat-u">demandes</span><span class="stat-l">en cours pour une attribution</span></div>
+    <div class="stat"><strong class="stat-n">${statsMin}<span class="stat-sep">→</span>${statsMax}</strong><span class="stat-u">mois</span><span class="stat-l">selon la commune : l'écart change tout</span></div>
+  </div>
+  <p class="stats-cta"><a class="btn" href="/logement-social/delais/">Voir les délais commune par commune</a></p>
+  <p class="maj">${esc(TENSION._meta.attribution)} · ${esc(TENSION._meta.license)}</p>
+</section>` : ''}
 <section>
   <h2>Comment ça marche&nbsp;?</h2>
   <div class="steps">
@@ -466,6 +500,7 @@ for (const p of PARCOURS) {
       FJT && { u: '/foyers-jeunes-travailleurs/', t: 'Les foyers de jeunes travailleurs (FJT)' },
     ],
     'logement-social': [
+      TENSION && { u: '/logement-social/delais/', t: "Délais d'attribution : où l'attente est la plus courte" },
       LS_COMMUNES && { u: '/logement-social/chiffres/', t: 'Le logement social commune par commune : parc, loyers, vacance' },
       RES_AUTONOMIE && { u: '/residences-autonomie/', t: `Les ${RES_AUTONOMIE.records.length} résidences autonomie (seniors)` },
       FJT && { u: '/foyers-jeunes-travailleurs/', t: 'Les foyers de jeunes travailleurs (FJT)' },
@@ -489,6 +524,20 @@ for (const p of PARCOURS) {
 <div class="steps" style="${themeStyle(t)}">
 ${etapes}
 </div>
+${p.slug === 'logement-social' && TENSION && TENSION._meta.region ? `
+<section class="stats-bloc">
+  <div class="stats-head">
+    <p class="kicker">Observatoire · données officielles</p>
+    <h2>Combien de temps attend-on&nbsp;? Les chiffres réels</h2>
+    <p>Avant de choisir les communes de votre demande, regardez où l'attente est la plus courte&nbsp;: l'écart est considérable d'une ville à l'autre.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><strong class="stat-n">${compteur(TENSION._meta.region.delaiMois)}</strong><span class="stat-u">mois</span><span class="stat-l">de délai médian en Île-de-France</span></div>
+    <div class="stat"><strong class="stat-n">${fmt(TENSION._meta.region.tension, 1)}</strong><span class="stat-u">demandes</span><span class="stat-l">en cours pour une attribution</span></div>
+    <div class="stat"><strong class="stat-n">${fmt(TENSION._meta.region.partAnc5ans, 1)}<span class="stat-sep">%</span></strong><span class="stat-u">des ménages</span><span class="stat-l">attendent depuis 5 ans ou plus</span></div>
+  </div>
+  <p class="stats-cta"><a class="btn" href="/logement-social/delais/">Voir les délais commune par commune</a></p>
+</section>` : ''}
 <section class="notice">
   <h2>Où chercher&nbsp;: les sources fiables pour ce profil</h2>
   ${annuaireBlock}
@@ -735,13 +784,6 @@ function datasetLd(meta, { name, description, urlPath }) {
     inLanguage: 'fr-FR',
   };
 }
-
-/* Compteur animable : la valeur finale reste DANS le HTML (SEO, lecteurs
- * d'écran, no-JS) ; le JS de layout ne la rejoue que visuellement.
- * Sous 10, un count-up serait ridicule : nombre nu. */
-const compteur = (n) => n >= 10
-  ? `<span class="compte" data-compte="${n}">${fmt(n)}</span>`
-  : fmt(n);
 
 /**
  * Annuaire générique : une page hub + une page par département.
@@ -1075,7 +1117,7 @@ ${(() => {
     ? (tn.delaiMois < reg.delaiMois ? `, soit moins que la moyenne francilienne (${fmt(reg.delaiMois)} mois)`
       : tn.delaiMois > reg.delaiMois ? `, soit plus que la moyenne francilienne (${fmt(reg.delaiMois)} mois)`
         : `, comme la moyenne francilienne`) : '';
-  return `<p>Dans ce département, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(tn.delaiMois)} mois ou moins</strong>${cmp}. On y compte <strong>${fmt(tn.tension, 1)} demandes en cours pour une attribution</strong>. Le détail commune par commune figure dans les deux dernières colonnes du tableau.</p>`;
+  return `<p>Dans ce département, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(tn.delaiMois)} mois ou moins</strong>${cmp}. On y compte <strong>${fmt(tn.tension, 1)} demandes en cours pour une attribution</strong>. Le détail commune par commune figure dans les deux dernières colonnes du tableau, et le <a href="/logement-social/delais/">classement francilien des délais</a> situe ces chiffres dans la région.</p>`;
 })()}
 <p><label for="filtre"><strong>Filtrer&nbsp;:</strong></label> <input id="filtre" type="search" placeholder="Nom de ${d === '75' ? "l'arrondissement" : 'la commune'}…" class="search-input search-inline"></p>
 <div class="table-wrap"><table class="data">
@@ -1092,7 +1134,12 @@ ${legende}
         `Logement social : ${r.nbLogementsSociaux != null ? fmt(r.nbLogementsSociaux) + ' logements' : 'chiffres'}${r.loyerMedian != null ? `, loyer médian ${fmt(r.loyerMedian, 2)} €/m²` : ''}${r.tauxSRU != null ? `, taux SRU ${fmt(r.tauxSRU, 1)} %` : ''}.`, 'Commune');
     }
     addPage(urlPath, layout({
-      title: `Logement social ${DEP_PREP[d]} (${d}) : parc et loyers`,
+      /* Le nom du département fait varier la longueur : on garde la version
+       * riche quand elle tient dans les 65 caractères, sinon on abrège. */
+      title: (() => {
+        const riche = `Logement social ${DEP_PREP[d]} (${d}) : parc, loyers, délais`;
+        return riche.length <= 65 ? riche : `Logement social ${DEP_PREP[d]} (${d}) : parc et délais`;
+      })(),
       metaDescription: `Le logement social ${DEP_PREP[d]} : parc, loyer médian au m², vacance et taux SRU ${d === '75' ? 'par arrondissement' : 'commune par commune'}. Données officielles au 1ᵉʳ janvier 2024.`,
       urlPath,
       content,
@@ -1104,15 +1151,13 @@ ${legende}
    * Seuil d'attributions obligatoire : un délai calculé sur une poignée de
    * ménages logés n'est pas un signal. Le seuil est affiché, pas caché. */
   if (TENSION && TENSION._meta.region) {
-    const SEUIL = 50;
+    const SEUIL = SEUIL_CLASSEMENT;
     const reg = TENSION._meta.region;
     const nomDe = new Map(recs.map(r => [r.code, r.nom]));
-    /* Le critère annoncé au lecteur (au moins SEUIL attributions) doit être le
-     * critère appliqué : ne pas restreindre au périmètre du join RPLS, qui ne
-     * couvre pas toute l'Île-de-France. */
-    const classables = TENSION.records.filter(t =>
-      t.delaiMois != null && t.tension != null && t.attributions != null && t.attributions >= SEUIL
-      && t.code !== '75056');
+    /* Le critère annoncé au lecteur (au moins SEUIL attributions) est le critère
+     * appliqué : pas de restriction cachée au périmètre du join RPLS, qui ne
+     * couvre pas toute l'Île-de-France. Liste partagée avec le bloc d'accueil. */
+    const classables = TENSION_CLASSABLES;
     const depDe = (code) => (recs.find(r => r.code === code) || {}).dep
       || (TENSION_BY_CODE.get(code) || {}).dep;
     const lien = (code, nom) => {
@@ -1610,6 +1655,19 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .page-head-icon svg{width:100%;height:100%}
 .page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 17px 17px 0;margin:-22px -26px -22px 8px;box-shadow:-14px 0 24px -18px rgba(31,78,121,.25)}
 .page-head h1{margin:.1rem 0 .5rem}.page-head .lead{margin:0}
+/* ---- Bloc de chiffres (Observatoire, accueil et hub parcours) ---- */
+.stats-bloc{background:linear-gradient(160deg,#eef5fb,#fdfbf7 120%);border:1px solid #dbe7f1;border-radius:20px;padding:30px 32px 24px;margin:2rem 0}
+.stats-head h2{margin:.2rem 0 .5rem}
+.stats-head p{margin:0 0 1.2rem;max-width:62ch}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;margin:1.2rem 0}
+.stat{background:#fff;border:1px solid var(--bord);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:2px}
+.stat-n{font-size:2.3rem;line-height:1.05;font-weight:700;color:var(--bleu2);font-variant-numeric:tabular-nums}
+.stat-sep{font-size:1.3rem;margin:0 .12em;color:var(--accent)}
+.stat-u{font-size:.9rem;font-weight:650;color:var(--bleu)}
+.stat-l{font-size:.88rem;color:#5a6b7c;margin-top:.25rem}
+.stats-cta{margin:1.2rem 0 .6rem}
+@media(max-width:520px){.stats-bloc{padding:22px 18px 18px}.stat-n{font-size:2rem}}
+
 /* ---- Étapes numérotées ---- */
 .steps{counter-reset:etape}
 .step{position:relative;border:1px solid var(--bord);border-radius:14px;padding:18px 22px 16px 64px;margin:1.2rem 0;counter-increment:etape;background:var(--surface)}
