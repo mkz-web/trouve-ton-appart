@@ -37,6 +37,12 @@ const FJT = readOpen('fjt');
 const RES_AUTONOMIE = readOpen('residences-autonomie');
 const LS_COMMUNES = readOpen('logement-social-communes');
 const ENCADREMENT = readOpen('encadrement-loyers-paris');
+const TENSION = readOpen('tension-communes');
+/* Index code INSEE → tension/délai (socle DRIHL). Jointure directe : le socle
+ * porte le code INSEE natif. Les communes sous secret statistique ont des
+ * valeurs null et doivent afficher « — », jamais un ratio recalculé. */
+const TENSION_BY_CODE = TENSION ? new Map(TENSION.records.map(r => [r.code, r])) : null;
+const tensionOf = (code) => (TENSION_BY_CODE ? TENSION_BY_CODE.get(code) || null : null);
 
 const DEPS_IDF = ['75', '77', '78', '91', '92', '93', '94', '95'];
 const DEP_NOMS = {
@@ -49,6 +55,9 @@ const DEP_SLUGS = {
 };
 const fmt = (n, dec = 0) => (n == null ? '—' : n.toLocaleString('fr-FR', { minimumFractionDigits: dec, maximumFractionDigits: dec }));
 const dateFrOf = (iso) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+/* AAAA-MM-JJ dans le même fuseau que dateFrOf (heure de Paris) : le JSON-LD et
+ * le texte visible doivent annoncer la même date d'extraction. */
+const isoFrOf = (iso) => new Date(iso).toLocaleDateString('sv-SE', { timeZone: 'Europe/Paris' });
 /* Époques de construction de l'encadrement, dans l'ordre canonique du dataset
  * (« Apres 1990 » sans accent : clé de données, pas un libellé d'affichage). */
 const EPOQUES = ['Avant 1946', '1946-1970', '1971-1990', 'Apres 1990'];
@@ -719,7 +728,9 @@ function datasetLd(meta, { name, description, urlPath }) {
     license: LICENSE_URLS[meta.license] || meta.license,
     creator: { '@type': 'Organization', name: SITE.name, url: SITE.baseUrl },
     isBasedOn: String(meta.sourceUrl).split(' | '),
-    dateModified: String(meta.collectedAt).slice(0, 10),
+    /* Même fuseau que la date affichée aux lecteurs (dateFrOf, heure de Paris) :
+     * sans cela, une extraction de fin de soirée fait diverger machine et humain. */
+    dateModified: isoFrOf(meta.collectedAt),
     spatialCoverage: 'Île-de-France, France',
     inLanguage: 'fr-FR',
   };
@@ -952,39 +963,51 @@ if (LS_COMMUNES) {
 
   const statut = (r) => (r.carencee ? '<span class="badge badge-car" title="Commune carencée au titre de la loi SRU : objectifs non tenus, sanctions renforcées">carencée</span>'
     : r.deficitaire ? '<span class="badge badge-def" title="Commune en dessous de son objectif légal de logements sociaux (loi SRU)">déficitaire</span>' : '');
-  const rowOf = (r) => `<tr id="c-${r.code}" data-n="${esc(r.nom.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''))}">
+  const rowOf = (r) => {
+    const tn = tensionOf(r.code);
+    return `<tr id="c-${r.code}" data-n="${esc(r.nom.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''))}">
     <td${r.note ? ` title="${esc(r.note)}"` : ''}>${esc(r.nom)}${r.note ? '&nbsp;*' : ''}</td>
     <td class="num">${fmt(r.nbLogementsSociaux)}</td>
     <td class="num">${fmt(r.loyerMedian, 2)}</td>
     <td class="num bar"${r.txVacance != null ? ` style="--pct:${Math.min(r.txVacance * 10, 100).toFixed(0)}%"` : ''}>${fmt(r.txVacance, 1)}</td>
     <td class="num bar"${r.tauxSRU != null ? ` style="--pct:${Math.min(r.tauxSRU, 100).toFixed(0)}%"` : ''}>${r.tauxSRU == null ? '—' : fmt(r.tauxSRU, 1) + ' %'}</td>
+    ${TENSION ? `<td class="num">${tn && tn.delaiMois != null ? fmt(tn.delaiMois) + '&nbsp;mois' : '—'}</td>
+    <td class="num">${tn && tn.tension != null ? fmt(tn.tension, 1) : '—'}</td>` : ''}
     <td>${esc(r.zone || '—')}</td>
     <td>${statut(r)}</td>
   </tr>`;
-  const tableHead = `<thead><tr><th scope="col">Commune</th><th scope="col" class="num">Parc social (RPLS)</th><th scope="col" class="num">Loyer médian €/m²</th><th scope="col" class="num">Vacance %</th><th scope="col" class="num">Taux SRU</th><th scope="col">Zone</th><th scope="col">Statut SRU</th></tr></thead>`;
+  };
+  const tableHead = `<thead><tr><th scope="col">Commune</th><th scope="col" class="num">Parc social (RPLS)</th><th scope="col" class="num">Loyer médian €/m²</th><th scope="col" class="num">Vacance %</th><th scope="col" class="num">Taux SRU</th>${TENSION ? '<th scope="col" class="num">Délai médian</th><th scope="col" class="num">Demandes / attribution</th>' : ''}<th scope="col">Zone</th><th scope="col">Statut SRU</th></tr></thead>`;
   const legende = `
 <section class="notice">
   <h2>Comment lire ces chiffres</h2>
   <ul>
     <li><strong>Parc social (RPLS)</strong>&nbsp;: logements locatifs des bailleurs sociaux au 1ᵉʳ janvier 2024 (répertoire RPLS, Insee–SDES). Les communes sans découpage IRIS ne sont pas couvertes par ce fichier («&nbsp;—&nbsp;»).</li>
-    <li><strong>Loyer médian</strong>&nbsp;: en €/m² de surface habitable, charges non comprises — à comparer aux 25-35&nbsp;€/m² du parc privé parisien.</li>
-    <li><strong>Vacance</strong>&nbsp;: part des logements vacants — sous 3&nbsp;%, le parc est saturé.</li>
-    <li><strong>Taux SRU</strong>&nbsp;: part de logements sociaux au sens de la loi SRU (inventaire au 1ᵉʳ janvier 2024, assiette plus large que le RPLS&nbsp;: ne pas additionner les deux). Une commune «&nbsp;déficitaire&nbsp;» est en dessous de son objectif légal&nbsp;; «&nbsp;carencée&nbsp;», elle est sanctionnée — des arguments utiles pour votre dossier.</li>
+    <li><strong>Loyer médian</strong>&nbsp;: en €/m² de surface habitable, charges non comprises, à comparer aux 25-35&nbsp;€/m² du parc privé parisien.</li>
+    <li><strong>Vacance</strong>&nbsp;: part des logements vacants&nbsp;: sous 3&nbsp;%, le parc est saturé.</li>
+    <li><strong>Taux SRU</strong>&nbsp;: part de logements sociaux au sens de la loi SRU (inventaire au 1ᵉʳ janvier 2024, assiette plus large que le RPLS&nbsp;: ne pas additionner les deux). Une commune «&nbsp;déficitaire&nbsp;» est en dessous de son objectif légal&nbsp;; «&nbsp;carencée&nbsp;», elle est sanctionnée. Autant d'arguments utiles pour votre dossier.</li>
     <li><strong>Zone</strong>&nbsp;: zonage ABC (Abis = Paris…)&nbsp;: il fixe les plafonds de loyers et de ressources de nombreux dispositifs.</li>
+    ${TENSION ? `<li><strong>Délai médian</strong>&nbsp;: la moitié des ménages logés dans l'année avaient déposé leur demande depuis moins de ce délai, l'autre moitié depuis plus longtemps. C'est le chiffre le plus parlant sur l'attente réelle.</li>
+    <li><strong>Demandes pour une attribution</strong>&nbsp;: nombre de demandes en cours (premier choix) rapporté aux attributions de l'année. C'est un <strong>rapport de pression, pas une durée</strong>&nbsp;: 20 demandes pour une attribution ne signifie pas 20 ans d'attente. «&nbsp;—&nbsp;» quand la source masque la valeur (moins de 10 demandes ou attributions).</li>` : ''}
   </ul>
   <p class="maj">${esc(LS_COMMUNES._meta.attribution)} · données extraites le ${esc(dateFrOf(LS_COMMUNES._meta.collectedAt))}.</p>
+  ${TENSION ? `<p class="maj">Délais et pression&nbsp;: ${esc(TENSION._meta.attribution)}, ${esc(TENSION._meta.license)} · extraction du ${esc(dateFrOf(TENSION._meta.collectedAt))}. Le champ des attributions réglementées n'est comparable ni au parc RPLS ni à l'inventaire SRU&nbsp;: ces colonnes ne s'additionnent pas.</p>` : ''}
 </section>`;
 
   /* Hub régional */
+  const depTension = (d) => (TENSION && TENSION._meta.departements ? TENSION._meta.departements.find(x => x.code === d) || null : null);
   const depRows = DEPS_IDF.map(d => {
     const rows = communesOf(d);
     const parc = d === '75' ? (recs.find(r => r.code === '75056') || {}).nbLogementsSociaux : parcOf(rows);
     const deficitaires = rows.filter(r => r.deficitaire).length;
+    const tn = depTension(d);
     return `<tr>
       <td><a href="/logement-social/chiffres/${DEP_SLUGS[d]}/">${esc(DEP_NOMS[d])} (${d})</a></td>
       <td class="num">${fmt(parc)}</td>
       <td class="num">${d === '75' ? 1 : rows.length}</td>
       <td class="num">${fmt(deficitaires)}</td>
+      ${TENSION ? `<td class="num">${tn && tn.delaiMois != null ? fmt(tn.delaiMois) + '&nbsp;mois' : '—'}</td>
+      <td class="num">${tn && tn.tension != null ? fmt(tn.tension, 1) : '—'}</td>` : ''}
     </tr>`;
   }).join('');
   const hubContent = `
@@ -1000,9 +1023,10 @@ if (LS_COMMUNES) {
 </header>
 <div class="table-wrap"><table class="data">
   <caption class="visually-hidden">Logement social par département en Île-de-France (RPLS au 1ᵉʳ janvier 2024)</caption>
-  <thead><tr><th scope="col">Département</th><th scope="col" class="num">Parc social (RPLS)</th><th scope="col" class="num">Communes couvertes</th><th scope="col" class="num">Communes déficitaires (SRU)</th></tr></thead>
+  <thead><tr><th scope="col">Département</th><th scope="col" class="num">Parc social (RPLS)</th><th scope="col" class="num">Communes couvertes</th><th scope="col" class="num">Communes déficitaires (SRU)</th>${TENSION ? '<th scope="col" class="num">Délai médian</th><th scope="col" class="num">Demandes / attribution</th>' : ''}</tr></thead>
   <tbody>${depRows}</tbody>
 </table></div>
+${TENSION && TENSION._meta.region ? `<p>En Île-de-France, le délai médian d'attribution est de <strong>${fmt(TENSION._meta.region.delaiMois)} mois</strong> et l'on compte <strong>${fmt(TENSION._meta.region.tension, 1)} demandes en cours pour une attribution</strong> (${esc(TENSION._meta.dateReference)}, source DRIHL). <a href="/logement-social/delais/">Voir le classement des communes où l'attente est la plus courte →</a></p>` : ''}
 <p>Choisissez un département pour le détail commune par commune, ou utilisez la <a href="/recherche/">recherche</a> pour aller directement à votre commune.</p>
 ${legende}
 <p class="pills"><strong>Guides utiles&nbsp;:</strong> <a class="pill" href="/guides/demande-logement-social/">Demande de logement social</a> <a class="pill" href="/guides/recours-dalo/">Recours DALO</a> <a class="pill" href="/guides/logement-intermediaire/">Logement intermédiaire</a></p>`;
@@ -1043,6 +1067,16 @@ ${legende}
   </div>
 </header>
 ${parisNote}
+${(() => {
+  const tn = depTension(d);
+  if (!tn || tn.delaiMois == null) return '';
+  const reg = TENSION._meta.region;
+  const cmp = reg && reg.delaiMois != null
+    ? (tn.delaiMois < reg.delaiMois ? `, soit moins que la moyenne francilienne (${fmt(reg.delaiMois)} mois)`
+      : tn.delaiMois > reg.delaiMois ? `, soit plus que la moyenne francilienne (${fmt(reg.delaiMois)} mois)`
+        : `, comme la moyenne francilienne`) : '';
+  return `<p>Dans ce département, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(tn.delaiMois)} mois ou moins</strong>${cmp}. On y compte <strong>${fmt(tn.tension, 1)} demandes en cours pour une attribution</strong>. Le détail commune par commune figure dans les deux dernières colonnes du tableau.</p>`;
+})()}
 <p><label for="filtre"><strong>Filtrer&nbsp;:</strong></label> <input id="filtre" type="search" placeholder="Nom de ${d === '75' ? "l'arrondissement" : 'la commune'}…" class="search-input search-inline"></p>
 <div class="table-wrap"><table class="data">
   <caption class="visually-hidden">Logement social par ${d === '75' ? 'arrondissement' : 'commune'} — ${esc(DEP_NOMS[d])} (${d})</caption>
@@ -1064,6 +1098,130 @@ ${legende}
       content,
       breadcrumbs: [{ name: 'Logement social en chiffres', url: '/logement-social/chiffres/' }, { name: DEP_NOMS[d], url: urlPath }],
     }), '0.6');
+  }
+
+  /* ---- Observatoire des délais : classement des communes ----
+   * Seuil d'attributions obligatoire : un délai calculé sur une poignée de
+   * ménages logés n'est pas un signal. Le seuil est affiché, pas caché. */
+  if (TENSION && TENSION._meta.region) {
+    const SEUIL = 50;
+    const reg = TENSION._meta.region;
+    const nomDe = new Map(recs.map(r => [r.code, r.nom]));
+    /* Le critère annoncé au lecteur (au moins SEUIL attributions) doit être le
+     * critère appliqué : ne pas restreindre au périmètre du join RPLS, qui ne
+     * couvre pas toute l'Île-de-France. */
+    const classables = TENSION.records.filter(t =>
+      t.delaiMois != null && t.tension != null && t.attributions != null && t.attributions >= SEUIL
+      && t.code !== '75056');
+    const depDe = (code) => (recs.find(r => r.code === code) || {}).dep
+      || (TENSION_BY_CODE.get(code) || {}).dep;
+    const lien = (code, nom) => {
+      const dep = depDe(code);
+      if (!dep || !DEP_SLUGS[dep]) return esc(nom);
+      /* Ancre vers la ligne seulement si la commune figure au tableau du
+       * département (le join RPLS ne couvre pas toutes les communes). */
+      return `<a href="/logement-social/chiffres/${DEP_SLUGS[dep]}/${nomDe.has(code) ? `#c-${code}` : ''}">${esc(nom)}</a>`;
+    };
+    /* Tri sur la valeur non arrondie : l'affichage reste en mois entiers. */
+    const dExact = (t) => (t.delaiMoisExact != null ? t.delaiMoisExact : t.delaiMois);
+    const rangee = (t, i) => `<tr>
+      <td class="num">${i + 1}</td>
+      <td>${lien(t.code, nomDe.get(t.code) || t.nom)}${t.dep ? ` <small>(${esc(t.dep)})</small>` : ''}</td>
+      <td class="num">${fmt(t.delaiMois)}&nbsp;mois</td>
+      <td class="num">${fmt(t.tension, 1)}</td>
+      <td class="num">${fmt(t.attributions)}</td>
+    </tr>`;
+    const rapides = classables.slice().sort((a, b) => dExact(a) - dExact(b) || b.attributions - a.attributions).slice(0, 20);
+    const lentes = classables.slice().sort((a, b) => dExact(b) - dExact(a) || b.attributions - a.attributions).slice(0, 20);
+    const tete = `<thead><tr><th scope="col" class="num">#</th><th scope="col">Commune</th><th scope="col" class="num">Délai médian</th><th scope="col" class="num">Demandes / attribution</th><th scope="col" class="num">Attributions ${TENSION._meta.millesime}</th></tr></thead>`;
+    const depRowsDelai = (TENSION._meta.departements || []).slice()
+      .sort((a, b) => (a.delaiMois ?? 999) - (b.delaiMois ?? 999))
+      .map(x => `<tr>
+        <td><a href="/logement-social/chiffres/${DEP_SLUGS[x.code]}/">${esc(x.nom)} (${esc(x.code)})</a></td>
+        <td class="num">${x.delaiMois != null ? fmt(x.delaiMois) + '&nbsp;mois' : '—'}</td>
+        <td class="num">${x.tension != null ? fmt(x.tension, 1) : '—'}</td>
+        <td class="num">${fmt(x.demandes)}</td>
+        <td class="num">${fmt(x.attributions)}</td>
+      </tr>`).join('');
+    const borneMin = rapides.length ? Math.round(dExact(rapides[0])) : null;
+    const borneMax = lentes.length ? Math.round(dExact(lentes[0])) : null;
+    const contenu = `
+<nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/logement-social/">Logement social</a> › <a href="/logement-social/chiffres/">Chiffres</a> › Délais</nav>
+<header class="page-head" style="${themeStyle(t)}">
+  <span class="page-head-icon">${icon('demande-logement-social', t.c)}</span>
+  <div>
+    <p class="kicker">Observatoire · données officielles</p>
+    <h1>Où le logement social va le plus vite en Île-de-France</h1>
+    <p class="lead">En Île-de-France, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(reg.delaiMois)} mois ou moins</strong>, et l'on compte <strong>${fmt(reg.tension, 1)} demandes en cours pour une attribution</strong>. Mais ce chiffre régional cache tout&nbsp;: ${borneMin != null && borneMax != null ? `d'une commune à l'autre, le délai médian va de ${fmt(borneMin)} à ${fmt(borneMax)} mois` : "l'attente varie fortement d'une commune à l'autre"}.</p>
+  </div>
+</header>
+<section>
+  <h2>Ce que disent les chiffres</h2>
+  <ul>
+    <li>Délai médian francilien&nbsp;: <strong>${fmt(reg.delaiMois)} mois</strong> (demandes déposées, ménages logés en ${TENSION._meta.millesime}).</li>
+    <li><strong>${fmt(reg.tension, 1)} demandes en cours pour une attribution</strong> dans l'année, soit ${fmt(reg.demandes)} demandes en premier choix pour ${fmt(reg.attributions)} attributions.</li>
+    <li><strong>${fmt(reg.partAnc5ans, 1)}&nbsp;%</strong> des ménages en attente ont déposé leur demande il y a au moins 5 ans.</li>
+    <li>La pression n'est pas la même selon la typologie&nbsp;: <strong>${fmt(reg.tensionT1, 1)} demandes par attribution pour un studio</strong>, contre ${fmt(reg.tensionT3, 1)} pour un trois-pièces. Attention à la lecture&nbsp;: la source classe chaque ménage dans la <em>plus petite</em> typologie qu'il a demandée, et la taille du logement attribuable dépend de la composition du foyer. Ce n'est donc pas un levier libre.</li>
+  </ul>
+</section>
+<section>
+  <h2>Les 20 communes où l'attente est la plus courte</h2>
+  <p>Communes ayant attribué au moins ${SEUIL} logements en ${TENSION._meta.millesime}, classées par délai médian croissant. À délai affiché identique, les communes sont ordonnées par nombre d'attributions décroissant.</p>
+  <div class="table-wrap"><table class="data">
+    <caption class="visually-hidden">Communes d'Île-de-France où le délai médian d'attribution est le plus court (${TENSION._meta.millesime})</caption>
+    ${tete}<tbody>${rapides.map(rangee).join('')}</tbody>
+  </table></div>
+</section>
+<section>
+  <h2>Les 20 communes où l'attente est la plus longue</h2>
+  <div class="table-wrap"><table class="data">
+    <caption class="visually-hidden">Communes d'Île-de-France où le délai médian d'attribution est le plus long (${TENSION._meta.millesime})</caption>
+    ${tete}<tbody>${lentes.map(rangee).join('')}</tbody>
+  </table></div>
+</section>
+<section>
+  <h2>Département par département</h2>
+  <div class="table-wrap"><table class="data">
+    <caption class="visually-hidden">Délai médian et pression de la demande par département francilien (${TENSION._meta.millesime})</caption>
+    <thead><tr><th scope="col">Département</th><th scope="col" class="num">Délai médian</th><th scope="col" class="num">Demandes / attribution</th><th scope="col" class="num">Demandes en cours</th><th scope="col" class="num">Attributions</th></tr></thead>
+    <tbody>${depRowsDelai}</tbody>
+  </table></div>
+</section>
+<section class="notice">
+  <h2>Comment lire ces chiffres (et ce qu'ils ne disent pas)</h2>
+  <ul>
+    <li>Le <strong>délai médian</strong> partage en deux les ménages logés dans l'année&nbsp;: la moitié a attendu moins, l'autre moitié plus. Il décrit ceux qui ont obtenu un logement, pas ceux qui attendent encore.</li>
+    <li>Le nombre de <strong>demandes pour une attribution</strong> est un rapport de pression, <strong>pas une durée</strong>&nbsp;: ${fmt(reg.tension, 1)} demandes par attribution ne veut pas dire ${fmt(reg.tension, 1)} années d'attente. Les deux indicateurs se lisent ensemble, jamais l'un déduit de l'autre.</li>
+    <li>Un délai court peut refléter un parc qui tourne vite, mais aussi une commune moins demandée. À croiser avec le parc et la vacance des <a href="/logement-social/chiffres/">pages chiffres</a>.</li>
+    <li>Un délai court n'est pas un accès facile&nbsp;: une commune qui livre un programme neuf dans l'année loge des demandeurs récemment inscrits et voit son délai médian chuter, alors que la pression y reste très forte. ${rapides[0] ? `${esc(nomDe.get(rapides[0].code) || rapides[0].nom)} affiche ${fmt(rapides[0].delaiMois)} mois avec ${fmt(rapides[0].tension, 1)} demandes pour une attribution. ` : ''}<strong>Lisez toujours les deux colonnes ensemble</strong>&nbsp;: un délai court associé à une pression élevée signale un afflux ponctuel d'offre, pas une commune ouverte.</li>
+    <li>Les communes sous le seuil de ${SEUIL} attributions ne sont pas classées&nbsp;: sur de petits effectifs, un délai médian n'est pas un signal fiable. La source masque par ailleurs les valeurs des territoires de moins de 10 demandes ou attributions.</li>
+    <li>Ce champ (attributions réglementées) n'est comparable ni au parc RPLS ni à l'inventaire SRU&nbsp;: ces chiffres ne s'additionnent pas.</li>
+  </ul>
+  <p class="maj">${esc(TENSION._meta.attribution)} · ${esc(TENSION._meta.license)} · ${esc(TENSION._meta.dateReference)} · extraction du ${esc(dateFrOf(TENSION._meta.collectedAt))}.</p>
+</section>
+<section>
+  <h2>Améliorer vos chances</h2>
+  <p>Ces écarts décrivent des territoires, pas des trajectoires individuelles&nbsp;: votre délai dépend d'abord de votre situation, des priorités reconnues et du parc réellement libéré près de chez vous. Ces chiffres servent à situer une commune, pas à promettre un délai. Nos guides détaillent la marche à suivre.</p>
+  <p class="pills"><a class="pill" href="/guides/demande-logement-social/">Déposer et renouveler sa demande</a> <a class="pill" href="/guides/recours-dalo/">Le recours DALO</a> <a class="pill" href="/diagnostic/">Faire le diagnostic</a> <a class="pill" href="/logement-social/chiffres/">Les chiffres commune par commune</a></p>
+</section>`;
+    pushIndex("Où le logement social va le plus vite en Île-de-France", '/logement-social/delais/',
+      `Délai médian ${fmt(reg.delaiMois)} mois en Île-de-France : le classement des communes.`, 'Chiffres');
+    addPage('/logement-social/delais/', layout({
+      title: `Délais du logement social en Île-de-France : le classement`,
+      metaDescription: `Combien de temps attend-on un logement social ? Délai médian ${fmt(reg.delaiMois)} mois en Île-de-France, et le classement des communes où l'attente est la plus courte.`,
+      urlPath: '/logement-social/delais/',
+      content: contenu,
+      breadcrumbs: [
+        { name: 'Logement social & situations spécifiques', url: '/logement-social/' },
+        { name: 'Les chiffres', url: '/logement-social/chiffres/' },
+        { name: 'Délais', url: '/logement-social/delais/' },
+      ],
+      jsonLd: [datasetLd(TENSION._meta, {
+        name: `Délais et pression de la demande de logement social en Île-de-France (${TENSION._meta.millesime})`,
+        description: `Délai médian d'attribution et nombre de demandes pour une attribution, par commune et par département d'Île-de-France, d'après le socle DRIHL (Infocentre SNE).`,
+        urlPath: '/logement-social/delais/',
+      })],
+    }), '0.8');
   }
 }
 
@@ -1706,6 +1864,7 @@ if (CROUS) llms.push(`- [Résidences CROUS d'Île-de-France](${B}/residences-cro
 if (FJT) llms.push(`- [Foyers de jeunes travailleurs](${B}/foyers-jeunes-travailleurs/): les ${FJT.records.length} FJT franciliens pour les 16-25 ans, adresses et téléphones (source : FINESS).`);
 if (RES_AUTONOMIE) llms.push(`- [Résidences autonomie (seniors)](${B}/residences-autonomie/): les ${RES_AUTONOMIE.records.length} résidences pour seniors autonomes (source : FINESS).`);
 if (LS_COMMUNES) llms.push(`- [Le logement social en chiffres](${B}/logement-social/chiffres/): parc, loyers au m², vacance et taux SRU, commune par commune (sources : RPLS Insee-SDES 01/01/2024, inventaire SRU, zonage ABC).`);
+if (TENSION && TENSION._meta.region) llms.push(`- [Délais du logement social : où l'attente est la plus courte](${B}/logement-social/delais/): délai médian d'attribution et nombre de demandes pour une attribution, par commune et par département. Île-de-France ${TENSION._meta.millesime} : ${fmt(TENSION._meta.region.delaiMois)} mois de délai médian, ${fmt(TENSION._meta.region.tension, 1)} demandes pour une attribution (source : DRIHL, socle demandes et attributions, Infocentre SNE, Licence Ouverte Etalab 2.0). Attention : ce ratio est une pression, pas une durée.`);
 if (ENCADREMENT) llms.push(`- [Vérificateur d'encadrement des loyers à Paris](${B}/guides/encadrement-des-loyers-paris/): les ${ENCADREMENT.records.length} loyers de référence ${ENCADREMENT._meta.millesime} (80 quartiers × pièces × époque × meublé). Grille complète en JSON : ${B}/data/encadrement-loyers-paris.json (ODbL, Ville de Paris).`);
 llms.push('');
 llms.push('## Divers');
@@ -1751,7 +1910,12 @@ if (LS_COMMUNES) {
   full.push(`## DONNÉES — LOGEMENT SOCIAL PAR COMMUNE (Île-de-France)`);
   full.push(`${LS_COMMUNES._meta.attribution}. Extraction du ${dateFrOf(LS_COMMUNES._meta.collectedAt)}. Détail et définitions : ${B}/logement-social/chiffres/`);
   full.push(`Avertissement : parc RPLS et décompte SRU reposent sur des assiettes différentes, ne pas les additionner. Loyers en €/m² de surface habitable, hors charges.`);
+  if (TENSION) {
+    full.push(`Délais et pression de la demande : ${TENSION._meta.attribution}, ${TENSION._meta.license}. ${TENSION._meta.dateReference}. Détail : ${B}/logement-social/delais/`);
+    full.push(`Avertissement : le nombre de demandes pour une attribution est un rapport de pression, PAS une durée d'attente. Le délai médian est l'indicateur de durée. Le champ des attributions réglementées n'est comparable ni au parc RPLS ni à l'inventaire SRU.`);
+  }
   for (const r of LS_COMMUNES.records) {
+    const tn = tensionOf(r.code);
     const parts = [
       r.nbLogementsSociaux != null ? `${fmt(r.nbLogementsSociaux)} logements sociaux (RPLS 01/01/2024)` : null,
       r.loyerMedian != null ? `loyer médian ${fmt(r.loyerMedian, 2)} €/m²` : null,
@@ -1759,8 +1923,20 @@ if (LS_COMMUNES) {
       r.tauxSRU != null ? `taux SRU ${fmt(r.tauxSRU, 1)} %` : null,
       r.zone ? `zone ${r.zone}` : null,
       r.carencee ? 'commune carencée (SRU)' : (r.deficitaire ? 'commune déficitaire (SRU)' : null),
+      tn && tn.delaiMois != null ? `délai médian d'attribution ${fmt(tn.delaiMois)} mois (${TENSION._meta.millesime})` : null,
+      tn && tn.tension != null ? `${fmt(tn.tension, 1)} demandes en cours pour une attribution` : null,
     ].filter(Boolean).join(', ');
     full.push(`- ${r.nom} (${r.arrondissement ? '75, arrondissement' : r.dep}) : ${parts || 'données non disponibles'}.${r.note ? ` Note : ${r.note}` : ''}`);
+  }
+  if (TENSION && TENSION._meta.region) {
+    const reg = TENSION._meta.region;
+    full.push('');
+    full.push(`## DONNÉES — DÉLAIS DU LOGEMENT SOCIAL PAR DÉPARTEMENT (Île-de-France, ${TENSION._meta.millesime})`);
+    full.push(`${TENSION._meta.attribution}. ${TENSION._meta.license}. Détail : ${B}/logement-social/delais/`);
+    full.push(`- Île-de-France : délai médian ${fmt(reg.delaiMois)} mois, ${fmt(reg.tension, 1)} demandes en cours pour une attribution (${fmt(reg.demandes)} demandes en choix 1, ${fmt(reg.attributions)} attributions), ${fmt(reg.partAnc5ans, 1)} % des ménages attendent depuis 5 ans ou plus, pression ${fmt(reg.tensionT1, 1)} sur les studios contre ${fmt(reg.tensionT3, 1)} sur les trois-pièces.`);
+    for (const x of (TENSION._meta.departements || [])) {
+      full.push(`- ${x.nom} (${x.code}) : délai médian ${x.delaiMois != null ? fmt(x.delaiMois) + ' mois' : 'non disponible'}, ${x.tension != null ? fmt(x.tension, 1) + ' demandes pour une attribution' : 'pression non disponible'} (${fmt(x.demandes)} demandes en choix 1, ${fmt(x.attributions)} attributions).`);
+    }
   }
 }
 const fullDir = (data, titre, urlPath) => {

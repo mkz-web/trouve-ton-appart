@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------
  * Exécution   : node ingest.js [--force]   (--force : ignore .cache/)
  * Runtime     : Node.js >= 14 · Dépendances : AUCUNE
- * Lance les 4 ingestions et résume. Les sorties vont dans
+ * Lance les 5 ingestions et résume. Les sorties vont dans
  * site/data/open/*.json (committées : le build Cloudflare Pages ne fait
  * AUCUN appel réseau, il régénère depuis ces snapshots).
  * ------------------------------------------------------------------
@@ -14,7 +14,7 @@
 const { execFileSync } = require('child_process');
 const path = require('path');
 
-const SCRIPTS = ['ingest-crous.js', 'ingest-encadrement.js', 'ingest-rpls.js', 'ingest-finess.js'];
+const SCRIPTS = ['ingest-crous.js', 'ingest-encadrement.js', 'ingest-rpls.js', 'ingest-finess.js', 'ingest-tension.js'];
 
 let failed = 0;
 for (const s of SCRIPTS) {

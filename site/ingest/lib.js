@@ -112,6 +112,89 @@ function unzipEntry(zipBuf, nameRegex) {
   throw new Error(`ZIP : aucune entrée ne correspond à ${nameRegex}`);
 }
 
+/* ------------------------------ XLSX -------------------------------- */
+
+/** Décode les entités XML d'un texte de cellule. */
+function xmlDecode(s) {
+  return String(s)
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'").replace(/&#(\d+);/g, (_, d) => String.fromCharCode(+d))
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)))
+    .replace(/&amp;/g, '&'); // en dernier : &amp;lt; doit donner &lt; et non <
+}
+
+/** "BT" → 71 (index de colonne 0-based, notation tableur). */
+function colIndex(ref) {
+  let n = 0;
+  for (const ch of ref.replace(/\d+/g, '')) n = n * 26 + (ch.charCodeAt(0) - 64);
+  return n - 1;
+}
+
+/**
+ * Lit un onglet d'un classeur XLSX et renvoie un tableau de lignes (tableaux
+ * de chaînes), cellules vides comprises (position déduite de l'attribut r).
+ * Pur Node : le XLSX est un ZIP de XML, on réutilise unzipEntry.
+ * Gère les chaînes partagées, les chaînes en ligne et les nombres.
+ * Ne gère pas les dates sérielles (aucun besoin ici) ni les formules calculées.
+ */
+function parseXlsx(zipBuf, sheetName) {
+  const readXml = (re) => { try { return unzipEntry(zipBuf, re).data.toString('utf8'); } catch { return null; } };
+
+  /* Chaînes partagées : chaque <si> peut contenir plusieurs <t> (texte enrichi). */
+  const shared = [];
+  const ssXml = readXml(/^xl\/sharedStrings\.xml$/);
+  if (ssXml) {
+    for (const si of ssXml.split(/<si[\s>]/).slice(1)) {
+      const parts = [...si.matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(m => xmlDecode(m[1]));
+      shared.push(parts.join(''));
+    }
+  }
+
+  /* Onglet demandé : workbook.xml donne le r:id, les rels donnent le fichier. */
+  const wbXml = readXml(/^xl\/workbook\.xml$/);
+  if (!wbXml) throw new Error('XLSX invalide : xl/workbook.xml introuvable');
+  const sheets = [...wbXml.matchAll(/<sheet[^>]*\/?>/g)].map(m => m[0]);
+  const wanted = sheets.find(s => xmlDecode((/name="([^"]*)"/.exec(s) || [])[1] || '') === sheetName);
+  if (!wanted) {
+    const noms = sheets.map(s => xmlDecode((/name="([^"]*)"/.exec(s) || [])[1] || ''));
+    throw new Error(`XLSX : onglet « ${sheetName} » introuvable (présents : ${noms.join(', ')})`);
+  }
+  const rid = (/r:id="([^"]*)"/.exec(wanted) || [])[1];
+  const relsXml = readXml(/^xl\/_rels\/workbook\.xml\.rels$/) || '';
+  const rel = [...relsXml.matchAll(/<Relationship[^>]*\/?>/g)].map(m => m[0])
+    .find(r => (/Id="([^"]*)"/.exec(r) || [])[1] === rid);
+  let target = rel ? (/Target="([^"]*)"/.exec(rel) || [])[1] : null;
+  if (!target) throw new Error(`XLSX : cible introuvable pour ${rid}`);
+  target = target.replace(/^\/?(xl\/)?/, '');
+  const sheetXml = readXml(new RegExp('^xl/' + target.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$'));
+  if (!sheetXml) throw new Error(`XLSX : feuille xl/${target} illisible`);
+
+  /* Lignes : les cellules vides sont omises, on se cale sur l'attribut r. */
+  const rows = [];
+  for (const rowXml of sheetXml.split(/<row[\s>]/).slice(1)) {
+    const cells = [];
+    for (const m of rowXml.matchAll(/<c\s([^>]*?)(\/>|>([\s\S]*?)<\/c>)/g)) {
+      const attrs = m[1], body = m[3] || '';
+      const idx = colIndex((/r="([A-Z]+)\d+"/.exec(attrs) || [])[1] || 'A');
+      const type = (/t="([^"]*)"/.exec(attrs) || [])[1] || 'n';
+      let val = '';
+      if (type === 's') {
+        const i = +(/<v>([\s\S]*?)<\/v>/.exec(body) || [])[1];
+        val = shared[i] ?? '';
+      } else if (type === 'inlineStr') {
+        val = [...body.matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)].map(x => xmlDecode(x[1])).join('');
+      } else {
+        const v = (/<v>([\s\S]*?)<\/v>/.exec(body) || [])[1];
+        val = v == null ? '' : xmlDecode(v);
+      }
+      while (cells.length < idx) cells.push('');
+      cells[idx] = val;
+    }
+    rows.push(cells);
+  }
+  return rows;
+}
+
 /* ------------------------------ CSV --------------------------------- */
 
 /** Parseur CSV complet : champs entre guillemets, guillemets doublés, \r\n. */
@@ -263,7 +346,7 @@ const DEP_NOMS = {
 const DEP_SLUGS = Object.fromEntries(DEPS_IDF.map((d) => [d, `${slugify(DEP_NOMS[d])}-${d}`]));
 
 module.exports = {
-  get, getText, getJson, getCached, unzipEntry, parseCsv, csvToObjects,
+  get, getText, getJson, getCached, unzipEntry, parseXlsx, parseCsv, csvToObjects,
   numFr, lambert93ToWgs84, frenchTitleCase, slugify, stripHtml, httpsify, cleanCedex, writeDataset,
   DEPS_IDF, DEP_NOMS, DEP_SLUGS,
 };
