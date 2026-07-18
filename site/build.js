@@ -23,6 +23,7 @@ const SITE = read('site.json');
 const GUIDES = read('guides.json');
 const PARCOURS = read('parcours.json');
 const ANNUAIRE = read('annuaire.json');
+const DIAG = read('diagnostic.json');
 
 /* ---- Snapshots open data (Phase 2, produits par ingest/ingest.js) ----
  * Optionnels : si un snapshot manque, les pages correspondantes sont
@@ -130,6 +131,7 @@ function icon(name, c) {
     'siao-115-hebergement-urgence': `<path d="M24 6L43 23h-5v15a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V23H5z" fill="${c}"/><rect x="19.5" y="28" width="9" height="12" rx="1.5" fill="#fff" opacity=".85"/><circle cx="38" cy="34" r="9.5" fill="${A}"/><text x="38" y="38" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff" font-family="system-ui,Arial">115</text>`,
     solibail: `<path d="M24 6L43 23h-5v15a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V23H5z" fill="${c}"/><rect x="19.5" y="28" width="9" height="12" rx="1.5" fill="#fff" opacity=".85"/><circle cx="38" cy="34" r="9.5" fill="${A}"/><path d="M33.5 34l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`,
     'residence-sociale': `<rect x="10" y="8" width="24" height="31" rx="2" fill="${c}"/>${[13, 20, 27].map(y => [15, 23.5].map(x => `<rect x="${x}" y="${y}" width="5" height="4.5" rx="1" fill="#fff" opacity=".8"/>`).join('')).join('')}<path d="M38 45.5c-4.5-3-7.5-5.4-7.5-8.2 0-2 1.6-3.4 3.6-3.4 1.6 0 2.9.8 3.9 2.2 1-1.4 2.3-2.2 3.9-2.2 2 0 3.6 1.4 3.6 3.4 0 2.8-3 5.2-7.5 8.2z" fill="${A}"/>`,
+    diagnostic: `<rect x="10" y="8" width="28" height="34" rx="3" fill="${c}"/><rect x="17" y="5" width="14" height="7" rx="2" fill="${c}" style="filter:brightness(.8)"/>${[17, 23].map(y => `<line x1="16" y1="${y}" x2="32" y2="${y}" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".7"/>`).join('')}<circle cx="34" cy="33" r="9.5" fill="${A}"/><path d="M29.5 33l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`,
     'logement-fonctionnaire': `<rect x="8" y="12" width="26" height="27" rx="2" fill="${c}"/><polygon points="8,12 34,12 31,5 11,5" fill="${c}" opacity=".7"/>${[17, 24].map(y => [13, 21].map(x => `<rect x="${x}" y="${y}" width="5" height="4.5" rx="1" fill="#fff" opacity=".8"/>`).join('')).join('')}<circle cx="38" cy="33" r="9.5" fill="${A}"/><text x="38" y="37.5" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" font-family="system-ui,Arial">RF</text>`,
   };
   return `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">${shapes[name] || shapes.annuaire}</svg>`;
@@ -286,6 +288,7 @@ function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = []
     FJT && '<li><a href="/foyers-jeunes-travailleurs/">Foyers de jeunes travailleurs</a></li>',
     RES_AUTONOMIE && '<li><a href="/residences-autonomie/">Résidences autonomie (seniors)</a></li>',
     LS_COMMUNES && '<li><a href="/logement-social/chiffres/">Le logement social en chiffres</a></li>',
+    '<li><a href="/diagnostic/">Diagnostic logement (2 min)</a></li>',
     '<li><a href="/recherche/">Rechercher sur le site</a></li>',
   ].filter(Boolean).join('');
   return `<!DOCTYPE html>
@@ -318,7 +321,7 @@ ${ld}
 <header class="site-header">
   <div class="container">
     <a class="brand" href="/" aria-label="${esc(SITE.name)}, accueil">${BRAND_MARK}<span class="brand-text" aria-hidden="true">${BRAND_HTML}<span class="brand-sub">Île-de-France</span></span></a>
-    <nav class="main-nav">${nav}${navLink('/annuaire/', 'Annuaire')}${navLink('/recherche/', 'Rechercher')}</nav>
+    <nav class="main-nav">${nav}${navLink('/diagnostic/', 'Diagnostic')}${navLink('/annuaire/', 'Annuaire')}${navLink('/recherche/', 'Rechercher')}</nav>
   </div>
 </header>
 <main class="container">
@@ -385,7 +388,7 @@ function addPage(urlPath, html, priority) {
   <div class="hero-text">
     <h1>Le logement en Île-de-France, enfin dans le bon ordre.</h1>
     <p class="lead">Étudiant, demandeur de logement social, senior, salarié en mobilité&nbsp;: chaque profil a ses dispositifs, ses aides et ses guichets, souvent méconnus. ${esc(SITE.name)} vous oriente, gratuitement, vers les bonnes démarches et les sources officielles.</p>
-    <p class="hero-actions"><a class="btn" href="#parcours">Trouver mon parcours</a><a class="btn btn-ghost" href="/annuaire/">Voir les sources fiables</a></p>
+    <p class="hero-actions"><a class="btn" href="/diagnostic/">Faire le diagnostic (2 min)</a><a class="btn btn-ghost" href="#parcours">Trouver mon parcours</a></p>
   </div>
   <div class="hero-illo">${skyline()}</div>
 </section>
@@ -1137,6 +1140,130 @@ var deb;['enc-s','enc-l'].forEach(function(i){$(i).addEventListener('input',func
 
 /* ----------------------- Recherche client-side ----------------------- */
 
+/* ---- Diagnostic logement : assistant client-side ----
+ * Moteur de règles déclaratif (site/data/diagnostic.json) : les réponses ne
+ * quittent jamais le navigateur (aucun stockage, aucun envoi). Les critères
+ * d'éligibilité reprennent les faits vérifiés des guides : toute évolution
+ * d'un guide doit être répercutée dans diagnostic.json. */
+(function buildDiagnostic() {
+  if (!DIAG) return;
+  const diagJson = JSON.stringify({ questions: DIAG.questions, blocs: DIAG.blocs, cartes: DIAG.cartes })
+    .replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
+  const couvre = [
+    ['/guides/visale/', 'Visale'], ['/guides/aide-mobili-jeune/', 'Mobili-Jeune'],
+    ['/guides/avance-loca-pass/', 'Loca-Pass'], ['/guides/demande-logement-social/', 'Logement social'],
+    ['/guides/logement-intermediaire/', 'Logement intermédiaire'], ['/guides/fonds-solidarite-logement/', 'FSL'],
+    ['/guides/siao-115-hebergement-urgence/', 'SIAO / 115'], ['/guides/solibail/', 'Solibail'],
+    ['/guides/residence-sociale/', 'Résidence sociale'], ['/guides/logement-fonctionnaire/', 'Agents publics'],
+    ['/guides/bail-mobilite/', 'Bail mobilité'], ['/foyers-jeunes-travailleurs/', 'FJT'],
+    ['/residences-crous/', 'CROUS'], ['/guides/encadrement-des-loyers-paris/', 'Encadrement des loyers'],
+  ].map(([u, l]) => `<a class="pill" href="${u}">${esc(l)}</a>`).join(' ');
+  const content = `
+<style>
+.diag-box{border:1px solid var(--bord);border-radius:16px;padding:24px 22px;background:var(--surface);margin:1.4rem 0}
+.diag-progress{font-size:.82rem;font-weight:650;text-transform:uppercase;letter-spacing:.06em;color:var(--bleu2);margin:0 0 .5rem}
+.diag-q{font-size:1.3rem;line-height:1.35;font-weight:650;margin:.1rem 0 1rem;outline:none}
+.diag-opts{display:grid;gap:10px}
+.diag-opt{display:block;width:100%;text-align:left;padding:13px 16px;min-height:44px;border:1px solid var(--bord);border-radius:12px;background:#fff;font:inherit;font-size:1rem;color:var(--encre);cursor:pointer;transition:border-color .15s,background .15s}
+.diag-opt:hover,.diag-opt:focus-visible{border-color:var(--bleu2);background:var(--ciel)}
+.diag-back{background:none;border:none;padding:6px 0;font:inherit;font-size:.9rem;color:var(--bleu2);cursor:pointer;text-decoration:underline}
+.diag-bloc{font-size:1.05rem;margin:1.6rem 0 .4rem;color:var(--bleu)}
+.diag-carte{border:1px solid var(--bord);border-left:4px solid var(--bleu2);border-radius:12px;padding:14px 16px;margin:.7rem 0;background:#fff}
+.diag-carte.urg{border-left-color:#b3261e;background:#fdf4f3}
+.diag-carte p{margin:.35rem 0 0}
+.diag-texte{font-size:.95rem}
+.diag-pourquoi{font-size:.88rem;color:var(--bleu);font-weight:650}
+.diag-lien{font-size:.92rem}
+</style>
+<nav class="breadcrumb"><a href="/">Accueil</a> › Diagnostic</nav>
+<header class="page-head" style="${themeStyle(themeOf())}">
+  <span class="page-head-icon">${icon('diagnostic', PAL.bleu2)}</span>
+  <div>
+    <p class="kicker">Outil gratuit · 2 minutes</p>
+    <h1>Votre diagnostic logement en Île-de-France</h1>
+    <p class="lead">7 questions, et vous repartez avec votre feuille de route : les aides auxquelles vous pouvez prétendre, les pistes de logement adaptées à votre situation, et les démarches dans le bon ordre.</p>
+  </div>
+</header>
+<div id="diag" class="diag-box"></div>
+<p class="maj">Ce diagnostic est indicatif : il oriente, chaque organisme reste seul juge des éligibilités. Vos réponses ne quittent pas votre navigateur : rien n'est envoyé, rien n'est conservé.</p>
+<noscript><p class="notice">Le diagnostic a besoin de JavaScript. Sans lui, choisissez directement votre parcours : <a href="/etudiant/">étudiant et jeune actif</a>, <a href="/logement-social/">logement social et situations spécifiques</a>, ou <a href="/mobilite/">mobilité professionnelle</a>.</p></noscript>
+<section>
+  <h2>Comment ça marche</h2>
+  <div class="steps">
+    <div class="step"><h3>7 questions, zéro inscription</h3><p>Statut, âge, foyer, revenus, situation, zone, durée&nbsp;: chaque réponse se donne en un clic, et tout se passe dans votre navigateur.</p></div>
+    <div class="step"><h3>Une feuille de route personnalisée</h3><p>Le diagnostic croise vos réponses avec les critères des dispositifs franciliens&nbsp;: garanties, aides financières, pistes de logement et démarches, classées dans le bon ordre.</p></div>
+    <div class="step"><h3>Chaque piste renvoie au guide complet</h3><p>Conditions détaillées, pièges à éviter et sources officielles&nbsp;: chaque carte de résultat pointe vers le guide correspondant, mis à jour avec les textes.</p></div>
+  </div>
+</section>
+<section class="notice">
+  <h2>Ce que le diagnostic couvre</h2>
+  <p>Les critères reprennent ceux de nos guides, eux-mêmes sourcés sur les fiches officielles (Service-public, Légifrance, DRIHL, Action Logement)&nbsp;:</p>
+  <p class="pills">${couvre}</p>
+</section>
+<script>
+(function(){
+var D=${diagJson};
+var mount=document.getElementById('diag');
+if(!mount)return;
+var etat={},i=0;
+function h(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function rendQ(){
+ var q=D.questions[i];
+ mount.innerHTML='<p class="diag-progress">Question '+(i+1)+' sur '+D.questions.length+'</p>'
+  +'<h2 class="diag-q" id="diag-q" tabindex="-1">'+h(q.label)+'</h2>'
+  +'<div class="diag-opts">'+q.options.map(function(o){return '<button type="button" class="diag-opt" data-v="'+h(o.v)+'">'+h(o.l)+'</button>'}).join('')+'</div>'
+  +(i>0?'<p style="margin:.9rem 0 0"><button type="button" class="diag-back" id="diag-back">← Question précédente</button></p>':'');
+ mount.querySelectorAll('.diag-opt').forEach(function(b){b.addEventListener('click',function(){
+  etat[q.id]=b.getAttribute('data-v');i++;if(i<D.questions.length){rendQ()}else{rendRes()}})});
+ var back=document.getElementById('diag-back');
+ if(back){back.addEventListener('click',function(){i--;rendQ()})}
+ if(i>0){document.getElementById('diag-q').focus()}
+}
+function okRegle(si){for(var k in si){if(si[k].indexOf(etat[k])<0)return false}return true}
+function rendRes(){
+ var parBloc={};
+ D.cartes.forEach(function(c){
+  for(var r=0;r<c.regles.length;r++){if(okRegle(c.regles[r].si)){
+   (parBloc[c.bloc]=parBloc[c.bloc]||[]).push({c:c,p:c.regles[r].pourquoi});return}}
+ });
+ var html='<h2 class="diag-q" id="diag-q" tabindex="-1">Votre feuille de route</h2>';
+ D.blocs.forEach(function(b){
+  var l=parBloc[b.id];if(!l||!l.length)return;
+  html+='<h3 class="diag-bloc">'+h(b.titre)+'</h3>'+l.map(function(x){
+   return '<div class="diag-carte'+(b.id==='urgence'?' urg':'')+'"><strong>'+h(x.c.titre)+'</strong>'
+    +'<p class="diag-texte">'+h(x.c.texte)+'</p>'
+    +'<p class="diag-pourquoi">Pour vous : '+h(x.p)+'</p>'
+    +'<p class="diag-lien"><a href="'+h(x.c.lien)+'">'+h(x.c.lienLabel)+' →</a></p></div>'}).join('');
+ });
+ html+='<p style="margin-top:1.5rem"><button type="button" class="btn btn-ghost" id="diag-redo">Refaire le diagnostic</button></p>';
+ mount.innerHTML=html;
+ document.getElementById('diag-redo').addEventListener('click',function(){etat={};i=0;rendQ()});
+ document.getElementById('diag-q').focus();
+}
+rendQ();
+})();
+</script>`;
+  pushIndex('Diagnostic logement en 2 minutes', '/diagnostic/', 'Vos aides, pistes et démarches selon votre situation.', 'Outil');
+  addPage('/diagnostic/', layout({
+    title: 'Diagnostic logement Île-de-France : vos aides en 2 minutes',
+    metaDescription: 'Répondez à 7 questions et obtenez votre feuille de route : aides, garanties, pistes de logement et démarches dans le bon ordre. Gratuit, sans inscription.',
+    urlPath: '/diagnostic/',
+    content,
+    breadcrumbs: [{ name: 'Diagnostic', url: '/diagnostic/' }],
+    jsonLd: [{
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Diagnostic logement Île-de-France',
+      url: `${SITE.baseUrl}/diagnostic/`,
+      applicationCategory: 'UtilityApplication',
+      operatingSystem: 'Web',
+      inLanguage: 'fr-FR',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+      provider: { '@type': 'Organization', name: SITE.name, url: SITE.baseUrl },
+    }],
+  }), '0.9');
+})();
+
 (function buildRecherche() {
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › Recherche</nav>
@@ -1583,6 +1710,7 @@ if (ENCADREMENT) llms.push(`- [Vérificateur d'encadrement des loyers à Paris](
 llms.push('');
 llms.push('## Divers');
 llms.push(`- [Annuaire des sources fiables](${B}/annuaire/): ${ANNUAIRE.metaDescription}`);
+llms.push(`- [Diagnostic logement](${B}/diagnostic/): 7 questions, une feuille de route personnalisée (aides, garanties, pistes de logement, démarches) selon la situation. Critères repris des guides.`);
 llms.push(`- [Recherche](${B}/recherche/): commune, résidence, dispositif — index JSON : ${B}/search-index.json`);
 llms.push(`- [Contenu intégral pour les LLM](${B}/llms-full.txt)`);
 llms.push(`- [Mentions légales](${B}/mentions-legales/)`);

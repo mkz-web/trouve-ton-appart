@@ -1,0 +1,313 @@
+{
+  "_meta": {
+    "note": "Moteur de règles du Diagnostic logement. Une carte s'affiche si UNE de ses règles matche ; une règle matche si TOUTES ses conditions sont vraies (chaque condition : la réponse à la question est dans la liste). Le 'pourquoi' vient de la PREMIÈRE règle qui matche (l'ordre des règles compte). Tous les critères reprennent les faits vérifiés des guides et annuaires du site : ne rien modifier sans re-vérifier le guide correspondant, et répercuter ici toute évolution d'un guide.",
+    "updatedAt": "2026-07-19"
+  },
+  "questions": [
+    {
+      "id": "statut",
+      "label": "Vous êtes…",
+      "options": [
+        { "v": "etudiant", "l": "Étudiant" },
+        { "v": "alternant", "l": "Alternant ou apprenti" },
+        { "v": "salarie", "l": "Salarié du secteur privé" },
+        { "v": "agent", "l": "Agent public (fonctionnaire ou contractuel)" },
+        { "v": "autre", "l": "En recherche d'emploi, indépendant ou autre" }
+      ]
+    },
+    {
+      "id": "age",
+      "label": "Votre âge",
+      "options": [
+        { "v": "a1", "l": "Moins de 26 ans" },
+        { "v": "a2", "l": "26 à 29 ans" },
+        { "v": "a3", "l": "30 ans ou plus" }
+      ]
+    },
+    {
+      "id": "foyer",
+      "label": "Votre foyer",
+      "options": [
+        { "v": "seul", "l": "Seul" },
+        { "v": "couple", "l": "En couple" },
+        { "v": "famille", "l": "Avec enfant(s)" }
+      ]
+    },
+    {
+      "id": "revenus",
+      "label": "Les revenus nets mensuels de votre foyer, environ",
+      "options": [
+        { "v": "r1", "l": "Moins de 1 500 €" },
+        { "v": "r2", "l": "1 500 à 2 500 €" },
+        { "v": "r3", "l": "2 500 à 4 500 €" },
+        { "v": "r4", "l": "Plus de 4 500 €" }
+      ]
+    },
+    {
+      "id": "situation",
+      "label": "Votre situation aujourd'hui",
+      "options": [
+        { "v": "premier", "l": "Je cherche un logement (installation, déménagement)" },
+        { "v": "heberge", "l": "Je suis hébergé chez un tiers, à l'hôtel ou en structure" },
+        { "v": "urgence", "l": "Je suis sans solution pour ce soir" },
+        { "v": "difficulte", "l": "Je suis locataire, mais en difficulté (impayés, logement indigne…)" }
+      ]
+    },
+    {
+      "id": "zone",
+      "label": "Où cherchez-vous ?",
+      "options": [
+        { "v": "paris", "l": "Paris" },
+        { "v": "pc", "l": "Petite couronne (92, 93, 94)" },
+        { "v": "gc", "l": "Grande couronne (77, 78, 91, 95)" },
+        { "v": "nsp", "l": "Pas encore fixé" }
+      ]
+    },
+    {
+      "id": "duree",
+      "label": "Pour combien de temps ?",
+      "options": [
+        { "v": "courte", "l": "Quelques mois (mission, stage, saison)" },
+        { "v": "durable", "l": "Durablement" }
+      ]
+    }
+  ],
+  "blocs": [
+    { "id": "urgence", "titre": "En priorité absolue" },
+    { "id": "demarches", "titre": "Vos démarches, dans le bon ordre" },
+    { "id": "aides", "titre": "Vos aides et garanties" },
+    { "id": "pistes", "titre": "Vos pistes de logement" }
+  ],
+  "cartes": [
+    {
+      "id": "c115",
+      "bloc": "urgence",
+      "titre": "Composez le 115, maintenant",
+      "texte": "Numéro gratuit, ouvert 24h/24 : le SIAO de votre département recherche une place d'hébergement d'urgence. Rappelez plusieurs fois si besoin, et poussez la porte d'un accueil de jour en parallèle.",
+      "lien": "/guides/siao-115-hebergement-urgence/",
+      "lienLabel": "Le mode d'emploi réaliste du 115 et du SIAO",
+      "regles": [
+        { "si": { "situation": ["urgence"] }, "pourquoi": "Vous êtes sans solution pour ce soir : la mise à l'abri passe avant tout le reste." }
+      ]
+    },
+    {
+      "id": "d-ls",
+      "bloc": "demarches",
+      "titre": "Déposez (ou renouvelez) votre demande de logement social",
+      "texte": "Une seule demande en ligne ouvre tous les bailleurs d'Île-de-France, et l'ancienneté compte dans l'attribution. Le piège mortel : oublier le renouvellement annuel, qui efface tout.",
+      "lien": "/guides/demande-logement-social/",
+      "lienLabel": "Le guide de la demande",
+      "regles": [
+        { "si": { "situation": ["heberge", "urgence", "difficulte"] }, "pourquoi": "Votre situation peut être prioritaire au sens de la loi : documentez-la précisément dans la demande, sous réserve des plafonds de ressources." },
+        { "si": { "revenus": ["r1", "r2", "r3"], "duree": ["durable"] }, "pourquoi": "Vos revenus semblent compatibles avec les plafonds (à vérifier selon votre composition familiale) : chaque mois d'ancienneté compte." }
+      ]
+    },
+    {
+      "id": "d-chiffres",
+      "bloc": "demarches",
+      "titre": "Ciblez les communes où votre demande a ses chances",
+      "texte": "Parc social, loyers médians, vacance et taux SRU pour 464 communes : les chiffres officiels pour choisir où candidater, plutôt qu'au hasard.",
+      "lien": "/logement-social/chiffres/",
+      "lienLabel": "Les chiffres commune par commune",
+      "regles": [
+        { "si": { "revenus": ["r1", "r2", "r3"], "duree": ["durable"] }, "pourquoi": "Bien choisir ses communes est le levier le plus sous-estimé d'une demande de logement social." }
+      ]
+    },
+    {
+      "id": "d-dossier",
+      "bloc": "demarches",
+      "titre": "Préparez un dossier certifié DossierFacile",
+      "texte": "Le dossier de location certifié par l'État, gratuit : pièces vérifiées, dossier partageable par lien, crédibilité immédiate auprès des bailleurs du parc privé.",
+      "lien": "/guides/dossierfacile/",
+      "lienLabel": "Le guide DossierFacile",
+      "regles": [
+        { "si": { "situation": ["premier"] }, "pourquoi": "Sur le marché francilien, le dossier se joue souvent dans l'heure : soyez prêt avant de visiter." }
+      ]
+    },
+    {
+      "id": "d-siao",
+      "bloc": "demarches",
+      "titre": "Faites ouvrir un dossier SIAO par un travailleur social",
+      "texte": "Le dossier SIAO insertion, monté en CCAS ou avec un travailleur social, est la porte vers l'hébergement stable, la résidence sociale ou Solibail. C'est lui qui fait sortir de l'hébergement précaire.",
+      "lien": "/guides/siao-115-hebergement-urgence/",
+      "lienLabel": "Comprendre le SIAO",
+      "regles": [
+        { "si": { "situation": ["heberge", "urgence"] }, "pourquoi": "Hébergé sans logement à vous : ce dossier est votre levier principal, et personne ne l'ouvrira à votre place." }
+      ]
+    },
+    {
+      "id": "d-droits",
+      "bloc": "demarches",
+      "titre": "Faites valoir vos droits de locataire",
+      "texte": "Impayés, logement indigne, congé : l'ADIL de votre département conseille gratuitement, le FSL peut traiter les dettes de loyer, et le recours DALO peut vous reconnaître prioritaire pour un relogement.",
+      "lien": "/guides/recours-dalo/",
+      "lienLabel": "Le guide du recours DALO",
+      "regles": [
+        { "si": { "situation": ["difficulte"] }, "pourquoi": "Plus vous agissez tôt, plus les solutions sont larges : n'attendez pas l'assignation." }
+      ]
+    },
+    {
+      "id": "d-encadrement",
+      "bloc": "demarches",
+      "titre": "Vérifiez le loyer avant de signer",
+      "texte": "À Paris, la plupart des loyers sont plafonnés par l'encadrement. Notre vérificateur compare un loyer à la grille officielle en quelques secondes, et un dépassement se conteste.",
+      "lien": "/guides/encadrement-des-loyers-paris/",
+      "lienLabel": "Vérifier un loyer parisien",
+      "regles": [
+        { "si": { "zone": ["paris"], "situation": ["premier", "heberge"] }, "pourquoi": "Vous cherchez à Paris : ce réflexe peut valoir des dizaines d'euros par mois." }
+      ]
+    },
+    {
+      "id": "a-visale",
+      "bloc": "aides",
+      "titre": "Garantie Visale : le garant gratuit de l'État",
+      "texte": "Action Logement se porte garant à votre place, gratuitement. Elle remplace le garant familial et rassure les bailleurs, y compris pour un bail mobilité.",
+      "lien": "/guides/visale/",
+      "lienLabel": "Le guide Visale",
+      "regles": [
+        { "si": { "age": ["a1", "a2"] }, "pourquoi": "De 18 à 30 ans, Visale est ouverte quel que soit votre statut." },
+        { "si": { "age": ["a3"], "statut": ["salarie", "alternant"] }, "pourquoi": "Après 30 ans, Visale reste accessible pour l'essentiel aux salariés du privé, alternants compris, selon la situation d'embauche : vérifiez votre cas dans le guide." },
+        { "si": { "age": ["a3"], "duree": ["courte"] }, "pourquoi": "Avec un bail mobilité, Visale est ouverte sans condition d'âge, quel que soit votre statut." }
+      ]
+    },
+    {
+      "id": "a-garant",
+      "bloc": "aides",
+      "titre": "Pas de garant ? Les alternatives qui fonctionnent",
+      "texte": "Garants payants, caution bancaire, Visale selon les cas : le tour complet des solutions quand le garant familial manque.",
+      "lien": "/guides/garant-location/",
+      "lienLabel": "Les solutions de garant",
+      "regles": [
+        { "si": { "age": ["a3"], "statut": ["etudiant", "agent", "autre"] }, "pourquoi": "Après 30 ans, hors salariat privé, Visale devient restrictive : d'autres solutions existent." },
+        { "si": { "age": ["a3"], "statut": ["salarie"] }, "pourquoi": "Si Visale ne couvre pas votre cas (CDI ancien, par exemple), ces alternatives prennent le relais." }
+      ]
+    },
+    {
+      "id": "a-mobili",
+      "bloc": "aides",
+      "titre": "Aide Mobili-Jeune : jusqu'à 100 € de loyer en moins par mois",
+      "texte": "Pour les alternants du secteur privé de moins de 30 ans : jusqu'à 100 € par mois pendant 11 mois, en plus de l'APL. La fenêtre de demande est stricte : ne la laissez pas passer.",
+      "lien": "/guides/aide-mobili-jeune/",
+      "lienLabel": "Le guide Mobili-Jeune",
+      "regles": [
+        { "si": { "statut": ["alternant"], "age": ["a1", "a2"] }, "pourquoi": "Alternant de moins de 30 ans : c'est l'une des aides les plus généreuses, et l'une des moins demandées." }
+      ]
+    },
+    {
+      "id": "a-locapass",
+      "bloc": "aides",
+      "titre": "Avance Loca-Pass : le dépôt de garantie financé à 0 %",
+      "texte": "Un prêt à taux zéro jusqu'à 1 200 € pour payer le dépôt de garantie, remboursable en petites mensualités. Cumulable avec Visale.",
+      "lien": "/guides/avance-loca-pass/",
+      "lienLabel": "Le guide Loca-Pass",
+      "regles": [
+        { "si": { "statut": ["salarie"] }, "pourquoi": "Salarié du secteur privé : l'avance est ouverte quel que soit votre âge." },
+        { "si": { "statut": ["alternant"], "age": ["a3"] }, "pourquoi": "Alternant de 30 ans ou plus : avec un contrat signé dans une entreprise privée, vous relevez des salariés du privé, éligibles quel que soit l'âge." },
+        { "si": { "age": ["a1", "a2"], "statut": ["etudiant", "alternant", "autre"] }, "pourquoi": "Moins de 30 ans : ouverte en formation, en emploi ou en recherche, et aux étudiants sous conditions (bourse, CDD ou stage d'au moins 3 mois)." },
+        { "si": { "statut": ["agent"], "age": ["a1", "a2"] }, "pourquoi": "Agent public de moins de 30 ans : l'avance reste ouverte en emploi non permanent (contractuel). Titulaire, elle ne vous concerne en principe pas : vérifiez votre cas dans le guide." }
+      ]
+    },
+    {
+      "id": "a-etudiant",
+      "bloc": "aides",
+      "titre": "APL et aides étudiantes : le pack complet",
+      "texte": "APL, Loca-Pass, Mobili-Jeune pour les alternants, Visale : les aides se cumulent, et l'ordre des demandes compte. Simulez l'APL d'abord : Mobili-Jeune se calcule sur le loyer restant après elle.",
+      "lien": "/guides/aide-logement-etudiant/",
+      "lienLabel": "Les aides au logement étudiant",
+      "regles": [
+        { "si": { "statut": ["etudiant"] }, "pourquoi": "Étudiant : quelques demandes bien ordonnées changent le budget de l'année." }
+      ]
+    },
+    {
+      "id": "a-fsl",
+      "bloc": "aides",
+      "titre": "FSL : le filet de sécurité de votre département",
+      "texte": "Dépôt de garantie, premier loyer, dettes de loyer ou factures d'énergie : le fonds de solidarité logement peut les prendre en charge, en subvention ou en prêt, sous conditions de ressources.",
+      "lien": "/guides/fonds-solidarite-logement/",
+      "lienLabel": "Le guide FSL",
+      "regles": [
+        { "si": { "situation": ["difficulte"] }, "pourquoi": "Pour une dette de loyer, plus la demande part tôt, plus la commission a de marges." },
+        { "si": { "revenus": ["r1"], "situation": ["premier", "heberge"] }, "pourquoi": "Ressources modestes : le FSL peut financer l'entrée dans les lieux si Loca-Pass ne vous couvre pas." }
+      ]
+    },
+    {
+      "id": "p-crous",
+      "bloc": "pistes",
+      "titre": "Résidences CROUS : les loyers les plus bas du marché",
+      "texte": "157 résidences universitaires publiques en Île-de-France. Tout passe par le Dossier social étudiant puis les vœux en ligne ; une phase complémentaire ouvre en juillet, accessible aussi aux non-boursiers.",
+      "lien": "/residences-crous/",
+      "lienLabel": "L'annuaire des résidences CROUS",
+      "regles": [
+        { "si": { "statut": ["etudiant"] }, "pourquoi": "Étudiant : c'est la première piste à activer." }
+      ]
+    },
+    {
+      "id": "p-fjt",
+      "bloc": "pistes",
+      "titre": "Foyer de jeunes travailleurs : le meublé tout compris pour démarrer",
+      "texte": "141 FJT en Île-de-France : chambre ou studio meublé, redevance toutes charges comprises, APL possible, pas de garant exigé dans la plupart des résidences. On candidate directement auprès de chaque foyer.",
+      "lien": "/foyers-jeunes-travailleurs/",
+      "lienLabel": "L'annuaire des 141 FJT",
+      "regles": [
+        { "si": { "age": ["a1"], "statut": ["alternant", "salarie", "agent", "autre", "etudiant"] }, "pourquoi": "16-25 ans en activité, alternance ou insertion : le cœur de cible des FJT (les étudiants y sont admis en minorité)." },
+        { "si": { "age": ["a2"], "statut": ["alternant", "salarie", "agent", "autre"] }, "pourquoi": "Jusqu'à 30 ans dans de nombreuses résidences : candidatez large." }
+      ]
+    },
+    {
+      "id": "p-rs",
+      "bloc": "pistes",
+      "titre": "Résidence sociale : le logement meublé tremplin",
+      "texte": "Studio meublé, redevance unique éligible à l'APL, contrat souple. Trois canaux : candidature directe (Adoma en ligne), travailleur social et SIAO, ou Action Logement si vous êtes salarié du privé.",
+      "lien": "/guides/residence-sociale/",
+      "lienLabel": "Le guide résidence sociale",
+      "regles": [
+        { "si": { "revenus": ["r1", "r2"], "situation": ["premier", "heberge"], "foyer": ["seul", "couple"] }, "pourquoi": "Ressources modestes mais stables, petit ménage : le profil type des résidences sociales." },
+        { "si": { "revenus": ["r1", "r2"], "situation": ["premier", "heberge"], "foyer": ["famille"] }, "pourquoi": "Les résidences sociales visent les petits ménages : en famille, cela concerne surtout les parents seuls ou les couples avec un enfant au maximum. Vérifiez le projet social de chaque résidence." }
+      ]
+    },
+    {
+      "id": "p-solibail",
+      "bloc": "pistes",
+      "titre": "Solibail : un logement privé, sécurisé par une association",
+      "texte": "Une association agréée loue le logement et vous y loge avec un accompagnement, le temps de rebondir vers le parc social. L'entrée passe par un travailleur social et le SIAO. À Paris, le dispositif s'appelle Louez solidaire.",
+      "lien": "/guides/solibail/",
+      "lienLabel": "Le guide Solibail",
+      "regles": [
+        { "si": { "situation": ["heberge"], "foyer": ["couple", "famille"] }, "pourquoi": "Famille ou couple sortant d'hébergement : c'est exactement le public de Solibail." }
+      ]
+    },
+    {
+      "id": "p-lli",
+      "bloc": "pistes",
+      "titre": "Logement intermédiaire : sous le marché, au-dessus des plafonds HLM",
+      "texte": "Loyers de 10 à 15 % sous le marché, plafonds nettement plus élevés que le logement social, candidature directe auprès des opérateurs (in'li, CDC Habitat), sans commission d'attribution.",
+      "lien": "/guides/logement-intermediaire/",
+      "lienLabel": "Le guide du logement intermédiaire",
+      "regles": [
+        { "si": { "revenus": ["r3", "r4"], "situation": ["premier"] }, "pourquoi": "Avec vos revenus, c'est souvent la piste la plus rapide en Île-de-France." }
+      ]
+    },
+    {
+      "id": "p-agent",
+      "bloc": "pistes",
+      "titre": "Agent public : Balae, AIP et vos canaux réservés",
+      "texte": "Bourse Balae (logements sociaux réservés aux agents de l'État en Île-de-France), AIP jusqu'à 1 500 € pour l'installation, CGOS pour les hospitaliers : chaque versant a ses portes d'entrée.",
+      "lien": "/guides/logement-fonctionnaire/",
+      "lienLabel": "Le guide du logement des agents publics",
+      "regles": [
+        { "si": { "statut": ["agent"] }, "pourquoi": "Vos dispositifs dépendent de votre versant (État, territoriale, hospitalière) : le guide démêle qui a droit à quoi." }
+      ]
+    },
+    {
+      "id": "p-mobilite",
+      "bloc": "pistes",
+      "titre": "Quelques mois seulement : pensez bail mobilité",
+      "texte": "Un bail meublé de 1 à 10 mois, sans dépôt de garantie, réservé aux situations de mobilité : études, formation, stage, mission, mutation. La garantie Visale peut le couvrir.",
+      "lien": "/guides/bail-mobilite/",
+      "lienLabel": "Le guide du bail mobilité",
+      "regles": [
+        { "si": { "duree": ["courte"] }, "pourquoi": "Pour une installation courte, c'est presque toujours le meilleur contrat." }
+      ]
+    }
+  ]
+}
