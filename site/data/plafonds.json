@@ -1,0 +1,95 @@
+{
+  "_meta": {
+    "note": "Barèmes des plafonds de ressources pour l'accès au logement social (PLAI, PLUS, PLS) et au logement locatif intermédiaire (LLI). ⚠️ REVALORISÉS PAR ARRÊTÉ CHAQUE 1er JANVIER : re-vérifier ce fichier début janvier, sinon la page se périme (un concurrent laisse traîner un barème 2024 en page 1 de Google). Les montants sont des revenus fiscaux de référence ANNUELS.",
+    "millesime": "2026",
+    "dateEffet": "2026-01-01",
+    "rfrAnnee": "2024",
+    "rfrLibelle": "revenu fiscal de référence de 2024, celui de l'avis d'impôt reçu en 2025",
+    "verifieLe": "2026-07-19",
+    "revalorisation": "+0,87 % (variation sur 12 mois de l'IRL du 3e trimestre 2025)",
+    "sources": [
+      { "label": "Arrêté du 19 décembre 2025 modifiant l'arrêté du 29 juillet 1987 relatif aux plafonds de ressources HLM (JO du 24/12/2025)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053159966", "portee": "PLAI, PLUS" },
+      { "label": "Plafonds de ressources pour un logement social (Service-public.fr)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F869", "portee": "PLAI, PLUS, PLS" },
+      { "label": "Barème BOFiP BOI-BAREME-000017 : plafonds de ressources 2026 du logement intermédiaire", "url": "https://bofip.impots.gouv.fr/bofip/10130-PGP.html/identifiant=BOI-BAREME-000017-20260310", "portee": "LLI" },
+      { "label": "Zonage A/B/C (ministère de la Transition écologique)", "url": "https://www.ecologie.gouv.fr/politiques-publiques/zonage-b-c", "portee": "zones LLI" }
+    ],
+    "controles": "PLS = arrondi(PLUS × 1,3) vérifié sur les 18 cellules ; monotonie PLAI < PLUS < PLS vérifiée sur les 18 ; montants relevés sur deux sources indépendantes concordantes."
+  },
+  "hlm": {
+    "libelle": "Logement social (parc HLM)",
+    "zones": [
+      { "id": "paris", "label": "Paris et communes limitrophes" },
+      { "id": "idf", "label": "Île-de-France hors Paris et communes limitrophes" }
+    ],
+    "categories": [
+      { "id": "1", "label": "Une personne seule" },
+      { "id": "2", "label": "Deux personnes sans personne à charge (hors jeune ménage), ou une personne seule en situation de handicap" },
+      { "id": "3", "label": "Trois personnes, ou une personne seule avec une personne à charge, ou un jeune ménage sans personne à charge" },
+      { "id": "4", "label": "Quatre personnes, ou une personne seule avec deux personnes à charge" },
+      { "id": "5", "label": "Cinq personnes, ou une personne seule avec trois personnes à charge" },
+      { "id": "6", "label": "Six personnes, ou une personne seule avec quatre personnes à charge" }
+    ],
+    "types": [
+      { "id": "PLAI", "label": "PLAI", "nom": "Prêt locatif aidé d'intégration", "desc": "Les logements très sociaux, réservés aux ménages les plus modestes. Loyers les plus bas du parc." },
+      { "id": "PLUS", "label": "PLUS", "nom": "Prêt locatif à usage social", "desc": "Le HLM classique : il représente l'essentiel du parc social français." },
+      { "id": "PLS", "label": "PLS", "nom": "Prêt locatif social", "desc": "Le haut du parc social, pour les ménages qui dépassent le plafond PLUS. Loyers plus élevés, souvent en zone tendue." }
+    ],
+    "plafonds": {
+      "PLAI": {
+        "paris": { "1": 14811, "2": 24140, "3": 31643, "4": 34637, "5": 41203, "6": 46369 },
+        "idf": { "1": 14811, "2": 24140, "3": 29018, "4": 31860, "5": 37719, "6": 42444 }
+      },
+      "PLUS": {
+        "paris": { "1": 26920, "2": 40233, "3": 52740, "4": 62968, "5": 74919, "6": 84304 },
+        "idf": { "1": 26920, "2": 40233, "3": 48362, "4": 57930, "5": 68577, "6": 77171 }
+      },
+      "PLS": {
+        "paris": { "1": 34996, "2": 52303, "3": 68562, "4": 81858, "5": 97395, "6": 109595 },
+        "idf": { "1": 34996, "2": 52303, "3": 62871, "4": 75309, "5": 89150, "6": 100322 }
+      }
+    },
+    "majorationParPersonneSupp": {
+      "PLAI": { "paris": 5166, "idf": 4727 },
+      "PLUS": { "paris": 9394, "idf": 8598 },
+      "PLS": { "paris": 12212, "idf": 11177 }
+    },
+    "communesLimitrophesNote": "L'arrêté de 1987 n'énumère pas les communes limitrophes. Le ministère du Logement publie cette liste sous le nom « zone 1 bis » (Annexe 10, Licence Ouverte). Elle a été recoupée par un calcul d'adjacence sur les contours officiels IGN (frontière terrestre partagée avec Paris, bois de Boulogne et de Vincennes inclus) : 29 communes, résultat identique à la liste ministérielle. ⚠️ Rapprochement par CODE INSEE et jamais par nom (la liste ministérielle date de 2014 et écrit encore « Saint-Ouen », devenu « Saint-Ouen-sur-Seine » en 2018). Faux positifs écartés : Arcueil et Maisons-Alfort (séparée par la Seine), proches mais sans frontière commune. ⚠️ Ce zonage vaut pour PLAI/PLUS/PLS uniquement : le logement intermédiaire relève du zonage A/B/C, plus large.",
+    "communesLimitrophesSource": "https://www.financement-logement-social.logement.gouv.fr/annexe-10-liste-des-communes-constituant-la-zone-1-a1254.html",
+    "communesLimitrophes": {
+      "92012": "Boulogne-Billancourt", "92024": "Clichy", "92040": "Issy-les-Moulineaux",
+      "92044": "Levallois-Perret", "92046": "Malakoff", "92049": "Montrouge",
+      "92051": "Neuilly-sur-Seine", "92062": "Puteaux", "92064": "Saint-Cloud",
+      "92073": "Suresnes", "92075": "Vanves",
+      "93001": "Aubervilliers", "93006": "Bagnolet", "93045": "Les Lilas",
+      "93048": "Montreuil", "93055": "Pantin", "93061": "Le Pré-Saint-Gervais",
+      "93066": "Saint-Denis", "93070": "Saint-Ouen-sur-Seine",
+      "94018": "Charenton-le-Pont", "94033": "Fontenay-sous-Bois", "94037": "Gentilly",
+      "94041": "Ivry-sur-Seine", "94042": "Joinville-le-Pont", "94043": "Le Kremlin-Bicêtre",
+      "94052": "Nogent-sur-Marne", "94067": "Saint-Mandé", "94069": "Saint-Maurice",
+      "94080": "Vincennes"
+    }
+  },
+  "lli": {
+    "libelle": "Logement locatif intermédiaire (LLI)",
+    "note": "Le LLI n'a pas de grille propre : l'article 279-0 bis A du CGI renvoie aux plafonds du dispositif d'investissement locatif intermédiaire (article 2 terdecies D de l'annexe III au CGI). Les ressources s'apprécient à la DATE DE SIGNATURE DU BAIL.",
+    "zones": [
+      { "id": "Abis", "label": "Zone A bis (Paris et 97 communes d'Île-de-France)" },
+      { "id": "A", "label": "Zone A (reste de l'agglomération parisienne)" },
+      { "id": "B1", "label": "Zone B1 (grande couronne moins tendue)" }
+    ],
+    "categories": [
+      { "id": "personne-seule", "label": "Personne seule" },
+      { "id": "couple", "label": "Couple" },
+      { "id": "1-personne-a-charge", "label": "Personne seule ou couple avec 1 personne à charge" },
+      { "id": "2-personnes-a-charge", "label": "Personne seule ou couple avec 2 personnes à charge" },
+      { "id": "3-personnes-a-charge", "label": "Personne seule ou couple avec 3 personnes à charge" },
+      { "id": "4-personnes-a-charge", "label": "Personne seule ou couple avec 4 personnes à charge" }
+    ],
+    "plafonds": {
+      "Abis": { "personne-seule": 44344, "couple": 66276, "1-personne-a-charge": 86878, "2-personnes-a-charge": 103727, "3-personnes-a-charge": 123415, "4-personnes-a-charge": 138874 },
+      "A": { "personne-seule": 44344, "couple": 66276, "1-personne-a-charge": 79666, "2-personnes-a-charge": 95427, "3-personnes-a-charge": 112968, "4-personnes-a-charge": 127122 },
+      "B1": { "personne-seule": 36144, "couple": 48268, "1-personne-a-charge": 58043, "2-personnes-a-charge": 70073, "3-personnes-a-charge": 82432, "4-personnes-a-charge": 92900 }
+    },
+    "majorationParPersonneSupp": { "Abis": 15471, "A": 14164, "B1": 10364 }
+  }
+}

@@ -37,6 +37,9 @@ const FJT = readOpen('fjt');
 const RES_AUTONOMIE = readOpen('residences-autonomie');
 const LS_COMMUNES = readOpen('logement-social-communes');
 const ENCADREMENT = readOpen('encadrement-loyers-paris');
+/* Barèmes de plafonds de ressources (revalorisés par arrêté chaque 1er janvier :
+ * re-vérifier site/data/plafonds.json début janvier). */
+const PLAFONDS = read('plafonds.json');
 const TENSION = readOpen('tension-communes');
 /* Index code INSEE → tension/délai (socle DRIHL). Jointure directe : le socle
  * porte le code INSEE natif. Les communes sous secret statistique ont des
@@ -675,7 +678,9 @@ for (const g of GUIDES) {
   const aLireAussi = GUIDES.filter(x => x.slug !== g.slug && x.parcours.some(s => g.parcours.includes(s)))
     .slice(0, 3)
     .map(x => `<a class="pill" href="/guides/${x.slug}/">${esc(x.h1)}</a>`).join(' ');
-  const outil = (g.slug === 'encadrement-des-loyers-paris' && ENCADREMENT) ? encadrementWidget() : '';
+  const outil = (g.slug === 'encadrement-des-loyers-paris' && ENCADREMENT) ? encadrementWidget()
+    : (g.slug === 'plafond-ressources-logement-social' && PLAFONDS && LS_COMMUNES) ? plafondsWidget() + plafondsTables()
+      : '';
   if (outil) tocItems.unshift('<li><a href="#verifier">Vérifier votre loyer</a></li>');
   tocItems.push('<li><a href="#faq">Questions fréquentes</a></li>');
   /* Sommaire actif : sticky en desktop, replié en mobile par un micro-script
@@ -1354,6 +1359,178 @@ ${legende}
   }
 }
 
+/* --------- Outil : simulateur de plafonds de ressources ---------------
+ * Verdict d'éligibilité (PLAI / PLUS / PLS / LLI / au-dessus), jamais un
+ * montant d'aide : les barèmes sont publics et exacts, un calcul d'APL ne
+ * le serait pas. La commune détermine les DEUX zonages, qui ne se
+ * recouvrent pas : « Paris et communes limitrophes » (zone 1 bis) pour le
+ * logement social, zonage A/B/C pour le logement intermédiaire. */
+function plafondsWidget() {
+  const P = PLAFONDS;
+  const lim = new Set(Object.keys(P.hlm.communesLimitrophes));
+  /* Une entrée par commune : libellé désambiguïsé (des noms se répètent
+   * d'un département à l'autre), zone HLM, zone LLI. */
+  const communes = LS_COMMUNES
+    ? LS_COMMUNES.records
+      .filter(r => !r.arrondissement)
+      .map(r => [`${r.nom} (${r.dep})`, (r.code === '75056' || lim.has(r.code)) ? 1 : 0, r.zone || ''])
+      .sort((a, b) => a[0].localeCompare(b[0], 'fr'))
+    : [];
+  const dataJson = JSON.stringify({
+    communes,
+    hlm: { plafonds: P.hlm.plafonds, maj: P.hlm.majorationParPersonneSupp, types: P.hlm.types },
+    lli: { plafonds: P.lli.plafonds, maj: P.lli.majorationParPersonneSupp },
+  }).replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026');
+  /* Deux questions, pas une : le barème distingue « deux personnes sans
+   * personne à charge » (catégorie 2) de « une personne seule avec une
+   * personne à charge » (catégorie 3), à nombre d'occupants identique. Ne
+   * demander que le nombre d'occupants déclasserait toutes les familles
+   * monoparentales d'un cran, soit plus de 12 000 € de plafond en moins. */
+  const optN = Array.from({ length: 12 }, (_, i) => i + 1)
+    .map(n => `<option value="${n}">${n} personne${n > 1 ? 's' : ''}</option>`).join('');
+  const optK = Array.from({ length: 11 }, (_, i) => i)
+    .map(k => `<option value="${k}">${k === 0 ? 'Aucune' : k}</option>`).join('');
+  const listOpts = communes.map(c => `<option value="${esc(c[0])}"></option>`).join('');
+  return `
+<section class="tool" id="simulateur">
+  <h2>Avez-vous droit à un logement social&nbsp;? Vérifiez en 30 secondes</h2>
+  <p>Renseignez votre commune, la taille de votre foyer et votre revenu fiscal de référence&nbsp;: l'outil compare aux barèmes officiels ${esc(P._meta.millesime)} et vous dit à quelle catégorie vous pouvez prétendre.</p>
+  <div class="tool-form">
+    <div><label for="pl-c">Commune visée</label>
+      <input id="pl-c" list="pl-communes" type="text" placeholder="Ex. : Massy (91)" autocomplete="off">
+      <datalist id="pl-communes">${listOpts}</datalist></div>
+    <div><label for="pl-n">Personnes qui occuperont le logement</label>
+      <select id="pl-n"><option value="">— Choisir —</option>${optN}</select></div>
+    <div><label for="pl-k">Dont personnes à charge (enfants rattachés, ascendant à charge)</label>
+      <select id="pl-k"><option value="">— Choisir —</option>${optK}</select></div>
+    <div><label for="pl-r">Revenu fiscal de référence du foyer (€)</label>
+      <input id="pl-r" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex. : 28000" aria-describedby="pl-r-aide">
+      <span id="pl-r-aide" class="pl-aide">Ligne « revenu fiscal de référence » de votre avis d'impôt ${esc(String(+P._meta.rfrAnnee + 1))}. Ni le salaire net, ni le revenu imposable.</span></div>
+  </div>
+  <fieldset class="pl-cas">
+    <legend>Cas particuliers prévus par le barème</legend>
+    <label><input type="checkbox" id="pl-jm"> Jeune ménage&nbsp;: couple sans personne à charge dont la somme des âges ne dépasse pas 55 ans</label>
+    <label><input type="checkbox" id="pl-ph"> Personne seule en situation de handicap</label>
+  </fieldset>
+  <noscript><p class="pl-note">Le simulateur a besoin de JavaScript. Les barèmes complets restent consultables dans <a href="#baremes">les tableaux ci-dessous</a>.</p></noscript>
+  <p class="maj">Le revenu à saisir est la <strong>somme des revenus fiscaux de référence</strong> de toutes les personnes qui occuperont le logement, sur l'avis d'impôt ${esc(String(+P._meta.rfrAnnee + 1))} portant sur les revenus ${esc(P._meta.rfrAnnee)}.</p>
+  <div id="pl-out" class="tool-result" aria-live="polite"></div>
+  <p class="maj">Résultat indicatif&nbsp;: seul l'organisme instructeur décide, au vu de votre dossier complet. Des règles particulières existent (jeune ménage, situation de handicap, changement de situation)&nbsp;: elles figurent dans les libellés officiels du tableau ci-dessous.</p>
+</section>
+<script>
+(function(){
+var D=${dataJson};
+var c=document.getElementById('pl-c'),n=document.getElementById('pl-n'),k=document.getElementById('pl-k'),
+    r=document.getElementById('pl-r'),jm=document.getElementById('pl-jm'),ph=document.getElementById('pl-ph'),
+    out=document.getElementById('pl-out');
+if(!c||!n||!k||!r||!out)return;
+var idx={};D.communes.forEach(function(x){idx[x[0].toLowerCase()]=x});
+function eur(v){return v.toLocaleString('fr-FR')+' €'}
+/* Catégorie officielle du barème : elle ne se déduit PAS du seul nombre
+ * d'occupants. Une personne seule avec k personnes à charge relève de la
+ * catégorie k+2, un jeune ménage sans charge de la 3, une personne seule
+ * en situation de handicap de la 2. */
+function categorie(occ,ch,jmC,phC){
+ var adultes=occ-ch;
+ if(adultes===1&&ch>=1)return ch+2;
+ if(occ===2&&ch===0&&jmC)return 3;
+ if(occ===1&&phC)return 2;
+ return occ}
+/* Le LLI compte des personnes à charge au sens fiscal, jamais des occupants. */
+function catLli(occ,ch){return ch>0?ch+2:(occ<=1?1:2)}
+/* Plafond d'une catégorie, avec majoration linéaire au-delà de la 6e. */
+function plafHlm(t,z,cat){var g=D.hlm.plafonds[t][z];
+ if(cat<=6)return g[String(cat)];
+ return g['6']+(cat-6)*D.hlm.maj[t][z]}
+var CATLLI=['','personne-seule','couple','1-personne-a-charge','2-personnes-a-charge','3-personnes-a-charge','4-personnes-a-charge'];
+function plafLli(z,cat){var g=D.lli.plafonds[z];if(!g)return null;
+ if(cat<=6)return g[CATLLI[cat]];
+ return g[CATLLI[6]]+(cat-6)*D.lli.maj[z]}
+function note(m){out.innerHTML='<p class="pl-note">'+m+'</p>'}
+function calc(){
+ var saisie=(c.value||'').trim(),com=idx[saisie.toLowerCase()],
+     occ=parseInt(n.value,10),ch=parseInt(k.value,10),rfr=parseFloat(r.value);
+ if(!com&&saisie){return note('Commune non reconnue. Choisissez-la dans la liste proposée, avec son département&nbsp;: «&nbsp;Massy (91)&nbsp;».')}
+ if(r.value&&isNaN(rfr)){return note('Saisissez un montant en chiffres, sans espace ni virgule. Exemple&nbsp;: 28000.')}
+ if(!com||!occ||isNaN(ch)||isNaN(rfr)||rfr<0){out.innerHTML='';return}
+ if(ch>occ-1){return note('Le foyer doit compter au moins une personne qui n\\'est pas à charge. Vérifiez les deux champs.')}
+ var cat=categorie(occ,ch,jm&&jm.checked,ph&&ph.checked),
+     zh=com[1]?'paris':'idf',zl=com[2],h=D.hlm.types,i,res=null;
+ for(i=0;i<h.length;i++){if(rfr<=plafHlm(h[i].id,zh,cat)){res=h[i];break}}
+ var nom=com[0],qui=occ+' personne'+(occ>1?'s':''),html='';
+ if(res){
+  html='<p class="pl-verdict pl-ok"><strong>Oui, vous êtes sous le plafond '+res.label+'.</strong></p>'
+   +'<p>Avec '+eur(rfr)+' pour '+qui+' à '+nom+', vous passez sous le plafond '
+   +res.label+' ('+eur(plafHlm(res.id,zh,cat))+'). '+res.desc+'</p>'
+   +'<p class="pl-detail">Vos plafonds pour cette commune&nbsp;: '
+   +h.map(function(t){var p=plafHlm(t.id,zh,cat);
+     return '<span class="'+(rfr<=p?'pl-sous':'pl-sur')+'">'+t.label+' '+eur(p)+'</span>'}).join(' · ')+'</p>'
+   +'<p class="pl-note">Être sous le plafond ouvre le droit à déposer une demande. Cela ne garantit pas l\\'attribution d\\'un logement, qui dépend du parc disponible et de la commission d\\'attribution.</p>';
+ } else {
+  var pl=plafLli(zl,catLli(occ,ch)),plsMax=plafHlm('PLS',zh,cat);
+  html='<p class="pl-verdict pl-ko"><strong>Vos revenus dépassent les plafonds du logement social.</strong></p>'
+   +'<p>Avec '+eur(rfr)+' pour '+qui+' à '+nom+', vous êtes au-dessus du plafond le plus élevé du parc social, le PLS ('+eur(plsMax)+').</p>';
+  if(pl!=null){
+   html+= rfr<=pl
+    ? '<p class="pl-verdict pl-ok"><strong>En revanche, vous êtes éligible au logement intermédiaire (LLI).</strong></p><p>Le plafond LLI de cette commune est de '+eur(pl)+'. Loyers 10 à 15 % sous le marché, candidature directe auprès des opérateurs, sans numéro unique. <a href="/guides/logement-intermediaire/">Voir le guide du logement intermédiaire</a>.</p>'
+    : '<p>Vous dépassez aussi le plafond du logement intermédiaire ('+eur(pl)+') pour cette commune. Reste le parc privé&nbsp;: <a href="/guides/encadrement-des-loyers-paris/">vérifiez l\\'encadrement des loyers</a> avant de signer, et <a href="/guides/visale/">Visale</a> peut vous servir de garant.</p>';
+  } else {
+   html+='<p>Cette commune est en zone B2 pour le logement intermédiaire, où les opérations sont soumises à agrément préfectoral. Renseignez-vous auprès de l\\'<a href="/annuaire/">ADIL de votre département</a> avant d\\'écarter cette piste.</p>';
+  }
+ }
+ out.innerHTML=html;
+}
+[c,n,k,r,jm,ph].forEach(function(el){if(el){el.addEventListener('input',calc);el.addEventListener('change',calc)}});
+})();
+</script>`;
+}
+
+/* Tableaux complets des barèmes, sous le simulateur : la SERP de ce mot-clé
+ * est tabulaire (snippets et PAA servent des tableaux extraits), l'outil seul
+ * ne suffirait pas à s'y positionner. Marqués « nosort » : l'ordre des
+ * catégories de ménage porte du sens et n'a pas à être réordonné. */
+function plafondsTables() {
+  const P = PLAFONDS;
+  const lignes = (type) => P.hlm.categories.map(cat => `<tr>
+      <td>${esc(cat.label)}</td>
+      <td class="num">${fmt(P.hlm.plafonds[type].paris[cat.id])}&nbsp;€</td>
+      <td class="num">${fmt(P.hlm.plafonds[type].idf[cat.id])}&nbsp;€</td>
+    </tr>`).join('') + `<tr>
+      <td>Par personne supplémentaire au-delà</td>
+      <td class="num">+&nbsp;${fmt(P.hlm.majorationParPersonneSupp[type].paris)}&nbsp;€</td>
+      <td class="num">+&nbsp;${fmt(P.hlm.majorationParPersonneSupp[type].idf)}&nbsp;€</td>
+    </tr>`;
+  const tableHlm = (t) => `
+<h3 id="bareme-${t.id.toLowerCase()}">${esc(t.label)} : ${esc(t.nom)}</h3>
+<p>${esc(t.desc)}</p>
+<div class="table-wrap"><table class="data nosort">
+  <caption class="visually-hidden">Plafonds de ressources ${esc(t.label)} en Île-de-France, barème ${esc(P._meta.millesime)}</caption>
+  <thead><tr><th scope="col">Composition du foyer</th><th scope="col" class="num">Paris et communes limitrophes</th><th scope="col" class="num">Reste de l'Île-de-France</th></tr></thead>
+  <tbody>${lignes(t.id)}</tbody>
+</table></div>`;
+  const lliRows = P.lli.categories.map(cat => `<tr>
+      <td>${esc(cat.label)}</td>
+      ${['Abis', 'A', 'B1'].map(z => `<td class="num">${fmt(P.lli.plafonds[z][cat.id])}&nbsp;€</td>`).join('')}
+    </tr>`).join('') + `<tr>
+      <td>Par personne supplémentaire au-delà</td>
+      ${['Abis', 'A', 'B1'].map(z => `<td class="num">+&nbsp;${fmt(P.lli.majorationParPersonneSupp[z])}&nbsp;€</td>`).join('')}
+    </tr>`;
+  return `
+<section id="baremes">
+  <h2>Les barèmes ${esc(P._meta.millesime)} en Île-de-France, catégorie par catégorie</h2>
+  <p>Montants annuels de <strong>revenu fiscal de référence</strong> à ne pas dépasser, en vigueur depuis le ${esc(dateFrOf(P._meta.dateEffet))} (revalorisation de ${esc(P._meta.revalorisation)}). Le revenu pris en compte est celui de ${esc(P._meta.rfrAnnee)}, soit l'avis d'impôt reçu en ${esc(String(+P._meta.rfrAnnee + 1))}.</p>
+  ${P.hlm.types.map(tableHlm).join('')}
+  <h3 id="bareme-lli">Au-dessus des plafonds : le logement intermédiaire (LLI)</h3>
+  <p>Si vous dépassez le PLS, le logement locatif intermédiaire prend le relais. Attention, il ne suit pas le même découpage géographique&nbsp;: c'est le zonage A/B/C qui s'applique, plus large que « Paris et communes limitrophes ».</p>
+  <div class="table-wrap"><table class="data nosort">
+    <caption class="visually-hidden">Plafonds de ressources du logement locatif intermédiaire, barème ${esc(P._meta.millesime)}</caption>
+    <thead><tr><th scope="col">Composition du foyer</th><th scope="col" class="num">Zone A bis</th><th scope="col" class="num">Zone A</th><th scope="col" class="num">Zone B1</th></tr></thead>
+    <tbody>${lliRows}</tbody>
+  </table></div>
+  <p class="maj">Sources&nbsp;: ${P._meta.sources.map(s => `<a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.label)}</a>`).join(' · ')}. Barème vérifié le ${esc(dateFrOf(P._meta.verifieLe))}. Les plafonds sont revalorisés par arrêté chaque 1ᵉʳ janvier.</p>
+</section>`;
+}
+
 /* --------- Outil : vérificateur d'encadrement des loyers (Paris) -------- */
 
 function encadrementWidget() {
@@ -1739,6 +1916,20 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .page-head-icon svg{width:100%;height:100%}
 .page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 17px 17px 0;margin:-22px -26px -22px 8px;box-shadow:-14px 0 24px -18px rgba(31,78,121,.25)}
 .page-head h1{margin:.1rem 0 .5rem}.page-head .lead{margin:0}
+/* ---- Simulateur de plafonds ---- */
+.pl-aide{display:block;font-size:.82rem;color:#5a6b7c;margin-top:.3rem;line-height:1.4}
+.pl-cas{border:1px solid var(--bord);border-radius:12px;padding:12px 16px 14px;margin:1rem 0 0;background:var(--surface)}
+.pl-cas legend{font-size:.82rem;font-weight:650;color:var(--bleu);padding:0 6px}
+.pl-cas label{display:flex;gap:.6em;align-items:flex-start;font-size:.92rem;padding:7px 0;cursor:pointer;min-height:44px;align-items:center}
+.pl-cas input{flex:none;width:18px;height:18px;accent-color:var(--bleu2)}
+.pl-verdict{font-size:1.06rem;margin:.2rem 0 .5rem}
+.pl-ok strong{color:#2e7050}
+.pl-ko strong{color:#b3261e}
+.pl-detail{font-size:.9rem;margin:.6rem 0 0}
+.pl-sous{color:#2e7050;font-weight:650}
+.pl-sur{color:#8a94a0;text-decoration:line-through}
+.pl-note{font-size:.88rem;color:#5a6b7c;margin:.7rem 0 0}
+
 /* ---- Tri des tableaux (en-têtes cliquables, ajoutés par JS) ---- */
 /* Le bouton reprend le padding de la cellule : toute la surface de l'en-tête
  * devient cliquable, et la cible tactile atteint les 44 px sur mobile.

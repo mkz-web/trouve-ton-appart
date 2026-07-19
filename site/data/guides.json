@@ -1382,5 +1382,89 @@
         "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33453"
       }
     ]
+  },
+  {
+    "slug": "plafond-ressources-logement-social",
+    "parcours": ["logement-social"],
+    "title": "Plafond de ressources logement social 2026 : le calcul",
+    "metaDescription": "Vérifiez en 30 secondes si vos revenus passent sous le plafond PLAI, PLUS ou PLS. Barèmes 2026 pour Paris et l'Île-de-France, simulateur gratuit.",
+    "h1": "Avez-vous droit à un logement social en 2026 ?",
+    "intro": "Le logement social n'est pas réservé aux plus démunis : environ 70 % des ménages français passent sous le plus élevé des plafonds, celui du PLS, et plus de la moitié sous celui du PLUS, le HLM classique (ANCOLS, 2024). Encore faut-il savoir lesquels s'appliquent à vous, car ils dépendent de trois choses : la taille de votre foyer, votre commune, et la catégorie de logement visée. Le simulateur ci-dessous fait le calcul avec les barèmes officiels en vigueur, et les tableaux complets suivent.",
+    "sections": [
+      {
+        "h2": "L'essentiel en 30 secondes",
+        "bullets": [
+          "Le revenu regardé est le revenu fiscal de référence de 2024, celui de l'avis d'impôt reçu en 2025. Ce n'est ni votre salaire net, ni votre revenu imposable.",
+          "On additionne les revenus fiscaux de référence de toutes les personnes qui occuperont le logement, même si elles ont des avis d'impôt distincts.",
+          "Trois catégories, du plus social au moins social : PLAI, PLUS (le HLM classique) et PLS. Chacune a son plafond : dépasser le PLAI ne ferme pas la porte, cela oriente vers la catégorie au-dessus.",
+          "En Île-de-France, le barème distingue « Paris et communes limitrophes » du reste de la région. L'écart atteint 6 549 € de revenu fiscal de référence pour un foyer de quatre personnes en PLS.",
+          "Au-dessus du PLS, le logement intermédiaire prend le relais, avec des plafonds nettement plus hauts et une candidature directe auprès des opérateurs.",
+          "Les plafonds sont revalorisés par arrêté chaque 1er janvier : un barème daté d'une année antérieure ne vaut plus rien."
+        ]
+      },
+      {
+        "h2": "Quels revenus sont pris en compte, et de quelle année ?",
+        "paragraphs": [
+          "C'est le point qui fait le plus d'erreurs. Le bailleur ne regarde ni vos fiches de paie, ni votre salaire net, mais le revenu fiscal de référence, une ligne précise de votre avis d'impôt. Pour une demande instruite en 2026, c'est celui de l'année 2024, figurant sur l'avis reçu en 2025.",
+          "Deuxième piège : on additionne les revenus fiscaux de référence de toutes les personnes appelées à vivre dans le logement. Un couple non marié avec deux avis distincts additionne les deux. Des colocataires aussi.",
+          "Ce décalage de deux ans joue parfois en votre faveur : si vos revenus ont fortement baissé depuis 2024 (perte d'emploi, séparation, passage à la retraite), signalez-le, car une baisse durable peut être prise en compte sur justificatifs. Adressez la question directement au bailleur ou au service instructeur, c'est lui qui apprécie."
+        ]
+      },
+      {
+        "h2": "Paris ou reste de l'Île-de-France : pourquoi les plafonds changent",
+        "paragraphs": [
+          "Le barème du logement social distingue deux zones en Île-de-France : « Paris et communes limitrophes » d'un côté, le reste de la région de l'autre. Les communes limitrophes sont les 29 villes qui touchent physiquement Paris, de Boulogne-Billancourt à Vincennes en passant par Saint-Denis et Montreuil. Le simulateur ci-dessus applique le bon zonage automatiquement à partir de votre commune.",
+          "Détail qui surprend : pour une personne seule et pour deux personnes, les deux zones ont exactement le même plafond. L'écart n'apparaît qu'à partir de trois personnes, et il grandit ensuite. Ce n'est pas une erreur d'affichage.",
+          "Attention à ne pas confondre avec le zonage A/B/C, qui sert au logement intermédiaire et à de nombreux dispositifs fiscaux : il est bien plus large et ne se superpose pas à celui du logement social. Une commune peut être en zone A bis sans être limitrophe de Paris."
+        ]
+      },
+      {
+        "h2": "PLAI, PLUS, PLS : ce que la catégorie change pour vous",
+        "paragraphs": [
+          "Ces sigles désignent le mode de financement du logement, et chacun vient avec son plafond de ressources et son niveau de loyer. Le PLAI correspond aux logements très sociaux, aux loyers les plus bas. Le PLUS est le HLM classique, qui constitue l'essentiel du parc. Le PLS, lui, est le haut du parc social, avec des loyers plus élevés, souvent en zone tendue.",
+          "Concrètement, votre revenu détermine les catégories auxquelles vous pouvez prétendre : sous le plafond PLAI, les trois vous sont ouvertes ; entre PLAI et PLUS, il vous reste le PLUS et le PLS. Vous ne choisissez pas votre catégorie, mais elle conditionne les logements qui pourront vous être proposés.",
+          "Le simulateur affiche vos trois plafonds pour la commune visée, afin que vous voyiez où vous vous situez, et pas seulement un oui ou un non. Pour la marche à suivre ensuite, notre [guide de la demande de logement social](/guides/demande-logement-social/) détaille le dossier, le numéro unique et le renouvellement annuel."
+        ]
+      },
+      {
+        "h2": "Vous dépassez les plafonds ? Le logement intermédiaire",
+        "paragraphs": [
+          "Dépasser le PLS ne signifie pas être exclu du logement aidé. Le logement locatif intermédiaire vise précisément les ménages trop aisés pour le parc social et trop justes pour le marché libre des zones tendues : loyers inférieurs de 10 à 15 % au marché, plafonds nettement plus élevés, et candidature directe auprès des opérateurs, sans numéro unique ni commission d'attribution.",
+          "Ses plafonds suivent le zonage A/B/C, pas celui du logement social. À titre de repère, une personne seule en zone A bis peut prétendre au logement intermédiaire jusqu'à 44 344 € de revenu fiscal de référence, contre 34 996 € pour le PLS. Le détail figure dans le tableau ci-dessus, et notre [guide du logement intermédiaire](/guides/logement-intermediaire/) présente les opérateurs et la marche à suivre."
+        ]
+      },
+      {
+        "h2": "Et si mes revenus augmentent après l'attribution ?",
+        "paragraphs": [
+          "Dépasser les plafonds une fois locataire ne fait pas perdre le logement du jour au lendemain. En revanche, au-delà d'un certain dépassement, un supplément de loyer de solidarité, souvent appelé surloyer, peut s'appliquer. Il augmente avec l'ampleur du dépassement.",
+          "Les règles varient selon les territoires et les conventions applicables à votre résidence : c'est votre bailleur qui les applique, et l'enquête annuelle de ressources sert précisément à cela. En cas de doute sur votre situation, l'ADIL de votre département donne un conseil juridique gratuit."
+        ]
+      },
+      {
+        "h2": "Où votre demande a-t-elle le plus de chances d'aboutir ?",
+        "paragraphs": [
+          "Être sous les plafonds est une condition nécessaire, pas suffisante : l'attente dépend ensuite du parc disponible et de la pression locale. En Île-de-France, le délai médian d'attribution varie de 10 à 57 mois selon la commune.",
+          "Avant d'arrêter les communes de votre demande, regardez donc [les délais et la pression commune par commune](/logement-social/delais/) et [les chiffres du parc social](/logement-social/chiffres/). C'est le meilleur usage que vous puissiez faire de ces données : viser juste dès le dépôt."
+        ]
+      }
+    ],
+    "faq": [
+      { "q": "Quel est le plafond à ne pas dépasser pour avoir droit à un logement social ?", "a": "Il n'y a pas un plafond unique : il dépend de la taille de votre foyer, de votre commune et de la catégorie de logement. Pour une personne seule en Île-de-France en 2026, le plafond est de 14 811 € de revenu fiscal de référence en PLAI, 26 920 € en PLUS et 34 996 € en PLS. Le simulateur en haut de page fait le calcul pour votre situation exacte." },
+      { "q": "Quel salaire ne pas dépasser pour avoir un logement social ?", "a": "Le barème ne raisonne pas en salaire mais en revenu fiscal de référence, une ligne de votre avis d'impôt, et il retient celui de l'avant-dernière année. Un même salaire ne donne donc pas le même revenu fiscal de référence selon votre situation familiale et vos déductions : mieux vaut lire directement la ligne de votre avis." },
+      { "q": "Quels revenus sont pris en compte, et de quelle année ?", "a": "La somme des revenus fiscaux de référence de toutes les personnes qui occuperont le logement, au titre de l'avant-dernière année. Pour une demande instruite en 2026, il s'agit des revenus de 2024, figurant sur l'avis d'impôt reçu en 2025." },
+      { "q": "Quelle différence entre PLAI, PLUS, PLS et LLI ?", "a": "Ce sont quatre étages, du plus social au moins social. PLAI : les logements très sociaux, aux loyers les plus bas. PLUS : le HLM classique, l'essentiel du parc. PLS : le haut du parc social, loyers plus élevés. LLI : le logement intermédiaire, qui n'est pas du logement social, avec des plafonds plus hauts et une candidature directe auprès des opérateurs." },
+      { "q": "Les plafonds sont-ils les mêmes à Paris et en Île-de-France ?", "a": "Non. Le barème distingue « Paris et communes limitrophes » du reste de la région, mais seulement à partir de trois personnes : pour une ou deux personnes, les montants sont identiques. Pour un foyer de quatre personnes en PLS, l'écart atteint 6 549 € de revenu fiscal de référence." },
+      { "q": "Que se passe-t-il si mes revenus dépassent le plafond après l'attribution ?", "a": "Vous ne perdez pas votre logement, mais un supplément de loyer de solidarité, le surloyer, peut s'appliquer au-delà d'un certain dépassement, et il augmente avec celui-ci. Les règles dépendent du territoire et de votre résidence : votre bailleur les applique après l'enquête annuelle de ressources." },
+      { "q": "Qui compte dans le foyer, et comment sont comptées les personnes à charge ?", "a": "Toutes les personnes appelées à occuper le logement comptent, et leurs revenus fiscaux de référence s'additionnent. Les catégories officielles prévoient des cas particuliers : jeune ménage, personne seule avec enfants, présence d'une personne en situation de handicap. Les libellés exacts figurent dans les tableaux ci-dessus." },
+      { "q": "Que faire si je dépasse le plafond HLM ?", "a": "Regardez le logement locatif intermédiaire : ses plafonds sont nettement plus élevés, ses loyers restent 10 à 15 % sous le marché, et l'on y candidate directement auprès des opérateurs, sans numéro unique. Le simulateur teste automatiquement votre éligibilité au LLI si vous dépassez le PLS." },
+      { "q": "Les plafonds changent-ils chaque année ?", "a": "Oui, ils sont revalorisés par arrêté au 1er janvier, en fonction de l'indice de référence des loyers. Pour 2026, la revalorisation est de 0,87 %. Vérifiez toujours l'année du barème que vous consultez : des tableaux périmés circulent encore largement." }
+    ],
+    "sourcesOfficielles": [
+      { "label": "Plafonds de ressources pour un logement social (Service-public.fr)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F869" },
+      { "label": "Arrêté du 19 décembre 2025 fixant les plafonds de ressources HLM (Légifrance)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053159966" },
+      { "label": "Plafonds de ressources du logement intermédiaire (BOFiP)", "url": "https://bofip.impots.gouv.fr/bofip/10130-PGP.html/identifiant=BOI-BAREME-000017-20260310" },
+      { "label": "Liste des communes de la zone 1 bis (ministère du Logement)", "url": "https://www.financement-logement-social.logement.gouv.fr/annexe-10-liste-des-communes-constituant-la-zone-1-a1254.html" },
+      { "label": "Déposer une demande de logement social", "url": "https://www.demande-logement-social.gouv.fr" }
+    ]
   }
 ]
