@@ -401,6 +401,7 @@ function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = []
     RES_AUTONOMIE && '<li><a href="/residences-autonomie/">Résidences autonomie (seniors)</a></li>',
     LS_COMMUNES && '<li><a href="/logement-social/chiffres/">Le logement social en chiffres</a></li>',
     TENSION && '<li><a href="/logement-social/delais/">Délais du logement social</a></li>',
+    '<li><a href="/outils/">Nos outils gratuits</a></li>',
     '<li><a href="/diagnostic/">Diagnostic logement (2 min)</a></li>',
     '<li><a href="/recherche/">Rechercher sur le site</a></li>',
   ].filter(Boolean).join('');
@@ -434,7 +435,7 @@ ${ld}
 <header class="site-header">
   <div class="container">
     <a class="brand" href="/" aria-label="${esc(SITE.name)}, accueil">${BRAND_MARK}<span class="brand-text" aria-hidden="true">${BRAND_HTML}<span class="brand-sub">Île-de-France</span></span></a>
-    <nav class="main-nav">${nav}${navLink('/diagnostic/', 'Diagnostic')}${navLink('/annuaire/', 'Annuaire')}${navLink('/recherche/', 'Rechercher')}</nav>
+    <nav class="main-nav">${nav}${navLink('/outils/', 'Outils')}${navLink('/annuaire/', 'Annuaire')}${navLink('/recherche/', 'Rechercher')}</nav>
   </div>
 </header>
 <main class="container">
@@ -502,13 +503,41 @@ function addPage(urlPath, html, priority) {
   <div class="hero-text">
     <h1>Le logement en Île-de-France, enfin dans le bon ordre.</h1>
     <p class="lead">Étudiant, demandeur de logement social, senior, salarié en mobilité&nbsp;: chaque profil a ses dispositifs, ses aides et ses guichets, souvent méconnus. ${esc(SITE.name)} vous oriente, gratuitement, vers les bonnes démarches et les sources officielles.</p>
-    <p class="hero-actions"><a class="btn" href="/diagnostic/">Faire le diagnostic (2 min)</a><a class="btn btn-ghost" href="#parcours">Trouver mon parcours</a></p>
+    <p class="hero-actions"><a class="btn" href="/diagnostic/">Faire le diagnostic (2 min)</a><a class="btn btn-ghost" href="/outils/">Voir tous nos outils</a></p>
   </div>
   <div class="hero-illo">${skyline()}</div>
 </section>
 <section id="parcours">
   <h2>Quelle est votre situation&nbsp;?</h2>
   <div class="grid grid-accueil">${cards}</div>
+</section>
+<section>
+  <h2>Répondez à votre question en 2 minutes</h2>
+  <p>Trois outils gratuits, sans inscription et sans collecte de données, construits sur les barèmes officiels.</p>
+  <div class="grid grid-outils">
+    <a class="card card-outil" href="/diagnostic/" style="${themeStyle(themeOf())}">
+      <span class="card-icon card-icon-sm">${icon('diagnostic', PAL.bleu2)}</span>
+      <div><h3>Diagnostic logement</h3>
+      <p class="outil-accroche">Quelles aides pour ma situation&nbsp;?</p>
+      <p>7 questions, et vous repartez avec vos aides, vos pistes de logement et vos démarches dans le bon ordre.</p>
+      <span class="card-cta">Faire le diagnostic →</span></div>
+    </a>${PLAFONDS && LS_COMMUNES ? `
+    <a class="card card-outil" href="/guides/plafond-ressources-logement-social/#simulateur" style="${themeStyle(themeOf('logement-social'))}">
+      <span class="card-icon card-icon-sm">${icon('plafond-ressources-logement-social', themeOf('logement-social').c)}</span>
+      <div><h3>Plafonds de ressources</h3>
+      <p class="outil-accroche">Ai-je droit au logement social&nbsp;?</p>
+      <p>Votre commune, votre foyer, votre revenu fiscal&nbsp;: le verdict PLAI, PLUS, PLS ou logement intermédiaire.</p>
+      <span class="card-cta">Tester mon éligibilité →</span></div>
+    </a>` : ''}${ENCADREMENT ? `
+    <a class="card card-outil" href="/guides/encadrement-des-loyers-paris/#verifier" style="${themeStyle(themeOf('mobilite'))}">
+      <span class="card-icon card-icon-sm">${icon('encadrement-des-loyers-paris', themeOf('mobilite').c)}</span>
+      <div><h3>Encadrement des loyers</h3>
+      <p class="outil-accroche">Mon loyer parisien est-il légal&nbsp;?</p>
+      <p>Comparez votre loyer aux ${fmt(ENCADREMENT.records.length)} références officielles des 80 quartiers de Paris.</p>
+      <span class="card-cta">Vérifier mon loyer →</span></div>
+    </a>` : ''}
+  </div>
+  <p><a href="/outils/">Comment nous construisons ces outils <span class="cta-arrow" aria-hidden="true">→</span></a></p>
 </section>
 <section>
   <h2>Les guides essentiels</h2>
@@ -653,6 +682,33 @@ function anchorOf(txt, used) {
   return id;
 }
 
+/* Les deux guides qui hébergent un outil interactif : l'Article reste l'entité
+ * principale de la page, l'outil est déclaré à part (voir outilLd). */
+const OUTILS_DE_GUIDE = {
+  'plafond-ressources-logement-social': {
+    nom: 'Simulateur de plafonds de ressources du logement social',
+    description: "Vérifie si les revenus d'un foyer passent sous les plafonds PLAI, PLUS, PLS ou du logement intermédiaire, d'après sa commune d'Île-de-France et sa composition.",
+    urlPath: '/guides/plafond-ressources-logement-social/',
+    ancre: 'simulateur',
+    fonctions: [
+      'Verdict PLAI, PLUS, PLS ou logement intermédiaire',
+      'Zonage appliqué automatiquement à partir de la commune',
+      'Barèmes officiels à jour, sans inscription ni collecte de données',
+    ],
+  },
+  'encadrement-des-loyers-paris': {
+    nom: "Vérificateur d'encadrement des loyers à Paris",
+    description: 'Compare un loyer parisien aux loyers de référence officiels, par quartier, nombre de pièces, époque de construction et meublé ou non.',
+    urlPath: '/guides/encadrement-des-loyers-paris/',
+    ancre: 'verifier',
+    fonctions: [
+      'Comparaison au loyer de référence majoré',
+      'Grille officielle des 80 quartiers parisiens',
+      'Verdict immédiat, sans inscription ni collecte de données',
+    ],
+  },
+};
+
 for (const g of GUIDES) {
   const usedIds = new Set(['faq', 'verifier']);
   const tocItems = [];
@@ -763,7 +819,7 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
         name: f.q,
         acceptedAnswer: { '@type': 'Answer', text: f.a }
       }))
-    }]
+    }].concat(OUTILS_DE_GUIDE[g.slug] ? [outilLd(OUTILS_DE_GUIDE[g.slug])] : [])
   }), '0.8');
 }
 
@@ -1417,7 +1473,9 @@ function plafondsWidget() {
   </fieldset>
   <noscript><p class="pl-note">Le simulateur a besoin de JavaScript. Les barèmes complets restent consultables dans <a href="#baremes">les tableaux ci-dessous</a>.</p></noscript>
   <p class="maj">Le revenu à saisir est la <strong>somme des revenus fiscaux de référence</strong> de toutes les personnes qui occuperont le logement, sur l'avis d'impôt ${esc(String(+P._meta.rfrAnnee + 1))} portant sur les revenus ${esc(P._meta.rfrAnnee)}.</p>
-  <div id="pl-out" class="tool-result" aria-live="polite"></div>
+  <!-- aria-atomic : sans lui, seule la portion modifiée est annoncée, donc un
+       verdict tronqué et incompréhensible. La région existe avant l'injection. -->
+  <div id="pl-out" class="tool-result" aria-live="polite" aria-atomic="true"></div>
   <p class="maj">Résultat indicatif&nbsp;: seul l'organisme instructeur décide, au vu de votre dossier complet. Des règles particulières existent (jeune ménage, situation de handicap, changement de situation)&nbsp;: elles figurent dans les libellés officiels du tableau ci-dessous.</p>
 </section>
 <script>
@@ -1486,6 +1544,32 @@ function calc(){
 [c,n,k,r,jm,ph].forEach(function(el){if(el){el.addEventListener('input',calc);el.addEventListener('change',calc)}});
 })();
 </script>`;
+}
+
+/* Balisage d'un outil hébergé DANS une page rédactionnelle. L'entité principale
+ * reste l'Article : déclarer WebApplication comme sujet d'une page à 90 % de
+ * texte serait une fausse représentation au sens des règles Google. L'outil est
+ * donc une entité distincte, ancrée sur son propre identifiant.
+ * ⚠️ Ce balisage ne produit AUCUN rich result (aucun type « calculateur » dans
+ * la galerie Google, et « Software app » exige une note tierce qu'on ne peut
+ * pas s'auto-attribuer). Sa valeur est la compréhension par les machines. */
+function outilLd({ nom, description, urlPath, ancre, fonctions }) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    '@id': `${SITE.baseUrl}${urlPath}#${ancre}`,
+    name: nom,
+    description,
+    url: `${SITE.baseUrl}${urlPath}#${ancre}`,
+    applicationCategory: 'UtilityApplication',
+    operatingSystem: 'Web',
+    browserRequirements: 'JavaScript activé',
+    inLanguage: 'fr-FR',
+    isAccessibleForFree: true,
+    featureList: fonctions,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+    provider: { '@type': 'Organization', name: SITE.name, url: SITE.baseUrl },
+  };
 }
 
 /* Tableaux complets des barèmes, sous le simulateur : la SERP de ce mot-clé
@@ -1731,6 +1815,120 @@ rendQ();
   }), '0.9');
 })();
 
+/* ---- Hub des outils ----
+ * Rôle assumé : support de netlinking et porte d'entrée interne, PAS actif SEO
+ * (« simulateur logement social » est à KD 26 avec 53 domaines référents en
+ * moyenne, hors de portée à 0 backlink). Une ADIL, un CFA ou une mission locale
+ * ne lie pas un guide de 3 000 mots ; ils lient une ressource utilitaire
+ * gratuite et sans collecte de données. C'est l'ancre la plus facile à faire
+ * accepter en outreach white hat.
+ * Aucune duplication : le hub pointe vers les outils là où ils vivent. */
+(function buildOutils() {
+  const outils = [
+    {
+      url: '/diagnostic/', icone: 'diagnostic',
+      titre: 'Diagnostic logement',
+      accroche: '7 questions, votre feuille de route personnalisée',
+      desc: "Statut, foyer, revenus, situation : l'outil croise votre situation avec les critères des dispositifs franciliens et vous rend les aides, les pistes de logement et les démarches dans le bon ordre.",
+      quoi: ['Aides et garanties auxquelles vous pouvez prétendre', 'Pistes de logement adaptées à votre profil', 'Démarches classées par ordre de priorité'],
+    },
+    PLAFONDS && LS_COMMUNES ? {
+      url: '/guides/plafond-ressources-logement-social/#simulateur', icone: 'plafond-ressources-logement-social',
+      titre: 'Simulateur de plafonds de ressources',
+      accroche: 'Avez-vous droit au logement social ?',
+      desc: `Indiquez votre commune, votre foyer et votre revenu fiscal de référence : le simulateur applique les barèmes ${esc(PLAFONDS._meta.millesime)} et vous dit à quelle catégorie vous pouvez prétendre, du PLAI au logement intermédiaire.`,
+      quoi: ['Verdict PLAI, PLUS, PLS ou logement intermédiaire', 'Zonage appliqué automatiquement selon la commune', 'Barèmes officiels, tableaux complets sous l\'outil'],
+    } : null,
+    ENCADREMENT ? {
+      url: '/guides/encadrement-des-loyers-paris/#verifier', icone: 'encadrement-des-loyers-paris',
+      titre: "Vérificateur d'encadrement des loyers",
+      accroche: 'Votre loyer parisien est-il légal ?',
+      desc: `Quartier, nombre de pièces, époque de construction, meublé ou non : l'outil compare votre loyer aux ${fmt(ENCADREMENT.records.length)} loyers de référence officiels de Paris et vous dit si le plafond est dépassé.`,
+      quoi: ['Comparaison au loyer de référence majoré', 'Les 80 quartiers parisiens couverts', 'Ce qu\'il faut faire en cas de dépassement'],
+    } : null,
+  ].filter(Boolean);
+
+  const donnees = [
+    TENSION ? { url: '/logement-social/delais/', t: 'Délais du logement social', d: `Délai médian d'attribution et pression de la demande, commune par commune.` } : null,
+    LS_COMMUNES ? { url: '/logement-social/chiffres/', t: 'Le logement social en chiffres', d: `Parc, loyers au m², vacance et taux SRU pour ${fmt(LS_COMMUNES.records.filter(r => !r.arrondissement).length)} communes.` } : null,
+    CROUS ? { url: '/residences-crous/', t: 'Résidences CROUS', d: `Les ${CROUS.records.length} résidences universitaires publiques d'Île-de-France.` } : null,
+    FJT ? { url: '/foyers-jeunes-travailleurs/', t: 'Foyers de jeunes travailleurs', d: `Les ${FJT.records.length} FJT franciliens, adresses et contacts.` } : null,
+    RES_AUTONOMIE ? { url: '/residences-autonomie/', t: 'Résidences autonomie', d: `Les ${RES_AUTONOMIE.records.length} résidences pour seniors autonomes.` } : null,
+  ].filter(Boolean);
+
+  const t = themeOf();
+  const cartes = outils.map(o => {
+    const th = themeOf(o.icone === 'diagnostic' ? undefined : 'logement-social');
+    return `
+  <a class="card card-outil" href="${o.url}" style="${themeStyle(th)}">
+    <span class="card-icon card-icon-sm">${icon(o.icone, th.c)}</span>
+    <div>
+      <h3>${esc(o.titre)}</h3>
+      <p class="outil-accroche">${esc(o.accroche)}</p>
+      <p>${o.desc}</p>
+      <ul class="outil-quoi">${o.quoi.map(q => `<li>${esc(q)}</li>`).join('')}</ul>
+      <span class="card-cta">Ouvrir l'outil →</span>
+    </div>
+  </a>`;
+  }).join('');
+
+  const content = `
+<nav class="breadcrumb"><a href="/">Accueil</a> › Outils</nav>
+<header class="page-head" style="${themeStyle(t)}">
+  <span class="page-head-icon">${icon('diagnostic', t.c)}</span>
+  <div>
+    <p class="kicker">Gratuit · sans inscription</p>
+    <h1>Nos outils pour se loger en Île-de-France</h1>
+    <p class="lead">${outils.length} simulateurs gratuits, construits sur les barèmes et les données officiels. Aucun compte à créer, aucune donnée personnelle collectée : tout se calcule dans votre navigateur, et rien n'est envoyé.</p>
+  </div>
+</header>
+<div class="grid grid-outils">${cartes}</div>
+<section class="notice">
+  <h2>Comment nous les construisons</h2>
+  <ul>
+    <li><strong>Sources officielles uniquement</strong>&nbsp;: arrêtés, fiches Service-public, Légifrance, données publiques. Chaque outil affiche ses sources et la date de son barème.</li>
+    <li><strong>Rien ne sort de votre navigateur</strong>&nbsp;: pas de compte, pas de formulaire envoyé, pas de traceur publicitaire. Vos réponses ne sont ni stockées ni transmises.</li>
+    <li><strong>Résultats indicatifs</strong>&nbsp;: nos outils vous orientent, mais seul l'organisme instructeur décide au vu de votre dossier complet. Nous le disons sur chaque résultat.</li>
+    <li><strong>Mis à jour avec les barèmes</strong>&nbsp;: les plafonds de ressources sont revalorisés chaque 1ᵉʳ janvier, les loyers de référence parisiens chaque été. Nous suivons ces échéances.</li>
+  </ul>
+</section>
+<section>
+  <h2>Nos données publiques en accès libre</h2>
+  <p>Au-delà des simulateurs, le site publie des données consolidées que personne d'autre ne réunit à l'échelle francilienne&nbsp;:</p>
+  <ul class="liens-data">${donnees.map(d => `<li><a href="${d.url}">${esc(d.t)}</a>&nbsp;: ${esc(d.d)}</li>`).join('')}</ul>
+</section>
+<section class="notice">
+  <h2>Vous accompagnez du public&nbsp;?</h2>
+  <p>Ces outils sont libres d'accès et pensés pour être partagés. Si vous êtes école, CFA, mission locale, ADIL, CLLAJ, service social ou association, vous pouvez lier ces pages depuis vos ressources sans nous demander l'autorisation. Une seule chose compte&nbsp;: qu'elles servent aux personnes que vous accompagnez.</p>
+</section>`;
+
+  pushIndex('Nos outils gratuits', '/outils/', `${outils.length} simulateurs gratuits pour se loger en Île-de-France.`, 'Outil');
+  addPage('/outils/', layout({
+    title: `Outils logement gratuits en Île-de-France | ${SITE.name}`,
+    metaDescription: `${outils.length} simulateurs gratuits : éligibilité au logement social, plafonds de ressources, encadrement des loyers à Paris. Sans inscription, sans collecte de données.`,
+    urlPath: '/outils/',
+    content,
+    breadcrumbs: [{ name: 'Outils', url: '/outils/' }],
+    jsonLd: [{
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: 'Nos outils pour se loger en Île-de-France',
+      url: `${SITE.baseUrl}/outils/`,
+      inLanguage: 'fr-FR',
+      about: { '@type': 'Thing', name: 'Logement en Île-de-France' },
+      hasPart: outils.map(o => ({
+        '@type': 'WebApplication',
+        name: o.titre,
+        url: SITE.baseUrl + o.url,
+        applicationCategory: 'UtilityApplication',
+        operatingSystem: 'Web',
+        isAccessibleForFree: true,
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+      })),
+    }],
+  }), '0.9');
+})();
+
 (function buildRecherche() {
   const content = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › Recherche</nav>
@@ -1919,6 +2117,16 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .page-head-icon svg{width:100%;height:100%}
 .page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 17px 17px 0;margin:-22px -26px -22px 8px;box-shadow:-14px 0 24px -18px rgba(31,78,121,.25)}
 .page-head h1{margin:.1rem 0 .5rem}.page-head .lead{margin:0}
+/* ---- Hub des outils ---- */
+.grid-outils{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin:1.6rem 0}
+.card-outil{align-items:flex-start}
+.card-outil h3{margin:0 0 .15rem}
+.outil-accroche{font-weight:650;color:var(--ttx,var(--bleu2));margin:0 0 .5rem;font-size:.95rem}
+.outil-quoi{margin:.7rem 0 0;padding-left:1.1rem;font-size:.9rem;color:#5a6b7c}
+.outil-quoi li{margin:.2rem 0}
+.liens-data{margin:.8rem 0 0;padding-left:1.2rem}
+.liens-data li{margin:.4rem 0}
+
 /* ---- Simulateur de plafonds ---- */
 .pl-aide{display:block;font-size:.82rem;color:#5a6b7c;margin-top:.3rem;line-height:1.4}
 .pl-cas{border:1px solid var(--bord);border-radius:12px;padding:12px 16px 14px;margin:1rem 0 0;background:var(--surface)}
