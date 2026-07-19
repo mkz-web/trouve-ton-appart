@@ -461,6 +461,15 @@ ${content}
   </div>
   <div class="container footer-legal">
     <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/">Mentions légales</a></p>
+    <!-- Crédit du concepteur. rel="nofollow" : la politique anti-spam de Google
+         range les liens de pied de page largement distribués (template d'agence
+         répété sur un parc de sites clients) dans le link spam, SAUF s'ils sont
+         qualifiés en nofollow ou sponsored. MKZ contrôlant le build, c'est bien
+         un lien que nous plaçons nous-mêmes : Google recommande alors nofollow
+         (Lizzi Sassman, SEO office hours janvier 2023). Ancre de marque, jamais
+         d'ancre commerciale. Pas de target="_blank" : rien ne l'exige, et le
+         même onglet évite la question de l'avertissement. -->
+    <p class="footer-credit">Site conçu et édité par <a href="https://mkz-consulting.fr" rel="nofollow">MKZ Consulting</a></p>
   </div>
 </footer>
 ${ANIM_JS}
@@ -2242,7 +2251,19 @@ main p a:not([class]):hover,main li a:not([class]):hover,main p a:not([class]):f
 .footer-brand{color:#fff;font-weight:700;font-size:1.05rem}
 .footer-title{font-size:.78rem;font-weight:650;text-transform:uppercase;letter-spacing:.08em;color:#9fb3c8;margin-bottom:.4rem}
 .site-footer ul{list-style:none;padding:0;margin:0}.site-footer li{margin:.38rem 0}.site-footer a{color:#9fc1e0;text-decoration:none}.site-footer a:hover{text-decoration:underline;color:#cfe3f4}
-.footer-legal{border-top:1px solid #33414e;margin-top:1.6rem;padding-top:1rem;color:#8a98a5}
+.footer-legal{border-top:1px solid #33414e;margin-top:1.6rem;padding-top:1rem;color:#8a98a5;display:flex;flex-wrap:wrap;gap:.3rem 1.4rem;justify-content:space-between}
+/* Ces liens-là sont EN LIGNE dans une phrase : la couleur ne peut pas être leur
+ * seul indice (WCAG 1.4.1, niveau A). Le bleu des liens ne contraste qu'à 1,5:1
+ * avec le gris du texte qui les entoure, loin des 3:1 qu'exigerait la voie sans
+ * soulignement. D'où le soulignement permanent, qui vaut aussi pour « Mentions
+ * légales » : même ligne, même défaut. Les liens des colonnes du dessus ne sont
+ * pas concernés, ce sont des listes de liens sans prose autour. */
+.footer-legal a{text-decoration:underline;text-underline-offset:2px}
+/* Les deux paragraphes partagent la ligne : sans remise à zéro des marges, le
+ * premier garde la sienne et le second non, ce qui les décale verticalement de
+ * quelques pixels. Défaut invisible pour un contrôle automatique (chaque bloc
+ * est à sa place), visible à l'œil. */
+.footer-legal p{margin:0}
 /* ---- Annuaires de données (Phase 2) ---- */
 [id]{scroll-margin-top:16px}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
