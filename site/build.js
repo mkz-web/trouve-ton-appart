@@ -2129,10 +2129,14 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 
 /* ---- Simulateur de plafonds ---- */
 .pl-aide{display:block;font-size:.82rem;color:#5a6b7c;margin-top:.3rem;line-height:1.4}
-.pl-cas{border:1px solid var(--bord);border-radius:12px;padding:12px 16px 14px;margin:1rem 0 0;background:var(--surface)}
+.pl-cas{border:1px solid var(--bord);border-radius:12px;padding:14px 16px 6px;margin:1rem 0 1.4rem;background:var(--surface)}
 .pl-cas legend{font-size:.82rem;font-weight:650;color:var(--bleu);padding:0 6px}
-.pl-cas label{display:flex;gap:.6em;align-items:flex-start;font-size:.92rem;padding:7px 0;cursor:pointer;min-height:44px;align-items:center}
-.pl-cas input{flex:none;width:18px;height:18px;accent-color:var(--bleu2)}
+/* align-items:flex-start (et non center) : sur un libellé qui passe à la ligne,
+ * la case doit rester sur la PREMIÈRE ligne de texte, pas flotter au milieu du
+ * bloc. La marge haute de la case la centre optiquement sur cette ligne. */
+.pl-cas label{display:flex;gap:.65em;align-items:flex-start;font-size:.92rem;line-height:1.45;padding:10px 0;cursor:pointer;min-height:44px}
+.pl-cas label+label{border-top:1px solid var(--bord)}
+.pl-cas input{flex:none;width:18px;height:18px;margin:calc((1.45em - 18px)/2) 0 0;accent-color:var(--bleu2)}
 .pl-verdict{font-size:1.06rem;margin:.2rem 0 .5rem}
 .pl-ok strong{color:#2e7050}
 .pl-ko strong{color:#b3261e}
