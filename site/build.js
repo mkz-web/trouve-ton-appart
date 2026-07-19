@@ -2129,8 +2129,12 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 
 /* ---- Simulateur de plafonds ---- */
 .pl-aide{display:block;font-size:.82rem;color:#5a6b7c;margin-top:.3rem;line-height:1.4}
-.pl-cas{border:1px solid var(--bord);border-radius:12px;padding:14px 16px 6px;margin:1rem 0 1.4rem;background:var(--surface)}
-.pl-cas legend{font-size:.82rem;font-weight:650;color:var(--bleu);padding:0 6px}
+.pl-cas{border:1px solid var(--bord);border-radius:12px;padding:0 16px 6px;margin:1rem 0 1.4rem;background:var(--surface)}
+/* Un <legend> natif se place À CHEVAL sur la bordure du fieldset : sur un fond
+ * de couleur, le texte chevauche le cadre. float+width le remet dans le flux,
+ * en gardant la sémantique de groupe (utile aux lecteurs d'écran). */
+.pl-cas legend{float:left;width:100%;font-size:.82rem;font-weight:650;color:var(--bleu);padding:14px 0 2px;margin:0}
+.pl-cas legend+label{clear:both}
 /* align-items:flex-start (et non center) : sur un libellé qui passe à la ligne,
  * la case doit rester sur la PREMIÈRE ligne de texte, pas flotter au milieu du
  * bloc. La marge haute de la case la centre optiquement sur cette ligne. */
@@ -2279,6 +2283,18 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .tool{background:var(--ciel);border:1px solid var(--bord);border-radius:16px;padding:10px 24px 18px;margin:0 0 2rem}
 .tool-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:1rem 0}
 .tool-form label{font-size:.82rem;font-weight:650;color:var(--bleu);display:block;margin-bottom:3px}
+/* Les libellés font 1, 2 ou 3 lignes selon les champs : sans cela les champs
+ * descendent en escalier. Repli universel : la cellule est étirée par la
+ * grille et le champ poussé en bas, ce qui aligne les champs d'une rangée. */
+.tool-form>div{display:flex;flex-direction:column}
+.tool-form>div>select,.tool-form>div>input{margin-top:auto}
+/* Mieux quand le navigateur le permet : chaque cellule partage les rangées de
+ * la grille parente (libellé, champ, aide), donc les trois s'alignent même
+ * quand un seul champ porte un texte d'aide sous lui. */
+@supports (grid-template-rows:subgrid){
+  .tool-form>div{display:grid;grid-template-rows:subgrid;grid-row:span 3;align-content:start}
+  .tool-form>div>select,.tool-form>div>input{margin-top:0;align-self:start}
+}
 .tool-form select,.tool-form input{width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--bord);border-radius:8px;font:inherit;background:#fff}
 .tool-result{background:#fff;border:1px solid var(--bord);border-left:5px solid var(--accent);border-radius:12px;padding:12px 18px;margin:.8rem 0}
 /* Skeleton du widget (affiché après 180 ms de latence réelle seulement) ;
