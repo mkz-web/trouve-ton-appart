@@ -1,7 +1,10 @@
 [
   {
     "slug": "visale",
-    "parcours": ["etudiant", "mobilite"],
+    "parcours": [
+      "etudiant",
+      "mobilite"
+    ],
     "title": "Garantie Visale : conditions et démarches en Île-de-France",
     "metaDescription": "La garantie Visale remplace gratuitement un garant pour louer. Qui y a droit, comment l'obtenir, quels plafonds à Paris et en Île-de-France.",
     "h1": "Garantie Visale : le garant gratuit pour louer en Île-de-France",
@@ -46,19 +49,39 @@
       }
     ],
     "faq": [
-      { "q": "Visale est-elle vraiment gratuite ?", "a": "Oui, totalement gratuite pour le locataire comme pour le bailleur. Le dispositif est financé par Action Logement (cotisations des entreprises)." },
-      { "q": "Quel est le plafond de loyer couvert par Visale à Paris ?", "a": "1 500 € charges comprises à Paris, 1 300 € dans le reste de l'Île-de-France et de la France." },
-      { "q": "Combien de temps faut-il pour obtenir son visa Visale ?", "a": "La demande se fait en ligne sur visale.fr et la réponse arrive en général sous 48 heures ouvrées. Le visa est ensuite valable 6 mois." },
-      { "q": "Visale fonctionne-t-elle avec un bail mobilité ?", "a": "Oui, le bail mobilité est éligible à Visale sans condition d'âge, ce qui en fait un duo très efficace pour les mobilités professionnelles." }
+      {
+        "q": "Visale est-elle vraiment gratuite ?",
+        "a": "Oui, totalement gratuite pour le locataire comme pour le bailleur. Le dispositif est financé par Action Logement (cotisations des entreprises)."
+      },
+      {
+        "q": "Quel est le plafond de loyer couvert par Visale à Paris ?",
+        "a": "1 500 € charges comprises à Paris, 1 300 € dans le reste de l'Île-de-France et de la France."
+      },
+      {
+        "q": "Combien de temps faut-il pour obtenir son visa Visale ?",
+        "a": "La demande se fait en ligne sur visale.fr et la réponse arrive en général sous 48 heures ouvrées. Le visa est ensuite valable 6 mois."
+      },
+      {
+        "q": "Visale fonctionne-t-elle avec un bail mobilité ?",
+        "a": "Oui, le bail mobilité est éligible à Visale sans condition d'âge, ce qui en fait un duo très efficace pour les mobilités professionnelles."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "visale.fr, le site officiel Action Logement", "url": "https://www.visale.fr" },
-      { "label": "La garantie Visale sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33453" }
+      {
+        "label": "visale.fr, le site officiel Action Logement",
+        "url": "https://www.visale.fr"
+      },
+      {
+        "label": "La garantie Visale sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33453"
+      }
     ]
   },
   {
     "slug": "demande-logement-social",
-    "parcours": ["logement-social"],
+    "parcours": [
+      "logement-social"
+    ],
     "title": "Demande de logement social en Île-de-France : le guide 2026",
     "metaDescription": "Demande de logement social à Paris et en Île-de-France : dossier unique en ligne, plafonds, délais réels, DALO et erreurs à éviter.",
     "h1": "Demande de logement social en Île-de-France : le guide complet",
@@ -103,21 +126,48 @@
       }
     ],
     "faq": [
-      { "q": "Combien de temps faut-il pour obtenir un logement social à Paris ?", "a": "Il n'y a pas de délai garanti : à Paris, l'attente moyenne dépasse souvent plusieurs années selon la typologie demandée. Activer les canaux parallèles (AL'in pour les salariés, Bienvéo, candidatures directes bailleurs) et signaler les critères de priorité raccourcit réellement le parcours." },
-      { "q": "Faut-il refaire sa demande chaque année ?", "a": "Oui, le renouvellement annuel est obligatoire. Sans renouvellement, la demande est radiée et l'ancienneté, critère majeur d'attribution, est perdue." },
-      { "q": "Puis-je faire une demande si je travaille ?", "a": "Oui. Les plafonds de ressources franciliens (PLUS, PLS) couvrent une large partie des salariés. Et au-dessus des plafonds HLM, le logement intermédiaire (LLI) prend le relais." },
-      { "q": "Qu'est-ce que le DALO ?", "a": "Le Droit Au Logement Opposable permet de saisir une commission de médiation lorsque votre demande dépasse le délai anormalement long sans proposition adaptée. Si elle vous reconnaît prioritaire, le préfet doit vous reloger." }
+      {
+        "q": "Combien de temps faut-il pour obtenir un logement social à Paris ?",
+        "a": "Il n'y a pas de délai garanti : à Paris, l'attente moyenne dépasse souvent plusieurs années selon la typologie demandée. Activer les canaux parallèles (AL'in pour les salariés, Bienvéo, candidatures directes bailleurs) et signaler les critères de priorité raccourcit réellement le parcours."
+      },
+      {
+        "q": "Faut-il refaire sa demande chaque année ?",
+        "a": "Oui, le renouvellement annuel est obligatoire. Sans renouvellement, la demande est radiée et l'ancienneté, critère majeur d'attribution, est perdue."
+      },
+      {
+        "q": "Puis-je faire une demande si je travaille ?",
+        "a": "Oui. Les plafonds de ressources franciliens (PLUS, PLS) couvrent une large partie des salariés. Et au-dessus des plafonds HLM, le logement intermédiaire (LLI) prend le relais."
+      },
+      {
+        "q": "Qu'est-ce que le DALO ?",
+        "a": "Le Droit Au Logement Opposable permet de saisir une commission de médiation lorsque votre demande dépasse le délai anormalement long sans proposition adaptée. Si elle vous reconnaît prioritaire, le préfet doit vous reloger."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "demande-logement-social.gouv.fr (demande et renouvellement)", "url": "https://www.demande-logement-social.gouv.fr" },
-      { "label": "AL'in, l'offre Action Logement pour les salariés", "url": "https://www.al-in.fr" },
-      { "label": "Bienvéo, les annonces des bailleurs sociaux", "url": "https://www.bienveo.fr" },
-      { "label": "Demander un logement social à la Ville de Paris", "url": "https://www.paris.fr/pages/demander-un-logement-social-37" }
+      {
+        "label": "demande-logement-social.gouv.fr (demande et renouvellement)",
+        "url": "https://www.demande-logement-social.gouv.fr"
+      },
+      {
+        "label": "AL'in, l'offre Action Logement pour les salariés",
+        "url": "https://www.al-in.fr"
+      },
+      {
+        "label": "Bienvéo, les annonces des bailleurs sociaux",
+        "url": "https://www.bienveo.fr"
+      },
+      {
+        "label": "Demander un logement social à la Ville de Paris",
+        "url": "https://www.paris.fr/pages/demander-un-logement-social-37"
+      }
     ]
   },
   {
     "slug": "bail-mobilite",
-    "parcours": ["mobilite", "etudiant"],
+    "parcours": [
+      "mobilite",
+      "etudiant"
+    ],
     "title": "Bail mobilité : durée, conditions, loyers (guide 2026)",
     "metaDescription": "Le bail mobilité : un meublé de 1 à 10 mois sans dépôt de garantie. Conditions, encadrement des loyers à Paris, compatibilité Visale.",
     "h1": "Bail mobilité : louer un meublé de 1 à 10 mois en Île-de-France",
@@ -154,19 +204,40 @@
       }
     ],
     "faq": [
-      { "q": "Le bail mobilité est-il renouvelable ?", "a": "Non. Il peut être modifié une fois par avenant dans la limite totale de 10 mois, mais jamais renouvelé. Si vous restez plus longtemps, le bailleur doit vous proposer un bail meublé classique." },
-      { "q": "Peut-on me demander un dépôt de garantie sur un bail mobilité ?", "a": "Non, c'est interdit par la loi. En revanche, une caution (garant physique ou Visale) peut être demandée." },
-      { "q": "L'encadrement des loyers s'applique-t-il au bail mobilité à Paris ?", "a": "Oui. À Paris et dans les communes appliquant l'encadrement, le loyer du bail mobilité doit respecter le loyer de référence majoré de la zone." },
-      { "q": "Quelles aides puis-je toucher avec un bail mobilité ?", "a": "Les aides au logement (APL/ALS) sont possibles si le logement est votre résidence principale et selon vos ressources, et la garantie Visale couvre ce bail sans condition d'âge." }
+      {
+        "q": "Le bail mobilité est-il renouvelable ?",
+        "a": "Non. Il peut être modifié une fois par avenant dans la limite totale de 10 mois, mais jamais renouvelé. Si vous restez plus longtemps, le bailleur doit vous proposer un bail meublé classique."
+      },
+      {
+        "q": "Peut-on me demander un dépôt de garantie sur un bail mobilité ?",
+        "a": "Non, c'est interdit par la loi. En revanche, une caution (garant physique ou Visale) peut être demandée."
+      },
+      {
+        "q": "L'encadrement des loyers s'applique-t-il au bail mobilité à Paris ?",
+        "a": "Oui. À Paris et dans les communes appliquant l'encadrement, le loyer du bail mobilité doit respecter le loyer de référence majoré de la zone."
+      },
+      {
+        "q": "Quelles aides puis-je toucher avec un bail mobilité ?",
+        "a": "Les aides au logement (APL/ALS) sont possibles si le logement est votre résidence principale et selon vos ressources, et la garantie Visale couvre ce bail sans condition d'âge."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "Le bail mobilité sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34759" },
-      { "label": "L'encadrement des loyers sur Paris.fr", "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712" }
+      {
+        "label": "Le bail mobilité sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34759"
+      },
+      {
+        "label": "L'encadrement des loyers sur Paris.fr",
+        "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712"
+      }
     ]
   },
   {
     "slug": "garant-location",
-    "parcours": ["etudiant", "mobilite"],
+    "parcours": [
+      "etudiant",
+      "mobilite"
+    ],
     "title": "Garant de location : solutions et alternatives (2026)",
     "metaDescription": "Pas de garant pour louer ? Visale gratuite, garants payants, caution bancaire : les solutions comparées pour faire accepter votre dossier.",
     "h1": "Garant de location : solutions et alternatives quand on n'en a pas",
@@ -207,20 +278,43 @@
       }
     ],
     "faq": [
-      { "q": "Quels revenus doit avoir un garant ?", "a": "Il n'y a pas de règle légale, mais les bailleurs attendent en pratique des revenus de 3 à 4 fois le montant du loyer charges comprises." },
-      { "q": "Un bailleur peut-il exiger un garant ET une assurance loyers impayés ?", "a": "Non, le cumul est interdit, sauf si le locataire est étudiant ou apprenti." },
-      { "q": "Combien coûte un garant payant ?", "a": "Comptez généralement 3 à 5 % du loyer annuel, soit pour un loyer de 1 000 €, environ 360 à 600 € par an." },
-      { "q": "Un garant qui vit à l'étranger est-il accepté ?", "a": "Légalement possible, mais beaucoup de bailleurs le refusent en pratique (recours difficile). Visale ou un garant payant sont alors les meilleures alternatives." }
+      {
+        "q": "Quels revenus doit avoir un garant ?",
+        "a": "Il n'y a pas de règle légale, mais les bailleurs attendent en pratique des revenus de 3 à 4 fois le montant du loyer charges comprises."
+      },
+      {
+        "q": "Un bailleur peut-il exiger un garant ET une assurance loyers impayés ?",
+        "a": "Non, le cumul est interdit, sauf si le locataire est étudiant ou apprenti."
+      },
+      {
+        "q": "Combien coûte un garant payant ?",
+        "a": "Comptez généralement 3 à 5 % du loyer annuel, soit pour un loyer de 1 000 €, environ 360 à 600 € par an."
+      },
+      {
+        "q": "Un garant qui vit à l'étranger est-il accepté ?",
+        "a": "Légalement possible, mais beaucoup de bailleurs le refusent en pratique (recours difficile). Visale ou un garant payant sont alors les meilleures alternatives."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "DossierFacile, le dossier de location certifié par l'État", "url": "https://www.dossierfacile.logement.gouv.fr" },
-      { "label": "visale.fr, la caution gratuite d'Action Logement", "url": "https://www.visale.fr" },
-      { "label": "L'acte de cautionnement sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31267" }
+      {
+        "label": "DossierFacile, le dossier de location certifié par l'État",
+        "url": "https://www.dossierfacile.logement.gouv.fr"
+      },
+      {
+        "label": "visale.fr, la caution gratuite d'Action Logement",
+        "url": "https://www.visale.fr"
+      },
+      {
+        "label": "L'acte de cautionnement sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31267"
+      }
     ]
   },
   {
     "slug": "aide-logement-etudiant",
-    "parcours": ["etudiant"],
+    "parcours": [
+      "etudiant"
+    ],
     "title": "Aides au logement étudiant : APL, Loca-Pass, Mobili-Jeune",
     "metaDescription": "APL, ALS, avance Loca-Pass, aide Mobili-Jeune, FSL : toutes les aides au logement étudiant en Île-de-France et comment les cumuler.",
     "h1": "Aides au logement étudiant : ce que vous pouvez vraiment toucher",
@@ -256,21 +350,48 @@
       }
     ],
     "faq": [
-      { "q": "Un étudiant rattaché au foyer fiscal de ses parents peut-il toucher l'APL ?", "a": "Oui. Mais si vos parents perçoivent des prestations familiales pour vous, celles-ci peuvent diminuer : faites la simulation globale sur caf.fr avant de demander." },
-      { "q": "L'APL est-elle rétroactive ?", "a": "Non. Elle est due à partir du mois suivant la demande : déposez votre dossier dès l'emménagement." },
-      { "q": "Peut-on cumuler APL et Mobili-Jeune ?", "a": "Oui, les deux aides sont cumulables. C'est la combinaison la plus avantageuse pour un alternant." },
-      { "q": "Comment obtenir un logement CROUS en Île-de-France ?", "a": "Constituez votre Dossier Social Étudiant (DSE) entre mars et mai sur messervices.etudiant.gouv.fr, puis candidatez sur les logements via trouverunlogement.lescrous.fr, y compris en phase complémentaire l'été." }
+      {
+        "q": "Un étudiant rattaché au foyer fiscal de ses parents peut-il toucher l'APL ?",
+        "a": "Oui. Mais si vos parents perçoivent des prestations familiales pour vous, celles-ci peuvent diminuer : faites la simulation globale sur caf.fr avant de demander."
+      },
+      {
+        "q": "L'APL est-elle rétroactive ?",
+        "a": "Non. Elle est due à partir du mois suivant la demande : déposez votre dossier dès l'emménagement."
+      },
+      {
+        "q": "Peut-on cumuler APL et Mobili-Jeune ?",
+        "a": "Oui, les deux aides sont cumulables. C'est la combinaison la plus avantageuse pour un alternant."
+      },
+      {
+        "q": "Comment obtenir un logement CROUS en Île-de-France ?",
+        "a": "Constituez votre Dossier Social Étudiant (DSE) entre mars et mai sur messervices.etudiant.gouv.fr, puis candidatez sur les logements via trouverunlogement.lescrous.fr, y compris en phase complémentaire l'été."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "Simuler et demander l'aide au logement sur caf.fr", "url": "https://www.caf.fr" },
-      { "label": "L'avance Loca-Pass d'Action Logement", "url": "https://www.actionlogement.fr/l-avance-loca-pass" },
-      { "label": "L'aide Mobili-Jeune d'Action Logement", "url": "https://www.actionlogement.fr/l-aide-mobili-jeune" },
-      { "label": "Mon Logement Étudiant, la plateforme publique", "url": "https://monlogementetudiant.beta.gouv.fr" }
+      {
+        "label": "Simuler et demander l'aide au logement sur caf.fr",
+        "url": "https://www.caf.fr"
+      },
+      {
+        "label": "L'avance Loca-Pass d'Action Logement",
+        "url": "https://www.actionlogement.fr/l-avance-loca-pass"
+      },
+      {
+        "label": "L'aide Mobili-Jeune d'Action Logement",
+        "url": "https://www.actionlogement.fr/l-aide-mobili-jeune"
+      },
+      {
+        "label": "Mon Logement Étudiant, la plateforme publique",
+        "url": "https://monlogementetudiant.beta.gouv.fr"
+      }
     ]
   },
   {
     "slug": "logement-intermediaire",
-    "parcours": ["logement-social", "mobilite"],
+    "parcours": [
+      "logement-social",
+      "mobilite"
+    ],
     "title": "Logement intermédiaire (LLI) : pour qui, où candidater ?",
     "metaDescription": "Le logement locatif intermédiaire : des loyers 10 à 15 % sous le marché. Plafonds, opérateurs franciliens (in'li, CDC Habitat), candidature.",
     "h1": "Logement intermédiaire : le chaînon manquant entre HLM et marché libre",
@@ -301,19 +422,40 @@
       }
     ],
     "faq": [
-      { "q": "Quelle différence entre logement social et logement intermédiaire ?", "a": "Le logement social (HLM) a des plafonds bas, une demande unique et des commissions d'attribution ; le LLI a des plafonds plus élevés, des loyers 10 à 15 % sous le marché, et une candidature directe auprès des opérateurs sur des annonces précises. Le parcours est beaucoup plus rapide." },
-      { "q": "Faut-il un numéro de demandeur de logement social pour le LLI ?", "a": "Non. La candidature se fait directement auprès des opérateurs (in'li, CDC Habitat…), annonce par annonce." },
-      { "q": "Les loyers intermédiaires sont-ils encadrés ?", "a": "Oui, ils sont plafonnés réglementairement par zone, en pratique 10 à 15 % sous les loyers de marché équivalents." }
+      {
+        "q": "Quelle différence entre logement social et logement intermédiaire ?",
+        "a": "Le logement social (HLM) a des plafonds bas, une demande unique et des commissions d'attribution ; le LLI a des plafonds plus élevés, des loyers 10 à 15 % sous le marché, et une candidature directe auprès des opérateurs sur des annonces précises. Le parcours est beaucoup plus rapide."
+      },
+      {
+        "q": "Faut-il un numéro de demandeur de logement social pour le LLI ?",
+        "a": "Non. La candidature se fait directement auprès des opérateurs (in'li, CDC Habitat…), annonce par annonce."
+      },
+      {
+        "q": "Les loyers intermédiaires sont-ils encadrés ?",
+        "a": "Oui, ils sont plafonnés réglementairement par zone, en pratique 10 à 15 % sous les loyers de marché équivalents."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "in'li, opérateur du logement intermédiaire en Île-de-France", "url": "https://www.inli.fr" },
-      { "label": "CDC Habitat, offres de logement intermédiaire", "url": "https://www.cdc-habitat.fr" },
-      { "label": "Le logement locatif intermédiaire sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F37292" }
+      {
+        "label": "in'li, opérateur du logement intermédiaire en Île-de-France",
+        "url": "https://www.inli.fr"
+      },
+      {
+        "label": "CDC Habitat, offres de logement intermédiaire",
+        "url": "https://www.cdc-habitat.fr"
+      },
+      {
+        "label": "Le logement locatif intermédiaire sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F37292"
+      }
     ]
   },
   {
     "slug": "dossierfacile",
-    "parcours": ["etudiant", "mobilite"],
+    "parcours": [
+      "etudiant",
+      "mobilite"
+    ],
     "title": "DossierFacile : le dossier de location certifié par l'État",
     "metaDescription": "DossierFacile certifie gratuitement votre dossier de location : pièces vérifiées, filigrane anti-fraude, lien partageable. Mode d'emploi complet.",
     "h1": "DossierFacile : le dossier de location certifié qui rassure les bailleurs",
@@ -357,21 +499,47 @@
       }
     ],
     "faq": [
-      { "q": "DossierFacile est-il vraiment gratuit ?", "a": "Oui, totalement. C'est un service public opéré par le ministère chargé du Logement, sans option payante ni publicité." },
-      { "q": "DossierFacile est-il obligatoire pour louer ?", "a": "Non. Mais un dossier certifié est lu plus vite et inspire confiance ; certaines agences le demandent explicitement." },
-      { "q": "Combien de temps prend la vérification ?", "a": "Le service annonce une vérification sous 72 heures ouvrées au maximum, souvent plus rapide en pratique. Prévoyez la création du dossier avant de commencer vos visites." },
-      { "q": "Peut-on inclure son garant dans le dossier ?", "a": "Oui, le dossier peut intégrer les pièces de votre garant physique ou votre visa Visale si vous passez par la garantie publique." },
-      { "q": "Mes documents sont-ils protégés ?", "a": "Les pièces sont hébergées par le service public et filigranées pour un usage exclusivement locatif, ce qui décourage toute réutilisation frauduleuse." }
+      {
+        "q": "DossierFacile est-il vraiment gratuit ?",
+        "a": "Oui, totalement. C'est un service public opéré par le ministère chargé du Logement, sans option payante ni publicité."
+      },
+      {
+        "q": "DossierFacile est-il obligatoire pour louer ?",
+        "a": "Non. Mais un dossier certifié est lu plus vite et inspire confiance ; certaines agences le demandent explicitement."
+      },
+      {
+        "q": "Combien de temps prend la vérification ?",
+        "a": "Le service annonce une vérification sous 72 heures ouvrées au maximum, souvent plus rapide en pratique. Prévoyez la création du dossier avant de commencer vos visites."
+      },
+      {
+        "q": "Peut-on inclure son garant dans le dossier ?",
+        "a": "Oui, le dossier peut intégrer les pièces de votre garant physique ou votre visa Visale si vous passez par la garantie publique."
+      },
+      {
+        "q": "Mes documents sont-ils protégés ?",
+        "a": "Les pièces sont hébergées par le service public et filigranées pour un usage exclusivement locatif, ce qui décourage toute réutilisation frauduleuse."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "DossierFacile, le site officiel", "url": "https://www.dossierfacile.logement.gouv.fr" },
-      { "label": "Les pièces qu'un bailleur peut exiger, sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1169" },
-      { "label": "visale.fr, la caution gratuite à joindre au dossier", "url": "https://www.visale.fr" }
+      {
+        "label": "DossierFacile, le site officiel",
+        "url": "https://www.dossierfacile.logement.gouv.fr"
+      },
+      {
+        "label": "Les pièces qu'un bailleur peut exiger, sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1169"
+      },
+      {
+        "label": "visale.fr, la caution gratuite à joindre au dossier",
+        "url": "https://www.visale.fr"
+      }
     ]
   },
   {
     "slug": "recours-dalo",
-    "parcours": ["logement-social"],
+    "parcours": [
+      "logement-social"
+    ],
     "title": "Recours DALO : obliger l'État à vous reloger (guide 2026)",
     "metaDescription": "Sans logement malgré vos démarches ? Le recours DALO oblige le préfet à vous reloger. Conditions, formulaire, délais : procédure gratuite, sans avocat.",
     "h1": "Recours DALO : le droit au logement opposable, mode d'emploi",
@@ -421,20 +589,43 @@
       }
     ],
     "faq": [
-      { "q": "Faut-il un avocat pour un recours DALO ?", "a": "Non. Le recours devant la commission de médiation est gratuit et se fait avec un simple formulaire. L'accompagnement par une ADIL ou une association agréée est gratuit également." },
-      { "q": "Combien de temps prend un recours DALO ?", "a": "La commission statue en principe sous 3 mois. En cas de décision favorable, le préfet a ensuite 3 mois, jusqu'à 6 mois selon les départements, pour proposer un logement." },
-      { "q": "Le DALO fonctionne-t-il vraiment en Île-de-France ?", "a": "C'est la région qui concentre le plus de recours et les délais les plus tendus, mais un dossier bien documenté sur un motif prioritaire reste l'outil juridique le plus puissant pour obtenir un relogement." },
-      { "q": "Quelle différence entre DALO et DAHO ?", "a": "Le DALO vise un logement autonome ; le DAHO vise un hébergement (structure, résidence sociale). Les deux passent par la même commission de médiation." }
+      {
+        "q": "Faut-il un avocat pour un recours DALO ?",
+        "a": "Non. Le recours devant la commission de médiation est gratuit et se fait avec un simple formulaire. L'accompagnement par une ADIL ou une association agréée est gratuit également."
+      },
+      {
+        "q": "Combien de temps prend un recours DALO ?",
+        "a": "La commission statue en principe sous 3 mois. En cas de décision favorable, le préfet a ensuite 3 mois, jusqu'à 6 mois selon les départements, pour proposer un logement."
+      },
+      {
+        "q": "Le DALO fonctionne-t-il vraiment en Île-de-France ?",
+        "a": "C'est la région qui concentre le plus de recours et les délais les plus tendus, mais un dossier bien documenté sur un motif prioritaire reste l'outil juridique le plus puissant pour obtenir un relogement."
+      },
+      {
+        "q": "Quelle différence entre DALO et DAHO ?",
+        "a": "Le DALO vise un logement autonome ; le DAHO vise un hébergement (structure, résidence sociale). Les deux passent par la même commission de médiation."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "Le recours DALO sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F18005" },
-      { "label": "Renouveler sa demande de logement social", "url": "https://www.demande-logement-social.gouv.fr" },
-      { "label": "Trouver son ADIL (conseil juridique logement gratuit)", "url": "https://www.anil.org" }
+      {
+        "label": "Le recours DALO sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F18005"
+      },
+      {
+        "label": "Renouveler sa demande de logement social",
+        "url": "https://www.demande-logement-social.gouv.fr"
+      },
+      {
+        "label": "Trouver son ADIL (conseil juridique logement gratuit)",
+        "url": "https://www.anil.org"
+      }
     ]
   },
   {
     "slug": "aide-mobili-jeune",
-    "parcours": ["etudiant"],
+    "parcours": [
+      "etudiant"
+    ],
     "title": "Aide Mobili-Jeune : jusqu'à 100 € de loyer pris en charge",
     "metaDescription": "L'aide Mobili-Jeune d'Action Logement prend en charge jusqu'à 100 € de loyer par mois pendant l'alternance. Conditions, demande en ligne, cumul APL.",
     "h1": "Aide Mobili-Jeune : le loyer allégé pour les alternants",
@@ -478,20 +669,43 @@
       }
     ],
     "faq": [
-      { "q": "Mobili-Jeune est-elle cumulable avec l'APL ?", "a": "Oui, c'est même son principe : elle prend en charge entre 10 et 100 € par mois sur la part de loyer qui reste après déduction de l'APL." },
-      { "q": "Un étudiant classique peut-il toucher Mobili-Jeune ?", "a": "Non, l'aide est réservée aux alternants (apprentissage ou professionnalisation) du secteur privé. Les autres aides étudiantes sont détaillées dans notre guide dédié." },
-      { "q": "Faut-il refaire la demande chaque année ?", "a": "Oui, le renouvellement se fait à chaque année de formation, dans les mêmes conditions." },
-      { "q": "Quel est le montant exact de l'aide ?", "a": "Jusqu'à 100 € par mois, versés pendant 11 mois, selon votre loyer et le montant de votre APL. Le simulateur d'Action Logement donne le chiffre exact en quelques minutes." }
+      {
+        "q": "Mobili-Jeune est-elle cumulable avec l'APL ?",
+        "a": "Oui, c'est même son principe : elle prend en charge entre 10 et 100 € par mois sur la part de loyer qui reste après déduction de l'APL."
+      },
+      {
+        "q": "Un étudiant classique peut-il toucher Mobili-Jeune ?",
+        "a": "Non, l'aide est réservée aux alternants (apprentissage ou professionnalisation) du secteur privé. Les autres aides étudiantes sont détaillées dans notre guide dédié."
+      },
+      {
+        "q": "Faut-il refaire la demande chaque année ?",
+        "a": "Oui, le renouvellement se fait à chaque année de formation, dans les mêmes conditions."
+      },
+      {
+        "q": "Quel est le montant exact de l'aide ?",
+        "a": "Jusqu'à 100 € par mois, versés pendant 11 mois, selon votre loyer et le montant de votre APL. Le simulateur d'Action Logement donne le chiffre exact en quelques minutes."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "L'aide Mobili-Jeune d'Action Logement", "url": "https://www.actionlogement.fr/l-aide-mobili-jeune" },
-      { "label": "Simuler et demander l'APL sur caf.fr", "url": "https://www.caf.fr" },
-      { "label": "Mon Logement Étudiant, la plateforme publique", "url": "https://monlogementetudiant.beta.gouv.fr" }
+      {
+        "label": "L'aide Mobili-Jeune d'Action Logement",
+        "url": "https://www.actionlogement.fr/l-aide-mobili-jeune"
+      },
+      {
+        "label": "Simuler et demander l'APL sur caf.fr",
+        "url": "https://www.caf.fr"
+      },
+      {
+        "label": "Mon Logement Étudiant, la plateforme publique",
+        "url": "https://monlogementetudiant.beta.gouv.fr"
+      }
     ]
   },
   {
     "slug": "avance-loca-pass",
-    "parcours": ["etudiant"],
+    "parcours": [
+      "etudiant"
+    ],
     "title": "Avance Loca-Pass : le dépôt de garantie financé à 0 %",
     "metaDescription": "L'avance Loca-Pass d'Action Logement prête jusqu'à 1 200 € à taux zéro pour payer votre dépôt de garantie. Conditions, démarches, remboursement.",
     "h1": "Avance Loca-Pass : payez votre dépôt de garantie sans avancer l'argent",
@@ -536,19 +750,39 @@
       }
     ],
     "faq": [
-      { "q": "L'avance Loca-Pass est-elle vraiment gratuite ?", "a": "C'est un prêt à 0 % sans frais de dossier : vous remboursez exactement le montant emprunté, jusqu'à 1 200 €, en mensualités d'au moins 20 € sur 25 mois maximum." },
-      { "q": "Peut-on cumuler Loca-Pass et Visale ?", "a": "Oui, et c'est même recommandé : Loca-Pass finance le dépôt de garantie, Visale sécurise le bailleur contre les impayés. Les deux sont gratuits." },
-      { "q": "Un étudiant non boursier peut-il avoir Loca-Pass ?", "a": "Oui s'il justifie d'un CDD d'au moins 3 mois ou d'une convention de stage d'au moins 3 mois en cours. Sinon, le FSL départemental peut prendre le relais." },
-      { "q": "Loca-Pass fonctionne-t-il avec un bail mobilité ?", "a": "Le bail mobilité interdit le dépôt de garantie, donc l'avance n'a pas d'objet dans ce cas. C'est un avantage du bail mobilité, pas une limite de Loca-Pass." }
+      {
+        "q": "L'avance Loca-Pass est-elle vraiment gratuite ?",
+        "a": "C'est un prêt à 0 % sans frais de dossier : vous remboursez exactement le montant emprunté, jusqu'à 1 200 €, en mensualités d'au moins 20 € sur 25 mois maximum."
+      },
+      {
+        "q": "Peut-on cumuler Loca-Pass et Visale ?",
+        "a": "Oui, et c'est même recommandé : Loca-Pass finance le dépôt de garantie, Visale sécurise le bailleur contre les impayés. Les deux sont gratuits."
+      },
+      {
+        "q": "Un étudiant non boursier peut-il avoir Loca-Pass ?",
+        "a": "Oui s'il justifie d'un CDD d'au moins 3 mois ou d'une convention de stage d'au moins 3 mois en cours. Sinon, le FSL départemental peut prendre le relais."
+      },
+      {
+        "q": "Loca-Pass fonctionne-t-il avec un bail mobilité ?",
+        "a": "Le bail mobilité interdit le dépôt de garantie, donc l'avance n'a pas d'objet dans ce cas. C'est un avantage du bail mobilité, pas une limite de Loca-Pass."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "L'avance Loca-Pass d'Action Logement", "url": "https://www.actionlogement.fr/l-avance-loca-pass" },
-      { "label": "L'avance Loca-Pass sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F18490" }
+      {
+        "label": "L'avance Loca-Pass d'Action Logement",
+        "url": "https://www.actionlogement.fr/l-avance-loca-pass"
+      },
+      {
+        "label": "L'avance Loca-Pass sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F18490"
+      }
     ]
   },
   {
     "slug": "fonds-solidarite-logement",
-    "parcours": ["logement-social"],
+    "parcours": [
+      "logement-social"
+    ],
     "title": "Fonds de solidarité logement (FSL) : qui y a droit en 2026 ?",
     "metaDescription": "Caution, premier loyer, dettes de loyer, factures d'énergie : le FSL peut les payer, en subvention ou en prêt à 0 %. Conditions et démarches en Île-de-France.",
     "h1": "FSL : le fonds de solidarité logement, dernier filet avant la rupture",
@@ -593,20 +827,43 @@
       }
     ],
     "faq": [
-      { "q": "Le FSL est-il un prêt ou une subvention ?", "a": "Les deux existent : selon votre situation et le règlement de votre département, l'aide est versée en subvention (rien à rembourser), en prêt sans intérêt, ou en combinaison des deux." },
-      { "q": "Qui décide de l'attribution du FSL ?", "a": "La commission FSL de votre département, sur la base de son règlement intérieur : plafonds de ressources, nature de la difficulté, cohérence loyer/ressources." },
-      { "q": "Le FSL peut-il payer des dettes de loyer ?", "a": "Oui, le volet « maintien » du FSL traite les dettes de loyers et de charges, et selon les départements les factures d'énergie et d'eau. Plus la demande est précoce, mieux c'est." },
-      { "q": "Peut-on cumuler FSL et Loca-Pass pour le dépôt de garantie ?", "a": "Non, pas pour financer le même dépôt. Choisissez Loca-Pass si vous êtes éligible (plus rapide), le FSL sinon." }
+      {
+        "q": "Le FSL est-il un prêt ou une subvention ?",
+        "a": "Les deux existent : selon votre situation et le règlement de votre département, l'aide est versée en subvention (rien à rembourser), en prêt sans intérêt, ou en combinaison des deux."
+      },
+      {
+        "q": "Qui décide de l'attribution du FSL ?",
+        "a": "La commission FSL de votre département, sur la base de son règlement intérieur : plafonds de ressources, nature de la difficulté, cohérence loyer/ressources."
+      },
+      {
+        "q": "Le FSL peut-il payer des dettes de loyer ?",
+        "a": "Oui, le volet « maintien » du FSL traite les dettes de loyers et de charges, et selon les départements les factures d'énergie et d'eau. Plus la demande est précoce, mieux c'est."
+      },
+      {
+        "q": "Peut-on cumuler FSL et Loca-Pass pour le dépôt de garantie ?",
+        "a": "Non, pas pour financer le même dépôt. Choisissez Loca-Pass si vous êtes éligible (plus rapide), le FSL sinon."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "Le FSL sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1334" },
-      { "label": "Trouver son ADIL (conseil gratuit, dettes et expulsion)", "url": "https://www.anil.org" },
-      { "label": "Demander un logement social (à maintenir en parallèle)", "url": "https://www.demande-logement-social.gouv.fr" }
+      {
+        "label": "Le FSL sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1334"
+      },
+      {
+        "label": "Trouver son ADIL (conseil gratuit, dettes et expulsion)",
+        "url": "https://www.anil.org"
+      },
+      {
+        "label": "Demander un logement social (à maintenir en parallèle)",
+        "url": "https://www.demande-logement-social.gouv.fr"
+      }
     ]
   },
   {
     "slug": "foyer-jeune-travailleur",
-    "parcours": ["etudiant"],
+    "parcours": [
+      "etudiant"
+    ],
     "title": "Foyer de jeunes travailleurs : logement meublé à petit prix",
     "metaDescription": "Les foyers de jeunes travailleurs logent les 16-25 ans (jusqu'à 30) en meublé tout compris, APL possible. Conditions, prix et candidature en Île-de-France.",
     "h1": "Foyer de jeunes travailleurs (FJT) : le meublé tout compris pour démarrer",
@@ -649,20 +906,43 @@
       }
     ],
     "faq": [
-      { "q": "Quel est le prix d'un foyer de jeunes travailleurs ?", "a": "La redevance varie selon la résidence et le logement (chambre ou studio), charges comprises. L'APL s'y applique, ce qui réduit nettement le coût réel par rapport au marché francilien." },
-      { "q": "Faut-il un garant pour entrer en FJT ?", "a": "Dans la plupart des résidences, non : le contrat est une convention d'occupation, plus souple qu'un bail. C'est l'un des grands avantages du dispositif." },
-      { "q": "Un étudiant peut-il vivre en FJT ?", "a": "C'est possible dans certaines résidences, mais le public prioritaire reste les jeunes actifs, alternants et stagiaires. Les étudiants ont aussi le canal CROUS." },
-      { "q": "Combien de temps peut-on rester en FJT ?", "a": "L'accueil est transitoire : de quelques mois à deux ans environ, avec un accompagnement pour préparer le logement suivant." }
+      {
+        "q": "Quel est le prix d'un foyer de jeunes travailleurs ?",
+        "a": "La redevance varie selon la résidence et le logement (chambre ou studio), charges comprises. L'APL s'y applique, ce qui réduit nettement le coût réel par rapport au marché francilien."
+      },
+      {
+        "q": "Faut-il un garant pour entrer en FJT ?",
+        "a": "Dans la plupart des résidences, non : le contrat est une convention d'occupation, plus souple qu'un bail. C'est l'un des grands avantages du dispositif."
+      },
+      {
+        "q": "Un étudiant peut-il vivre en FJT ?",
+        "a": "C'est possible dans certaines résidences, mais le public prioritaire reste les jeunes actifs, alternants et stagiaires. Les étudiants ont aussi le canal CROUS."
+      },
+      {
+        "q": "Combien de temps peut-on rester en FJT ?",
+        "a": "L'accueil est transitoire : de quelques mois à deux ans environ, avec un accompagnement pour préparer le logement suivant."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "ALJT, principal opérateur francilien", "url": "https://www.aljt.com" },
-      { "label": "Le réseau Habitat Jeunes (UNHAJ)", "url": "https://www.habitatjeunes.org" },
-      { "label": "Les FJT sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2018" }
+      {
+        "label": "ALJT, principal opérateur francilien",
+        "url": "https://www.aljt.com"
+      },
+      {
+        "label": "Le réseau Habitat Jeunes (UNHAJ)",
+        "url": "https://www.habitatjeunes.org"
+      },
+      {
+        "label": "Les FJT sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2018"
+      }
     ]
   },
   {
     "slug": "encadrement-des-loyers-paris",
-    "parcours": ["mobilite"],
+    "parcours": [
+      "mobilite"
+    ],
     "title": "Encadrement des loyers à Paris : vérifier et faire respecter",
     "metaDescription": "Loyer de référence, complément de loyer, recours en cas de dépassement : comment vérifier que votre loyer parisien respecte l'encadrement.",
     "h1": "Encadrement des loyers à Paris : vérifiez avant de signer",
@@ -705,20 +985,43 @@
       }
     ],
     "faq": [
-      { "q": "L'encadrement s'applique-t-il aux meublés et au bail mobilité ?", "a": "Oui. Les meublés ont des loyers de référence spécifiques, un peu plus élevés, et le bail mobilité est soumis aux mêmes plafonds que le meublé classique." },
-      { "q": "Que faire si mon loyer dépasse la référence majorée ?", "a": "Tentez d'abord l'amiable par courrier recommandé, puis saisissez la commission départementale de conciliation (gratuite). En parallèle, le dépassement peut être signalé à la Ville de Paris, qui peut infliger une amende au bailleur." },
-      { "q": "Un complément de loyer est-il légal ?", "a": "Oui, mais seulement s'il est inscrit au bail et justifié par des caractéristiques réellement exceptionnelles par rapport aux logements comparables du quartier. Il peut être contesté en début de bail devant la commission de conciliation." },
-      { "q": "L'encadrement existe-t-il en dehors de Paris ?", "a": "Oui, notamment sur les territoires d'Est Ensemble et de Plaine Commune en Seine-Saint-Denis. Chaque territoire a ses propres références : vérifiez le simulateur local." }
+      {
+        "q": "L'encadrement s'applique-t-il aux meublés et au bail mobilité ?",
+        "a": "Oui. Les meublés ont des loyers de référence spécifiques, un peu plus élevés, et le bail mobilité est soumis aux mêmes plafonds que le meublé classique."
+      },
+      {
+        "q": "Que faire si mon loyer dépasse la référence majorée ?",
+        "a": "Tentez d'abord l'amiable par courrier recommandé, puis saisissez la commission départementale de conciliation (gratuite). En parallèle, le dépassement peut être signalé à la Ville de Paris, qui peut infliger une amende au bailleur."
+      },
+      {
+        "q": "Un complément de loyer est-il légal ?",
+        "a": "Oui, mais seulement s'il est inscrit au bail et justifié par des caractéristiques réellement exceptionnelles par rapport aux logements comparables du quartier. Il peut être contesté en début de bail devant la commission de conciliation."
+      },
+      {
+        "q": "L'encadrement existe-t-il en dehors de Paris ?",
+        "a": "Oui, notamment sur les territoires d'Est Ensemble et de Plaine Commune en Seine-Saint-Denis. Chaque territoire a ses propres références : vérifiez le simulateur local."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "L'encadrement des loyers sur Paris.fr", "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712" },
-      { "label": "Paris : le montant du loyer encadré, sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34407" },
-      { "label": "L'ADIL de Paris, conseil juridique gratuit", "url": "https://www.adil75.org" }
+      {
+        "label": "L'encadrement des loyers sur Paris.fr",
+        "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712"
+      },
+      {
+        "label": "Paris : le montant du loyer encadré, sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34407"
+      },
+      {
+        "label": "L'ADIL de Paris, conseil juridique gratuit",
+        "url": "https://www.adil75.org"
+      }
     ]
   },
   {
     "slug": "siao-115-hebergement-urgence",
-    "parcours": ["logement-social"],
+    "parcours": [
+      "logement-social"
+    ],
     "title": "SIAO et 115 : obtenir un hébergement d'urgence (guide 2026)",
     "metaDescription": "Le 115 oriente, le SIAO attribue les places. Qui est prioritaire, que faire si ça ne répond pas, comment passer de l'urgence au logement : le guide complet.",
     "h1": "SIAO et 115 : l'hébergement d'urgence, mode d'emploi réaliste",
@@ -758,12 +1061,27 @@
         ],
         "table": {
           "caption": "Ordre de priorité des mises à l'abri par le 115 en Île-de-France (cadre unifié des SIAO franciliens, en vigueur depuis le 1er janvier 2024, détaillé par le SIAO 95 en juillet 2024)",
-          "headers": ["Niveau", "Publics concernés"],
+          "headers": [
+            "Niveau",
+            "Publics concernés"
+          ],
           "rows": [
-            ["P1", "Familles avec enfant(s) de moins de 3 mois, femmes enceintes de plus de 6 mois, personnes victimes de violences en danger immédiat"],
-            ["P2", "Familles avec enfant(s) de moins de 3 ans, jeunes de 18 à 25 ans à la rue, victimes de violences, problématiques de santé importantes"],
-            ["P3", "Personnes de plus de 65 ans, personnes sans enfant cumulant des vulnérabilités fortes, familles en détresse avec enfant(s) de plus de 3 ans"],
-            ["P4", "Familles avec adolescents (13 à 18 ans), personnes isolées, couples et groupes sans enfant"]
+            [
+              "P1",
+              "Familles avec enfant(s) de moins de 3 mois, femmes enceintes de plus de 6 mois, personnes victimes de violences en danger immédiat"
+            ],
+            [
+              "P2",
+              "Familles avec enfant(s) de moins de 3 ans, jeunes de 18 à 25 ans à la rue, victimes de violences, problématiques de santé importantes"
+            ],
+            [
+              "P3",
+              "Personnes de plus de 65 ans, personnes sans enfant cumulant des vulnérabilités fortes, familles en détresse avec enfant(s) de plus de 3 ans"
+            ],
+            [
+              "P4",
+              "Familles avec adolescents (13 à 18 ans), personnes isolées, couples et groupes sans enfant"
+            ]
           ]
         }
       },
@@ -822,16 +1140,61 @@
         ],
         "table": {
           "caption": "Les huit SIAO d'Île-de-France : opérateurs et sites officiels (vérifiés en juillet 2026)",
-          "headers": ["Département", "Opérateur du SIAO", "Site officiel", "Contact usager"],
+          "headers": [
+            "Département",
+            "Opérateur du SIAO",
+            "Site officiel",
+            "Contact usager"
+          ],
           "rows": [
-            ["Paris (75)", "Samusocial de Paris", "[siao.paris](https://www.siao.paris/) · [115.paris](https://115.paris/)", "115"],
-            ["Seine-et-Marne (77)", "Equalis", "[siao77.fr](https://siao77.fr/)", "115"],
-            ["Yvelines (78)", "Croix-Rouge française", "[siao78.fr](https://siao78.fr/)", "115"],
-            ["Essonne (91)", "Croix-Rouge française", "[siao91.fr](https://siao91.fr/)", "115"],
-            ["Hauts-de-Seine (92)", "GCSMS SIAO 92", "[siao92.fr](https://siao92.fr/)", "115"],
-            ["Seine-Saint-Denis (93)", "Interlogement93", "[interlogement93.net](https://www.interlogement93.net/)", "115"],
-            ["Val-de-Marne (94)", "Croix-Rouge française", "[siao94.fr](https://www.siao94.fr/)", "115"],
-            ["Val-d'Oise (95)", "Espérer 95", "[siao.esperer-95.org](https://siao.esperer-95.org/)", "115"]
+            [
+              "Paris (75)",
+              "Samusocial de Paris",
+              "[siao.paris](https://www.siao.paris/) · [115.paris](https://115.paris/)",
+              "115"
+            ],
+            [
+              "Seine-et-Marne (77)",
+              "Equalis",
+              "[siao77.fr](https://siao77.fr/)",
+              "115"
+            ],
+            [
+              "Yvelines (78)",
+              "Croix-Rouge française",
+              "[siao78.fr](https://siao78.fr/)",
+              "115"
+            ],
+            [
+              "Essonne (91)",
+              "Croix-Rouge française",
+              "[siao91.fr](https://siao91.fr/)",
+              "115"
+            ],
+            [
+              "Hauts-de-Seine (92)",
+              "GCSMS SIAO 92",
+              "[siao92.fr](https://siao92.fr/)",
+              "115"
+            ],
+            [
+              "Seine-Saint-Denis (93)",
+              "Interlogement93",
+              "[interlogement93.net](https://www.interlogement93.net/)",
+              "115"
+            ],
+            [
+              "Val-de-Marne (94)",
+              "Croix-Rouge française",
+              "[siao94.fr](https://www.siao94.fr/)",
+              "115"
+            ],
+            [
+              "Val-d'Oise (95)",
+              "Espérer 95",
+              "[siao.esperer-95.org](https://siao.esperer-95.org/)",
+              "115"
+            ]
           ]
         }
       },
@@ -845,20 +1208,56 @@
       }
     ],
     "faq": [
-      { "q": "Est-ce que le 115 peut me trouver un logement ?", "a": "Non : le 115 propose des mises à l'abri de courte durée (centre d'hébergement d'urgence, nuitée d'hôtel). L'accès à un hébergement stable ou à un logement passe par le dossier SIAO insertion, monté avec un travailleur social, et par la demande de logement social menée en parallèle." },
-      { "q": "Qui est prioritaire au 115 ?", "a": "En Île-de-France, le cadre unifié des SIAO place en priorité 1 les familles avec un enfant de moins de 3 mois, les femmes enceintes de plus de 6 mois et les personnes victimes de violences en danger immédiat. Viennent ensuite les familles avec enfants de moins de 3 ans, les jeunes de 18 à 25 ans à la rue et les situations de santé préoccupantes." },
-      { "q": "Quelle est la différence entre le Samu social et le 115 ?", "a": "Le 115 est le numéro national d'urgence sociale. Le Samu social est un opérateur de terrain (maraudes, plateforme d'écoute) qui, dans certains départements comme Paris, gère la plateforme 115. Composer le 115 vous met en relation avec le dispositif de votre département." },
-      { "q": "Combien de temps peut-on rester dans un hébergement d'urgence ?", "a": "Il n'y a pas de durée unique : elle varie selon la structure. La loi pose en revanche un principe de continuité : vous pouvez y demeurer, si vous le souhaitez, jusqu'à ce qu'une orientation adaptée vous soit proposée (article L345-2-3 du Code de l'action sociale et des familles)." },
-      { "q": "Comment faire une demande de logement auprès du SIAO ?", "a": "Jamais en direct : la demande est créée dans la plateforme SI-SIAO par un travailleur social (CCAS, service social de secteur, accueil de jour, association agréée). Prenez rendez-vous, apportez tout ce qui documente votre situation, et faites mettre le dossier à jour à chaque changement." },
-      { "q": "Qui a droit à un hébergement via le SIAO ?", "a": "L'accueil d'urgence est inconditionnel : toute personne sans abri en situation de détresse y a accès, sans condition de nationalité ou de statut administratif. Pour les orientations vers le logement adapté (résidence sociale, pension de famille), l'admission dépend ensuite des conditions propres à chaque structure." }
+      {
+        "q": "Est-ce que le 115 peut me trouver un logement ?",
+        "a": "Non : le 115 propose des mises à l'abri de courte durée (centre d'hébergement d'urgence, nuitée d'hôtel). L'accès à un hébergement stable ou à un logement passe par le dossier SIAO insertion, monté avec un travailleur social, et par la demande de logement social menée en parallèle."
+      },
+      {
+        "q": "Qui est prioritaire au 115 ?",
+        "a": "En Île-de-France, le cadre unifié des SIAO place en priorité 1 les familles avec un enfant de moins de 3 mois, les femmes enceintes de plus de 6 mois et les personnes victimes de violences en danger immédiat. Viennent ensuite les familles avec enfants de moins de 3 ans, les jeunes de 18 à 25 ans à la rue et les situations de santé préoccupantes."
+      },
+      {
+        "q": "Quelle est la différence entre le Samu social et le 115 ?",
+        "a": "Le 115 est le numéro national d'urgence sociale. Le Samu social est un opérateur de terrain (maraudes, plateforme d'écoute) qui, dans certains départements comme Paris, gère la plateforme 115. Composer le 115 vous met en relation avec le dispositif de votre département."
+      },
+      {
+        "q": "Combien de temps peut-on rester dans un hébergement d'urgence ?",
+        "a": "Il n'y a pas de durée unique : elle varie selon la structure. La loi pose en revanche un principe de continuité : vous pouvez y demeurer, si vous le souhaitez, jusqu'à ce qu'une orientation adaptée vous soit proposée (article L345-2-3 du Code de l'action sociale et des familles)."
+      },
+      {
+        "q": "Comment faire une demande de logement auprès du SIAO ?",
+        "a": "Jamais en direct : la demande est créée dans la plateforme SI-SIAO par un travailleur social (CCAS, service social de secteur, accueil de jour, association agréée). Prenez rendez-vous, apportez tout ce qui documente votre situation, et faites mettre le dossier à jour à chaque changement."
+      },
+      {
+        "q": "Qui a droit à un hébergement via le SIAO ?",
+        "a": "L'accueil d'urgence est inconditionnel : toute personne sans abri en situation de détresse y a accès, sans condition de nationalité ou de statut administratif. Pour les orientations vers le logement adapté (résidence sociale, pension de famille), l'admission dépend ensuite des conditions propres à chaque structure."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "Hébergement d'une personne en situation de précarité (Service-public.fr)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2003" },
-      { "label": "Le recours DAHO sur Service-public.fr", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F20343" },
-      { "label": "Article L345-2-2 du CASF : l'accueil inconditionnel", "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000037670338" },
-      { "label": "Article L345-2-3 du CASF : le principe de continuité", "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000020459026" },
-      { "label": "Numéros d'urgence et d'écoute (Service-public.fr)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33954" },
-      { "label": "DRIHL Île-de-France : le cadre unifié d'intervention des SIAO", "url": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/cadre-unifie-d-intervention-des-siao-a1305.html" }
+      {
+        "label": "Hébergement d'une personne en situation de précarité (Service-public.fr)",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2003"
+      },
+      {
+        "label": "Le recours DAHO sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F20343"
+      },
+      {
+        "label": "Article L345-2-2 du CASF : l'accueil inconditionnel",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000037670338"
+      },
+      {
+        "label": "Article L345-2-3 du CASF : le principe de continuité",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000020459026"
+      },
+      {
+        "label": "Numéros d'urgence et d'écoute (Service-public.fr)",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33954"
+      },
+      {
+        "label": "DRIHL Île-de-France : le cadre unifié d'intervention des SIAO",
+        "url": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/cadre-unifie-d-intervention-des-siao-a1305.html"
+      }
     ]
   },
   {
@@ -1385,7 +1784,9 @@
   },
   {
     "slug": "plafond-ressources-logement-social",
-    "parcours": ["logement-social"],
+    "parcours": [
+      "logement-social"
+    ],
     "title": "Plafond de ressources logement social 2026 : le calcul",
     "metaDescription": "Vérifiez en 30 secondes si vos revenus passent sous le plafond PLAI, PLUS ou PLS. Barèmes 2026 pour Paris et l'Île-de-France, simulateur gratuit.",
     "h1": "Avez-vous droit à un logement social en 2026 ?",
@@ -1449,22 +1850,262 @@
       }
     ],
     "faq": [
-      { "q": "Quel est le plafond à ne pas dépasser pour avoir droit à un logement social ?", "a": "Il n'y a pas un plafond unique : il dépend de la taille de votre foyer, de votre commune et de la catégorie de logement. Pour une personne seule en Île-de-France en 2026, le plafond est de 14 811 € de revenu fiscal de référence en PLAI, 26 920 € en PLUS et 34 996 € en PLS. Le simulateur en haut de page fait le calcul pour votre situation exacte." },
-      { "q": "Quel salaire ne pas dépasser pour avoir un logement social ?", "a": "Le barème ne raisonne pas en salaire mais en revenu fiscal de référence, une ligne de votre avis d'impôt, et il retient celui de l'avant-dernière année. Un même salaire ne donne donc pas le même revenu fiscal de référence selon votre situation familiale et vos déductions : mieux vaut lire directement la ligne de votre avis." },
-      { "q": "Quels revenus sont pris en compte, et de quelle année ?", "a": "La somme des revenus fiscaux de référence de toutes les personnes qui occuperont le logement, au titre de l'avant-dernière année. Pour une demande instruite en 2026, il s'agit des revenus de 2024, figurant sur l'avis d'impôt reçu en 2025." },
-      { "q": "Quelle différence entre PLAI, PLUS, PLS et LLI ?", "a": "Ce sont quatre étages, du plus social au moins social. PLAI : les logements très sociaux, aux loyers les plus bas. PLUS : le HLM classique, l'essentiel du parc. PLS : le haut du parc social, loyers plus élevés. LLI : le logement intermédiaire, qui n'est pas du logement social, avec des plafonds plus hauts et une candidature directe auprès des opérateurs." },
-      { "q": "Les plafonds sont-ils les mêmes à Paris et en Île-de-France ?", "a": "Non. Le barème distingue « Paris et communes limitrophes » du reste de la région, mais seulement à partir de trois personnes : pour une ou deux personnes, les montants sont identiques. Pour un foyer de quatre personnes en PLS, l'écart atteint 6 549 € de revenu fiscal de référence." },
-      { "q": "Que se passe-t-il si mes revenus dépassent le plafond après l'attribution ?", "a": "Vous ne perdez pas votre logement, mais un supplément de loyer de solidarité, le surloyer, peut s'appliquer au-delà d'un certain dépassement, et il augmente avec celui-ci. Les règles dépendent du territoire et de votre résidence : votre bailleur les applique après l'enquête annuelle de ressources." },
-      { "q": "Qui compte dans le foyer, et comment sont comptées les personnes à charge ?", "a": "Toutes les personnes appelées à occuper le logement comptent, et leurs revenus fiscaux de référence s'additionnent. Les catégories officielles prévoient des cas particuliers : jeune ménage, personne seule avec enfants, présence d'une personne en situation de handicap. Les libellés exacts figurent dans les tableaux ci-dessus." },
-      { "q": "Que faire si je dépasse le plafond HLM ?", "a": "Regardez le logement locatif intermédiaire : ses plafonds sont nettement plus élevés, ses loyers restent 10 à 15 % sous le marché, et l'on y candidate directement auprès des opérateurs, sans numéro unique. Le simulateur teste automatiquement votre éligibilité au LLI si vous dépassez le PLS." },
-      { "q": "Les plafonds changent-ils chaque année ?", "a": "Oui, ils sont revalorisés par arrêté au 1er janvier, en fonction de l'indice de référence des loyers. Pour 2026, la revalorisation est de 0,87 %. Vérifiez toujours l'année du barème que vous consultez : des tableaux périmés circulent encore largement." }
+      {
+        "q": "Quel est le plafond à ne pas dépasser pour avoir droit à un logement social ?",
+        "a": "Il n'y a pas un plafond unique : il dépend de la taille de votre foyer, de votre commune et de la catégorie de logement. Pour une personne seule en Île-de-France en 2026, le plafond est de 14 811 € de revenu fiscal de référence en PLAI, 26 920 € en PLUS et 34 996 € en PLS. Le simulateur en haut de page fait le calcul pour votre situation exacte."
+      },
+      {
+        "q": "Quel salaire ne pas dépasser pour avoir un logement social ?",
+        "a": "Le barème ne raisonne pas en salaire mais en revenu fiscal de référence, une ligne de votre avis d'impôt, et il retient celui de l'avant-dernière année. Un même salaire ne donne donc pas le même revenu fiscal de référence selon votre situation familiale et vos déductions : mieux vaut lire directement la ligne de votre avis."
+      },
+      {
+        "q": "Quels revenus sont pris en compte, et de quelle année ?",
+        "a": "La somme des revenus fiscaux de référence de toutes les personnes qui occuperont le logement, au titre de l'avant-dernière année. Pour une demande instruite en 2026, il s'agit des revenus de 2024, figurant sur l'avis d'impôt reçu en 2025."
+      },
+      {
+        "q": "Quelle différence entre PLAI, PLUS, PLS et LLI ?",
+        "a": "Ce sont quatre étages, du plus social au moins social. PLAI : les logements très sociaux, aux loyers les plus bas. PLUS : le HLM classique, l'essentiel du parc. PLS : le haut du parc social, loyers plus élevés. LLI : le logement intermédiaire, qui n'est pas du logement social, avec des plafonds plus hauts et une candidature directe auprès des opérateurs."
+      },
+      {
+        "q": "Les plafonds sont-ils les mêmes à Paris et en Île-de-France ?",
+        "a": "Non. Le barème distingue « Paris et communes limitrophes » du reste de la région, mais seulement à partir de trois personnes : pour une ou deux personnes, les montants sont identiques. Pour un foyer de quatre personnes en PLS, l'écart atteint 6 549 € de revenu fiscal de référence."
+      },
+      {
+        "q": "Que se passe-t-il si mes revenus dépassent le plafond après l'attribution ?",
+        "a": "Vous ne perdez pas votre logement, mais un supplément de loyer de solidarité, le surloyer, peut s'appliquer au-delà d'un certain dépassement, et il augmente avec celui-ci. Les règles dépendent du territoire et de votre résidence : votre bailleur les applique après l'enquête annuelle de ressources."
+      },
+      {
+        "q": "Qui compte dans le foyer, et comment sont comptées les personnes à charge ?",
+        "a": "Toutes les personnes appelées à occuper le logement comptent, et leurs revenus fiscaux de référence s'additionnent. Les catégories officielles prévoient des cas particuliers : jeune ménage, personne seule avec enfants, présence d'une personne en situation de handicap. Les libellés exacts figurent dans les tableaux ci-dessus."
+      },
+      {
+        "q": "Que faire si je dépasse le plafond HLM ?",
+        "a": "Regardez le logement locatif intermédiaire : ses plafonds sont nettement plus élevés, ses loyers restent 10 à 15 % sous le marché, et l'on y candidate directement auprès des opérateurs, sans numéro unique. Le simulateur teste automatiquement votre éligibilité au LLI si vous dépassez le PLS."
+      },
+      {
+        "q": "Les plafonds changent-ils chaque année ?",
+        "a": "Oui, ils sont revalorisés par arrêté au 1er janvier, en fonction de l'indice de référence des loyers. Pour 2026, la revalorisation est de 0,87 %. Vérifiez toujours l'année du barème que vous consultez : des tableaux périmés circulent encore largement."
+      }
     ],
     "sourcesOfficielles": [
-      { "label": "Plafonds de ressources pour un logement social (Service-public.fr)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F869" },
-      { "label": "Arrêté du 19 décembre 2025 fixant les plafonds de ressources HLM (Légifrance)", "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053159966" },
-      { "label": "Plafonds de ressources du logement intermédiaire (BOFiP)", "url": "https://bofip.impots.gouv.fr/bofip/10130-PGP.html/identifiant=BOI-BAREME-000017-20260310" },
-      { "label": "Liste des communes de la zone 1 bis (ministère du Logement)", "url": "https://www.financement-logement-social.logement.gouv.fr/annexe-10-liste-des-communes-constituant-la-zone-1-a1254.html" },
-      { "label": "Déposer une demande de logement social", "url": "https://www.demande-logement-social.gouv.fr" }
+      {
+        "label": "Plafonds de ressources pour un logement social (Service-public.fr)",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F869"
+      },
+      {
+        "label": "Arrêté du 19 décembre 2025 fixant les plafonds de ressources HLM (Légifrance)",
+        "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000053159966"
+      },
+      {
+        "label": "Plafonds de ressources du logement intermédiaire (BOFiP)",
+        "url": "https://bofip.impots.gouv.fr/bofip/10130-PGP.html/identifiant=BOI-BAREME-000017-20260310"
+      },
+      {
+        "label": "Liste des communes de la zone 1 bis (ministère du Logement)",
+        "url": "https://www.financement-logement-social.logement.gouv.fr/annexe-10-liste-des-communes-constituant-la-zone-1-a1254.html"
+      },
+      {
+        "label": "Déposer une demande de logement social",
+        "url": "https://www.demande-logement-social.gouv.fr"
+      }
+    ]
+  },
+  {
+    "slug": "bail-reel-solidaire",
+    "parcours": [
+      "logement-social"
+    ],
+    "title": "Bail réel solidaire (BRS) en Île-de-France : le guide 2026",
+    "metaDescription": "Ce qu'on achète vraiment, les plafonds de ressources 2026, la redevance et la revente encadrée : le guide honnête du BRS, avantages et limites compris.",
+    "h1": "Bail réel solidaire : acheter son logement sans acheter le terrain",
+    "intro": "Le bail réel solidaire, ou BRS, permet de devenir propriétaire de son logement en zone tendue à un prix inférieur au marché. Le principe : vous achetez les murs, un organisme agréé garde le terrain et vous le loue. La décote réelle est plus modeste que ne le laissent croire les brochures, et en contrepartie la revente est encadrée et la plus-value limitée. Nous ne vendons pas de BRS : voici ce que le dispositif apporte, ce qu'il coûte réellement en Île-de-France, et dans quels cas il vaut mieux rester locataire.",
+    "sections": [
+      {
+        "h2": "L'essentiel en 30 secondes",
+        "bullets": [
+          "Vous achetez des droits réels sur le bâti, pas le terrain : celui-ci reste la propriété d'un organisme de foncier solidaire (OFS), qui vous le loue contre une redevance mensuelle.",
+          "Le bail dure de 18 à 99 ans et il est « rechargeable » : à chaque revente ou succession, il repart pour sa durée initiale, ce qui évite que vos droits perdent de la valeur. En Île-de-France, cette durée est le plus souvent de 80 ans, calée sur le prêt qui finance le foncier, alors que le reste de la France est majoritairement à 99 ans (Apur, octobre 2025). Paris fait exception avec 99 ans.",
+          "Il faut respecter des plafonds de ressources, ceux du PSLA : 38 844 € de revenu fiscal de référence pour une personne seule en zones A et A bis (arrêté du 24 février 2026).",
+          "Le logement doit être votre résidence principale pendant toute la durée du bail. En pratique, les OFS franciliens interdisent dans leurs baux de le louer.",
+          "Deux charges se cumulent : votre crédit sur le bâti et la redevance foncière. Dans la Métropole du Grand Paris, cette redevance est de 2,30 €/m² habitable par mois en valeur médiane, dans une fourchette de 1,40 à 3,60 € selon les opérations (Apur, octobre 2025, données au 31 décembre 2024).",
+          "À la revente, le prix est plafonné et l'acheteur doit lui aussi respecter les plafonds, avec l'agrément de l'OFS. Vous vous constituez un patrimoine, mais la plus-value reste bien inférieure à celle de la pleine propriété."
+        ]
+      },
+      {
+        "h2": "Ce que vous achetez vraiment",
+        "paragraphs": [
+          "C'est la question qui décide de tout le reste. En BRS, vous n'achetez pas un bien en pleine propriété : vous achetez des droits réels immobiliers portant sur le bâti, pour la durée du bail. Le terrain, lui, reste la propriété permanente de l'organisme de foncier solidaire, qui vous le met à disposition contre une redevance (articles L255-1 et suivants du code de la construction et de l'habitation).",
+          "Ces droits sont solides : vous occupez le logement comme un propriétaire, vous pouvez le revendre, le donner ou le transmettre par succession. Ils peuvent être saisis dans les formes prescrites pour la saisie immobilière et servir d'assiette aux sûretés constituées par les parties (article L255-9), ce qui rend le montage finançable par une banque. Toutes ne pratiquent pas le BRS pour autant : interrogez plusieurs établissements. Le ministère du Logement situe d'ailleurs le dispositif « entre la location et l'accession en pleine propriété ».",
+          "Un point que les plaquettes commerciales passent sous silence : les constructions et améliorations que vous réalisez vous appartiennent pendant le bail, mais deviennent la propriété de l'OFS à son expiration (article L255-7). Vous n'êtes pas dépossédé pour autant, la loi prévoyant une indemnisation de la valeur de vos droits réels selon les modalités fixées par votre bail (article L255-16). En pratique, le rechargement du bail à chaque mutation rend ce cas rare, mais les modalités d'indemnisation méritent une lecture attentive avant signature.",
+          "En copropriété, le régime est particulier : c'est vous qui votez en assemblée générale, sauf sur certaines décisions réservées au bailleur, et aucune charge ne peut être appelée auprès de l'OFS (article L255-7-1). Autrement dit, vous supportez l'intégralité des travaux votés, sans participation du propriétaire du terrain."
+        ]
+      },
+      {
+        "h2": "Qui peut acheter en BRS ? Les plafonds de ressources",
+        "paragraphs": [
+          "Les plafonds applicables sont ceux du PSLA, le prêt social location-accession. Ils reposent sur votre revenu fiscal de référence de l'avant-dernière année, comme pour le logement social, mais ce sont des montants différents et nettement plus élevés que ceux du parc HLM classique.",
+          "L'essentiel de l'Île-de-France relève des zones A et A bis, donc de la première colonne, mais pas la totalité : plusieurs communes, notamment en Seine-et-Marne, sont classées en zone B1, où les plafonds divergent à partir de trois personnes. Vérifiez le classement de votre commune avant de vous fier à une colonne, le zonage ayant encore été modifié en septembre 2025 puis en juin 2026. Ces plafonds sont par ailleurs revalorisés chaque année : ceux ci-dessous résultent de l'arrêté du 24 février 2026."
+        ],
+        "table": {
+          "caption": "Plafonds de ressources pour acheter en bail réel solidaire (barème PSLA, arrêté du 24 février 2026)",
+          "headers": [
+            "Composition du foyer",
+            "Zones A bis et A",
+            "Zone B1",
+            "Zones B2 et C"
+          ],
+          "rows": [
+            [
+              "Une personne",
+              "38 844 €",
+              "38 844 €",
+              "33 771 €"
+            ],
+            [
+              "Deux personnes sans personne à charge, hors jeune ménage, ou une personne en situation de handicap",
+              "58 057 €",
+              "58 057 €",
+              "45 100 €"
+            ],
+            [
+              "Trois personnes, ou un jeune ménage sans personne à charge",
+              "76 105 €",
+              "69 786 €",
+              "54 235 €"
+            ],
+            [
+              "Quatre personnes",
+              "90 863 €",
+              "83 594 €",
+              "65 476 €"
+            ],
+            [
+              "Cinq personnes",
+              "108 107 €",
+              "98 956 €",
+              "77 023 €"
+            ],
+            [
+              "Six personnes",
+              "121 650 €",
+              "111 359 €",
+              "86 805 €"
+            ],
+            [
+              "Par personne supplémentaire",
+              "+ 13 557 €",
+              "+ 12 408 €",
+              "+ 9 683 €"
+            ]
+          ]
+        }
+      },
+      {
+        "h2": "Combien ça coûte réellement : le prix, puis la redevance",
+        "paragraphs": [
+          "Le prix de vente au mètre carré est plafonné par le même arrêté : 5 837 € en zone A bis et 4 423 € en zone A, hors taxes. La surface de référence est la surface habitable augmentée de la moitié des surfaces annexes. Mais le plafond n'est pas le prix pratiqué : dans la Métropole du Grand Paris, le prix médian constaté est de 3 900 €/m² habitable toutes taxes comprises, dans une fourchette de 3 231 à 5 350 € (Apur, octobre 2025). À Paris, la Ville a commercialisé 230 logements à moins de 5 000 €/m² en septembre 2025, dans les 18e, 19e et 20e arrondissements.",
+          "À ce prix s'ajoute la redevance foncière, tous les mois, pendant toute la durée du bail. Elle n'est pas encadrée par la loi : son montant dépend du montage de l'opération. Dans la Métropole du Grand Paris, l'Apur relève une redevance moyenne de 2,30 €/m² habitable par mois, qu'il donne égale à la médiane, dans une fourchette de 1,40 à 3,60 € selon les opérations (données au 31 décembre 2024). C'est nettement plus qu'à l'échelle nationale, où la médiane des programmes livrés en zones A et A bis s'établit à 1,3 €/m² (observatoire Foncier Solidaire France, données au 31 décembre 2025) : comptez donc plutôt 138 € par mois pour 60 m² en petite couronne que 78 €. À Paris, la Foncière de la Ville de Paris applique 2,65 €/m² par mois, soit environ 133 € pour 50 m².",
+          "Trois opérations franciliennes fichées par l'Apur donnent des repères concrets : Unisson, à Noisy-le-Grand et Villiers-sur-Marne (48 logements livrés en mars 2024), 3 115 €/m² et 1,37 €/m² de redevance ; Les Séquentielles, à Bry-sur-Marne (38 logements, mars 2024), 3 794 €/m² et 2,70 €/m² ; Les Météores, à Saint-Denis (22 logements, janvier 2025), 3 814 €/m² et 1,90 €/m². L'écart de redevance du simple au double entre deux programmes voisins n'a rien d'anormal : il dépend du montage financier de l'OFS.",
+          "Le calcul à faire est donc celui de la charge totale : mensualité de crédit plus redevance. Un repère utile : quand l'organisme finance le terrain surtout par l'emprunt, sans autre effort public ou privé, la redevance descend rarement sous 2,50 €/m² par mois (Apur, octobre 2025). À l'inverse, certaines communes posent un plafond dans leur charte, comme Villiers-sur-Marne à 2,00 €/m². Ces deux repères encadrent ce qui se pratique.",
+          "Quant à la décote, elle varie beaucoup selon ce à quoi on compare. L'Apur mesure, sur les 101 opérations du Grand Paris, une décote moyenne de 39 % par rapport au neuf (de 21 à 59 % selon les opérations), mais de 16 % seulement par rapport à l'ancien, où elle n'approche 50 % qu'à Paris. Retenez la comparaison avec l'ancien : c'est elle qui correspond à ce que vous pourriez acheter par ailleurs, et elle est bien plus modeste que les chiffres mis en avant dans les brochures."
+        ]
+      },
+      {
+        "h2": "BRS, logement social ou rester locataire : comment arbitrer",
+        "paragraphs": [
+          "Les acteurs qui commercialisent du BRS n'ont pas intérêt à vous dire quand il n'est pas la bonne solution. Nous ne vendons rien : voici les cas où il a du sens, et ceux où il en a moins.",
+          "Le BRS a du sens si vos revenus dépassent les plafonds du logement social ou si l'attente y est trop longue pour vous, si vous êtes certain de rester plusieurs années dans le même secteur, et si vous cherchez d'abord à vous loger durablement plutôt qu'à revendre au prix du marché.",
+          "Il en a beaucoup moins si votre situation professionnelle ou familiale est instable, car la revente est encadrée et le marché de seconde main étroit ; si vous comptez sur la revente pour financer un projet futur ; ou si vous êtes éligible au logement social dans une commune où l'attente reste raisonnable. Dans ce dernier cas, vérifiez d'abord vos plafonds avec notre [simulateur de plafonds de ressources](/guides/plafond-ressources-logement-social/) et regardez [les délais réels commune par commune](/logement-social/delais/) avant de vous engager.",
+          "Rester locataire garde tout son sens dans trois situations : quand votre horizon dans la commune est inférieur à quelques années, les frais d'acquisition n'étant alors pas amortis ; quand votre apport est trop faible pour absorber le cumul crédit et redevance sans tension budgétaire ; et quand vous visez un secteur où le parc social se libère vite, la location y restant la voie la plus rapide vers un logement durable et bien moins chère à l'entrée.",
+          "Un dernier repère : rien ne vous oblige à choisir. Vous pouvez maintenir votre [demande de logement social](/guides/demande-logement-social/) pendant que vous étudiez un BRS, les deux démarches étant indépendantes."
+        ]
+      },
+      {
+        "h2": "Les inconvénients qu'il faut connaître avant de signer",
+        "bullets": [
+          "La plus-value est bornée par construction : à la revente, le prix est limité à votre prix d'achat actualisé par un indice choisi par l'OFS lui-même, augmenté de la valorisation des travaux (article R255-3). Cet indice est le plus souvent l'indice du coût de la construction ou l'indice de référence des loyers (Apur, octobre 2025), et le choix n'est pas neutre : ces dernières années, l'indice du coût de la construction a progressé plus vite. Vérifiez lequel figure dans votre bail, et si les travaux sont pris en compte avant ou après indexation.",
+          "La redevance est due pendant toute la durée du bail et n'est pas plafonnée par la loi. Elle s'ajoute à votre crédit et ne construit aucun capital.",
+          "Les avantages qui vous aident à acheter ne se transmettent pas : l'acquéreur d'un BRS neuf bénéficie du prêt à taux zéro et de frais de notaire réduits, mais les acheteurs suivants n'y ont pas droit (Apur, octobre 2025). Votre logement sera donc moins solvabilisé à la revente qu'il ne l'a été à l'achat.",
+          "La revente est contrainte : votre acheteur doit respecter les plafonds de ressources et obtenir l'agrément de l'OFS, qui dispose de deux mois pour se prononcer (article L255-11) et d'un droit de préemption (article L255-15).",
+          "La mise en location est en théorie possible si le bail ne l'interdit pas, mais les OFS franciliens l'interdisent dans leurs baux : n'y voyez pas un futur investissement locatif.",
+          "En cas de défaut de paiement de la redevance, le bail est résilié, avec indemnisation de la valeur de vos droits selon les modalités du contrat (article L255-8). Vous ne pouvez pas non plus vous libérer de la redevance.",
+          "L'abattement de taxe foncière, souvent mis en avant, n'a rien d'automatique : il va de 30 à 100 %, mais seulement si la commune ou l'intercommunalité l'a voté. Dans les faits, 17 % seulement des BRS livrés recensés en bénéficient, 52 % n'en bénéficient pas, et l'information manque pour les 31 % restants (observatoire Foncier Solidaire France, données au 31 décembre 2025)."
+        ]
+      },
+      {
+        "h2": "Revente, succession, fin de bail : ce qui se passe ensuite",
+        "paragraphs": [
+          "C'est le volet le moins documenté et le plus décisif. À la revente, vous ne fixez pas librement votre prix : il ne peut pas dépasser votre prix d'acquisition actualisé, plus la valorisation des travaux réalisés. Votre acquéreur doit être éligible et agréé par l'OFS.",
+          "Si votre acquéreur se voit refuser l'agrément, vous pouvez demander à l'OFS de vous en proposer un autre ; s'il n'y parvient pas dans les six mois, le bail peut être résilié conventionnellement et vous êtes indemnisé (article L255-13). Les clauses d'indemnisation observées vont de 60 à 100 % de la valeur des droits réels initiaux (Apur, octobre 2025) : c'est le point précis à vérifier dans votre contrat, l'écart entre 60 et 100 % étant considérable.",
+          "La succession fonctionne, et mieux qu'on ne le croit : les droits sont transmis de plein droit, et les conditions d'éligibilité ne sont pas opposables au conjoint survivant, quel que soit le régime matrimonial, ni au partenaire de PACS (article L255-14). Un héritier qui ne remplit pas les conditions dispose de douze mois pour céder les droits, faute de quoi le bail est résilié avec indemnisation. La donation, elle, reste soumise à l'agrément de l'OFS.",
+          "À chaque mutation, le bail est prorogé de plein droit pour sa durée initiale : c'est le mécanisme rechargeable, la vraie innovation du dispositif, qui évite que vos droits perdent de la valeur à mesure que le bail court.",
+          "Côté avantages fiscaux, la TVA est à 5,5 % sur la cession des droits réels lorsque l'opération passe par un opérateur, et le prêt à taux zéro est cumulable avec un achat en BRS neuf."
+        ]
+      },
+      {
+        "h2": "Où trouver un BRS en Île-de-France",
+        "paragraphs": [
+          "La plateforme officielle de l'État, [BoRiS](https://boris.beta.gouv.fr/), recense les logements disponibles, les organismes agréés et propose un simulateur d'éligibilité. Nous y avons compté 94 entrées franciliennes en juillet 2026 (la plateforme recense les villes où des logements sont en vente, pas les programmes un par un), et une surprise : ce sont les Yvelines qui en comptent le plus, avec 23 entrées, devant le Val-de-Marne (18) et la Seine-Saint-Denis (17).",
+          "Les principaux organismes actifs en Île-de-France sont [la Coopérative Foncière Francilienne](https://coopfoncierefrancilienne.fr/) (toute la région), [la Foncière de la Ville de Paris](https://fonciere-ville-paris.fr/), créée par la Ville pour Paris intra-muros, à l'origine de 510 logements dans six arrondissements fin 2024 (Apur), [l'OFS de Plaine Commune](https://plainecommune.fr/ofs/) (les neuf villes de l'établissement public territorial, avec des programmes à Saint-Denis, Saint-Ouen-sur-Seine, Aubervilliers et L'Île-Saint-Denis) et [l'OFS des Yvelines](https://www.yvelines.fr/cadre-de-vie/logement/loffice-foncier-solidaire-des-yvelines/), porté par le Département.",
+          "Gardez en tête l'échelle réelle du dispositif : dans la Métropole du Grand Paris, l'Apur recensait fin 2024 environ 2 800 logements BRS livrés ou en projet, dont 229 effectivement livrés, Paris et Plaine Commune concentrant 40 % du total. L'offre monte en puissance, avec environ 1 000 livraisons attendues en 2026, mais reste très inférieure à la demande : ne construisez pas votre projet de logement sur cette seule piste."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "Comment fonctionne le bail réel solidaire ?",
+        "a": "Vous achetez les droits réels sur le logement, pas le terrain. Celui-ci appartient à un organisme de foncier solidaire agréé par le préfet de région, qui vous le loue contre une redevance mensuelle pendant toute la durée du bail. Retirer la valeur du terrain du prix rend le logement accessible en zone tendue."
+      },
+      {
+        "q": "Quels sont les inconvénients du bail réel solidaire ?",
+        "a": "La plus-value est plafonnée à la revente, la redevance s'ajoute au crédit sans construire de capital, l'acheteur suivant doit être agréé et sous plafonds et perd le prêt à taux zéro dont vous avez bénéficié, la location est interdite en pratique par les organismes franciliens, et l'abattement de taxe foncière dépend d'une délibération de votre commune. En contrepartie, le prix d'achat est nettement inférieur au marché."
+      },
+      {
+        "q": "Quelle est la durée d'un bail réel solidaire ?",
+        "a": "Entre 18 et 99 ans selon les opérations. Dans la Métropole du Grand Paris, la durée est généralement de 80 ans, calée sur celle du prêt qui finance le foncier, sauf à Paris où elle est de 99 ans. Le bail est rechargeable : à chaque revente, donation ou succession, il est prorogé de plein droit pour sa durée initiale, ce qui évite que vos droits perdent de la valeur avec le temps."
+      },
+      {
+        "q": "Qui peut bénéficier d'un BRS ?",
+        "a": "Toute personne dont le revenu fiscal de référence reste sous les plafonds du PSLA, soit 38 844 € pour une personne seule en zones A et A bis en 2026, et qui occupera le logement comme résidence principale. Ces plafonds sont sensiblement plus élevés que ceux du logement social classique."
+      },
+      {
+        "q": "Peut-on louer un logement acheté en BRS ?",
+        "a": "En droit, la location est possible si le bail ne l'interdit pas, mais les organismes de foncier solidaire franciliens l'interdisent dans leurs baux. Le logement doit rester votre résidence principale pendant toute la durée du bail."
+      },
+      {
+        "q": "Comment se passe la revente d'un logement en BRS ?",
+        "a": "Le prix est plafonné à votre prix d'achat actualisé par un indice choisi par l'organisme, augmenté de la valorisation des travaux. L'acheteur doit respecter les plafonds de ressources et être agréé par l'organisme, qui dispose de deux mois pour se prononcer et d'un droit de préemption. Si l'agrément est refusé, l'organisme doit vous proposer un autre acquéreur dans les six mois."
+      },
+      {
+        "q": "Le BRS donne-t-il droit au prêt à taux zéro ?",
+        "a": "Oui, le prêt à taux zéro est cumulable avec un achat en bail réel solidaire neuf, tout comme les frais de notaire réduits. Attention toutefois : ces avantages ne se transmettent pas. Les acquéreurs suivants, lors des reventes, n'y ont pas droit, ce qui rétrécit le nombre de personnes capables de vous racheter."
+      },
+      {
+        "q": "Y a-t-il beaucoup de logements en BRS en Île-de-France ?",
+        "a": "Encore peu, mais l'offre progresse vite. Dans la Métropole du Grand Paris, environ 2 800 logements étaient livrés ou en projet fin 2024, dont 229 livrés seulement, et près de 1 000 livraisons sont attendues en 2026. La plateforme officielle BoRiS recensait 94 entrées franciliennes en juillet 2026."
+      }
+    ],
+    "sourcesOfficielles": [
+      {
+        "label": "BoRiS, la plateforme officielle du bail réel solidaire (État)",
+        "url": "https://boris.beta.gouv.fr/"
+      },
+      {
+        "label": "Le bail réel solidaire dans la Métropole du Grand Paris (Apur, octobre 2025, données au 31 décembre 2024)",
+        "url": "https://www.apur.org/fr/logement-hebergement/parc-social/bail-reel-solidaire-metropole-grand-paris"
+      },
+      {
+        "label": "Les organismes de foncier solidaire et le bail réel solidaire (ministère du Logement, 2025)",
+        "url": "https://www.ecologie.gouv.fr/sites/default/files/documents/Les%20organismes%20de%20foncier%20solidaire%20et%20le%20bail%20r%C3%A9el%20solidaire%202025.pdf"
+      },
+      {
+        "label": "Articles L255-1 et suivants du code de la construction et de l'habitation (Légifrance)",
+        "url": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006074096/LEGISCTA000032919234/"
+      },
+      {
+        "label": "Plafonds de ressources et de prix du PSLA 2026 (ANIL)",
+        "url": "https://www.anil.org/aj-accession-sociale-psla-zones-anru-plafonds-2026/"
+      }
     ]
   }
 ]
