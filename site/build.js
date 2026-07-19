@@ -221,6 +221,25 @@ const FAVICON = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" view
 /* Marque du header : tuile « verre » + maison blanche, porte terracotta
  * (même langage que le favicon). La porte s'éclaire au survol. */
 const BRAND_MARK = `<svg class="brand-mark" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect width="32" height="32" rx="8" fill="#fff" opacity=".13"/><rect x="1" y="1" width="30" height="30" rx="7" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/><path d="M16 6.5l10.5 8.4h-3.1v9.6h-5.5v-6.2h-3.8v6.2H8.6v-9.6H5.5z" fill="#fff"/><path d="M19.4 18.3h2.5v6.2h-2.5z" class="brand-door" fill="${PAL.accent}"/></svg>`;
+/* Crédit du concepteur, en pied de page sur toutes les pages.
+ *
+ * rel="nofollow" : la politique anti-spam de Google range les liens de pied de
+ * page largement distribués (le template d'une agence répété sur un parc de
+ * sites clients) dans le link spam, SAUF s'ils sont qualifiés en nofollow ou
+ * sponsored. MKZ contrôlant ce build, c'est bien un lien que nous plaçons
+ * nous-mêmes : Google recommande alors nofollow (Lizzi Sassman, SEO office
+ * hours, janvier 2023). Le risque porte sur le domaine DESTINATAIRE, qui
+ * accumulerait N liens site-wide depuis N sites clients, pas sur ce site-ci.
+ *
+ * Ancre de marque (« MKZ », la dénomination sociale), jamais une ancre
+ * commerciale : c'est l'ancre optimisée répétée qui construit le motif.
+ * Pas de target="_blank" : rien ne l'exige, et le même onglet supprime la
+ * question de l'avertissement d'ouverture.
+ *
+ * Ce raisonnement reste ICI, en commentaire de build : servi en commentaire
+ * HTML, il pesait sur les 67 pages et exposait la stratégie dans le source. */
+const CREDIT = '<p class="footer-credit">Site conçu et édité par <a href="https://mkz-consulting.fr" rel="nofollow">MKZ</a></p>';
+
 /* Wordmark : dernier mot du nom en accent, son « A » initial remplacé par
  * une maison-lettre (pignon = chapeau du A, porte = contrepoinçon). */
 const BRAND_A = `<svg class="brand-a" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12 1l11 9.5V25h-7v-7.6H8V25H1V10.5z" fill="currentColor"/></svg>`;
@@ -461,15 +480,7 @@ ${content}
   </div>
   <div class="container footer-legal">
     <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/">Mentions légales</a></p>
-    <!-- Crédit du concepteur. rel="nofollow" : la politique anti-spam de Google
-         range les liens de pied de page largement distribués (template d'agence
-         répété sur un parc de sites clients) dans le link spam, SAUF s'ils sont
-         qualifiés en nofollow ou sponsored. MKZ contrôlant le build, c'est bien
-         un lien que nous plaçons nous-mêmes : Google recommande alors nofollow
-         (Lizzi Sassman, SEO office hours janvier 2023). Ancre de marque, jamais
-         d'ancre commerciale. Pas de target="_blank" : rien ne l'exige, et le
-         même onglet évite la question de l'avertissement. -->
-    <p class="footer-credit">Site conçu et édité par <a href="https://mkz-consulting.fr" rel="nofollow">MKZ</a></p>
+    ${CREDIT}
   </div>
 </footer>
 ${ANIM_JS}
@@ -2252,17 +2263,10 @@ main p a:not([class]):hover,main li a:not([class]):hover,main p a:not([class]):f
 .footer-title{font-size:.78rem;font-weight:650;text-transform:uppercase;letter-spacing:.08em;color:#9fb3c8;margin-bottom:.4rem}
 .site-footer ul{list-style:none;padding:0;margin:0}.site-footer li{margin:.38rem 0}.site-footer a{color:#9fc1e0;text-decoration:none}.site-footer a:hover{text-decoration:underline;color:#cfe3f4}
 .footer-legal{border-top:1px solid #33414e;margin-top:1.6rem;padding-top:1rem;color:#8a98a5;display:flex;flex-wrap:wrap;gap:.3rem 1.4rem;justify-content:space-between}
-/* Ces liens-là sont EN LIGNE dans une phrase : la couleur ne peut pas être leur
- * seul indice (WCAG 1.4.1, niveau A). Le bleu des liens ne contraste qu'à 1,5:1
- * avec le gris du texte qui les entoure, loin des 3:1 qu'exigerait la voie sans
- * soulignement. D'où le soulignement permanent, qui vaut aussi pour « Mentions
- * légales » : même ligne, même défaut. Les liens des colonnes du dessus ne sont
- * pas concernés, ce sont des listes de liens sans prose autour. */
+/* Liens en ligne dans une phrase : soulignés en permanence (WCAG 1.4.1, ils ne
+ * contrastent qu'à 1,6:1 avec le texte autour). Marges à zéro : les deux
+ * paragraphes partagent la ligne et se décaleraient de quelques pixels. */
 .footer-legal a{text-decoration:underline;text-underline-offset:2px}
-/* Les deux paragraphes partagent la ligne : sans remise à zéro des marges, le
- * premier garde la sienne et le second non, ce qui les décale verticalement de
- * quelques pixels. Défaut invisible pour un contrôle automatique (chaque bloc
- * est à sa place), visible à l'œil. */
 .footer-legal p{margin:0}
 /* ---- Annuaires de données (Phase 2) ---- */
 [id]{scroll-margin-top:16px}
