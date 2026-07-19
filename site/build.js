@@ -240,6 +240,85 @@ const VT_CSS = `<style>@media(prefers-reduced-motion:no-preference){
 @keyframes vt-in{from{opacity:0;transform:translateY(8px)}}
 }</style>`;
 
+/* Tri des tableaux de données : progressive enhancement pur.
+ * Sans JS le tableau reste lisible et trié par défaut (alphabétique, ou par
+ * rang pour les classements) ; avec JS, chaque en-tête devient un bouton.
+ * Type de colonne déduit de la classe « num » posée au build (pas d'heuristique
+ * sur le contenu). Valeurs manquantes (« — ») toujours rejetées en fin, quel
+ * que soit le sens : une donnée absente n'est ni la plus petite ni la plus
+ * grande. Tri stable (index d'origine en départage) pour que deux passes
+ * successives ne réordonnent pas les ex aequo. */
+const TABLE_JS = `<script>
+(function(){
+var tables=[].slice.call(document.querySelectorAll('table.data:not(.nosort)'));
+if(!tables.length||!Array.prototype.map)return;
+var live=document.createElement('div');
+live.className='visually-hidden';live.setAttribute('aria-live','polite');
+document.body.appendChild(live);
+/* "1 580" / "6,49" / "15,1 %" / "23 mois" -> nombre ; "—" et vide -> null. */
+/* Premier nombre du texte, jamais une concaténation à travers un séparateur :
+ * « 01/01/2024 » doit échouer visiblement plutôt que donner 1012024. */
+function num(s){
+ var t=s.replace(/[\\s\\u00a0\\u202f]/g,'').replace(/,/g,'.');
+ var m=t.match(/-?[0-9]+(?:\\.[0-9]+)?/);
+ if(!m)return null;
+ var n=parseFloat(m[0]);return isNaN(n)?null:n}
+function txt(td){return (td.textContent||'').replace(/\\u00a0/g,' ').trim()}
+function vide(td){var v=txt(td);return v===''||v==='—'||v==='-'}
+tables.forEach(function(tb){
+ var head=tb.tHead&&tb.tHead.rows[0],body=tb.tBodies[0];
+ if(!head||!body||body.rows.length<3)return;
+ var rows=[].slice.call(body.rows);
+ rows.forEach(function(r,i){r.setAttribute('data-i',i)});
+ var ths=[].slice.call(head.cells);
+ var etat={col:-1,sens:1};
+ ths.forEach(function(th,ci){
+  /* Hors tri : la colonne de rang (position éditoriale figée) et les colonnes
+   * marquées « nosort » (valeur absente qui ne signifie pas « inconnu »). */
+  if(th.classList.contains('rank')||th.classList.contains('nosort'))return;
+  /* Type lu sur l'en-tête (posé au build) : insensible aux lignes plus
+   * courtes que le thead, contrairement à une lecture de la 1re cellule. */
+  var isNum=th.classList.contains('num');
+  var lib=th.innerHTML;
+  var b=document.createElement('button');
+  b.type='button';b.className='th-sort';
+  b.innerHTML=lib+'<span class="th-ind" aria-hidden="true"></span>';
+  th.innerHTML='';th.appendChild(b);th.classList.add('th-triable');
+  th.setAttribute('aria-sort','none');
+  b.addEventListener('click',function(){
+   /* Premier clic : décroissant sur un nombre (le plus grand d'abord, ce
+    * qu'on cherche presque toujours), croissant sur du texte (A→Z). */
+   var sens=(etat.col===ci)?-etat.sens:(isNum?-1:1);
+   etat={col:ci,sens:sens};
+   ths.forEach(function(o){if(!o.classList.contains('rank'))o.setAttribute('aria-sort','none')});
+   th.setAttribute('aria-sort',sens===1?'ascending':'descending');
+   var tri=rows.slice().sort(function(a,b2){
+    var ca=a.cells[ci],cb=b2.cells[ci];
+    var va=ca?txt(ca):'',vb=cb?txt(cb):'';
+    var na=!ca||vide(ca),nb=!cb||vide(cb);
+    if(na&&nb)return a.getAttribute('data-i')-b2.getAttribute('data-i');
+    if(na)return 1;if(nb)return -1;  /* absents toujours en fin */
+    var d;
+    if(isNum){var x=num(va),y=num(vb);
+     if(x===null&&y===null)d=0;else if(x===null)return 1;else if(y===null)return -1;else d=x-y}
+    else d=va.localeCompare(vb,'fr',{numeric:true,sensitivity:'base'});
+    if(d===0)return a.getAttribute('data-i')-b2.getAttribute('data-i');
+    return d*sens});
+   var frag=document.createDocumentFragment();
+   tri.forEach(function(r){frag.appendChild(r)});
+   body.appendChild(frag);
+   /* Le rang ne se renumérote JAMAIS : c'est la position dans le classement
+    * éditorial (par délai médian), pas dans le tri courant. Le renuméroter
+    * afficherait un « 1. » mensonger sous un titre qui annonce autre chose. */
+   tb.classList.remove('jauge-anim');  /* barres figées à 0 % si jamais vues */
+   live.textContent='Tableau trié par '+(b.textContent||'').trim()+', ordre '+(sens===1?'croissant':'décroissant')+'.';
+  });
+ });
+ tb.classList.add('sortable');
+});
+})();
+</script>`;
+
 /* Compteurs, jauges et pause de la skyline : IntersectionObserver uniquement,
  * garde matchMedia obligatoire (le kill switch CSS ne coupe jamais un rAF). */
 const ANIM_JS = `<script>
@@ -378,6 +457,7 @@ ${content}
   </div>
 </footer>
 ${ANIM_JS}
+${content.includes('table class="data"') ? TABLE_JS : ''}
 </body>
 </html>`;
 }
@@ -576,7 +656,11 @@ for (const g of GUIDES) {
     let html = `<h2 id="${id}">${esc(s.h2)}</h2>`;
     if (s.paragraphs) html += s.paragraphs.map(t => `<p>${inline(t)}</p>`).join('');
     if (s.bullets) html += `<ul>${s.bullets.map(b => `<li>${inline(b)}</li>`).join('')}</ul>`;
-    if (s.table) html += `<div class="table-wrap"><table class="data">
+    /* Les tableaux de guides sont COMPARATIFS : leur ordre porte du sens
+     * (priorités P1→P4, dispositif générique avant ses déclinaisons…), le trier
+     * détruirait l'information. Tri désactivé par défaut, activable au cas par
+     * cas avec "triable": true si un guide porte un vrai tableau de données. */
+    if (s.table) html += `<div class="table-wrap"><table class="data${s.table.triable ? '' : ' nosort'}">
   <caption class="visually-hidden">${esc(s.table.caption)}</caption>
   <thead><tr>${s.table.headers.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>
   <tbody>${s.table.rows.map(r => `<tr>${r.map(c => `<td>${inline(c)}</td>`).join('')}</tr>`).join('')}</tbody>
@@ -1019,7 +1103,7 @@ if (LS_COMMUNES) {
     <td>${statut(r)}</td>
   </tr>`;
   };
-  const tableHead = `<thead><tr><th scope="col">Commune</th><th scope="col" class="num">Parc social (RPLS)</th><th scope="col" class="num">Loyer médian €/m²</th><th scope="col" class="num">Vacance %</th><th scope="col" class="num">Taux SRU</th>${TENSION ? '<th scope="col" class="num">Délai médian</th><th scope="col" class="num">Demandes / attribution</th>' : ''}<th scope="col">Zone</th><th scope="col">Statut SRU</th></tr></thead>`;
+  const tableHead = `<thead><tr><th scope="col">Commune</th><th scope="col" class="num">Parc social (RPLS)</th><th scope="col" class="num">Loyer médian €/m²</th><th scope="col" class="num">Vacance %</th><th scope="col" class="num">Taux SRU</th>${TENSION ? '<th scope="col" class="num">Délai médian</th><th scope="col" class="num">Demandes / attribution</th>' : ''}<th scope="col">Zone</th><th scope="col" class="nosort">Statut SRU</th></tr></thead>`;
   const legende = `
 <section class="notice">
   <h2>Comment lire ces chiffres</h2>
@@ -1170,7 +1254,7 @@ ${legende}
     /* Tri sur la valeur non arrondie : l'affichage reste en mois entiers. */
     const dExact = (t) => (t.delaiMoisExact != null ? t.delaiMoisExact : t.delaiMois);
     const rangee = (t, i) => `<tr>
-      <td class="num">${i + 1}</td>
+      <td class="num rank">${i + 1}</td>
       <td>${lien(t.code, nomDe.get(t.code) || t.nom)}${t.dep ? ` <small>(${esc(t.dep)})</small>` : ''}</td>
       <td class="num">${fmt(t.delaiMois)}&nbsp;mois</td>
       <td class="num">${fmt(t.tension, 1)}</td>
@@ -1178,7 +1262,7 @@ ${legende}
     </tr>`;
     const rapides = classables.slice().sort((a, b) => dExact(a) - dExact(b) || b.attributions - a.attributions).slice(0, 20);
     const lentes = classables.slice().sort((a, b) => dExact(b) - dExact(a) || b.attributions - a.attributions).slice(0, 20);
-    const tete = `<thead><tr><th scope="col" class="num">#</th><th scope="col">Commune</th><th scope="col" class="num">Délai médian</th><th scope="col" class="num">Demandes / attribution</th><th scope="col" class="num">Attributions ${TENSION._meta.millesime}</th></tr></thead>`;
+    const tete = `<thead><tr><th scope="col" class="num rank"><abbr title="Rang dans le classement par délai médian">Rang</abbr></th><th scope="col">Commune</th><th scope="col" class="num">Délai médian</th><th scope="col" class="num">Demandes / attribution</th><th scope="col" class="num">Attributions ${TENSION._meta.millesime}</th></tr></thead>`;
     const depRowsDelai = (TENSION._meta.departements || []).slice()
       .sort((a, b) => (a.delaiMois ?? 999) - (b.delaiMois ?? 999))
       .map(x => `<tr>
@@ -1655,6 +1739,30 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .page-head-icon svg{width:100%;height:100%}
 .page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 17px 17px 0;margin:-22px -26px -22px 8px;box-shadow:-14px 0 24px -18px rgba(31,78,121,.25)}
 .page-head h1{margin:.1rem 0 .5rem}.page-head .lead{margin:0}
+/* ---- Tri des tableaux (en-têtes cliquables, ajoutés par JS) ---- */
+/* Le bouton reprend le padding de la cellule : toute la surface de l'en-tête
+ * devient cliquable, et la cible tactile atteint les 44 px sur mobile.
+ * Ciblé sur les seules cellules réellement transformées : une colonne hors
+ * tri (rang, statut) garde son padding et n'affiche pas de curseur menteur. */
+table.sortable thead th.th-triable{padding:0;cursor:pointer}
+/* Hauteur finale réservée dès le HTML servi : le script est en fin de body et
+ * peut peindre après un premier rendu sur les tableaux longs ; sans cela
+ * l'en-tête grandit de 6 px et pousse tout le contenu qui suit (CLS). */
+table.data:not(.nosort) thead th{height:44px}
+.th-sort{display:flex;align-items:center;gap:.35em;width:100%;min-height:44px;background:none;border:0;padding:9px 12px;margin:0;font:inherit;color:inherit;text-align:inherit;cursor:pointer}
+th.num .th-sort{justify-content:flex-end}
+.th-sort:hover{color:var(--bleu2)}
+/* Anneau vers l'intérieur : .table-wrap est en overflow auto avec un rayon,
+ * un offset positif serait rogné sur le bord haut de tous les en-têtes. */
+.th-sort:focus-visible{outline:2px solid var(--bleu2);outline-offset:-3px;border-radius:4px}
+.th-ind{flex:none;width:.7em;height:.7em;opacity:.32;background:currentColor;transition:opacity .15s;
+ -webkit-mask:var(--ind) center/contain no-repeat;mask:var(--ind) center/contain no-repeat;
+ --ind:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12"><path d="M6 1L9 5H3zM6 11L3 7h6z"/></svg>')}
+.th-sort:hover .th-ind{opacity:.6}
+th[aria-sort="ascending"] .th-ind{opacity:1;--ind:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12"><path d="M6 2L10 8H2z"/></svg>')}
+th[aria-sort="descending"] .th-ind{opacity:1;--ind:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12"><path d="M6 10L2 4h8z"/></svg>')}
+th[aria-sort="ascending"],th[aria-sort="descending"]{color:var(--bleu2)}
+
 /* ---- Bloc de chiffres (Observatoire, accueil et hub parcours) ---- */
 .stats-bloc{background:linear-gradient(160deg,#eef5fb,#fdfbf7 120%);border:1px solid #dbe7f1;border-radius:20px;padding:30px 32px 24px;margin:2rem 0}
 .stats-head h2{margin:.2rem 0 .5rem}
