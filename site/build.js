@@ -259,7 +259,7 @@ const TABLE_JS = `<script>
 var tables=[].slice.call(document.querySelectorAll('table.data:not(.nosort)'));
 if(!tables.length||!Array.prototype.map)return;
 var live=document.createElement('div');
-live.className='visually-hidden';live.setAttribute('aria-live','polite');
+live.className='visually-hidden';live.setAttribute('aria-live','polite');live.setAttribute('aria-atomic','true');
 document.body.appendChild(live);
 /* "1 580" / "6,49" / "15,1 %" / "23 mois" -> nombre ; "—" et vide -> null. */
 /* Premier nombre du texte, jamais une concaténation à travers un séparateur :
@@ -1941,7 +1941,7 @@ rendQ();
 </header>
 <p><input id="q" type="search" class="search-input" aria-label="Rechercher sur le site" placeholder="Ex. : Massy, résidence CROUS, FJT, Visale, encadrement…" autocomplete="off"></p>
 <p class="pills"><small>Essayez&nbsp;:</small> <button type="button" class="pill ex" data-q="Massy">Massy</button> <button type="button" class="pill ex" data-q="garant Visale">garant Visale</button> <button type="button" class="pill ex" data-q="résidence CROUS">résidence CROUS</button> <button type="button" class="pill ex" data-q="encadrement des loyers">encadrement des loyers</button></p>
-<p class="result-count" id="count" aria-live="polite"></p>
+<p class="result-count" id="count" aria-live="polite" aria-atomic="true"></p>
 <ul class="result-list" id="results"></ul>
 <noscript><p>La recherche a besoin de JavaScript. Sans lui, parcourez les <a href="/annuaire/">annuaires</a> ou les <a href="/">parcours</a>.</p></noscript>
 <script>
