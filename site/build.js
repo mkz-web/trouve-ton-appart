@@ -2140,7 +2140,9 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
  * bloc. La marge haute de la case la centre optiquement sur cette ligne. */
 .pl-cas label{display:flex;gap:.65em;align-items:flex-start;font-size:.92rem;line-height:1.45;padding:10px 0;cursor:pointer;min-height:44px}
 .pl-cas label+label{border-top:1px solid var(--bord)}
-.pl-cas input{flex:none;width:18px;height:18px;margin:calc((1.45em - 18px)/2) 0 0;accent-color:var(--bleu2)}
+/* 24 px : taille minimale d'une cible au sens du critère WCAG 2.5.8 (AA).
+ * Le libellé entier reste cliquable, mais la case doit tenir seule le seuil. */
+.pl-cas input{flex:none;width:24px;height:24px;margin:calc((1.45em - 24px)/2) 0 0;accent-color:var(--bleu2)}
 .pl-verdict{font-size:1.06rem;margin:.2rem 0 .5rem}
 .pl-ok strong{color:#2e7050}
 .pl-ko strong{color:#b3261e}
