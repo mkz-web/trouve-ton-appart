@@ -469,7 +469,7 @@ ${content}
          (Lizzi Sassman, SEO office hours janvier 2023). Ancre de marque, jamais
          d'ancre commerciale. Pas de target="_blank" : rien ne l'exige, et le
          même onglet évite la question de l'avertissement. -->
-    <p class="footer-credit">Site conçu et édité par <a href="https://mkz-consulting.fr" rel="nofollow">MKZ Consulting</a></p>
+    <p class="footer-credit">Site conçu et édité par <a href="https://mkz-consulting.fr" rel="nofollow">MKZ</a></p>
   </div>
 </footer>
 ${ANIM_JS}
