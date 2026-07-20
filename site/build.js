@@ -933,16 +933,22 @@ function sourceNotice(meta) {
 const LICENSE_URLS = {
   'Licence Ouverte / Open Licence v2.0 (Etalab)': 'https://www.etalab.gouv.fr/licence-ouverte-open-licence',
   'Licence Ouverte / Open Licence (Etalab)': 'https://www.etalab.gouv.fr/licence-ouverte-open-licence',
+  'Licence Ouverte Etalab 2.0': 'https://www.etalab.gouv.fr/licence-ouverte-open-licence',
   'Open Database License (ODbL)': 'https://opendatacommons.org/licenses/odbl/1-0/',
 };
 function datasetLd(meta, { name, description, urlPath }) {
+  /* Google exige une URL (ou un CreativeWork) pour license : un libellé texte
+   * déclenche « Type d'objet non valide » dans GSC. Tout libellé d'ingestion
+   * doit donc exister dans LICENSE_URLS ; échec de build sinon (fail-closed). */
+  const licenseUrl = LICENSE_URLS[meta.license];
+  if (!licenseUrl) throw new Error(`datasetLd : licence « ${meta.license} » absente de LICENSE_URLS (${urlPath})`);
   return {
     '@context': 'https://schema.org',
     '@type': 'Dataset',
     name,
     description,
     url: SITE.baseUrl + urlPath,
-    license: LICENSE_URLS[meta.license] || meta.license,
+    license: licenseUrl,
     creator: { '@type': 'Organization', name: SITE.name, url: SITE.baseUrl },
     isBasedOn: String(meta.sourceUrl).split(' | '),
     /* Même fuseau que la date affichée aux lecteurs (dateFrOf, heure de Paris) :

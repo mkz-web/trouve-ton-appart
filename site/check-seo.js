@@ -11,6 +11,8 @@
  *       (@type concret + name + url), sinon erreur GSC « Champ item manquant ».
  *     - BreadcrumbList : item requis sur tous les maillons SAUF le dernier,
  *       name requis partout.
+ *     - Dataset : license DOIT être une URL http(s), jamais un libellé texte
+ *       (erreur GSC « Type d'objet non valide pour le champ license », 20/07/2026).
  * Sort avec exit(1) à la moindre violation : à passer avant chaque publication.
  */
 const fs = require('fs');
@@ -73,6 +75,12 @@ function checkLd(rel, node) {
       if (!it || typeof it !== 'object') errors.push(`${rel} : ItemList[${i}] sans objet item`);
       else if (!it['@type'] || !it.name || !it.url) errors.push(`${rel} : ItemList[${i}] item incomplet (@type/name/url)`);
     });
+  }
+  if (node['@type'] === 'Dataset') {
+    const lic = node.license;
+    if (typeof lic !== 'string' || !/^https?:\/\//.test(lic)) {
+      errors.push(`${rel} : Dataset avec license non-URL (« ${JSON.stringify(lic)} »)`);
+    }
   }
   if (node['@type'] === 'BreadcrumbList' && Array.isArray(node.itemListElement)) {
     const n = node.itemListElement.length;
