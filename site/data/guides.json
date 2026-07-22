@@ -21,12 +21,12 @@
         "h2": "Qui peut en bénéficier ?",
         "bullets": [
           "Tous les jeunes de 18 à 30 ans, quel que soit leur statut : étudiant, alternant, salarié, en recherche d'emploi.",
-          "Les salariés de plus de 30 ans embauchés depuis moins de 6 mois (hors CDI confirmé) ou en mobilité professionnelle.",
+          "Les salariés du privé de plus de 30 ans, s'ils demandent leur visa dans les 6 mois qui suivent leur embauche ou leur mutation, ou si leur salaire net ne dépasse pas 1 710 € par mois.",
           "Les titulaires d'un bail mobilité, sans condition d'âge.",
           "Les étudiants et chercheurs étrangers en mobilité, sous conditions de titre de séjour."
         ],
         "paragraphs": [
-          "Le logement doit être votre résidence principale, situé en France, et le loyer charges comprises ne doit pas dépasser un plafond : 1 500 € à Paris, 1 300 € sur le reste du territoire. Un point décisif en Île-de-France où les loyers flirtent souvent avec ces seuils."
+          "Le logement doit être votre résidence principale, situé en France, et le loyer charges comprises ne doit pas dépasser un plafond qui dépend de la commune : jusqu'à 1 940 € en Île-de-France, 1 575 € ou 1 365 € ailleurs (Service-public.fr, janvier 2026). Vérifiez le plafond exact de votre commune sur le simulateur officiel de visale.fr avant de candidater."
         ]
       },
       {
@@ -55,7 +55,7 @@
       },
       {
         "q": "Quel est le plafond de loyer couvert par Visale à Paris ?",
-        "a": "1 500 € charges comprises à Paris, 1 300 € dans le reste de l'Île-de-France et de la France."
+        "a": "Le plafond dépend de la commune. En Île-de-France, Visale peut couvrir un loyer jusqu'à 1 940 € charges comprises selon votre situation et vos ressources (1 000 € pour un étudiant ou un alternant sans justificatifs de ressources). Le simulateur officiel de visale.fr donne le plafond exact de votre commune."
       },
       {
         "q": "Combien de temps faut-il pour obtenir son visa Visale ?",

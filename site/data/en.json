@@ -1,0 +1,369 @@
+{
+  "home": {
+    "title": "Renting in Paris: housing guide in English | Trouve Ton Appart",
+    "metaDescription": "How renting works in Paris and Île-de-France: free state guarantor (Visale), certified rental file, mobility lease and rent control, in plain English.",
+    "h1": "Renting in Paris and Île-de-France, explained in English",
+    "lead": "France's rental system runs on schemes that even locals struggle with: guarantors, certified files, rent caps, short furnished leases. We explain the ones that matter for internationals, in plain English, and we link only to the official platforms. Free, no signup, no data collected.",
+    "steps": [
+      { "h3": "Secure a guarantor first", "text": "In Paris, landlords almost always demand solid guarantees before they consider an application. The state-backed Visale guarantee solves this for free, before you start viewing apartments." },
+      { "h3": "Prepare a certified file", "text": "DossierFacile, a free public service, verifies and watermarks your documents and gives you one shareable link. Your application reads in seconds while others are still gathering paperwork." },
+      { "h3": "Apply at the source", "text": "We publish no listings. Every guide points to the official platform where things actually happen: visale.fr, dossierfacile.logement.gouv.fr, the City of Paris reference-rent grids." }
+    ],
+    "frenchSite": "This English section covers the essentials for internationals. The full site is in French: 19 practical guides, a 2-minute housing diagnostic, a social-housing eligibility simulator, a Paris rent checker, and open-data directories covering social housing, student residences and waiting times across all of Île-de-France.",
+    "about": "Trouve Ton Appart is an independent orientation service published by MKZ SAS. We are not an agency and we sell nothing: we point each profile to the right official scheme, with sources and dates. Our data pages are built on French public open data."
+  },
+  "hub": {
+    "title": "Guides in English: renting in Paris and Île-de-France",
+    "metaDescription": "Five practical guides in English to rent in Paris: Visale guarantor, DossierFacile, mobility lease, guarantor options and Paris rent control.",
+    "h1": "Guides in English",
+    "lead": "Five practical guides covering what internationals actually need to rent in Paris and Île-de-France: a free state guarantor, a certified application file, the short furnished lease and the legal rent caps. Each one links to the official source that counts."
+  },
+  "guides": [
+    {
+      "slug": "visale-guarantee",
+      "frSlug": "visale",
+      "parcours": ["etudiant", "mobilite"],
+      "title": "Visale: France's free rent guarantor, explained in English",
+      "metaDescription": "No guarantor in France? Visale stands as your rent guarantor for free. Who qualifies, how to apply on visale.fr, and the rent caps in Paris.",
+      "h1": "Visale: the free rent guarantor for renting in France",
+      "intro": "No guarantor in France? The Visale guarantee from Action Logement acts as your rent guarantor, for free. It is the single most powerful way to unlock a rental application, especially in Paris, where landlords almost always demand solid security, and where most internationals have no guarantor based in France.",
+      "sections": [
+        {
+          "h2": "What is the Visale guarantee?",
+          "paragraphs": [
+            "Visale is a free rental guarantee granted by Action Logement, the body financed by contributions from French companies. Concretely, if you stop paying your rent, Action Logement compensates the landlord (unpaid rent and charges, up to 36 monthly payments in the private market), then arranges a repayment plan with you.",
+            "For the landlord, it is security equal to, and often better than, a family guarantor. More and more landlords in the Paris region accept it, and some rental platforms even require it by default."
+          ]
+        },
+        {
+          "h2": "Who qualifies?",
+          "bullets": [
+            "Everyone aged 18 to 30, whatever the status: student, work-study trainee, employee, jobseeker.",
+            "Private-sector employees over 30, if they apply within 6 months of being hired or transferred, or if their net salary is €1,710 per month or less.",
+            "Anyone signing a bail mobilité (mobility lease), with no age condition.",
+            "International students and researchers on mobility programmes, subject to residence-permit conditions."
+          ],
+          "paragraphs": [
+            "The home must be your main residence, located in France, and the rent including charges must not exceed a cap that depends on the commune: up to €1,940 in Île-de-France, €1,575 or €1,365 elsewhere in France (Service-public.fr, January 2026). Check the exact cap for your commune on the official visale.fr simulator before you apply."
+          ]
+        },
+        {
+          "h2": "How to get your Visale visa: the 3 steps",
+          "bullets": [
+            "1. Create your account on [visale.fr](https://www.visale.fr) and submit your application (ID, proof of your situation). The answer usually arrives within 2 working days.",
+            "2. You receive your certified \"visa\", valid for 6 months, to include in your rental applications: it reassures the landlord immediately.",
+            "3. Once the lease is signed, the landlord activates the guarantee on their own visale.fr account using your visa number."
+          ],
+          "paragraphs": [
+            "Tip: request your visa BEFORE you start viewing apartments. An application that arrives with a validated Visale visa goes to the top of the pile."
+          ]
+        },
+        {
+          "h2": "Visale, family guarantor or paid guarantor: which to choose?",
+          "paragraphs": [
+            "Visale is free, while private paid guarantors (GarantMe, Cautioneo and others) typically charge 3 to 5% of the annual rent. If you qualify for Visale, always start there. If you do not, see our guide to [guarantor options in France](/en/guides/guarantor-in-france/).",
+            "One rule to know: a landlord cannot combine a guarantee (a guarantor or Visale) with rent-default insurance, except for students and apprentices. If a landlord declines Visale because they already have insurance, that is consistent with the rule: look for a compatible home instead."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Is Visale really free?",
+          "a": "Yes, completely free for the tenant and for the landlord. The scheme is financed by Action Logement (contributions paid by French companies)."
+        },
+        {
+          "q": "Can I use Visale as an international?",
+          "a": "Yes, subject to residence conditions: anyone aged 18 to 30 qualifies under the general rules, and international students and researchers on mobility programmes qualify subject to their residence permit. The application is filed online on visale.fr."
+        },
+        {
+          "q": "What is the Visale rent cap in Paris?",
+          "a": "The cap depends on the commune. In Île-de-France, Visale can cover a rent of up to €1,940 including charges, depending on your situation and resources (€1,000 for a student or work-study trainee with no proof of income). The official visale.fr simulator gives the exact cap for your commune."
+        },
+        {
+          "q": "How long does it take to get a Visale visa?",
+          "a": "You apply online on visale.fr and the answer usually arrives within 2 working days. The visa is then valid for 6 months."
+        },
+        {
+          "q": "Does Visale work with a mobility lease?",
+          "a": "Yes, the bail mobilité qualifies for Visale with no age condition, which makes the two a very effective combination for work assignments and temporary stays."
+        }
+      ],
+      "sourcesOfficielles": [
+        { "label": "visale.fr, the official Action Logement website", "url": "https://www.visale.fr" },
+        { "label": "The Visale guarantee on Service-public.fr (in French)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33453" }
+      ]
+    },
+    {
+      "slug": "guarantor-in-france",
+      "frSlug": "garant-location",
+      "parcours": ["etudiant", "mobilite"],
+      "title": "Guarantor in France: 4 solutions when you don't have one",
+      "metaDescription": "No guarantor in France? Compare the free Visale guarantee, paid guarantor services and bank guarantees, and learn how to strengthen your application.",
+      "h1": "Guarantor in France: your options when you don't have one",
+      "intro": "In Paris and Île-de-France, a rental application without a guarantor starts with a serious handicap, and a guarantor living abroad is often refused in practice. Good news: a French family guarantor is no longer the only option. Here are the solutions, from the cheapest to the most expensive.",
+      "sections": [
+        {
+          "h2": "Option 1: Visale, the free public guarantee, always first",
+          "paragraphs": [
+            "If you are aged 18 to 30, if you have just been hired, or if you are signing a mobility lease, the public Visale guarantee acts as your guarantor for free. It is the first option to try. See our full [Visale guide](/en/guides/visale-guarantee/) for the conditions and the application steps."
+          ]
+        },
+        {
+          "h2": "Option 2: a personal guarantor (family, close friend)",
+          "paragraphs": [
+            "The classic route: someone signs a guarantee deed (acte de cautionnement, usually a joint and several guarantee). In practice, landlords expect the guarantor to earn about 3 to 4 times the rent. A guarantor cannot be combined with the landlord's rent-default insurance, unless you are a student or an apprentice."
+          ]
+        },
+        {
+          "h2": "Option 3: paid guarantor services (GarantMe, Cautioneo, Unkle)",
+          "paragraphs": [
+            "Private companies act as your guarantor for a fee, typically 3 to 5% of the annual rent, renewed every year. This is the usual solution for profiles not eligible for Visale and without a guarantor in France: self-employed workers, internationals outside the supported mobility schemes, atypical income. Their certificates are widely accepted by Paris agencies.",
+            "Compare carefully: the cost over several years becomes significant, and some landlords still prefer a personal guarantor."
+          ]
+        },
+        {
+          "h2": "Option 4: a bank guarantee",
+          "paragraphs": [
+            "You block several months of rent (often 6 to 12) in a dedicated account, and the bank acts as your guarantor. It works, but it ties up a lot of cash and the bank charges for it: keep it for when nothing else does."
+          ]
+        },
+        {
+          "h2": "Strengthen your application beyond the guarantor",
+          "bullets": [
+            "Build a complete file with [DossierFacile](/en/guides/dossierfacile/), the free public service: certified documents, tamper-proof watermark, one shareable link. Agencies love it.",
+            "Request your Visale visa or your guarantor certificate BEFORE the viewings: a pre-validated application goes to the front of the queue.",
+            "Never pay to visit a property, and never send money before the lease is signed: that is the most common rental scam in the Paris region."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "How much does a guarantor need to earn?",
+          "a": "There is no legal rule, but in practice landlords expect the guarantor's income to reach 3 to 4 times the rent including charges."
+        },
+        {
+          "q": "Can a landlord require both a guarantor and rent-default insurance?",
+          "a": "No, combining the two is prohibited, unless the tenant is a student or an apprentice."
+        },
+        {
+          "q": "How much does a paid guarantor service cost?",
+          "a": "Generally 3 to 5% of the annual rent: for a €1,000 monthly rent, roughly €360 to €600 per year."
+        },
+        {
+          "q": "Is a guarantor living abroad accepted?",
+          "a": "Legally possible, but many landlords refuse it in practice, because recovery would be difficult. Visale or a paid guarantor service are then your best alternatives."
+        }
+      ],
+      "sourcesOfficielles": [
+        { "label": "DossierFacile, the state-certified rental file", "url": "https://www.dossierfacile.logement.gouv.fr" },
+        { "label": "visale.fr, the free guarantee from Action Logement", "url": "https://www.visale.fr" },
+        { "label": "The guarantee deed on Service-public.fr (in French)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31267" }
+      ]
+    },
+    {
+      "slug": "dossierfacile",
+      "frSlug": "dossierfacile",
+      "parcours": ["etudiant", "mobilite"],
+      "title": "DossierFacile: France's certified rental file, in English",
+      "metaDescription": "DossierFacile certifies your French rental application for free: verified documents, anti-fraud watermark, one shareable link. How it works, in English.",
+      "h1": "DossierFacile: the state-certified rental file landlords trust",
+      "intro": "In Paris, a listing attracts dozens of applications within hours. DossierFacile, the free public service run by the French Ministry of Housing, turns your supporting documents into a verified, watermarked digital file you share with a single link. Combined with a Visale guarantor, it is the other half of an application that goes to the top of the pile.",
+      "sections": [
+        {
+          "h2": "What is DossierFacile?",
+          "paragraphs": [
+            "DossierFacile is a free online public service operated by the French Ministry of Housing. You upload your supporting documents, a team checks them (legibility, consistency, compliance), then your file is certified and available through a web link you paste into your applications.",
+            "Every document is covered with a watermark stating that it is for rental use only. That is concrete protection against document fraud and the reuse of your papers: never again attach raw payslips to an email."
+          ]
+        },
+        {
+          "h2": "Which documents to prepare",
+          "bullets": [
+            "Valid ID (national ID card, passport, residence permit).",
+            "Proof of your situation: work contract or employer certificate, school enrolment certificate or work-study contract.",
+            "Proof of income: last three payslips, latest tax notice, scholarship or pension statements where relevant.",
+            "Proof of your current address (rent receipts, a host attestation, and so on).",
+            "For a personal guarantor: the same documents for them. A Visale visa can replace the guarantor."
+          ],
+          "paragraphs": [
+            "Tip: scan complete, sharp documents (every page, no fingers in the shot, no rough cropping). Illegible documents are the number one cause of back-and-forth with the verification team."
+          ]
+        },
+        {
+          "h2": "How it works, step by step",
+          "bullets": [
+            "1. Create your account on [dossierfacile.logement.gouv.fr](https://www.dossierfacile.logement.gouv.fr).",
+            "2. Upload your documents, plus your guarantor's documents or your Visale visa.",
+            "3. The team verifies your file within 72 working hours at most, often faster. If a document raises an issue, you receive a precise correction request.",
+            "4. You get a unique link to your certified file, to paste into every application (and a full PDF if an agency insists on one)."
+          ]
+        },
+        {
+          "h2": "Why it changes your applications, especially in the Paris region",
+          "paragraphs": [
+            "Paris agencies and landlords sort through piles of files: a state-certified file reads in a few seconds, with no missing document and no doubt about authenticity. Several agency networks now recommend it, or even require it.",
+            "The winning combination in Île-de-France: DossierFacile for the file, [Visale](/en/guides/visale-guarantee/) for the guarantee. Both are free, both are public, and both can be ready before your first viewing. Your application arrives complete while the others are still gathering paperwork."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Is DossierFacile really free?",
+          "a": "Yes, completely. It is a public service operated by the French Ministry of Housing, with no paid tier and no advertising."
+        },
+        {
+          "q": "Is DossierFacile mandatory to rent in France?",
+          "a": "No. But a certified file is read faster and inspires trust, and some agencies now ask for it explicitly."
+        },
+        {
+          "q": "How long does the verification take?",
+          "a": "The service announces a verification within 72 working hours at most, and it is often faster in practice. Create your file before you start booking viewings."
+        },
+        {
+          "q": "Can my guarantor be included in the file?",
+          "a": "Yes, the file can include your personal guarantor's documents, or your Visale visa if you use the public guarantee."
+        },
+        {
+          "q": "Are my documents protected?",
+          "a": "The documents are hosted by the public service and watermarked for rental use only, which discourages any fraudulent reuse."
+        }
+      ],
+      "sourcesOfficielles": [
+        { "label": "DossierFacile, the official website", "url": "https://www.dossierfacile.logement.gouv.fr" },
+        { "label": "The documents a landlord may require, on Service-public.fr (in French)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F1169" },
+        { "label": "visale.fr, the free guarantee to attach to your file", "url": "https://www.visale.fr" }
+      ]
+    },
+    {
+      "slug": "mobility-lease",
+      "frSlug": "bail-mobilite",
+      "parcours": ["mobilite", "etudiant"],
+      "title": "Bail mobilité: the 1-to-10-month furnished lease in France",
+      "metaDescription": "The bail mobilité is France's furnished lease for 1 to 10 months, with no security deposit. Who can sign one, the rules, and the traps to avoid.",
+      "h1": "Mobility lease: renting furnished for 1 to 10 months",
+      "intro": "Internship, work-study, assignment, transfer, exchange semester: the bail mobilité (mobility lease) is the contract designed for 1-to-10-month stays in furnished homes, with no security deposit allowed. It now accounts for nearly a quarter of the furnished leases signed in Île-de-France. Here is how it works, and the catches to watch for.",
+      "sections": [
+        {
+          "h2": "Who can sign a mobility lease?",
+          "paragraphs": [
+            "The mobility lease (created by the French ELAN law) is reserved for tenants who can prove, when signing, that they are in a mobility situation:"
+          ],
+          "bullets": [
+            "professional training or apprenticeship",
+            "higher education (including exchange semesters)",
+            "an internship or a civic service assignment (service civique)",
+            "a job transfer or a temporary professional assignment"
+          ]
+        },
+        {
+          "h2": "The rules of the contract",
+          "bullets": [
+            "Furnished homes only, used as your main residence during the stay.",
+            "Duration of 1 to 10 months, adjustable once by amendment but never beyond 10 months in total, because the contract is not renewable. To stay longer, you have to switch to a standard furnished lease (1 year, or 9 months for students).",
+            "No security deposit (dépôt de garantie) can be required: that is the law. The landlord may however ask for a guarantee, and that is where [Visale](/en/guides/visale-guarantee/) comes in: it covers this lease with no age condition.",
+            "Tenant's notice: 1 month, at any time. The landlord cannot terminate the lease before its end.",
+            "In Paris and in some towns of the Greater Paris area, rent control also applies to mobility leases: [check the maximum reference rent](/en/guides/paris-rent-control/) of your neighbourhood before signing."
+          ]
+        },
+        {
+          "h2": "Where to find a mobility lease in Île-de-France",
+          "paragraphs": [
+            "Supply is concentrated among furnished-rental specialists (Lodgis, Paris Attitude, medium-term rental platforms) and is growing fast among coliving and residence operators. Furnished rents in Paris are high (around €38 per m² on average): widening your search to well-connected inner suburbs changes the budget radically.",
+            "Good to know: since 2025, in certain employment-oriented residences (résidences à vocation d'emploi), the duration can be extended up to 18 months, useful for long assignments."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Is the mobility lease renewable?",
+          "a": "No. It can be amended once, within the overall limit of 10 months, but never renewed. If you stay longer, the landlord must offer you a standard furnished lease."
+        },
+        {
+          "q": "Can I be asked for a security deposit on a mobility lease?",
+          "a": "No, the law prohibits it. A guarantee can however be required: a personal guarantor or Visale."
+        },
+        {
+          "q": "Does Paris rent control apply to the mobility lease?",
+          "a": "Yes. In Paris and in the other areas applying rent control, the rent of a mobility lease must stay within the maximum reference rent of the zone."
+        },
+        {
+          "q": "Which housing benefits can I receive with a mobility lease?",
+          "a": "France's housing benefits (APL or ALS, paid by the CAF) are possible if the home is your main residence, depending on your resources, and the Visale guarantee covers this lease with no age condition."
+        }
+      ],
+      "sourcesOfficielles": [
+        { "label": "The mobility lease on Service-public.fr (in French)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34759" },
+        { "label": "Rent control on Paris.fr (in French)", "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712" }
+      ]
+    },
+    {
+      "slug": "paris-rent-control",
+      "frSlug": "encadrement-des-loyers-paris",
+      "parcours": ["mobilite"],
+      "title": "Paris rent control: check your rent before you sign",
+      "metaDescription": "Most Paris rents are legally capped. How to check yours against the official reference rent, spot an unjustified rent supplement, and take action.",
+      "h1": "Rent control in Paris: check before you sign",
+      "intro": "In Paris, the rent of most leases is capped by a maximum reference rent (loyer de référence majoré) set by decree, neighbourhood by neighbourhood. Yet many listings exceed it, counting on tenants who do not know the rules, starting with newcomers and internationals. Checking takes five minutes and can save hundreds of euros per month.",
+      "sections": [
+        {
+          "h2": "How Paris rent control works",
+          "paragraphs": [
+            "For each neighbourhood and each type of home (number of rooms, construction period, furnished or not), a prefectural decree sets three values: the reference rent, the maximum reference rent (+20%) and the minimum reference rent (-30%). The rent per square metre in your lease cannot exceed the maximum reference.",
+            "The scheme applies to standard residential leases, to furnished leases (with specific, higher references) and to mobility leases. The lease must state the applicable maximum reference rent."
+          ]
+        },
+        {
+          "h2": "Check your rent in 5 minutes",
+          "bullets": [
+            "1. Note the living area, the number of rooms, the approximate construction year, furnished or not, and the exact address.",
+            "2. Look up the official reference rents for Paris (City of Paris and regional prefecture publish a simulator). Our [French-language rent checker](/guides/encadrement-des-loyers-paris/#verifier) compares your rent to the official grid of the 80 Paris neighbourhoods.",
+            "3. Compute: rent excluding charges ÷ living area = rent per m². Compare it to the maximum reference of the neighbourhood.",
+            "4. Above the cap? Check whether a rent supplement (complément de loyer) is written into the lease, and whether it is genuinely justified."
+          ]
+        },
+        {
+          "h2": "The rent supplement: the exception used as an excuse",
+          "paragraphs": [
+            "A landlord may exceed the maximum reference only through an explicit rent supplement in the lease, justified by comfort or location features that are exceptional compared with similar homes in the neighbourhood: a large terrace, a remarkable view, rare equipment. An ordinary balcony, \"lovely light\" or a standard renovation do not qualify.",
+            "The supplement can be contested within 3 months of signing the lease, before the departmental conciliation commission: it is free, and the burden of proving the exceptional feature lies with the landlord."
+          ]
+        },
+        {
+          "h2": "Rent above the cap: your concrete remedies",
+          "bullets": [
+            "Before signing: negotiate by quoting the maximum reference rent (a legal argument changes the balance of power), or walk away.",
+            "After signing: an action to reduce the rent, first amicably (registered letter), then before the departmental conciliation commission, free of charge and with no lawyer required.",
+            "Report the breach to the City of Paris: the landlord risks an administrative fine of up to €5,000 (€15,000 for a legal entity such as a company).",
+            "The ADIL of Paris, the free housing-law advice centre, can guide you at every step."
+          ],
+          "paragraphs": [
+            "Note: rent control also exists elsewhere in Île-de-France, notably in the Est Ensemble and Plaine Commune areas, just north and east of Paris. That five-minute check is worth doing beyond the ring road too."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Does rent control apply to furnished homes and mobility leases?",
+          "a": "Yes. Furnished homes have their own, slightly higher reference rents, and the mobility lease is subject to the same caps as a standard furnished lease."
+        },
+        {
+          "q": "What can I do if my rent exceeds the maximum reference?",
+          "a": "Start with an amicable request by registered letter, then bring the case to the departmental conciliation commission (free). In parallel, the breach can be reported to the City of Paris, which can fine the landlord."
+        },
+        {
+          "q": "Is a rent supplement legal?",
+          "a": "Yes, but only if it is written into the lease and justified by genuinely exceptional features compared with similar homes in the neighbourhood. It can be contested at the start of the lease before the conciliation commission."
+        },
+        {
+          "q": "Does rent control exist outside Paris?",
+          "a": "Yes, notably in the Est Ensemble and Plaine Commune areas in Seine-Saint-Denis. Each area has its own reference rents: check the local simulator."
+        }
+      ],
+      "sourcesOfficielles": [
+        { "label": "Rent control on Paris.fr (in French)", "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712" },
+        { "label": "Paris capped rents on Service-public.fr (in French)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34407" },
+        { "label": "The ADIL of Paris, free housing-law advice", "url": "https://www.adil75.org" }
+      ]
+    }
+  ]
+}

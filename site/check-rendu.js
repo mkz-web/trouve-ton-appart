@@ -61,6 +61,7 @@ const GABARITS = [
   '/annuaire/', '/residences-crous/', '/residences-crous/paris-75/',
   '/logement-social/chiffres/', '/logement-social/chiffres/seine-et-marne-77/',
   '/logement-social/delais/', '/mentions-legales/', '/404.html',
+  '/en/', '/en/guides/', '/en/guides/visale-guarantee/',
 ];
 
 /* Pages dont le contenu utile est CONSTRUIT PAR JS et non présent dans le HTML.

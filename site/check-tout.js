@@ -5,8 +5,8 @@
  * Runtime     : Node.js >= 22 (imposé par check-rendu.js)
  * Dépendances : AUCUNE (child_process, path natifs)
  * Exécution   : node site/check-tout.js [--toutes]
- *   --toutes   passe les 66 pages au contrôle de rendu au lieu des 18 gabarits
- *              (à réserver aux refontes de CSS : ~4 min contre ~12 s)
+ *   --toutes   passe toutes les pages au contrôle de rendu au lieu des seuls
+ *              gabarits (à réserver aux refontes de CSS : ~4 min contre ~12 s)
  *
  * POURQUOI CE SCRIPT : un contrôle qu'on peut oublier finit par être oublié.
  * Les trois contrôles existants ne servent à rien s'ils ne sont pas lancés, et
@@ -69,4 +69,4 @@ for (let i = 0; i < ETAPES.length; i++) {
 }
 
 console.log(`\n✓ Les ${ETAPES.length} étapes passent (${((Date.now() - debutTotal) / 1000).toFixed(1)} s au total). Publication possible.`);
-if (!TOUTES) console.log('  (rendu vérifié sur les 18 gabarits ; après une refonte du CSS, relancer avec --toutes)');
+if (!TOUTES) console.log('  (rendu vérifié sur les gabarits de check-rendu.js ; après une refonte du CSS, relancer avec --toutes)');

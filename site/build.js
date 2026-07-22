@@ -24,6 +24,15 @@ const GUIDES = read('guides.json');
 const PARCOURS = read('parcours.json');
 const ANNUAIRE = read('annuaire.json');
 const DIAG = read('diagnostic.json');
+const EN = read('en.json');
+
+/* Correspondances FR ↔ EN : alimentent le hreflang bidirectionnel et les
+ * liens de bascule de langue. Une paire n'existe que si la page anglaise
+ * est une vraie jumelle (adaptation fidèle du même contenu). */
+const EN_PAIRS = [{ fr: '/', en: '/en/' }, { fr: '/guides/', en: '/en/guides/' }]
+  .concat(EN.guides.map(g => ({ fr: `/guides/${g.frSlug}/`, en: `/en/guides/${g.slug}/` })));
+const EN_OF = new Map(EN_PAIRS.map(p => [p.fr, p.en]));
+const FR_OF = new Map(EN_PAIRS.map(p => [p.en, p.fr]));
 
 /* ---- Snapshots open data (Phase 2, produits par ingest/ingest.js) ----
  * Optionnels : si un snapshot manque, les pages correspondantes sont
@@ -239,6 +248,7 @@ const BRAND_MARK = `<svg class="brand-mark" viewBox="0 0 32 32" xmlns="http://ww
  * Ce raisonnement reste ICI, en commentaire de build : servi en commentaire
  * HTML, il pesait sur les 67 pages et exposait la stratégie dans le source. */
 const CREDIT = '<p class="footer-credit">Site conçu et édité par <a href="https://mkz-consulting.fr" rel="nofollow">MKZ</a></p>';
+const CREDIT_EN = '<p class="footer-credit">Website designed and published by <a href="https://mkz-consulting.fr" rel="nofollow">MKZ</a></p>';
 
 /* Wordmark : dernier mot du nom en accent, son « A » initial remplacé par
  * une maison-lettre (pignon = chapeau du A, porte = contrepoinçon). */
@@ -380,10 +390,25 @@ if(illo){new IntersectionObserver(function(es){es.forEach(function(en){
 const BUILD_DATE = new Date();
 const DATE_ISO = BUILD_DATE.toISOString().slice(0, 10);
 const DATE_FR = BUILD_DATE.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+const DATE_EN = BUILD_DATE.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 const DATE_PUBLICATION = '2026-06-10';
+
+/* Échappement spécifique au contexte <script> : JSON.stringify ne protège
+ * ni « < » ni « </script> » — une donnée open data hostile pourrait sinon
+ * fermer la balise et injecter du HTML. Le JSON reste strictement valide. */
+const ldEsc = (o) => JSON.stringify(o)
+  .replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026')
+  .replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
 
 function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = [], breadcrumbs = null }) {
   const canonical = SITE.baseUrl + urlPath;
+  /* hreflang : seulement sur les pages qui ont une vraie jumelle anglaise.
+   * x-default = la version française (audience principale du site). */
+  const enPath = EN_OF.get(urlPath);
+  const alternates = enPath ? `
+<link rel="alternate" hreflang="fr" href="${SITE.baseUrl}${urlPath}">
+<link rel="alternate" hreflang="en" href="${SITE.baseUrl}${enPath}">
+<link rel="alternate" hreflang="x-default" href="${SITE.baseUrl}${urlPath}">` : '';
   /* aria-current : annonce « page courante » aux lecteurs d'écran ; porte
    * aussi l'état visuel « vous êtes ici » du menu (pilule + barre).
    * « page » = correspondance exacte seulement ; une sous-page de la
@@ -405,12 +430,6 @@ function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = []
       })),
     }]);
   }
-  /* Échappement spécifique au contexte <script> : JSON.stringify ne protège
-   * ni « < » ni « </script> » — une donnée open data hostile pourrait sinon
-   * fermer la balise et injecter du HTML. Le JSON reste strictement valide. */
-  const ldEsc = (o) => JSON.stringify(o)
-    .replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026')
-    .replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
   const ld = jsonLd.map(o => `<script type="application/ld+json">${ldEsc(o)}</script>`).join('\n');
   const footGuides = GUIDES.map(g => `<li><a href="/guides/${g.slug}/">${esc(g.h1)}</a></li>`).join('');
   const footParcours = PARCOURS.map(p => `<li><a href="/${p.slug}/">${esc(p.nav)}</a></li>`).join('');
@@ -431,7 +450,7 @@ function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = []
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(metaDescription)}">
-<link rel="canonical" href="${canonical}">
+<link rel="canonical" href="${canonical}">${alternates}
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${esc(SITE.name)}">
@@ -454,7 +473,7 @@ ${ld}
 <header class="site-header">
   <div class="container">
     <a class="brand" href="/" aria-label="${esc(SITE.name)}, accueil">${BRAND_MARK}<span class="brand-text" aria-hidden="true">${BRAND_HTML}<span class="brand-sub">Île-de-France</span></span></a>
-    <nav class="main-nav">${nav}${navLink('/outils/', 'Outils')}${navLink('/annuaire/', 'Annuaire')}${navLink('/recherche/', 'Rechercher')}</nav>
+    <nav class="main-nav">${nav}${navLink('/outils/', 'Outils')}${navLink('/annuaire/', 'Annuaire')}${navLink('/recherche/', 'Rechercher')}<a class="lang-link" href="${enPath || '/en/'}" lang="en" hreflang="en">English</a></nav>
   </div>
 </header>
 <main class="container">
@@ -481,6 +500,105 @@ ${content}
   <div class="container footer-legal">
     <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/">Mentions légales</a></p>
     ${CREDIT}
+  </div>
+</footer>
+${ANIM_JS}
+${content.includes('table class="data"') ? TABLE_JS : ''}
+</body>
+</html>`;
+}
+
+/* ------------------- Gabarit anglais (/en/) ---------------------------
+ * Section anglaise compacte pour la 3e cible du site (mobilité pro,
+ * expats, étudiants internationaux) : chrome traduit, hreflang
+ * bidirectionnel, footer réduit aux pages anglaises + renvois vers le
+ * site français. Fonction sœur de layout() plutôt que paramétrage de
+ * celle-ci : le gabarit des 60+ pages françaises reste intouché. */
+function layoutEn({ title, metaDescription, urlPath, content, jsonLd = [], breadcrumbs = null }) {
+  const canonical = SITE.baseUrl + urlPath;
+  const frPath = FR_OF.get(urlPath) || '/';
+  const navLink = (href, label) => {
+    const cur = urlPath === href ? 'page' : (href !== '/en/' && urlPath.startsWith(href)) ? 'true' : '';
+    return `<a href="${href}"${cur ? ` aria-current="${cur}"` : ''}>${label}</a>`;
+  };
+  if (breadcrumbs) {
+    jsonLd = jsonLd.concat([{
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [{ name: 'Home', url: '/en/' }].concat(breadcrumbs).map((b, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: b.name,
+        ...(b.url ? { item: SITE.baseUrl + b.url } : {}),
+      })),
+    }]);
+  }
+  const ld = jsonLd.map(o => `<script type="application/ld+json">${ldEsc(o)}</script>`).join('\n');
+  const footGuidesEn = EN.guides.map(g => `<li><a href="/en/guides/${g.slug}/">${esc(g.h1)}</a></li>`).join('');
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(metaDescription)}">
+<link rel="canonical" href="${canonical}">
+<link rel="alternate" hreflang="fr" href="${SITE.baseUrl}${frPath}">
+<link rel="alternate" hreflang="en" href="${canonical}">
+<link rel="alternate" hreflang="x-default" href="${SITE.baseUrl}${frPath}">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="${esc(SITE.name)}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(metaDescription)}">
+<meta property="og:url" content="${canonical}">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="${SITE.baseUrl}/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(metaDescription)}">
+<meta name="twitter:image" content="${SITE.baseUrl}/og-image.png">
+<style>${css()}</style>
+${VT_CSS}
+${ld}
+</head>
+<body>
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="/en/" aria-label="${esc(SITE.name)}, home">${BRAND_MARK}<span class="brand-text" aria-hidden="true">${BRAND_HTML}<span class="brand-sub">Île-de-France</span></span></a>
+    <nav class="main-nav">${navLink('/en/', 'Home')}${navLink('/en/guides/', 'Guides')}<a class="lang-link" href="${frPath}" lang="fr" hreflang="fr">Français</a></nav>
+  </div>
+</header>
+<main class="container">
+${content}
+</main>
+<svg class="roofline" viewBox="0 0 640 22" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path fill="#1c2733" d="M0 22V13h26l7-7 7 7h46V7h34l9-5 9 5h50v7h38l11-9 11 9h56V6h42l8-6 8 6h46v9h40l9-7 9 7h52V8h38l9-6 9 6h66v14z"/></svg>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <p class="footer-brand">${esc(SITE.name)}</p>
+      <p>The single front door to housing in Paris and Île-de-France. An independent, free orientation service: no listings, no signup, no data collected. We point you to the official schemes and sources.</p>
+    </div>
+    <div>
+      <p class="footer-title">Guides in English</p>
+      <ul>${footGuidesEn}</ul>
+    </div>
+    <div>
+      <p class="footer-title">The full site (in French)</p>
+      <ul>
+        <li><a href="/" lang="fr">Accueil en français</a></li>
+        <li><a href="/guides/" lang="fr">Les ${GUIDES.length} guides pratiques</a></li>
+        <li><a href="/outils/" lang="fr">Outils gratuits</a></li>
+        <li><a href="/diagnostic/" lang="fr">Diagnostic logement (2 min)</a></li>
+        <li><a href="/annuaire/" lang="fr">Annuaire des sources fiables</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-legal">
+    <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/" lang="fr">Legal notice (mentions légales)</a></p>
+    ${CREDIT_EN}
   </div>
 </footer>
 ${ANIM_JS}
@@ -873,6 +991,198 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
     content,
     breadcrumbs: [{ name: 'Guides', url: '/guides/' }],
   }), '0.7');
+})();
+
+/* ---------------------- Section anglaise (/en/) ----------------------
+ * 7 pages : accueil, hub, 5 guides adaptés des guides français déjà
+ * fact-checkés (Visale, garant, DossierFacile, bail mobilité,
+ * encadrement). Les volumes de recherche purement anglophones sont
+ * faibles : cette section joue l'audience expat (3e cible du site) et
+ * la citabilité par les moteurs IA interrogés en anglais, pas la SERP
+ * classique. Tout fait nouveau doit être vérifié avant d'entrer ici. */
+
+/* Guides anglais : même mécanique que les guides français (sommaire
+ * actif, scroll-spy, FAQ, sources), chrome et libellés traduits. */
+for (const g of EN.guides) {
+  const frGuide = GUIDES.find(x => x.slug === g.frSlug);
+  if (!frGuide) throw new Error(`en.json : frSlug inconnu « ${g.frSlug} » (guide ${g.slug})`);
+  const usedIds = new Set(['faq']);
+  const tocItems = [];
+  const sections = g.sections.map(s => {
+    const id = anchorOf(s.h2, usedIds);
+    tocItems.push(`<li><a href="#${id}">${esc(s.h2)}</a></li>`);
+    /* Même mécanique que les guides français : paragraphes puis puces. */
+    let html = `<h2 id="${id}">${esc(s.h2)}</h2>`;
+    if (s.paragraphs) html += s.paragraphs.map(t => `<p>${inline(t)}</p>`).join('');
+    if (s.bullets) html += `<ul>${s.bullets.map(b => `<li>${inline(b)}</li>`).join('')}</ul>`;
+    return html;
+  }).join('');
+  tocItems.push('<li><a href="#faq">Frequently asked questions</a></li>');
+  const faqHtml = g.faq.map(f => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('');
+  const srcHtml = g.sourcesOfficielles.map(s => `<li><a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.label)}</a></li>`).join('');
+  const related = EN.guides.filter(x => x.slug !== g.slug).slice(0, 3)
+    .map(x => `<a class="pill" href="/en/guides/${x.slug}/">${esc(x.h1)}</a>`).join(' ');
+  const t = guideTheme(g);
+  const frUrl = `/guides/${g.frSlug}/`;
+  const content = `
+<div class="lecture-bar" aria-hidden="true"></div>
+<nav class="breadcrumb"><a href="/en/">Home</a> › <a href="/en/guides/">Guides</a> › ${esc(g.h1)}</nav>
+<article>
+<header class="page-head" style="${themeStyle(t)}">
+  <span class="page-head-icon">${icon(g.frSlug, t.c)}</span>
+  <div>
+    <p class="kicker">Practical guide</p>
+    <h1>${esc(g.h1)}</h1>
+    <p class="lead">${esc(g.intro)}</p>
+    <p class="maj">Updated ${DATE_EN}</p>
+  </div>
+</header>
+<div class="guide-layout">
+<nav class="guide-toc" aria-label="Guide contents"><details class="toc-box" open><summary>In this guide</summary><ol>${tocItems.join('')}</ol></details></nav>
+<script>if(!matchMedia('(min-width:1020px)').matches){var tocD=document.querySelector('.guide-toc details');if(tocD)tocD.removeAttribute('open')}</script>
+<div class="guide-body">
+${sections}
+<section class="faq" id="faq"><h2>Frequently asked questions</h2>${faqHtml}</section>
+<section class="notice"><h2>Official sources</h2><ul class="sources">${srcHtml}</ul></section>
+${related ? `<p class="pills"><strong>More guides in English:</strong> ${related}</p>` : ''}
+<p class="pills"><strong>En français&nbsp;:</strong> <a class="pill" href="${frUrl}" lang="fr" hreflang="fr">${esc(frGuide.h1)}</a></p>
+</div>
+</div>
+</article>
+<script>
+(function(){
+var toc=document.querySelector('.guide-toc');if(!toc)return;
+var links={},ordre=[],vis={},cur=null;
+toc.querySelectorAll('a[href^="#"]').forEach(function(a){var id=a.getAttribute('href').slice(1);links[id]=a;ordre.push(id)});
+function on(id){var a=links[id];if(!a||a===cur)return;
+ if(cur){cur.classList.remove('on');cur.removeAttribute('aria-current')}
+ cur=a;a.classList.add('on');a.setAttribute('aria-current','location')}
+var io=new IntersectionObserver(function(es){
+ es.forEach(function(en){vis[en.target.id]=en.isIntersecting});
+ for(var i=0;i<ordre.length;i++){if(vis[ordre[i]]){on(ordre[i]);return}}
+},{rootMargin:'0px 0px -65% 0px'});
+ordre.forEach(function(id){var el=document.getElementById(id);if(el)io.observe(el)});
+toc.addEventListener('click',function(e){var a=e.target.closest('a[href^="#"]');if(a)on(a.getAttribute('href').slice(1))});
+if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
+})();
+</script>`;
+  addPage(`/en/guides/${g.slug}/`, layoutEn({
+    title: g.title,
+    metaDescription: g.metaDescription,
+    urlPath: `/en/guides/${g.slug}/`,
+    content,
+    breadcrumbs: [{ name: 'Guides', url: '/en/guides/' }, { name: g.h1, url: `/en/guides/${g.slug}/` }],
+    jsonLd: [{
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: g.h1,
+      description: g.metaDescription,
+      datePublished: DATE_ISO,
+      dateModified: DATE_ISO,
+      inLanguage: 'en',
+      mainEntityOfPage: `${SITE.baseUrl}/en/guides/${g.slug}/`,
+      image: `${SITE.baseUrl}/og-image.png`,
+      author: { '@type': 'Organization', name: SITE.name, url: SITE.baseUrl },
+      publisher: { '@type': 'Organization', name: SITE.name, url: SITE.baseUrl, logo: { '@type': 'ImageObject', url: `${SITE.baseUrl}/og-image.png` } }
+    }, {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: g.faq.map(f => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a }
+      }))
+    }]
+  }), '0.7');
+}
+
+/* Hub anglais des guides — cible du fil d'Ariane « Guides » côté /en/. */
+(function buildGuidesHubEn() {
+  const cards = EN.guides.map(g => {
+    const t = guideTheme(g);
+    return `
+  <a class="card card-guide" href="/en/guides/${g.slug}/" style="${themeStyle(t)}">
+    <span class="card-icon card-icon-sm">${icon(g.frSlug, t.c)}</span>
+    <div><h3>${esc(g.h1)}</h3>
+    <p>${esc(g.metaDescription.split('. ')[0])}.</p></div>
+  </a>`;
+  }).join('');
+  const content = `
+<nav class="breadcrumb"><a href="/en/">Home</a> › Guides</nav>
+<header class="page-head" style="${themeStyle(themeOf())}">
+  <span class="page-head-icon">${icon('annuaire', PAL.bleu)}</span>
+  <div>
+    <h1>${esc(EN.hub.h1)}</h1>
+    <p class="lead">${esc(EN.hub.lead)}</p>
+  </div>
+</header>
+<div class="grid grid-guides">${cards}</div>
+<section class="notice">
+  <h2>Looking for more?</h2>
+  <p>${esc(EN.home.frenchSite)} <a href="/guides/" lang="fr" hreflang="fr">Voir les ${GUIDES.length} guides en français</a>.</p>
+</section>`;
+  addPage('/en/guides/', layoutEn({
+    title: EN.hub.title,
+    metaDescription: EN.hub.metaDescription,
+    urlPath: '/en/guides/',
+    content,
+    breadcrumbs: [{ name: 'Guides', url: '/en/guides/' }],
+  }), '0.6');
+})();
+
+/* Accueil anglais */
+(function buildHomeEn() {
+  const guideCards = EN.guides.map(g => {
+    const t = guideTheme(g);
+    return `
+  <a class="card card-guide" href="/en/guides/${g.slug}/" style="${themeStyle(t)}">
+    <span class="card-icon card-icon-sm">${icon(g.frSlug, t.c)}</span>
+    <div><h3>${esc(g.h1)}</h3>
+    <p>${esc(g.metaDescription.split('. ')[0])}.</p></div>
+  </a>`;
+  }).join('');
+  const steps = EN.home.steps.map(s => `<div class="step"><h3>${esc(s.h3)}</h3><p>${esc(s.text)}</p></div>`).join('');
+  const content = `
+<section class="hero">
+  <div class="hero-text">
+    <h1>${esc(EN.home.h1)}</h1>
+    <p class="lead">${esc(EN.home.lead)}</p>
+    <p class="hero-actions"><a class="btn" href="/en/guides/visale-guarantee/">Start here: your free guarantor</a><a class="btn btn-ghost" href="/en/guides/">All guides in English</a></p>
+  </div>
+  <div class="hero-illo">${skyline()}</div>
+</section>
+<section>
+  <h2>The guides</h2>
+  <div class="grid grid-guides">${guideCards}</div>
+</section>
+<section>
+  <h2>How renting works here, in three moves</h2>
+  <div class="steps">${steps}</div>
+</section>
+<section class="notice">
+  <h2>The rest of the site is in French</h2>
+  <p>${esc(EN.home.frenchSite)}</p>
+  <p class="pills"><a class="pill" href="/" lang="fr" hreflang="fr">Accueil en français</a> <a class="pill" href="/diagnostic/" lang="fr" hreflang="fr">Diagnostic logement (2 min)</a> <a class="pill" href="/outils/" lang="fr" hreflang="fr">Outils gratuits</a> <a class="pill" href="/logement-social/delais/" lang="fr" hreflang="fr">Délais du logement social</a></p>
+</section>
+<section class="notice">
+  <h2>Who we are</h2>
+  <p>${esc(EN.home.about)}</p>
+</section>`;
+  addPage('/en/', layoutEn({
+    title: EN.home.title,
+    metaDescription: EN.home.metaDescription,
+    urlPath: '/en/',
+    content,
+    jsonLd: [{
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: EN.home.title,
+      url: `${SITE.baseUrl}/en/`,
+      description: EN.home.metaDescription,
+      inLanguage: 'en',
+      isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.baseUrl }
+    }]
+  }), '0.8');
 })();
 
 /* Annuaire */
@@ -2024,7 +2334,8 @@ const HTML_404 = layout({
   content: `
 <h1>Page introuvable</h1>
 <p class="lead">Cette adresse ne correspond à aucune page du site. Le contenu a peut-être été déplacé.</p>
-<p class="hero-actions"><a class="btn" href="/recherche/">Rechercher sur le site</a><a class="btn btn-ghost" href="/">Retour à l'accueil</a></p>`,
+<p class="hero-actions"><a class="btn" href="/recherche/">Rechercher sur le site</a><a class="btn btn-ghost" href="/">Retour à l'accueil</a></p>
+<p lang="en">In English: this page does not exist. <a href="/en/">See our housing guides in English</a>.</p>`,
 }).replace('<link rel="canonical" href="https://trouve-ton-appart.fr/404/">', '<meta name="robots" content="noindex">');
 
 /* Mentions légales */
@@ -2081,6 +2392,7 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
  * (from scaleX(0)) : sous reduced-motion, l'indicateur reste affiché. */
 .main-nav a[aria-current]::after{content:"";position:absolute;left:12px;right:12px;bottom:2px;height:2px;border-radius:1px;background:#f3a18b;transform-origin:left;animation:nav-actif .26s ease-out .15s both}
 .main-nav a:hover{background:rgba(255,255,255,.14);opacity:1}
+.main-nav .lang-link{border:1px solid rgba(255,255,255,.38)}
 /* ---- Hero ---- */
 .hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px 36px;align-items:end;background:radial-gradient(420px 260px at 84% 22%,rgba(224,122,95,.12),transparent 70%),linear-gradient(160deg,#e8f1f9,#f7fbfe 60%,#fdfbf7 120%);border:1px solid #dbe7f1;border-radius:22px;box-shadow:0 18px 44px -28px rgba(31,78,121,.35);padding:40px 42px 28px;margin:1.6rem 0 .6rem}
 .hero h1{margin:.2rem 0 .8rem}
@@ -2480,6 +2792,10 @@ llms.push('');
 llms.push('## Guides pratiques');
 for (const g of GUIDES) llms.push(`- [${g.h1}](${B}/guides/${g.slug}/): ${g.metaDescription}`);
 llms.push('');
+llms.push('## In English');
+llms.push(`- [${EN.home.h1}](${B}/en/): ${EN.home.metaDescription}`);
+for (const g of EN.guides) llms.push(`- [${g.h1}](${B}/en/guides/${g.slug}/): ${g.metaDescription}`);
+llms.push('');
 llms.push('## Annuaires et chiffres (données publiques)');
 if (CROUS) llms.push(`- [Résidences CROUS d'Île-de-France](${B}/residences-crous/): les ${CROUS.records.length} résidences universitaires publiques, adresses et contacts par département (source : CNOUS).`);
 if (FJT) llms.push(`- [Foyers de jeunes travailleurs](${B}/foyers-jeunes-travailleurs/): les ${FJT.records.length} FJT franciliens pour les 16-25 ans, adresses et téléphones (source : FINESS).`);
@@ -2525,6 +2841,23 @@ for (const g of GUIDES) {
   full.push('FAQ :');
   for (const f of g.faq) { full.push(`Q : ${f.q}`); full.push(`R : ${f.a}`); }
   full.push(`Sources officielles : ${g.sourcesOfficielles.map(s => `${s.label} (${s.url})`).join(' · ')}`);
+}
+full.push('');
+full.push('## GUIDES IN ENGLISH');
+full.push('English adaptations of our fact-checked French guides, for internationals renting in Paris and Île-de-France.');
+for (const g of EN.guides) {
+  full.push('');
+  full.push(`### ${g.h1} — ${B}/en/guides/${g.slug}/`);
+  full.push(`Updated ${DATE_EN}. French version: ${B}/guides/${g.frSlug}/`);
+  full.push(g.intro);
+  for (const s of g.sections) {
+    full.push(`#### ${s.h2}`);
+    if (s.paragraphs) for (const t of s.paragraphs) full.push(t);
+    if (s.bullets) for (const b of s.bullets) full.push(`- ${b}`);
+  }
+  full.push('FAQ:');
+  for (const f of g.faq) { full.push(`Q: ${f.q}`); full.push(`A: ${f.a}`); }
+  full.push(`Official sources: ${g.sourcesOfficielles.map(s => `${s.label} (${s.url})`).join(' · ')}`);
 }
 if (LS_COMMUNES) {
   full.push('');
