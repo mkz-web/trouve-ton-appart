@@ -471,9 +471,10 @@ ${ld}
 </head>
 <body>
 <header class="site-header">
+  <div class="container header-lang"><a class="lang-link" href="${enPath || '/en/'}" lang="en" hreflang="en">English</a></div>
   <div class="container">
     <a class="brand" href="/" aria-label="${esc(SITE.name)}, accueil">${BRAND_MARK}<span class="brand-text" aria-hidden="true">${BRAND_HTML}<span class="brand-sub">Île-de-France</span></span></a>
-    <nav class="main-nav">${nav}${navLink('/outils/', 'Outils')}${navLink('/annuaire/', 'Annuaire')}${navLink('/recherche/', 'Rechercher')}<a class="lang-link" href="${enPath || '/en/'}" lang="en" hreflang="en">English</a></nav>
+    <nav class="main-nav">${nav}${navLink('/outils/', 'Outils')}${navLink('/annuaire/', 'Annuaire')}${navLink('/recherche/', 'Rechercher')}</nav>
   </div>
 </header>
 <main class="container">
@@ -566,9 +567,10 @@ ${ld}
 </head>
 <body>
 <header class="site-header">
+  <div class="container header-lang"><a class="lang-link" href="${frPath}" lang="fr" hreflang="fr">Français</a></div>
   <div class="container">
     <a class="brand" href="/en/" aria-label="${esc(SITE.name)}, home">${BRAND_MARK}<span class="brand-text" aria-hidden="true">${BRAND_HTML}<span class="brand-sub">Île-de-France</span></span></a>
-    <nav class="main-nav">${navLink('/en/', 'Home')}${navLink('/en/guides/', 'Guides')}<a class="lang-link" href="${frPath}" lang="fr" hreflang="fr">Français</a></nav>
+    <nav class="main-nav">${navLink('/en/', 'Home')}${navLink('/en/guides/', 'Guides')}</nav>
   </div>
 </header>
 <main class="container">
@@ -2372,7 +2374,11 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .lead{font-size:1.14rem;line-height:1.6;color:var(--gris)}
 .kicker{font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ttx,var(--bleu2));margin:0 0 .2rem}
 /* ---- Header ---- */
-.site-header{background:linear-gradient(135deg,#163a5c,var(--bleu) 60%,#26619a);padding:16px 0 0}
+.site-header{background:linear-gradient(135deg,#163a5c,var(--bleu) 60%,#26619a);padding:8px 0 0}
+.site-header .container.header-lang{justify-content:flex-end;margin-bottom:2px}
+.lang-link{color:#fff;text-decoration:none;font-size:.82rem;opacity:.92;padding:5px 12px;border:1px solid rgba(255,255,255,.38);border-radius:999px;transition:background .15s}
+.lang-link:hover{background:rgba(255,255,255,.14);opacity:1}
+.lang-link:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .site-header::after{content:"";display:block;height:4px;margin-top:14px;background:linear-gradient(90deg,var(--bleu2) 0 34%,var(--accent) 34% 67%,#3d8b6e 67%)}
 .main-nav a:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .site-header .container{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;justify-content:space-between}
@@ -2392,7 +2398,6 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
  * (from scaleX(0)) : sous reduced-motion, l'indicateur reste affiché. */
 .main-nav a[aria-current]::after{content:"";position:absolute;left:12px;right:12px;bottom:2px;height:2px;border-radius:1px;background:#f3a18b;transform-origin:left;animation:nav-actif .26s ease-out .15s both}
 .main-nav a:hover{background:rgba(255,255,255,.14);opacity:1}
-.main-nav .lang-link{border:1px solid rgba(255,255,255,.38)}
 /* ---- Hero ---- */
 .hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px 36px;align-items:end;background:radial-gradient(420px 260px at 84% 22%,rgba(224,122,95,.12),transparent 70%),linear-gradient(160deg,#e8f1f9,#f7fbfe 60%,#fdfbf7 120%);border:1px solid #dbe7f1;border-radius:22px;box-shadow:0 18px 44px -28px rgba(31,78,121,.35);padding:40px 42px 28px;margin:1.6rem 0 .6rem}
 .hero h1{margin:.2rem 0 .8rem}
