@@ -160,13 +160,13 @@
     {
       "id": "a-visale",
       "bloc": "aides",
-      "titre": "Garantie Visale : le garant gratuit de l'État",
+      "titre": "Garantie Visale : le garant gratuit d'Action Logement",
       "texte": "Action Logement se porte garant à votre place, gratuitement. Elle remplace le garant familial et rassure les bailleurs, y compris pour un bail mobilité.",
       "lien": "/guides/visale/",
       "lienLabel": "Le guide Visale",
       "regles": [
         { "si": { "age": ["a1", "a2"] }, "pourquoi": "De 18 à 30 ans, Visale est ouverte quel que soit votre statut." },
-        { "si": { "age": ["a3"], "statut": ["salarie", "alternant"] }, "pourquoi": "Après 30 ans, Visale reste accessible pour l'essentiel aux salariés du privé, alternants compris, selon la situation d'embauche : vérifiez votre cas dans le guide." },
+        { "si": { "age": ["a3"], "statut": ["salarie", "alternant"] }, "pourquoi": "Après 30 ans, Visale reste accessible pour l'essentiel aux salariés du privé, alternants compris, selon la date d'embauche ou de mutation et le niveau de salaire : vérifiez votre cas dans le guide." },
         { "si": { "age": ["a3"], "duree": ["courte"] }, "pourquoi": "Avec un bail mobilité, Visale est ouverte sans condition d'âge, quel que soit votre statut." }
       ]
     },
