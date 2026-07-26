@@ -3,11 +3,11 @@
   "dataset": "encadrement-loyers-paris",
   "collectedAt": "2026-06-11T01:24:23.230Z",
   "recordCount": 2560,
-  "source": "Ville de Paris — Logement : encadrement des loyers",
+  "source": "Ville de Paris, Logement : encadrement des loyers",
   "sourceUrl": "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/logement-encadrement-des-loyers/exports/json?where=annee%3D%222025%22&select=annee%2Cid_zone%2Cid_quartier%2Cnom_quartier%2Cpiece%2Cepoque%2Cmeuble_txt%2Cref%2Cmax%2Cmin",
   "portal": "opendata.paris.fr",
   "license": "Open Database License (ODbL)",
-  "attribution": "Source : Ville de Paris — opendata.paris.fr, sous licence ODbL",
+  "attribution": "Source : Ville de Paris, opendata.paris.fr, sous licence ODbL",
   "millesime": "2025"
  },
  "records": [

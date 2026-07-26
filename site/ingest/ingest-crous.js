@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * ingest-crous.js — Résidences universitaires CROUS d'Île-de-France.
+ * ingest-crous.js : résidences universitaires CROUS d'Île-de-France.
  * ------------------------------------------------------------------
  * Exécution   : node ingest-crous.js [--force]
  * Runtime     : Node.js >= 14 · Dépendances : AUCUNE
  * Source      : CNOUS via data.enseignementsup-recherche.gouv.fr,
  *               dataset fr_crous_logement_france_entiere (flux officiel
  *               qui alimente trouverunlogement.lescrous.fr).
- * Licence     : Licence Ouverte / Open Licence (Etalab) — citer le CNOUS.
+ * Licence     : Licence Ouverte / Open Licence (Etalab), citer le CNOUS.
  * Sortie      : site/data/open/crous-residences.json
  * ------------------------------------------------------------------
  */
@@ -39,7 +39,7 @@ const COMPLEMENTS = {
 };
 
 (async () => {
-  console.log('CROUS — résidences universitaires Île-de-France');
+  console.log('CROUS : résidences universitaires Île-de-France');
   const raw = await getJson(URL_EXPORT);
 
   const records = [];
@@ -79,7 +79,7 @@ const COMPLEMENTS = {
 
   if (rejected.length) console.log(`  ! ${rejected.length} hors Île-de-France exclue(s) : ${rejected.join(' · ')}`);
   writeDataset('crous-residences', records, {
-    source: 'CNOUS — Logements CROUS (fr_crous_logement_france_entiere)',
+    source: 'CNOUS : Logements CROUS (fr_crous_logement_france_entiere)',
     sourceUrl: URL_EXPORT,
     portal: 'data.enseignementsup-recherche.gouv.fr',
     license: 'Licence Ouverte / Open Licence v2.0 (Etalab)',

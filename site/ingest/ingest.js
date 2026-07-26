@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ingest.js — Orchestrateur d'ingestion open data (Phase 2).
+ * ingest.js : orchestrateur d'ingestion open data (Phase 2).
  * ------------------------------------------------------------------
  * Exécution   : node ingest.js [--force]   (--force : ignore .cache/)
  * Runtime     : Node.js >= 14 · Dépendances : AUCUNE
@@ -24,5 +24,5 @@ for (const s of SCRIPTS) {
     failed++;
   }
 }
-console.log(failed ? `\n${failed} ingestion(s) en échec` : '\nIngestion complète OK — données dans site/data/open/');
+console.log(failed ? `\n${failed} ingestion(s) en échec` : '\nIngestion complète OK : données dans site/data/open/');
 process.exit(failed ? 1 : 0);

@@ -1,5 +1,5 @@
 /*
- * check-seo.js — vérification SEO/GEO programmatique du dist/ généré.
+ * check-seo.js : vérification SEO/GEO programmatique du dist/ généré.
  * Exécution : node site/check-seo.js [chemin dist]   (défaut : site/dist)
  * Dépendances : aucune. Node 14+ natif.
  *
@@ -99,4 +99,4 @@ console.log(`${htmlFiles.length} pages · ${nTitles} titles · ${nMetas} metas �
 console.log(`Title le plus long  : ${maxTitle[1]} car. → ${maxTitle[0]}`);
 console.log(`Meta la plus longue : ${maxMeta[1]} car. → ${maxMeta[0]}`);
 if (errors.length) { console.error(`\n${errors.length} ERREUR(S) :`); errors.forEach(e => console.error('  - ' + e)); process.exit(1); }
-console.log('\nOK — tout est conforme (titles ≤ 65, metas ≤ 160, JSON-LD valides, règles ItemList/BreadcrumbList respectées).');
+console.log('\nOK : tout est conforme (titles ≤ 65, metas ≤ 160, JSON-LD valides, règles ItemList/BreadcrumbList respectées).');

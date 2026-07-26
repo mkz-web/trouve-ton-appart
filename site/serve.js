@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * serve.js — Serveur statique de développement pour dist/.
+ * serve.js : serveur statique de développement pour dist/.
  * Dépendances : aucune. Node 14+. Exécution : node serve.js [port]
- * (Outil de dev local uniquement — la production est servie par l'hébergeur statique.)
+ * (Outil de dev local uniquement, la production est servie par l'hébergeur statique.)
  */
 'use strict';
 const http = require('http');

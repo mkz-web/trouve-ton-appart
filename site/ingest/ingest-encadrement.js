@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * ingest-encadrement.js — Loyers de référence parisiens (encadrement).
+ * ingest-encadrement.js : loyers de référence parisiens (encadrement).
  * ------------------------------------------------------------------
  * Exécution   : node ingest-encadrement.js [--force]
  * Runtime     : Node.js >= 14 · Dépendances : AUCUNE
  * Source      : Ville de Paris (Direction du Logement et de l'Habitat),
  *               opendata.paris.fr, dataset logement-encadrement-des-loyers.
  *               Export allégé (sans geo_shape) filtré sur le dernier millésime.
- * Licence     : ODbL — attribution obligatoire « Ville de Paris / opendata.paris.fr ».
+ * Licence     : ODbL, attribution obligatoire « Ville de Paris / opendata.paris.fr ».
  * Sortie      : site/data/open/encadrement-loyers-paris.json
  * ------------------------------------------------------------------
  */
@@ -19,7 +19,7 @@ const BASE = 'https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/logeme
 const SELECT = 'select=annee%2Cid_zone%2Cid_quartier%2Cnom_quartier%2Cpiece%2Cepoque%2Cmeuble_txt%2Cref%2Cmax%2Cmin';
 
 (async () => {
-  console.log('Encadrement des loyers — Paris');
+  console.log('Encadrement des loyers : Paris');
   // Détermine le millésime le plus récent réellement disponible (annee est une STRING).
   const years = await getJson(`${BASE}/records?select=annee&group_by=annee&order_by=annee%20desc&limit=20`);
   const annee = years.results[0].annee;
@@ -42,15 +42,15 @@ const SELECT = 'select=annee%2Cid_zone%2Cid_quartier%2Cnom_quartier%2Cpiece%2Cep
   // Garde-fous : 80 quartiers × 4 pièces × 4 époques × 2 (meublé) = 2 560.
   const quartiers = new Set(records.map((r) => r.quartierId));
   if (records.length !== 2560 || quartiers.size !== 80) {
-    console.log(`  ! attendu 2560 records / 80 quartiers, obtenu ${records.length} / ${quartiers.size} — vérifier le dataset`);
+    console.log(`  ! attendu 2560 records / 80 quartiers, obtenu ${records.length} / ${quartiers.size}, vérifier le dataset`);
   }
 
   writeDataset('encadrement-loyers-paris', records, {
-    source: 'Ville de Paris — Logement : encadrement des loyers',
+    source: 'Ville de Paris, Logement : encadrement des loyers',
     sourceUrl: `${BASE}/exports/json?where=annee%3D%22${annee}%22&${SELECT}`,
     portal: 'opendata.paris.fr',
     license: 'Open Database License (ODbL)',
-    attribution: 'Source : Ville de Paris — opendata.paris.fr, sous licence ODbL',
+    attribution: 'Source : Ville de Paris, opendata.paris.fr, sous licence ODbL',
     millesime: annee,
   });
 })().catch((e) => { console.error('ÉCHEC ingest-encadrement :', e.message); process.exit(1); });

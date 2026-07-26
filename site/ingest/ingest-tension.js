@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ingest-tension.js — Tension et délais de la demande de logement social en IdF.
+ * ingest-tension.js : tension et délais de la demande de logement social en IdF.
  * ------------------------------------------------------------------------------
  * Runtime     : Node.js >= 14
  * Dépendances : AUCUNE (lib.js maison : https, zlib natifs)
@@ -9,7 +9,7 @@
  *
  * Source : DRIHL Île-de-France, « socle de données demandes et attributions de
  * logements sociaux », millésime 2025 (Infocentre SNE, traitements DRIHL/SOEE).
- * Licence Ouverte Etalab 2.0 — attribution DRIHL obligatoire à l'affichage.
+ * Licence Ouverte Etalab 2.0, attribution DRIHL obligatoire à l'affichage.
  * Publication annuelle fin juin (millésime N publié en N+1).
  *
  * PIÈGES CÂBLÉS ICI (voir aussi CLAUDE.md) :
@@ -132,7 +132,7 @@ async function main() {
   console.log(`  Région : ${region.tension} demandes pour une attribution, délai médian ${region.delaiMois} mois`);
 
   lib.writeDataset('tension-communes', communes, {
-    source: 'DRIHL Île-de-France — socle de données demandes et attributions de logements sociaux (Infocentre SNE, traitements DRIHL/SOEE)',
+    source: 'DRIHL Île-de-France : socle de données demandes et attributions de logements sociaux (Infocentre SNE, traitements DRIHL/SOEE)',
     sourceUrl: PAGE,
     fileUrl: URL,
     license: 'Licence Ouverte Etalab 2.0',

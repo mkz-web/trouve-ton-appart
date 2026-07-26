@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * lib.js — Boîte à outils commune des scripts d'ingestion open data.
+ * lib.js : boîte à outils commune des scripts d'ingestion open data.
  * ------------------------------------------------------------------
  * Runtime     : Node.js >= 14
  * Dépendances : AUCUNE (modules natifs : https, http, zlib, fs, path)
@@ -77,7 +77,7 @@ async function getCached(url, cacheName, opts) {
 
 /**
  * Extrait un fichier d'une archive ZIP (méthodes store et deflate uniquement),
- * en lisant le répertoire central — pur Node (zlib.inflateRawSync).
+ * en lisant le répertoire central, pur Node (zlib.inflateRawSync).
  */
 function unzipEntry(zipBuf, nameRegex) {
   // Localise la fin du répertoire central (EOCD, signature 0x06054b50).
@@ -331,7 +331,7 @@ function writeDataset(name, records, meta) {
   };
   const file = path.join(dir, `${name}.json`);
   fs.writeFileSync(file, JSON.stringify(out, null, 1));
-  console.log(`  ✓ ${name}.json — ${out._meta.recordCount ?? '?'} enregistrements (${(fs.statSync(file).size / 1024).toFixed(0)} Ko)`);
+  console.log(`  ✓ ${name}.json : ${out._meta.recordCount ?? '?'} enregistrements (${(fs.statSync(file).size / 1024).toFixed(0)} Ko)`);
   return file;
 }
 

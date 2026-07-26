@@ -3,7 +3,7 @@
   "dataset": "residences-autonomie",
   "collectedAt": "2026-06-11T01:56:50.919Z",
   "recordCount": 430,
-  "source": "FINESS — extraction des établissements, catégorie 202 (Résidence autonomie)",
+  "source": "FINESS : extraction des établissements, catégorie 202 (Résidence autonomie)",
   "sourceUrl": "https://www.data.gouv.fr/fr/datasets/r/98f3161f-79ff-4f16-8f6a-6d571a80fea2",
   "portal": "data.gouv.fr",
   "license": "Licence Ouverte / Open Licence (Etalab)",

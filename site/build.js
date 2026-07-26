@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * build.js — Générateur de site statique « Trouve Ton Appart »
+ * build.js : générateur de site statique « Trouve Ton Appart »
  * ------------------------------------------------------------------
  * Exécution   : node build.js
  * Runtime     : Node.js >= 14
@@ -52,7 +52,7 @@ const PLAFONDS = read('plafonds.json');
 const TENSION = readOpen('tension-communes');
 /* Index code INSEE → tension/délai (socle DRIHL). Jointure directe : le socle
  * porte le code INSEE natif. Les communes sous secret statistique ont des
- * valeurs null et doivent afficher « — », jamais un ratio recalculé. */
+ * valeurs null et doivent afficher « n.d. », jamais un ratio recalculé. */
 const TENSION_BY_CODE = TENSION ? new Map(TENSION.records.map(r => [r.code, r])) : null;
 const tensionOf = (code) => (TENSION_BY_CODE ? TENSION_BY_CODE.get(code) || null : null);
 /* Seuil d'attributions des classements : au-dessous, un délai médian n'est pas
@@ -76,7 +76,7 @@ const DEP_SLUGS = {
   75: 'paris-75', 77: 'seine-et-marne-77', 78: 'yvelines-78', 91: 'essonne-91',
   92: 'hauts-de-seine-92', 93: 'seine-saint-denis-93', 94: 'val-de-marne-94', 95: 'val-d-oise-95',
 };
-const fmt = (n, dec = 0) => (n == null ? '—' : n.toLocaleString('fr-FR', { minimumFractionDigits: dec, maximumFractionDigits: dec }));
+const fmt = (n, dec = 0) => (n == null ? 'n.d.' : n.toLocaleString('fr-FR', { minimumFractionDigits: dec, maximumFractionDigits: dec }));
 /* Compteur animable : la valeur finale reste DANS le HTML (SEO, lecteurs
  * d'écran, no-JS) ; le JS de layout ne la rejoue que visuellement.
  * Sous 10, un count-up serait ridicule : nombre nu.
@@ -104,7 +104,7 @@ const safeUrl = (u) => (/^(https?:|mailto:)/i.test(String(u || '')) ? u : '#');
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 /* Liens [label](url) dans les contenus de guides, transformés APRÈS échappement.
- * Autorisés : chemins internes (/…) et https:// uniquement — tout le reste reste du texte. */
+ * Autorisés : chemins internes (/…) et https:// uniquement, tout le reste reste du texte. */
 const inline = (s) => esc(s).replace(/\[([^\]]+)\]\((\/[^\s)]*|https:\/\/[^\s)]+)\)/g,
   (m, label, url) => (url.startsWith('/')
     ? `<a href="${url}">${label}</a>`
@@ -136,7 +136,7 @@ const PAL = {
 };
 
 /* Thème par parcours : c = couleur pleine, txt = variante texte (contraste AA
- * sur fond clair), bg = fond pâle, soft = ombre teintée (rgba précalculée —
+ * sur fond clair), bg = fond pâle, soft = ombre teintée (rgba précalculée :
  * changer une couleur de thème ⇒ régénérer sa rgba soft). */
 const THEMES = {
   'etudiant':        { c: PAL.bleu2,       txt: PAL.bleu2,   bg: PAL.cielClair, soft: 'rgba(46,116,181,.30)' },
@@ -291,7 +291,7 @@ const VT_CSS = `<style>@media(prefers-reduced-motion:no-preference){
  * Sans JS le tableau reste lisible et trié par défaut (alphabétique, ou par
  * rang pour les classements) ; avec JS, chaque en-tête devient un bouton.
  * Type de colonne déduit de la classe « num » posée au build (pas d'heuristique
- * sur le contenu). Valeurs manquantes (« — ») toujours rejetées en fin, quel
+ * sur le contenu). Valeurs manquantes (« n.d. ») toujours rejetées en fin, quel
  * que soit le sens : une donnée absente n'est ni la plus petite ni la plus
  * grande. Tri stable (index d'origine en départage) pour que deux passes
  * successives ne réordonnent pas les ex aequo. */
@@ -302,7 +302,7 @@ if(!tables.length||!Array.prototype.map)return;
 var live=document.createElement('div');
 live.className='visually-hidden';live.setAttribute('aria-live','polite');live.setAttribute('aria-atomic','true');
 document.body.appendChild(live);
-/* "1 580" / "6,49" / "15,1 %" / "23 mois" -> nombre ; "—" et vide -> null. */
+/* "1 580" / "6,49" / "15,1 %" / "23 mois" -> nombre ; "n.d." et vide -> null. */
 /* Premier nombre du texte, jamais une concaténation à travers un séparateur :
  * « 01/01/2024 » doit échouer visiblement plutôt que donner 1012024. */
 function num(s){
@@ -311,7 +311,7 @@ function num(s){
  if(!m)return null;
  var n=parseFloat(m[0]);return isNaN(n)?null:n}
 function txt(td){return (td.textContent||'').replace(/\\u00a0/g,' ').trim()}
-function vide(td){var v=txt(td);return v===''||v==='—'||v==='-'}
+function vide(td){var v=txt(td);return v===''||v==='n.d.'||v==='-'}
 tables.forEach(function(tb){
  var head=tb.tHead&&tb.tHead.rows[0],body=tb.tBodies[0];
  if(!head||!body||body.rows.length<3)return;
@@ -406,7 +406,7 @@ const DATE_EN = BUILD_DATE.toLocaleDateString('en-GB', { day: 'numeric', month: 
 const DATE_PUBLICATION = '2026-06-10';
 
 /* Échappement spécifique au contexte <script> : JSON.stringify ne protège
- * ni « < » ni « </script> » — une donnée open data hostile pourrait sinon
+ * ni « < » ni « </script> » : une donnée open data hostile pourrait sinon
  * fermer la balise et injecter du HTML. Le JSON reste strictement valide. */
 const ldEsc = (o) => JSON.stringify(o)
   .replace(/</g, '\\u003c').replace(/>/g, '\\u003e').replace(/&/g, '\\u0026')
@@ -975,7 +975,7 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
   }), '0.8');
 }
 
-/* Hub des guides — cible du fil d'Ariane « Guides » et page de maillage. */
+/* Hub des guides : cible du fil d'Ariane « Guides » et page de maillage. */
 (function buildGuidesHub() {
   const cards = GUIDES.map(g => {
     const t = guideTheme(g);
@@ -1110,7 +1110,7 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
   }), '0.7');
 }
 
-/* Hub anglais des guides — cible du fil d'Ariane « Guides » côté /en/. */
+/* Hub anglais des guides : cible du fil d'Ariane « Guides » côté /en/. */
 (function buildGuidesHubEn() {
   const cards = EN.guides.map(g => {
     const t = guideTheme(g);
@@ -1510,10 +1510,10 @@ if (LS_COMMUNES) {
     <td class="num">${fmt(r.nbLogementsSociaux)}</td>
     <td class="num">${fmt(r.loyerMedian, 2)}</td>
     <td class="num bar"${r.txVacance != null ? ` style="--pct:${Math.min(r.txVacance * 10, 100).toFixed(0)}%"` : ''}>${fmt(r.txVacance, 1)}</td>
-    <td class="num bar"${r.tauxSRU != null ? ` style="--pct:${Math.min(r.tauxSRU, 100).toFixed(0)}%"` : ''}>${r.tauxSRU == null ? '—' : fmt(r.tauxSRU, 1) + ' %'}</td>
-    ${TENSION ? `<td class="num">${tn && tn.delaiMois != null ? fmt(tn.delaiMois) + '&nbsp;mois' : '—'}</td>
-    <td class="num">${tn && tn.tension != null ? fmt(tn.tension, 1) : '—'}</td>` : ''}
-    <td>${esc(r.zone || '—')}</td>
+    <td class="num bar"${r.tauxSRU != null ? ` style="--pct:${Math.min(r.tauxSRU, 100).toFixed(0)}%"` : ''}>${r.tauxSRU == null ? 'n.d.' : fmt(r.tauxSRU, 1) + ' %'}</td>
+    ${TENSION ? `<td class="num">${tn && tn.delaiMois != null ? fmt(tn.delaiMois) + '&nbsp;mois' : 'n.d.'}</td>
+    <td class="num">${tn && tn.tension != null ? fmt(tn.tension, 1) : 'n.d.'}</td>` : ''}
+    <td>${esc(r.zone || 'n.d.')}</td>
     <td>${statut(r)}</td>
   </tr>`;
   };
@@ -1522,13 +1522,13 @@ if (LS_COMMUNES) {
 <section class="notice">
   <h2>Comment lire ces chiffres</h2>
   <ul>
-    <li><strong>Parc social (RPLS)</strong>&nbsp;: logements locatifs des bailleurs sociaux au 1ᵉʳ janvier 2024 (répertoire RPLS, Insee–SDES). Les communes sans découpage IRIS ne sont pas couvertes par ce fichier («&nbsp;—&nbsp;»).</li>
+    <li><strong>Parc social (RPLS)</strong>&nbsp;: logements locatifs des bailleurs sociaux au 1ᵉʳ janvier 2024 (répertoire RPLS, Insee-SDES). Les communes sans découpage IRIS ne sont pas couvertes par ce fichier («&nbsp;n.d.&nbsp;»).</li>
     <li><strong>Loyer médian</strong>&nbsp;: en €/m² de surface habitable, charges non comprises, à comparer aux 25-35&nbsp;€/m² du parc privé parisien.</li>
     <li><strong>Vacance</strong>&nbsp;: part des logements vacants&nbsp;: sous 3&nbsp;%, le parc est saturé.</li>
     <li><strong>Taux SRU</strong>&nbsp;: part de logements sociaux au sens de la loi SRU (inventaire au 1ᵉʳ janvier 2024, assiette plus large que le RPLS&nbsp;: ne pas additionner les deux). Une commune «&nbsp;déficitaire&nbsp;» est en dessous de son objectif légal&nbsp;; «&nbsp;carencée&nbsp;», elle est sanctionnée. Autant d'arguments utiles pour votre dossier.</li>
     <li><strong>Zone</strong>&nbsp;: zonage ABC (Abis = Paris…)&nbsp;: il fixe les plafonds de loyers et de ressources de nombreux dispositifs.</li>
     ${TENSION ? `<li><strong>Délai médian</strong>&nbsp;: la moitié des ménages logés dans l'année avaient déposé leur demande depuis moins de ce délai, l'autre moitié depuis plus longtemps. C'est le chiffre le plus parlant sur l'attente réelle.</li>
-    <li><strong>Demandes pour une attribution</strong>&nbsp;: nombre de demandes en cours (premier choix) rapporté aux attributions de l'année. C'est un <strong>rapport de pression, pas une durée</strong>&nbsp;: 20 demandes pour une attribution ne signifie pas 20 ans d'attente. «&nbsp;—&nbsp;» quand la source masque la valeur (moins de 10 demandes ou attributions).</li>` : ''}
+    <li><strong>Demandes pour une attribution</strong>&nbsp;: nombre de demandes en cours (premier choix) rapporté aux attributions de l'année. C'est un <strong>rapport de pression, pas une durée</strong>&nbsp;: 20 demandes pour une attribution ne signifie pas 20 ans d'attente. «&nbsp;n.d.&nbsp;» quand la source masque la valeur (moins de 10 demandes ou attributions).</li>` : ''}
   </ul>
   <p class="maj">${esc(LS_COMMUNES._meta.attribution)} · données extraites le ${esc(dateFrOf(LS_COMMUNES._meta.collectedAt))}.</p>
   ${TENSION ? `<p class="maj">Délais et pression&nbsp;: ${esc(TENSION._meta.attribution)}, ${esc(TENSION._meta.license)} · extraction du ${esc(dateFrOf(TENSION._meta.collectedAt))}. Le champ des attributions réglementées n'est comparable ni au parc RPLS ni à l'inventaire SRU&nbsp;: ces colonnes ne s'additionnent pas.</p>` : ''}
@@ -1546,8 +1546,8 @@ if (LS_COMMUNES) {
       <td class="num">${fmt(parc)}</td>
       <td class="num">${d === '75' ? 1 : rows.length}</td>
       <td class="num">${fmt(deficitaires)}</td>
-      ${TENSION ? `<td class="num">${tn && tn.delaiMois != null ? fmt(tn.delaiMois) + '&nbsp;mois' : '—'}</td>
-      <td class="num">${tn && tn.tension != null ? fmt(tn.tension, 1) : '—'}</td>` : ''}
+      ${TENSION ? `<td class="num">${tn && tn.delaiMois != null ? fmt(tn.delaiMois) + '&nbsp;mois' : 'n.d.'}</td>
+      <td class="num">${tn && tn.tension != null ? fmt(tn.tension, 1) : 'n.d.'}</td>` : ''}
     </tr>`;
   }).join('');
   const hubContent = `
@@ -1619,7 +1619,7 @@ ${(() => {
 })()}
 <p><label for="filtre"><strong>Filtrer&nbsp;:</strong></label> <input id="filtre" type="search" placeholder="Nom de ${d === '75' ? "l'arrondissement" : 'la commune'}…" class="search-input search-inline"></p>
 <div class="table-wrap"><table class="data">
-  <caption class="visually-hidden">Logement social par ${d === '75' ? 'arrondissement' : 'commune'} — ${esc(DEP_NOMS[d])} (${d})</caption>
+  <caption class="visually-hidden">Logement social par ${d === '75' ? 'arrondissement' : 'commune'} : ${esc(DEP_NOMS[d])} (${d})</caption>
   ${tableHead}
   <tbody>${sorted.map(rowOf).join('')}</tbody>
 </table></div>
@@ -1681,8 +1681,8 @@ ${legende}
       .sort((a, b) => (a.delaiMois ?? 999) - (b.delaiMois ?? 999))
       .map(x => `<tr>
         <td><a href="/logement-social/chiffres/${DEP_SLUGS[x.code]}/">${esc(x.nom)} (${esc(x.code)})</a></td>
-        <td class="num">${x.delaiMois != null ? fmt(x.delaiMois) + '&nbsp;mois' : '—'}</td>
-        <td class="num">${x.tension != null ? fmt(x.tension, 1) : '—'}</td>
+        <td class="num">${x.delaiMois != null ? fmt(x.delaiMois) + '&nbsp;mois' : 'n.d.'}</td>
+        <td class="num">${x.tension != null ? fmt(x.tension, 1) : 'n.d.'}</td>
         <td class="num">${fmt(x.demandes)}</td>
         <td class="num">${fmt(x.attributions)}</td>
       </tr>`).join('');
@@ -1809,9 +1809,9 @@ function plafondsWidget() {
       <input id="pl-c" list="pl-communes" type="text" placeholder="Ex. : Massy (91)" autocomplete="off">
       <datalist id="pl-communes">${listOpts}</datalist></div>
     <div><label for="pl-n">Personnes qui occuperont le logement</label>
-      <select id="pl-n"><option value="">— Choisir —</option>${optN}</select></div>
+      <select id="pl-n"><option value="">Choisir…</option>${optN}</select></div>
     <div><label for="pl-k">Dont personnes à charge (enfants rattachés, ascendant à charge)</label>
-      <select id="pl-k"><option value="">— Choisir —</option>${optK}</select></div>
+      <select id="pl-k"><option value="">Choisir…</option>${optK}</select></div>
     <div><label for="pl-r">Revenu fiscal de référence du foyer (€)</label>
       <input id="pl-r" type="number" inputmode="numeric" min="0" step="1" placeholder="Ex. : 28000" aria-describedby="pl-r-aide">
       <span id="pl-r-aide" class="pl-aide">Ligne « revenu fiscal de référence » de votre avis d'impôt ${esc(String(+P._meta.rfrAnnee + 1))}. Ni le salaire net, ni le revenu imposable.</span></div>
@@ -1981,10 +1981,10 @@ function encadrementWidget() {
   <h2>Vérifiez votre loyer&nbsp;: les références ${esc(m.millesime)}, quartier par quartier</h2>
   <p>Les loyers de référence officiels (arrêté préfectoral, références ${esc(m.millesime)}) pour chacun des 80 quartiers de Paris. Sélectionnez les caractéristiques du logement&nbsp;:</p>
   <div class="tool-form">
-    <div><label for="enc-q">Quartier</label><select id="enc-q"><option value="">— Choisir —</option>${optQ}</select></div>
-    <div><label for="enc-p">Pièces</label><select id="enc-p"><option value="">—</option><option value="1">1 pièce</option><option value="2">2 pièces</option><option value="3">3 pièces</option><option value="4">4 pièces et plus</option></select></div>
-    <div><label for="enc-e">Construction</label><select id="enc-e"><option value="">—</option>${optE}</select></div>
-    <div><label for="enc-m">Location</label><select id="enc-m"><option value="">—</option><option value="0">Non meublée</option><option value="1">Meublée</option></select></div>
+    <div><label for="enc-q">Quartier</label><select id="enc-q"><option value="">Choisir…</option>${optQ}</select></div>
+    <div><label for="enc-p">Pièces</label><select id="enc-p"><option value="">Choisir…</option><option value="1">1 pièce</option><option value="2">2 pièces</option><option value="3">3 pièces</option><option value="4">4 pièces et plus</option></select></div>
+    <div><label for="enc-e">Construction</label><select id="enc-e"><option value="">Choisir…</option>${optE}</select></div>
+    <div><label for="enc-m">Location</label><select id="enc-m"><option value="">Choisir…</option><option value="0">Non meublée</option><option value="1">Meublée</option></select></div>
     <div><label for="enc-s">Surface (m², optionnel)</label><input id="enc-s" type="number" min="6" max="400" step="0.5" placeholder="ex. 32"></div>
     <div><label for="enc-l">Loyer mensuel hors charges (€, optionnel)</label><input id="enc-l" type="number" min="1" step="1" placeholder="ex. 1200"></div>
   </div>
@@ -2339,7 +2339,7 @@ inp.focus();
   }), '0.3');
 })();
 
-/* Page 404 — sa présence désactive aussi le fallback SPA de Cloudflare Pages
+/* Page 404 : sa présence désactive aussi le fallback SPA de Cloudflare Pages
  * (sans elle, toute URL inconnue renvoyait l'accueil en 200 : soft-404). */
 const HTML_404 = layout({
   title: `Page introuvable | ${SITE.name}`,
@@ -2738,7 +2738,7 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 @media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 ::selection{background:var(--ciel)}
 /* Kill switch : le sélecteur * seul ne matche PAS les pseudo-éléments
- * (chevron FAQ, barre du menu, liserets) — ils continueraient d'animer.
+ * (chevron FAQ, barre du menu, liserets) : ils continueraient d'animer.
  * La barre de lecture reste à scaleX(0) : invisible sous reduced-motion, assumé. */
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.card:hover,.btn:hover,.btn:active,.card:hover .card-icon,.card:hover .cta-arrow,.card:focus-visible .cta-arrow,a:hover>.cta-arrow,a:focus-visible>.cta-arrow,.brand:hover .brand-mark,.card-parcours:hover::before,.card-parcours:focus-visible::before{transform:none}
 /* Les états finaux portés par une animation doivent être servis en statique. */
@@ -2766,13 +2766,25 @@ try {
 }
 fs.mkdirSync(DIST, { recursive: true });
 
+/* Les commentaires du source documentent le POURQUOI du code : ils n'ont rien à
+ * faire dans la sortie servie (même règle que le raisonnement du crédit MKZ).
+ * Le CSS et le JS étant inline, 56 blocs partaient dans CHAQUE page : 6,9 Ko par
+ * page, environ 500 Ko sur le site, et la stratégie exposée dans le source
+ * public. On les retire à l'écriture, ils restent intacts dans build.js.
+ * Seuls les blocs qui COMMENCENT une ligne sont retirés : une ouverture de
+ * commentaire au milieu d'une ligne de code peut vivre dans une chaîne, on n'y
+ * touche pas. Les blocs à attribut (JSON-LD) ne sont pas visés. */
+const RE_COMMENTAIRE = /^[ \t]*\/\*[\s\S]*?\*\/[ \t]*\r?\n?/gm;
+const sansCommentaires = (html) => html.replace(/<(style|script)>([\s\S]*?)<\/\1>/g,
+  (_, balise, corps) => `<${balise}>${corps.replace(RE_COMMENTAIRE, '')}</${balise}>`);
+
 for (const { urlPath, html } of pages) {
   const dir = path.join(DIST, ...urlPath.split('/').filter(Boolean));
   fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, 'index.html'), html);
+  fs.writeFileSync(path.join(dir, 'index.html'), sansCommentaires(html));
 }
 
-fs.writeFileSync(path.join(DIST, 'style.css'), css());
+fs.writeFileSync(path.join(DIST, 'style.css'), css().replace(RE_COMMENTAIRE, ''));
 
 /* Données consommées côté client (outil encadrement, recherche) */
 if (ENCADREMENT) {
@@ -2789,10 +2801,10 @@ if (ENCADREMENT) {
 }
 fs.writeFileSync(path.join(DIST, 'search-index.json'), JSON.stringify(SEARCH_INDEX));
 
-fs.writeFileSync(path.join(DIST, '404.html'), HTML_404);
+fs.writeFileSync(path.join(DIST, '404.html'), sansCommentaires(HTML_404));
 
 /* ---------------- GEO : llms.txt et llms-full.txt -------------------- */
-/* llms.txt (llmstxt.org) : index du site pour les moteurs IA — qui nous
+/* llms.txt (llmstxt.org) : index du site pour les moteurs IA : qui nous
  * sommes, ce qui fait foi, et où aller chercher quoi. llms-full.txt : le
  * contenu intégral en texte brut, citable, avec sources et dates. */
 const B = SITE.baseUrl;
@@ -2801,7 +2813,7 @@ llms.push(`# ${SITE.name}`);
 llms.push('');
 llms.push(`> ${SITE.tagline}. ${SITE.description}`);
 llms.push('');
-llms.push(`Service d'orientation indépendant et gratuit (éditeur : MKZ SAS) : pas d'annonces, des parcours par profil de vie et des liens vers les guichets officiels où candidater. Périmètre : Paris et Île-de-France. Nos annuaires et chiffres sont construits sur les données publiques (Licence Ouverte Etalab ; encadrement des loyers : ODbL Ville de Paris) — citez la source et la date en cas de réutilisation. Contenu mis à jour le ${DATE_FR}.`);
+llms.push(`Service d'orientation indépendant et gratuit (éditeur : MKZ SAS) : pas d'annonces, des parcours par profil de vie et des liens vers les guichets officiels où candidater. Périmètre : Paris et Île-de-France. Nos annuaires et chiffres sont construits sur les données publiques (Licence Ouverte Etalab ; encadrement des loyers : ODbL Ville de Paris). Citez la source et la date en cas de réutilisation. Contenu mis à jour le ${DATE_FR}.`);
 llms.push('');
 llms.push('## Parcours par profil');
 for (const p of PARCOURS) llms.push(`- [${p.h1}](${B}/${p.slug}/): ${p.metaDescription}`);
@@ -2824,21 +2836,21 @@ llms.push('');
 llms.push('## Divers');
 llms.push(`- [Annuaire des sources fiables](${B}/annuaire/): ${ANNUAIRE.metaDescription}`);
 llms.push(`- [Diagnostic logement](${B}/diagnostic/): 7 questions, une feuille de route personnalisée (aides, garanties, pistes de logement, démarches) selon la situation. Critères repris des guides.`);
-llms.push(`- [Recherche](${B}/recherche/): commune, résidence, dispositif — index JSON : ${B}/search-index.json`);
+llms.push(`- [Recherche](${B}/recherche/): commune, résidence, dispositif. Index JSON : ${B}/search-index.json`);
 llms.push(`- [Contenu intégral pour les LLM](${B}/llms-full.txt)`);
 llms.push(`- [Mentions légales](${B}/mentions-legales/)`);
 fs.writeFileSync(path.join(DIST, 'llms.txt'), llms.join('\n') + '\n');
 
 const full = [];
-full.push(`# ${SITE.name} — contenu intégral (llms-full.txt)`);
+full.push(`# ${SITE.name} : contenu intégral (llms-full.txt)`);
 full.push('');
-full.push(`Généré le ${DATE_ISO}. Site : ${B} — ${SITE.tagline}.`);
+full.push(`Généré le ${DATE_ISO}. Site : ${B}. ${SITE.tagline}.`);
 full.push(`${SITE.description} Service d'orientation indépendant (MKZ SAS) : nous ne publions pas d'annonces, nous orientons vers les guichets officiels. Les chiffres ci-dessous proviennent de données publiques ; citez la source et la date.`);
 full.push('');
 full.push('## PARCOURS');
 for (const p of PARCOURS) {
   full.push('');
-  full.push(`### ${p.h1} — ${B}/${p.slug}/`);
+  full.push(`### ${p.h1} (${B}/${p.slug}/)`);
   full.push(p.intro);
   for (const e of p.etapes) full.push(`${e.titre} ${e.texte}`);
 }
@@ -2846,7 +2858,7 @@ full.push('');
 full.push('## GUIDES');
 for (const g of GUIDES) {
   full.push('');
-  full.push(`### ${g.h1} — ${B}/guides/${g.slug}/`);
+  full.push(`### ${g.h1} (${B}/guides/${g.slug}/)`);
   full.push(`Mis à jour le ${DATE_FR}.`);
   full.push(g.intro);
   for (const s of g.sections) {
@@ -2864,7 +2876,7 @@ full.push('## GUIDES IN ENGLISH');
 full.push('English adaptations of our fact-checked French guides, for internationals renting in Paris and Île-de-France.');
 for (const g of EN.guides) {
   full.push('');
-  full.push(`### ${g.h1} — ${B}/en/guides/${g.slug}/`);
+  full.push(`### ${g.h1} (${B}/en/guides/${g.slug}/)`);
   full.push(`Updated ${DATE_EN}. French version: ${B}/guides/${g.frSlug}/`);
   full.push(g.intro);
   for (const s of g.sections) {
@@ -2878,7 +2890,7 @@ for (const g of EN.guides) {
 }
 if (LS_COMMUNES) {
   full.push('');
-  full.push(`## DONNÉES — LOGEMENT SOCIAL PAR COMMUNE (Île-de-France)`);
+  full.push(`## DONNÉES : LOGEMENT SOCIAL PAR COMMUNE (Île-de-France)`);
   full.push(`${LS_COMMUNES._meta.attribution}. Extraction du ${dateFrOf(LS_COMMUNES._meta.collectedAt)}. Détail et définitions : ${B}/logement-social/chiffres/`);
   full.push(`Avertissement : parc RPLS et décompte SRU reposent sur des assiettes différentes, ne pas les additionner. Loyers en €/m² de surface habitable, hors charges.`);
   if (TENSION) {
@@ -2902,7 +2914,7 @@ if (LS_COMMUNES) {
   if (TENSION && TENSION._meta.region) {
     const reg = TENSION._meta.region;
     full.push('');
-    full.push(`## DONNÉES — DÉLAIS DU LOGEMENT SOCIAL PAR DÉPARTEMENT (Île-de-France, ${TENSION._meta.millesime})`);
+    full.push(`## DONNÉES : DÉLAIS DU LOGEMENT SOCIAL PAR DÉPARTEMENT (Île-de-France, ${TENSION._meta.millesime})`);
     full.push(`${TENSION._meta.attribution}. ${TENSION._meta.license}. Détail : ${B}/logement-social/delais/`);
     full.push(`- Île-de-France : délai médian ${fmt(reg.delaiMois)} mois, ${fmt(reg.tension, 1)} demandes en cours pour une attribution (${fmt(reg.demandes)} demandes en choix 1, ${fmt(reg.attributions)} attributions), ${fmt(reg.partAnc5ans, 1)} % des ménages attendent depuis 5 ans ou plus, pression ${fmt(reg.tensionT1, 1)} sur les studios contre ${fmt(reg.tensionT3, 1)} sur les trois-pièces.`);
     for (const x of (TENSION._meta.departements || [])) {
@@ -2912,10 +2924,10 @@ if (LS_COMMUNES) {
 }
 const fullDir = (data, titre, urlPath) => {
   full.push('');
-  full.push(`## DONNÉES — ${titre} (${data.records.length})`);
+  full.push(`## DONNÉES : ${titre} (${data.records.length})`);
   full.push(`${data._meta.attribution}. Extraction du ${dateFrOf(data._meta.collectedAt)}. Annuaire complet : ${B}${urlPath}`);
   for (const r of data.records) {
-    full.push(`- ${r.nom} — ${[r.adresse, [r.cp, r.commune].filter(Boolean).join(' ')].filter(Boolean).join(', ')} (${r.dep})${r.tel ? ` — ${r.tel}` : ''}`);
+    full.push(`- ${r.nom} : ${[r.adresse, [r.cp, r.commune].filter(Boolean).join(' ')].filter(Boolean).join(', ')} (${r.dep})${r.tel ? `, tél. ${r.tel}` : ''}`);
   }
 };
 if (CROUS) fullDir(CROUS, 'RÉSIDENCES CROUS', '/residences-crous/');
@@ -2924,7 +2936,7 @@ if (RES_AUTONOMIE) fullDir(RES_AUTONOMIE, 'RÉSIDENCES AUTONOMIE (SENIORS)', '/r
 if (ENCADREMENT) {
   const majores = ENCADREMENT.records.map(r => r.refMajore);
   full.push('');
-  full.push(`## DONNÉES — ENCADREMENT DES LOYERS À PARIS (références ${ENCADREMENT._meta.millesime})`);
+  full.push(`## DONNÉES : ENCADREMENT DES LOYERS À PARIS (références ${ENCADREMENT._meta.millesime})`);
   full.push(`${ENCADREMENT._meta.attribution}. ${ENCADREMENT.records.length} références officielles (80 quartiers × 1-4 pièces × 4 époques × meublé/non meublé). Plafonds légaux (loyer de référence majoré) : de ${fmt(Math.min(...majores), 2)} à ${fmt(Math.max(...majores), 2)} €/m² hors charges selon le profil du logement.`);
   full.push(`Vérificateur interactif : ${B}/guides/encadrement-des-loyers-paris/ · grille complète en JSON : ${B}/data/encadrement-loyers-paris.json`);
 }
@@ -2955,5 +2967,5 @@ fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
 
 fs.writeFileSync(path.join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE.baseUrl}/sitemap.xml\n\n# Index pour les moteurs IA : ${SITE.baseUrl}/llms.txt\n`);
 
-console.log(`OK — ${pages.length} pages générées dans dist/ (+ sitemap.xml, robots.txt, style.css)`);
+console.log(`OK : ${pages.length} pages générées dans dist/ (+ sitemap.xml, robots.txt, style.css)`);
 pages.forEach(p => console.log('  ' + p.urlPath));

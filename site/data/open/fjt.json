@@ -3,7 +3,7 @@
   "dataset": "fjt",
   "collectedAt": "2026-06-11T01:56:50.921Z",
   "recordCount": 141,
-  "source": "FINESS — extraction des établissements, catégorie 257 (Foyer de jeunes travailleurs)",
+  "source": "FINESS : extraction des établissements, catégorie 257 (Foyer de jeunes travailleurs)",
   "sourceUrl": "https://www.data.gouv.fr/fr/datasets/r/98f3161f-79ff-4f16-8f6a-6d571a80fea2",
   "portal": "data.gouv.fr",
   "license": "Licence Ouverte / Open Licence (Etalab)",

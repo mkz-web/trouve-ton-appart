@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * check-tout.js — La barrière avant publication : build + les trois contrôles.
+ * check-tout.js : la barrière avant publication : build + les trois contrôles.
  * ---------------------------------------------------------------------------
  * Runtime     : Node.js >= 22 (imposé par check-rendu.js)
  * Dépendances : AUCUNE (child_process, path natifs)
@@ -41,7 +41,7 @@ if (manquants.length) {
   process.exit(1);
 }
 
-console.log(`Barrière avant publication — ${ETAPES.length} étapes${TOUTES ? ' (rendu : toutes les pages)' : ''}\n`);
+console.log(`Barrière avant publication : ${ETAPES.length} étapes${TOUTES ? ' (rendu : toutes les pages)' : ''}\n`);
 
 const debutTotal = Date.now();
 for (let i = 0; i < ETAPES.length; i++) {

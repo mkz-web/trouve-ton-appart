@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ingest-rpls.js — Parc locatif social par commune en Île-de-France.
+ * ingest-rpls.js : parc locatif social par commune en Île-de-France.
  * ------------------------------------------------------------------
  * Exécution   : node ingest-rpls.js [--force]
  * Runtime     : Node.js >= 14 · Dépendances : AUCUNE
@@ -44,7 +44,7 @@ const GEO_REPLI = {
 };
 
 (async () => {
-  console.log('RPLS / SRU / zonage — logement social par commune Île-de-France');
+  console.log('RPLS / SRU / zonage : logement social par commune Île-de-France');
 
   /* 1. INSEE RPLS agrégé commune (ZIP) */
   const zip = await getCached(URL_INSEE, 'RPLS_01-01-2024_Iris.zip');
@@ -115,18 +115,18 @@ const GEO_REPLI = {
   const ecartees = [...communes.values()].filter((e) => !e.nom);
   if (ecartees.length) {
     const parcPerdu = ecartees.reduce((s, e) => s + (e.nbLogementsSociaux || 0), 0);
-    console.log(`  ! ${ecartees.length} code(s) écarté(s) faute de nom : ${ecartees.map((e) => e.code).join(', ')} — ${parcPerdu} logements RPLS perdus`);
+    console.log(`  ! ${ecartees.length} code(s) écarté(s) faute de nom : ${ecartees.map((e) => e.code).join(', ')}, ${parcPerdu} logements RPLS perdus`);
     if (parcPerdu > 0) {
-      console.error('  ÉCHEC : perte de parc non nulle — compléter GEO_REPLI (fusion de communes ?)');
+      console.error('  ÉCHEC : perte de parc non nulle, compléter GEO_REPLI (fusion de communes ?)');
       process.exit(1);
     }
   }
 
   writeDataset('logement-social-communes', records, {
-    source: 'INSEE–SDES RPLS 01/01/2024 (parc, vacance, loyers) ; Ministère de la Transition écologique, inventaire SRU au 01/01/2024, fichier publié 2025 (llsSRU, tauxSRU) ; zonage ABC du 5 septembre 2025',
+    source: 'INSEE-SDES RPLS 01/01/2024 (parc, vacance, loyers) ; Ministère de la Transition écologique, inventaire SRU au 01/01/2024, fichier publié 2025 (llsSRU, tauxSRU) ; zonage ABC du 5 septembre 2025',
     sourceUrl: [URL_INSEE, URL_SRU, URL_ZONAGE].join(' | '),
     license: 'Licence Ouverte / Open Licence v2.0 (Etalab)',
-    attribution: 'Sources : Insee–SDES, RPLS au 1ᵉʳ janvier 2024 · Ministère de la Transition écologique, inventaire SRU au 1ᵉʳ janvier 2024 · Zonage ABC (arrêté du 5 septembre 2025) — Licence Ouverte',
+    attribution: 'Sources : Insee-SDES, RPLS au 1ᵉʳ janvier 2024 · Ministère de la Transition écologique, inventaire SRU au 1ᵉʳ janvier 2024 · Zonage ABC (arrêté du 5 septembre 2025), Licence Ouverte',
     millesime: 'RPLS 01/01/2024 · SRU 01/01/2024 · zonage 05/09/2025',
     avertissement: 'nbLogementsSociaux (RPLS) et llsSRU (inventaire SRU) reposent sur des assiettes différentes : ne pas les additionner ni les comparer terme à terme. Paris : la ligne 75056 porte le total communal (sans loyers) ; le détail par arrondissement est porté par les codes 75101-75120 (arrondissement: true).',
   });

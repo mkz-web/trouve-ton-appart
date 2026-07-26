@@ -3,7 +3,7 @@
   "dataset": "tension-communes",
   "collectedAt": "2026-07-18T23:03:39.319Z",
   "recordCount": 1286,
-  "source": "DRIHL Île-de-France — socle de données demandes et attributions de logements sociaux (Infocentre SNE, traitements DRIHL/SOEE)",
+  "source": "DRIHL Île-de-France : socle de données demandes et attributions de logements sociaux (Infocentre SNE, traitements DRIHL/SOEE)",
   "sourceUrl": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/socle-de-donnees-demandes-et-attributions-de-a1510.html",
   "fileUrl": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/IMG/xlsx/socle_demandes_attributions_2025.xlsx",
   "license": "Licence Ouverte Etalab 2.0",

@@ -3,7 +3,7 @@
   "dataset": "crous-residences",
   "collectedAt": "2026-06-11T01:56:50.623Z",
   "recordCount": 157,
-  "source": "CNOUS — Logements CROUS (fr_crous_logement_france_entiere)",
+  "source": "CNOUS : Logements CROUS (fr_crous_logement_france_entiere)",
   "sourceUrl": "https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr_crous_logement_france_entiere/exports/json?where=regions%3D%22%C3%8Ele-de-France%22",
   "portal": "data.enseignementsup-recherche.gouv.fr",
   "license": "Licence Ouverte / Open Licence v2.0 (Etalab)",

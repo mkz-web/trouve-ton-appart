@@ -3,10 +3,10 @@
   "dataset": "logement-social-communes",
   "collectedAt": "2026-06-11T01:56:51.257Z",
   "recordCount": 464,
-  "source": "INSEE–SDES RPLS 01/01/2024 (parc, vacance, loyers) ; Ministère de la Transition écologique, inventaire SRU au 01/01/2024, fichier publié 2025 (llsSRU, tauxSRU) ; zonage ABC du 5 septembre 2025",
+  "source": "INSEE-SDES RPLS 01/01/2024 (parc, vacance, loyers) ; Ministère de la Transition écologique, inventaire SRU au 01/01/2024, fichier publié 2025 (llsSRU, tauxSRU) ; zonage ABC du 5 septembre 2025",
   "sourceUrl": "https://www.insee.fr/fr/statistiques/fichier/8736658/RPLS_01-01-2024_Iris.zip | https://www.data.gouv.fr/fr/datasets/r/59379519-0fa6-4510-be06-a97d02fdef18 | https://data.iledefrance.fr/api/explore/v2.1/catalog/datasets/logement-liste-des-communes-selon-le-zonage-abc/exports/json?select=codgeo%2Cdep%2Clibgeo%2Czonage_en_vigueur_depuis_le_5_septembre_2025",
   "license": "Licence Ouverte / Open Licence v2.0 (Etalab)",
-  "attribution": "Sources : Insee–SDES, RPLS au 1ᵉʳ janvier 2024 · Ministère de la Transition écologique, inventaire SRU au 1ᵉʳ janvier 2024 · Zonage ABC (arrêté du 5 septembre 2025) — Licence Ouverte",
+  "attribution": "Sources : Insee-SDES, RPLS au 1ᵉʳ janvier 2024 · Ministère de la Transition écologique, inventaire SRU au 1ᵉʳ janvier 2024 · Zonage ABC (arrêté du 5 septembre 2025), Licence Ouverte",
   "millesime": "RPLS 01/01/2024 · SRU 01/01/2024 · zonage 05/09/2025",
   "avertissement": "nbLogementsSociaux (RPLS) et llsSRU (inventaire SRU) reposent sur des assiettes différentes : ne pas les additionner ni les comparer terme à terme. Paris : la ligne 75056 porte le total communal (sans loyers) ; le détail par arrondissement est porté par les codes 75101-75120 (arrondissement: true)."
  },

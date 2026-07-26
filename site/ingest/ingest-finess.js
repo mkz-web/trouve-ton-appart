@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * ingest-finess.js — FJT et résidences autonomie d'Île-de-France (FINESS).
+ * ingest-finess.js : FJT et résidences autonomie d'Île-de-France (FINESS).
  * ------------------------------------------------------------------
  * Exécution   : node ingest-finess.js [--force]
  * Runtime     : Node.js >= 14 · Dépendances : AUCUNE
@@ -55,7 +55,7 @@ function nomPropre(s) {
 const telFr = (t) => (t && /^\d{10}$/.test(t) ? t.match(/\d{2}/g).join(' ') : t || null);
 
 (async () => {
-  console.log('FINESS — FJT et résidences autonomie Île-de-France');
+  console.log('FINESS : FJT et résidences autonomie Île-de-France');
   const buf = await getCached(URL_FINESS, 'finess-etablissements.csv');
   const lines = buf.toString('utf8').split('\n');
   console.log(`  ${lines.length} lignes nationales`);
@@ -107,7 +107,7 @@ const telFr = (t) => (t && /^\d{10}$/.test(t) ? t.match(/\d{2}/g).join(' ') : t 
     const geoles = records.filter((r) => r.lat != null).length;
     console.log(`  ${label} : ${records.length} en IdF (${geoles} géolocalisées)`);
     writeDataset(dataset, records, {
-      source: `FINESS — extraction des établissements, catégorie ${cat} (${label})`,
+      source: `FINESS : extraction des établissements, catégorie ${cat} (${label})`,
       sourceUrl: URL_FINESS,
       portal: 'data.gouv.fr',
       license: 'Licence Ouverte / Open Licence (Etalab)',
