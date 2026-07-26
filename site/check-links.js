@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * check-links.js — Vérifie que tous les liens internes de dist/ pointent
+ * check-links.js : vérifie que tous les liens internes de dist/ pointent
  * vers une page existante. Dépendances : aucune. Node 14+.
  * Exécution : node check-links.js
  */
@@ -20,7 +20,10 @@ function walk(d) {
         links++;
         const u = m[1].split('#')[0];
         if (!u) continue;
-        const t = /\.(css|xml|txt)$/.test(u) ? path.join(DIST, u) : path.join(DIST, u, 'index.html');
+        /* Une URL à extension (/favicon.ico, /style.css, /apple-touch-icon.png…)
+         * désigne un fichier ; sinon c'est une page, donc un dossier + index.html.
+         * Toutes les pages du site sont en URL à slash final, jamais à extension. */
+        const t = /\.[a-z0-9]{2,5}$/i.test(u) ? path.join(DIST, u) : path.join(DIST, u, 'index.html');
         if (!fs.existsSync(t)) { console.log('CASSÉ dans ' + p.replace(DIST, '') + ' -> ' + u); errs++; }
       }
     }

@@ -225,7 +225,19 @@ function skyline() {
 /* Icône d'un guide = thème de son premier parcours ; picto dédié par slug. */
 const guideTheme = (g) => themeOf(g.parcours && g.parcours[0]);
 
-const FAVICON = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="${PAL.bleu}"/><path d="M16 7l10 8h-3v9h-5.2v-6h-3.6v6H9v-9H6z" fill="#fff"/><path d="M19.5 18h2.5v6h-2.5z" fill="${PAL.accent}"/></svg>`);
+/* Icône du site. Source unique du dessin : ce SVG est écrit tel quel dans
+ * dist/favicon.svg, et node site/generate-favicon.js le reproduit en pixels
+ * pour favicon.ico et apple-touch-icon.png (à relancer si le dessin change).
+ *
+ * Trois fichiers, jamais de data URI : une data URI n'est pas une URL
+ * crawlable, or Google exige une URL de favicon stable et crawlable pour
+ * afficher l'icône en résultat de recherche, Safari ne gère pas les favicons
+ * SVG, et beaucoup de surfaces (marque-pages, agrégateurs, robots) demandent
+ * /favicon.ico en dur sans lire le <head>. */
+const FAVICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="${PAL.bleu}"/><path d="M16 7l10 8h-3v9h-5.2v-6h-3.6v6H9v-9H6z" fill="#fff"/><path d="M19.5 18h2.5v6h-2.5z" fill="${PAL.accent}"/></svg>`;
+const FAVICON_LINKS = `<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">`;
 
 /* Marque du header : tuile « verre » + maison blanche, porte terracotta
  * (même langage que le favicon). La porte s'éclaire au survol. */
@@ -451,7 +463,7 @@ function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = []
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(metaDescription)}">
 <link rel="canonical" href="${canonical}">${alternates}
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON}">
+${FAVICON_LINKS}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${esc(SITE.name)}">
 <meta property="og:title" content="${esc(title)}">
@@ -547,7 +559,7 @@ function layoutEn({ title, metaDescription, urlPath, content, jsonLd = [], bread
 <link rel="alternate" hreflang="fr" href="${SITE.baseUrl}${frPath}">
 <link rel="alternate" hreflang="en" href="${canonical}">
 <link rel="alternate" hreflang="x-default" href="${SITE.baseUrl}${frPath}">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON}">
+${FAVICON_LINKS}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${esc(SITE.name)}">
 <meta property="og:title" content="${esc(title)}">
@@ -2922,6 +2934,17 @@ fs.writeFileSync(path.join(DIST, 'llms-full.txt'), full.join('\n') + '\n');
 const STATIC = path.join(ROOT, 'static');
 if (fs.existsSync(STATIC)) {
   for (const f of fs.readdirSync(STATIC)) fs.copyFileSync(path.join(STATIC, f), path.join(DIST, f));
+}
+
+/* Icônes. Le SVG est dérivé de la palette à chaque build (jamais de dérive de
+ * couleur) ; les deux binaires viennent de site/static/. Échec franc s'ils
+ * manquent : toutes les pages les référencent, un 404 d'icône est muet dans le
+ * navigateur mais coûte l'icône en résultat de recherche. */
+fs.writeFileSync(path.join(DIST, 'favicon.svg'), FAVICON_SVG + '\n');
+for (const f of ['favicon.ico', 'apple-touch-icon.png']) {
+  if (!fs.existsSync(path.join(DIST, f))) {
+    throw new Error(`${f} manquant dans site/static/ : lancer « node site/generate-favicon.js »`);
+  }
 }
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * check-rendu.js — Audit de rendu des pages générées (géométrie et accessibilité).
+ * check-rendu.js : audit de rendu des pages générées (géométrie et accessibilité).
  * ------------------------------------------------------------------------------
  * Runtime     : Node.js >= 22 (WebSocket natif)
  * Dépendances : AUCUNE (http, child_process, fs, path natifs + un Chrome/Edge
@@ -307,7 +307,7 @@ function client(url) {
    * auditée. Le serveur local répond 404 en text/html, Chrome en fait un
    * document valide dont le pathname est celui demandé : sans cette barrière,
    * une faute de frappe dans --page ou un slug renommé dans GABARITS ressort
-   * en « OK — aucun défaut ». C'est le mode de panne historique de ce script,
+   * en « OK : aucun défaut ». C'est le mode de panne historique de ce script,
    * sous une autre forme. */
   const absentes = pages.filter(p => !fs.existsSync(fichierDe(p)));
   if (absentes.length) {
@@ -354,9 +354,11 @@ function client(url) {
   });
   c.sur('Log.entryAdded', (p) => {
     const e = p.entry || {};
-    /* Chrome réclame /favicon.ico de lui-même, même sans référence dans la
-     * page : son absence est un comportement du navigateur, pas un défaut. */
-    if (e.level === 'error' && !/favicon\.ico/.test(e.url || '')) {
+    /* Plus d'exception pour /favicon.ico : le fichier existe désormais et
+     * toutes les pages le référencent, donc une erreur réseau dessus est un
+     * vrai défaut. Une exception qui survit à son motif finit par masquer
+     * exactement ce que le contrôle est censé attraper. */
+    if (e.level === 'error') {
       erreursPage.push(`[${e.source}] ${e.text}`);
     }
   });
@@ -376,7 +378,7 @@ function client(url) {
       if (att) await c.envoyer('Runtime.evaluate', { expression: `window.__ATTENDU=${JSON.stringify(att.sel)}` });
       const r = await c.envoyer('Runtime.evaluate', { expression: AUDIT, returnByValue: true, awaitPromise: true });
       if (r && r.exceptionDetails) {
-        console.error(`✗ ${p} (${largeur}px) : l'audit a échoué dans la page — ${(r.exceptionDetails.exception || {}).description || r.exceptionDetails.text}`);
+        console.error(`✗ ${p} (${largeur}px) : l'audit a échoué dans la page : ${(r.exceptionDetails.exception || {}).description || r.exceptionDetails.text}`);
         process.exitCode = 1; continue;
       }
       const v = r && r.result && r.result.value;
@@ -399,18 +401,18 @@ function client(url) {
       /* Une ressource manquante ou une exception du site invalident la mesure :
        * la page auditée n'est pas celle que le visiteur verra. */
       if (srv.manquants.size) {
-        console.error(`✗ ${p} (${largeur}px) : ressource(s) introuvable(s) — ${[...srv.manquants].join(', ')}`);
+        console.error(`✗ ${p} (${largeur}px) : ressource(s) introuvable(s) : ${[...srv.manquants].join(', ')}`);
         process.exitCode = 1; continue;
       }
       if (erreursPage.length) {
-        console.error(`✗ ${p} (${largeur}px) : la page a produit une erreur JS, son rendu n'est pas fiable —`);
+        console.error(`✗ ${p} (${largeur}px) : la page a produit une erreur JS, son rendu n'est pas fiable :`);
         for (const m of erreursPage.slice(0, 3)) console.error(`    ${String(m).split('\n')[0]}`);
         process.exitCode = 1; continue;
       }
       /* Contenu construit par JS : absent, il n'y a rien à mesurer, et un audit
        * sur du vide ne vaut pas un audit réussi. */
       if (att && !(v.attendus >= att.min)) {
-        console.error(`✗ ${p} (${largeur}px) : contenu injecté manquant — ${att.quoi} (${att.sel} : ${v.attendus} trouvé(s), ${att.min} attendu(s)).`);
+        console.error(`✗ ${p} (${largeur}px) : contenu injecté manquant : ${att.quoi} (${att.sel} : ${v.attendus} trouvé(s), ${att.min} attendu(s)).`);
         process.exitCode = 1; continue;
       }
       if (v.pbs.length) resultats.push({ largeur, page: p, pbs: v.pbs });
@@ -428,7 +430,7 @@ function client(url) {
     process.exit(1);
   }
   if (!resultats.length) {
-    console.log('\nOK — aucun défaut de rendu : pas de scroll horizontal, pas de débordement, pas de chevauchement, pas de texte tronqué, champs alignés, cibles ≥ 24 px.');
+    console.log('\nOK : aucun défaut de rendu : pas de scroll horizontal, pas de débordement, pas de chevauchement, pas de texte tronqué, champs alignés, cibles ≥ 24 px.');
     process.exit(0);
   }
   const bloquants = resultats.filter(r => r.pbs.some(p => p.g === 'BLOQUANT')).length;
