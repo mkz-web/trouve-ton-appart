@@ -2375,7 +2375,9 @@ const HTML_404 = layout({
 /* ------------------------------ CSS --------------------------------- */
 
 /* Déclaration de fonction (hoistée) : le CSS est inliné dans <head> par layout(),
- * appelé avant ce point du fichier. Supprime la requête bloquante /style.css. */
+ * appelé avant ce point du fichier. Il n'y a donc AUCUNE feuille de style
+ * externe, et plus aucun /style.css écrit dans dist/ (il n'était chargé par
+ * aucune page depuis le passage au CSS inline : 24 Ko servis à personne). */
 function css() { return `:root{--bleu:${PAL.bleu};--bleu2:${PAL.bleu2};--accent:${PAL.accent};--accent2:${PAL.accentFonce};--cta:#b04a30;--encre:${PAL.encre};--gris:#5b6770;--fond:#fdfbf7;--surface:#ffffff;--fond2:#f2f6fa;--ciel:${PAL.cielClair};--creme:${PAL.creme};--bord:#dde5ec}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--encre);background:var(--fond);line-height:1.65}
 .container{max-width:980px;margin:0 auto;padding:0 20px}
@@ -2784,8 +2786,6 @@ for (const { urlPath, html } of pages) {
   fs.writeFileSync(path.join(dir, 'index.html'), sansCommentaires(html));
 }
 
-fs.writeFileSync(path.join(DIST, 'style.css'), css().replace(RE_COMMENTAIRE, ''));
-
 /* Données consommées côté client (outil encadrement, recherche) */
 if (ENCADREMENT) {
   const grille = {};
@@ -2967,5 +2967,5 @@ fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
 
 fs.writeFileSync(path.join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE.baseUrl}/sitemap.xml\n\n# Index pour les moteurs IA : ${SITE.baseUrl}/llms.txt\n`);
 
-console.log(`OK : ${pages.length} pages générées dans dist/ (+ sitemap.xml, robots.txt, style.css)`);
+console.log(`OK : ${pages.length} pages générées dans dist/ (+ sitemap.xml, robots.txt, llms.txt)`);
 pages.forEach(p => console.log('  ' + p.urlPath));
