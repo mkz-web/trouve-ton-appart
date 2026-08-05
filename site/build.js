@@ -2862,10 +2862,18 @@ fs.mkdirSync(DIST, { recursive: true });
  * public. On les retire à l'écriture, ils restent intacts dans build.js.
  * Seuls les blocs qui COMMENCENT une ligne sont retirés : une ouverture de
  * commentaire au milieu d'une ligne de code peut vivre dans une chaîne, on n'y
- * touche pas. Les blocs à attribut (JSON-LD) ne sont pas visés. */
+ * touche pas. Les blocs à attribut (JSON-LD) ne sont pas visés.
+ * Même règle pour les commentaires HTML <!-- --> des gabarits (06/08/2026) :
+ * la passe du 26/07 ne couvrait que style/script et deux « pourquoi »
+ * partaient encore dans le source public de deux guides. Un <!-- en milieu
+ * de ligne (chaîne JS, exemple dans du texte) n'est pas touché ; le site
+ * n'émet aucun commentaire conditionnel. */
 const RE_COMMENTAIRE = /^[ \t]*\/\*[\s\S]*?\*\/[ \t]*\r?\n?/gm;
-const sansCommentaires = (html) => html.replace(/<(style|script)>([\s\S]*?)<\/\1>/g,
-  (_, balise, corps) => `<${balise}>${corps.replace(RE_COMMENTAIRE, '')}</${balise}>`);
+const RE_COMMENTAIRE_HTML = /^[ \t]*<!--[\s\S]*?-->[ \t]*\r?\n?/gm;
+const sansCommentaires = (html) => html
+  .replace(/<(style|script)>([\s\S]*?)<\/\1>/g,
+    (_, balise, corps) => `<${balise}>${corps.replace(RE_COMMENTAIRE, '')}</${balise}>`)
+  .replace(RE_COMMENTAIRE_HTML, '');
 
 for (const { urlPath, html } of pages) {
   const dir = path.join(DIST, ...urlPath.split('/').filter(Boolean));
