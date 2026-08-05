@@ -3,3 +3,6 @@ site/ingest/.cache/
 *.docx
 ~$*
 site/_illus-work/
+
+# Secrets locaux (cle API Clarity...)
+.env
