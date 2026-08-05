@@ -262,6 +262,21 @@ const BRAND_MARK = `<svg class="brand-mark" viewBox="0 0 32 32" xmlns="http://ww
 const CREDIT = '<p class="footer-credit">Site conçu et édité par <a href="https://mkz-consulting.fr" rel="nofollow">MKZ</a></p>';
 const CREDIT_EN = '<p class="footer-credit">Website designed and published by <a href="https://mkz-consulting.fr" rel="nofollow">MKZ</a></p>';
 
+/* ---------------- Mesure d'audience : Microsoft Clarity ----------------
+ * Snippet officiel du projet xxtv797oln, gardé par le nom d'hôte de
+ * production : en local (serve.js, check-rendu.js et ses 200+ rendus par
+ * passe --toutes) et sur les previews *.pages.dev, clarity.ms n'est jamais
+ * chargé. Zéro session fantôme au tableau de bord, zéro dépendance réseau
+ * dans les contrôles (check-rendu échoue sur toute erreur réseau), et le
+ * build reste identique en local et chez Cloudflare (déterminisme).
+ * RGPD : depuis le 31/10/2025, Clarity exige un signal de consentement
+ * pour le trafic EEE ; sans CMP il fonctionne en mode sans cookie et
+ * chaque page vue compte comme une session isolée. Les trois outils
+ * portent data-clarity-mask="true" : le contenu masqué est remplacé côté
+ * client et ne quitte pas le navigateur, la promesse du diagnostic
+ * (« aucune réponse envoyée ») reste vraie. */
+const CLARITY = `<script>if(/(^|\\.)trouve-ton-appart\\.fr$/.test(location.hostname))(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","xxtv797oln");</script>`;
+
 /* Wordmark : dernier mot du nom en accent, son « A » initial remplacé par
  * une maison-lettre (pignon = chapeau du A, porte = contrepoinçon). */
 const BRAND_A = `<svg class="brand-a" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12 1l11 9.5V25h-7v-7.6H8V25H1V10.5z" fill="currentColor"/></svg>`;
@@ -480,6 +495,7 @@ ${FAVICON_LINKS}
 <style>${css()}</style>
 ${urlPath.startsWith('/logement-social/chiffres/') ? '' : VT_CSS}
 ${ld}
+${CLARITY}
 </head>
 <body>
 <header class="site-header">
@@ -576,6 +592,7 @@ ${FAVICON_LINKS}
 <style>${css()}</style>
 ${VT_CSS}
 ${ld}
+${CLARITY}
 </head>
 <body>
 <header class="site-header">
@@ -1801,7 +1818,7 @@ function plafondsWidget() {
     .map(k => `<option value="${k}">${k === 0 ? 'Aucune' : k}</option>`).join('');
   const listOpts = communes.map(c => `<option value="${esc(c[0])}"></option>`).join('');
   return `
-<section class="tool" id="simulateur">
+<section class="tool" id="simulateur" data-clarity-mask="true">
   <h2>Avez-vous droit à un logement social&nbsp;? Vérifiez en 30 secondes</h2>
   <p>Renseignez votre commune, la taille de votre foyer et votre revenu fiscal de référence&nbsp;: l'outil compare aux barèmes officiels ${esc(P._meta.millesime)} et vous dit à quelle catégorie vous pouvez prétendre.</p>
   <div class="tool-form">
@@ -1977,7 +1994,7 @@ function encadrementWidget() {
   const optQ = quartiers.map(([id, nom]) => `<option value="${id}">${esc(nom)}</option>`).join('');
   const optE = EPOQUES.map((e, i) => `<option value="${i}">${esc(e.replace('Apres', 'Après'))}</option>`).join('');
   return `
-<section class="tool" id="verifier">
+<section class="tool" id="verifier" data-clarity-mask="true">
   <h2>Vérifiez votre loyer&nbsp;: les références ${esc(m.millesime)}, quartier par quartier</h2>
   <p>Les loyers de référence officiels (arrêté préfectoral, références ${esc(m.millesime)}) pour chacun des 80 quartiers de Paris. Sélectionnez les caractéristiques du logement&nbsp;:</p>
   <div class="tool-form">
@@ -2085,7 +2102,7 @@ var deb;['enc-s','enc-l'].forEach(function(i){$(i).addEventListener('input',func
     <p class="lead">7 questions, et vous repartez avec votre feuille de route : les aides auxquelles vous pouvez prétendre, les pistes de logement adaptées à votre situation, et les démarches dans le bon ordre.</p>
   </div>
 </header>
-<div id="diag" class="diag-box"></div>
+<div id="diag" class="diag-box" data-clarity-mask="true"></div>
 <p class="maj">Ce diagnostic est indicatif : il oriente, chaque organisme reste seul juge des éligibilités. Vos réponses ne quittent pas votre navigateur : rien n'est envoyé, rien n'est conservé.</p>
 <noscript><p class="notice">Le diagnostic a besoin de JavaScript. Sans lui, choisissez directement votre parcours : <a href="/etudiant/">étudiant et jeune actif</a>, <a href="/logement-social/">logement social et situations spécifiques</a>, ou <a href="/mobilite/">mobilité professionnelle</a>.</p></noscript>
 <section>
