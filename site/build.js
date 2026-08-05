@@ -262,20 +262,77 @@ const BRAND_MARK = `<svg class="brand-mark" viewBox="0 0 32 32" xmlns="http://ww
 const CREDIT = '<p class="footer-credit">Site conçu et édité par <a href="https://mkz-consulting.fr" rel="nofollow">MKZ</a></p>';
 const CREDIT_EN = '<p class="footer-credit">Website designed and published by <a href="https://mkz-consulting.fr" rel="nofollow">MKZ</a></p>';
 
-/* ---------------- Mesure d'audience : Microsoft Clarity ----------------
- * Snippet officiel du projet xxtv797oln, gardé par le nom d'hôte de
- * production : en local (serve.js, check-rendu.js et ses 200+ rendus par
- * passe --toutes) et sur les previews *.pages.dev, clarity.ms n'est jamais
- * chargé. Zéro session fantôme au tableau de bord, zéro dépendance réseau
- * dans les contrôles (check-rendu échoue sur toute erreur réseau), et le
- * build reste identique en local et chez Cloudflare (déterminisme).
- * RGPD : depuis le 31/10/2025, Clarity exige un signal de consentement
- * pour le trafic EEE ; sans CMP il fonctionne en mode sans cookie et
- * chaque page vue compte comme une session isolée. Les trois outils
- * portent data-clarity-mask="true" : le contenu masqué est remplacé côté
- * client et ne quitte pas le navigateur, la promesse du diagnostic
- * (« aucune réponse envoyée ») reste vraie. */
-const CLARITY = `<script>if(/(^|\\.)trouve-ton-appart\\.fr$/.test(location.hostname))(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","xxtv797oln");</script>`;
+/* ------------- Consentement cookies + Microsoft Clarity ----------------
+ * Rien ne se charge avant un clic sur « Accepter » : plus strict que le
+ * mode sans cookie de Microsoft, et sans zone grise CNIL (l'enregistrement
+ * de session n'entre pas dans l'exemption de mesure d'audience). Bandeau
+ * conforme : deux boutons identiques (refuser aussi simple qu'accepter),
+ * non bloquant, retrait à tout moment par les boutons .js-cookies (pied de
+ * page de chaque page + mentions légales), choix conservé 6 mois dans
+ * localStorage puis question reposée.
+ * Garde de production : hors trouve-ton-appart.fr (local, *.pages.dev), le
+ * bandeau ne s'affiche pas tout seul et Clarity ne se charge jamais (zéro
+ * session fantôme, zéro dépendance réseau dans check-rendu, build
+ * déterministe). Le bouton « Gérer les cookies » ouvre quand même le
+ * bandeau partout : c'est la porte de test locale, et check-rendu ne voit
+ * donc jamais le bandeau ouvert.
+ * Les trois outils portent data-clarity-mask="true" : le contenu masqué
+ * est remplacé côté client et ne quitte pas le navigateur, la promesse du
+ * diagnostic (« aucune réponse envoyée ») reste vraie.
+ * API mesurée en prod le 06/08/2026 : consentv2 accuse réception
+ * (ad_Storage denied / analytics_Storage granted, S majuscules), cookies
+ * constatés _clck 365 j et _clsk 1 j, clarity('consent', false) les
+ * efface immédiatement. */
+const CONSENT_BANNER = `
+<div class="consent" id="consent" role="region" aria-label="Consentement aux cookies" hidden>
+  <p class="consent-txt">Avec votre accord, nous mesurons l'usage du site avec Microsoft Clarity pour l'améliorer. Ce que vous saisissez dans nos outils reste masqué et n'est jamais transmis. <a href="/mentions-legales/#cookies">En savoir plus</a></p>
+  <p class="consent-actions">
+    <button type="button" class="consent-btn" id="consent-ok">Accepter</button>
+    <button type="button" class="consent-btn" id="consent-non">Refuser</button>
+  </p>
+</div>`;
+const CONSENT_BANNER_EN = `
+<div class="consent" id="consent" role="region" aria-label="Cookie consent" hidden>
+  <p class="consent-txt">With your consent, we use Microsoft Clarity to measure how this site is used and improve it. Whatever you type in our tools stays masked and is never transmitted. <a href="/mentions-legales/#cookies" hreflang="fr">Learn more (in French)</a></p>
+  <p class="consent-actions">
+    <button type="button" class="consent-btn" id="consent-ok">Accept</button>
+    <button type="button" class="consent-btn" id="consent-non">Decline</button>
+  </p>
+</div>`;
+const CONSENT_JS = `<script>
+(function(){
+/* Bandeau de consentement : Clarity ne se charge qu'APRÈS un accord
+ * explicite, et uniquement sur le domaine de production. Le choix
+ * (accord ou refus) vit 6 mois dans localStorage, puis on redemande.
+ * Les boutons .js-cookies rouvrent le bandeau pour changer d'avis. */
+var CLE='tta-consent',MAX=15778800000;
+var PROD=/(^|\\.)trouve-ton-appart\\.fr$/.test(location.hostname);
+var banniere=document.getElementById('consent');
+var ouvreur=null;
+function lire(){try{var v=JSON.parse(localStorage.getItem(CLE));if(v&&v.c&&(Date.now()-v.t)<MAX)return v.c}catch(e){}return null}
+function ecrire(c){try{localStorage.setItem(CLE,JSON.stringify({c:c,t:Date.now()}))}catch(e){}}
+function charger(){
+if(!PROD||window.clarity)return;
+(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","xxtv797oln");
+/* File d'attente du stub : le signal part avant même que clarity.js soit
+ * arrivé, les cookies ne sont posés qu'en analytics, jamais en pub. */
+window.clarity('consentv2',{ad_Storage:"denied",analytics_Storage:"granted"});
+}
+function fermer(){banniere.hidden=true;if(ouvreur){ouvreur.focus();ouvreur=null}}
+document.getElementById('consent-ok').addEventListener('click',function(){ecrire('granted');fermer();charger()});
+document.getElementById('consent-non').addEventListener('click',function(){
+var actif=!!window.clarity;
+ecrire('denied');fermer();
+/* Retrait après accord : signaler le refus puis effacer les cookies
+ * Clarity (recette Microsoft, mesurée : _clck et _clsk disparaissent). */
+if(actif){window.clarity('consentv2',{ad_Storage:"denied",analytics_Storage:"denied"});window.clarity('consent',false)}
+});
+for(var i=0,b=document.querySelectorAll('.js-cookies');i<b.length;i++)b[i].addEventListener('click',function(){ouvreur=this;banniere.hidden=false;document.getElementById('consent-ok').focus()});
+var choix=lire();
+if(choix==='granted')charger();
+else if(choix===null&&PROD)banniere.hidden=false;
+})();
+</script>`;
 
 /* Wordmark : dernier mot du nom en accent, son « A » initial remplacé par
  * une maison-lettre (pignon = chapeau du A, porte = contrepoinçon). */
@@ -495,7 +552,6 @@ ${FAVICON_LINKS}
 <style>${css()}</style>
 ${urlPath.startsWith('/logement-social/chiffres/') ? '' : VT_CSS}
 ${ld}
-${CLARITY}
 </head>
 <body>
 <header class="site-header">
@@ -527,10 +583,12 @@ ${content}
     </div>
   </div>
   <div class="container footer-legal">
-    <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/">Mentions légales</a></p>
+    <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/">Mentions légales</a> · <button type="button" class="js-cookies">Gérer les cookies</button></p>
     ${CREDIT}
   </div>
 </footer>
+${CONSENT_BANNER}
+${CONSENT_JS}
 ${ANIM_JS}
 ${content.includes('table class="data"') ? TABLE_JS : ''}
 </body>
@@ -592,7 +650,6 @@ ${FAVICON_LINKS}
 <style>${css()}</style>
 ${VT_CSS}
 ${ld}
-${CLARITY}
 </head>
 <body>
 <header class="site-header">
@@ -628,10 +685,12 @@ ${content}
     </div>
   </div>
   <div class="container footer-legal">
-    <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/" lang="fr">Legal notice (mentions légales)</a></p>
+    <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/" lang="fr">Legal notice (mentions légales)</a> · <button type="button" class="js-cookies">Manage cookies</button></p>
     ${CREDIT_EN}
   </div>
 </footer>
+${CONSENT_BANNER_EN}
+${CONSENT_JS}
 ${ANIM_JS}
 ${content.includes('table class="data"') ? TABLE_JS : ''}
 </body>
@@ -2379,7 +2438,11 @@ const HTML_404 = layout({
 <p><strong>Contact</strong> : <a href="mailto:contact@mkz-consulting.fr">contact@mkz-consulting.fr</a></p>
 <p><strong>Hébergement</strong> : Cloudflare Pages, Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis.</p>
 <p><strong>Données personnelles</strong> : Ce site ne collecte aucune donnée personnelle et ne dépose aucun cookie de suivi sans consentement.</p>
-<p><strong>Nature du service</strong> : ${esc(SITE.name)} est un service d'information et d'orientation. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>`;
+<p><strong>Nature du service</strong> : ${esc(SITE.name)} est un service d'information et d'orientation. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>
+<h2 id="cookies">Cookies et mesure d'audience</h2>
+<p>Avec votre accord, et seulement avec lui, nous utilisons <strong>Microsoft Clarity</strong> (Microsoft Ireland Operations Limited) pour comprendre comment le site est utilisé : pages consultées, zones cliquées, parcours de navigation. Tant que vous n'avez pas cliqué sur «&nbsp;Accepter&nbsp;» dans le bandeau, le script de mesure ne se charge pas et aucun cookie de mesure n'est déposé. Refuser ne change rien à votre navigation.</p>
+<p>Si vous acceptez, deux cookies internes sont déposés&nbsp;: <code>_clck</code> (identifiant pseudonyme propre à ce site, durée constatée de 12 mois) et <code>_clsk</code> (relie les pages d'une même visite, durée constatée de 1 jour). Nous refusons d'office le volet publicitaire de Microsoft (signal «&nbsp;ad storage&nbsp;» refusé). Ce que vous saisissez dans nos outils (diagnostic, simulateur de plafonds, vérificateur de loyer) est masqué dans votre navigateur et n'est jamais transmis à Clarity. Pour en savoir plus&nbsp;: <a href="https://privacy.microsoft.com/fr-fr/privacystatement" rel="noopener" target="_blank">déclaration de confidentialité de Microsoft</a>.</p>
+<p>Votre choix, accord comme refus, est conservé sur votre appareil pendant 6 mois, puis la question vous est reposée. Vous pouvez changer d'avis à tout moment&nbsp;: <button type="button" class="js-cookies">gérer les cookies</button>, aussi accessible en pied de chaque page. Le retrait de l'accord supprime immédiatement les cookies Clarity.</p>`;
   addPage('/mentions-legales/', layout({
     title: `Mentions légales | ${SITE.name}`,
     metaDescription: `Mentions légales du site ${SITE.name}.`,
@@ -2622,6 +2685,13 @@ main p a:not([class]):hover,main li a:not([class]):hover,main p a:not([class]):f
  * paragraphes partagent la ligne et se décaleraient de quelques pixels. */
 .footer-legal a{text-decoration:underline;text-underline-offset:2px}
 .footer-legal p{margin:0}
+.consent{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:2px solid var(--bord);box-shadow:0 -10px 30px rgba(28,39,51,.18);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.6rem 1.6rem;padding:14px 16px calc(14px + env(safe-area-inset-bottom))}
+.consent[hidden]{display:none}
+.consent-txt{margin:0;font-size:.95rem;max-width:62ch}
+.consent-actions{margin:0;display:flex;gap:.8rem;flex-wrap:wrap}
+.consent-btn{background:#fff;color:var(--bleu);font:inherit;font-weight:600;font-size:.97rem;border:0;box-shadow:inset 0 0 0 2px var(--bleu2);border-radius:10px;padding:11px 22px;min-height:44px;min-width:110px;cursor:pointer}
+.consent-btn:hover{background:var(--ciel)}
+.js-cookies{background:none;border:0;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer;padding:12px 4px;margin:-12px -4px}
 /* ---- Annuaires de données (Phase 2) ---- */
 [id]{scroll-margin-top:16px}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
