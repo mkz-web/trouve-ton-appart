@@ -26,6 +26,11 @@ const ANNUAIRE = read('annuaire.json');
 const DIAG = read('diagnostic.json');
 const EN = read('en.json');
 
+/* Dates réelles par guide (voir date-guides.js) : le build REFUSE un guide
+ * dont le contenu a changé sans mise à jour de sa date (fail-closed : pas de
+ * « Mis à jour le » mensonger). Carte amorcée depuis l'historique git. */
+const DATES_GUIDES = require('./date-guides.js').controle(GUIDES, EN.guides);
+
 /* Correspondances FR ↔ EN : alimentent le hreflang bidirectionnel et les
  * liens de bascule de langue. Une paire n'existe que si la page anglaise
  * est une vraie jumelle (adaptation fidèle du même contenu). */
@@ -85,6 +90,7 @@ const compteur = (n) => n >= 10
   ? `<span class="compte" data-compte="${n}">${fmt(n)}</span>`
   : fmt(n);
 const dateFrOf = (iso) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+const dateEnOf = (iso) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 /* AAAA-MM-JJ dans le même fuseau que dateFrOf (heure de Paris) : le JSON-LD et
  * le texte visible doivent annoncer la même date d'extraction. */
 const isoFrOf = (iso) => new Date(iso).toLocaleDateString('sv-SE', { timeZone: 'Europe/Paris' });
@@ -291,6 +297,13 @@ const CREDIT_EN = '<p class="footer-credit">Website designed and published by <a
  * document.prerendering posée sur le bootstrap consentement (ne jamais
  * charger Clarity ni afficher le bandeau pour une page jamais montrée). */
 const SPECULATION = '<script type="speculationrules">{"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>';
+
+/* Page « Qui fait ce site ? » (E-E-A-T) : PRÊTE MAIS NON PUBLIÉE, décision du
+ * 07/08/2026. Tant que ce drapeau est à false, la page n'est ni générée, ni
+ * liée (pied de page), ni au sitemap, ni dans llms.txt : invisible des
+ * visiteurs et des moteurs. L'activer = le passer à true, rebuild, republier,
+ * après validation du contenu par Mickaël (récit fondateur inclus). */
+const A_PROPOS_ACTIF = false;
 
 const CONSENT_BANNER = `
 <div class="consent" id="consent" role="region" aria-label="Consentement aux cookies" hidden>
@@ -599,7 +612,7 @@ ${content}
     </div>
   </div>
   <div class="container footer-legal">
-    <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/">Mentions légales</a> · <button type="button" class="js-cookies">Gérer les cookies</button></p>
+    <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/">Mentions légales</a>${A_PROPOS_ACTIF ? ' · <a href="/a-propos/">Qui fait ce site&nbsp;?</a>' : ''} · <button type="button" class="js-cookies">Gérer les cookies</button></p>
     ${CREDIT}
   </div>
 </footer>
@@ -718,8 +731,8 @@ ${content.includes('table class="data"') ? TABLE_JS : ''}
 
 const pages = []; // { urlPath, html, priority }
 
-function addPage(urlPath, html, priority) {
-  pages.push({ urlPath, html, priority });
+function addPage(urlPath, html, priority, lastmod) {
+  pages.push({ urlPath, html, priority, lastmod });
 }
 
 /* Accueil */
@@ -1042,7 +1055,7 @@ for (const g of GUIDES) {
     <p class="kicker">Guide pratique</p>
     <h1>${esc(g.h1)}</h1>
     <p class="lead">${esc(g.intro)}</p>
-    <p class="maj">Mis à jour le ${DATE_FR}</p>
+    <p class="maj">Mis à jour le ${dateFrOf(DATES_GUIDES.fr[g.slug].modifie)}</p>
   </div>
 </header>
 ${barreIa(`/guides/${g.slug}/`, false)}
@@ -1092,8 +1105,8 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
       headline: g.h1,
       description: g.metaDescription,
       ...(g.tldr && g.tldr.length ? { abstract: g.tldr.join(' ') } : {}),
-      datePublished: DATE_PUBLICATION,
-      dateModified: DATE_ISO,
+      datePublished: DATES_GUIDES.fr[g.slug].publie,
+      dateModified: DATES_GUIDES.fr[g.slug].modifie,
       inLanguage: 'fr-FR',
       mainEntityOfPage: `${SITE.baseUrl}/guides/${g.slug}/`,
       image: `${SITE.baseUrl}/og-image.png`,
@@ -1108,7 +1121,7 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
         acceptedAnswer: { '@type': 'Answer', text: f.a }
       }))
     }].concat(OUTILS_DE_GUIDE[g.slug] ? [outilLd(OUTILS_DE_GUIDE[g.slug])] : [])
-  }), '0.8');
+  }), '0.8', DATES_GUIDES.fr[g.slug].modifie);
 }
 
 /* Hub des guides : cible du fil d'Ariane « Guides » et page de maillage. */
@@ -1184,7 +1197,7 @@ for (const g of EN.guides) {
     <p class="kicker">Practical guide</p>
     <h1>${esc(g.h1)}</h1>
     <p class="lead">${esc(g.intro)}</p>
-    <p class="maj">Updated ${DATE_EN}</p>
+    <p class="maj">Updated ${dateEnOf(DATES_GUIDES.en[g.slug].modifie)}</p>
   </div>
 </header>
 ${barreIa(`/en/guides/${g.slug}/`, true)}
@@ -1228,8 +1241,9 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
       '@type': 'Article',
       headline: g.h1,
       description: g.metaDescription,
-      datePublished: DATE_ISO,
-      dateModified: DATE_ISO,
+      ...(g.tldr && g.tldr.length ? { abstract: g.tldr.join(' ') } : {}),
+      datePublished: DATES_GUIDES.en[g.slug].publie,
+      dateModified: DATES_GUIDES.en[g.slug].modifie,
       inLanguage: 'en',
       mainEntityOfPage: `${SITE.baseUrl}/en/guides/${g.slug}/`,
       image: `${SITE.baseUrl}/og-image.png`,
@@ -1244,7 +1258,7 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
         acceptedAnswer: { '@type': 'Answer', text: f.a }
       }))
     }]
-  }), '0.7');
+  }), '0.7', DATES_GUIDES.en[g.slug].modifie);
 }
 
 /* Hub anglais des guides : cible du fil d'Ariane « Guides » côté /en/. */
@@ -2513,13 +2527,59 @@ const HTML_404 = layout({
   }), '0.1');
 })();
 
+/* Qui fait ce site ? : voir le drapeau A_PROPOS_ACTIF (déclaré près des
+ * constantes de gabarit) pour le statut de publication. */
+(function buildAPropos() {
+  if (!A_PROPOS_ACTIF) return;
+  const content = `
+<nav class="breadcrumb"><a href="/">Accueil</a> › Qui fait ce site&nbsp;?</nav>
+<h1>Qui fait ce site&nbsp;?</h1>
+<p class="lead">Un service d'orientation ne vaut que si l'on sait qui le fait, comment, et avec quel intérêt. Les trois réponses tiennent sur cette page.</p>
+<h2>Qui l'édite</h2>
+<p>${esc(SITE.name)} est édité par <strong>MKZ</strong>, société par actions simplifiée fondée et dirigée par <strong>Mickaël Leclerc</strong>, consultant en visibilité (SEO et GEO). Le site est indépendant&nbsp;: il ne publie pas d'annonces, ne vend rien aux candidats locataires et n'est l'intermédiaire de personne&nbsp;; il oriente vers les guichets officiels et les sources primaires. Les informations légales complètes figurent aux <a href="/mentions-legales/">mentions légales</a>.</p>
+<h2>Pourquoi il existe</h2>
+<p>Le site est né d'un cas très concret&nbsp;: aider une étudiante de l'entourage de son fondateur à s'y retrouver dans le logement francilien. Les informations existaient, mais éclatées entre des dizaines de guichets, de sigles et de sites officiels. Ce qui a servi à une personne pouvait servir à tous&nbsp;: ${esc(SITE.name)} rassemble ces parcours au même endroit, gratuitement.</p>
+<h2>La méthode</h2>
+<ul>
+<li>Les chiffres viennent de <strong>données publiques officielles</strong> (CROUS, RPLS, DRIHL, données ouvertes de la Ville de Paris...), citées avec leur source et leur date sur chaque page.</li>
+<li>Chaque guide est <strong>vérifié sur les textes et fiches officiels</strong> avant publication, puis relu de manière contradictoire&nbsp;; les corrections sont intégrées et datées.</li>
+<li>Chaque guide affiche sa <strong>vraie date de dernière mise à jour</strong>&nbsp;: elle ne change que quand son contenu change.</li>
+<li>Les outils (diagnostic, simulateur de plafonds, vérificateur de loyer) calculent <strong>dans votre navigateur</strong>&nbsp;: aucune réponse n'est stockée ni transmise.</li>
+<li>Aucun contenu sponsorisé, aucune annonce payée par un bailleur ou une résidence.</li>
+</ul>
+<h2>L'engagement</h2>
+<p>Une inexactitude, un chiffre périmé, un lien mort&nbsp;? Écrivez à <a href="mailto:contact@mkz-consulting.fr">contact@mkz-consulting.fr</a>&nbsp;: toute erreur avérée est corrigée sous 48&nbsp;heures, et la correction est datée sur la page concernée.</p>`;
+  addPage('/a-propos/', layout({
+    title: `Qui fait ce site ? | ${SITE.name}`,
+    metaDescription: `Qui édite ${SITE.name}, avec quelle méthode et quel engagement de correction : la transparence complète sur la fabrication du site.`,
+    urlPath: '/a-propos/',
+    content,
+    breadcrumbs: [{ name: 'Qui fait ce site ?', url: '/a-propos/' }],
+    jsonLd: [{
+      '@context': 'https://schema.org',
+      '@type': 'AboutPage',
+      name: 'Qui fait ce site ?',
+      url: `${SITE.baseUrl}/a-propos/`,
+      inLanguage: 'fr-FR',
+      mainEntity: {
+        '@type': 'Organization',
+        name: SITE.name,
+        url: SITE.baseUrl,
+        foundingDate: '2026',
+        founder: { '@type': 'Person', name: 'Mickaël Leclerc' },
+        parentOrganization: { '@type': 'Organization', name: 'MKZ', url: 'https://mkz-consulting.fr' },
+      },
+    }],
+  }), '0.3');
+})();
+
 /* ------------------------------ CSS --------------------------------- */
 
 /* Déclaration de fonction (hoistée) : le CSS est inliné dans <head> par layout(),
  * appelé avant ce point du fichier. Il n'y a donc AUCUNE feuille de style
  * externe, et plus aucun /style.css écrit dans dist/ (il n'était chargé par
  * aucune page depuis le passage au CSS inline : 24 Ko servis à personne). */
-function css() { return `:root{--bleu:${PAL.bleu};--bleu2:${PAL.bleu2};--accent:${PAL.accent};--accent2:${PAL.accentFonce};--cta:#b04a30;--encre:${PAL.encre};--gris:#5b6770;--fond:#fdfbf7;--surface:#ffffff;--fond2:#f2f6fa;--ciel:${PAL.cielClair};--creme:${PAL.creme};--bord:#dde5ec}
+function css() { return `:root{--bleu:${PAL.bleu};--bleu2:${PAL.bleu2};--accent:${PAL.accent};--accent2:${PAL.accentFonce};--cta:#b04a30;--encre:${PAL.encre};--gris:#5b6770;--fond:#fdfbf7;--surface:#ffffff;--fond2:#f2f6fa;--ciel:${PAL.cielClair};--creme:${PAL.creme};--bord:#dde5ec;color-scheme:light}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--encre);background:var(--fond);line-height:1.65}
 .container{max-width:980px;margin:0 auto;padding:0 20px}
 a{color:var(--bleu2)}h1,h2,h3{line-height:1.25;color:var(--bleu)}
@@ -2909,6 +2969,39 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .page-illu{width:calc(100% + 40px);max-width:none;margin:0 -20px -20px;border-radius:0 0 17px 17px;max-height:240px}
 .step{padding-left:58px}
 .step:not(:last-child)::after{display:none}
+}
+/* ---- Mode sombre (prefers-color-scheme, sans bascule manuelle) ---- */
+/* La palette bascule par variables : contrastes AA vérifiés par script sur
+ * 19 paires avant écriture (aucune sous 4,5:1, titres ≥ 3:1). Le chrome déjà
+ * sombre (header, footer, roofline) ne bouge pas. Les pastilles à fond clair
+ * (badges, verdicts encadrement) restent claires : lisibles telles quelles.
+ * Les thèmes pastel inline (--tbg/--ttx) sont neutralisés uniquement là où
+ * ils porteraient du texte sombre sur fond sombre (kicker, CTA de cartes) ;
+ * la skyline du héros garde ses couleurs : fenêtres blanches sur fond
+ * nocturne, lecture « ville le soir » assumée. */
+@media(prefers-color-scheme:dark){
+:root{--bleu:#93c1e8;--bleu2:#82b5e6;--accent2:#f0967c;--encre:#e7edf3;--gris:#a9b6c2;--fond:#131b23;--surface:#1c2632;--fond2:#232f3c;--ciel:#243447;--creme:#2a2620;--bord:#354453;color-scheme:dark}
+.hero{background:radial-gradient(420px 260px at 84% 22%,rgba(224,122,95,.10),transparent 70%),linear-gradient(160deg,#182534,#131b23 60%);border-color:var(--bord)}
+.page-head{background:linear-gradient(135deg,var(--fond2),var(--surface) 85%)}
+.page-head-icon{background:var(--surface)}
+.kicker,.card-cta,.outil-accroche{color:var(--bleu2)}
+.pill:hover{background:var(--fond2)}
+.stats-bloc{background:linear-gradient(160deg,#182534,#131b23 120%);border-color:var(--bord)}
+.stat{background:var(--surface)}
+.stat-l,.outil-quoi,.pl-aide,.pl-note{color:var(--gris)}
+.data th{background:linear-gradient(var(--fond2),var(--surface));border-bottom-color:var(--bord)}
+.data tbody tr:nth-child(even) td{background:#19232e}
+.data tbody tr:hover td{background:var(--ciel)}
+.tool-form select,.tool-form input{background:var(--surface);color:var(--encre)}
+.tool-result{background:var(--surface)}
+.consent-btn{background:var(--surface)}
+.sk::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent)}
+.faq details[open]{background:linear-gradient(180deg,var(--ciel),var(--surface) 140%)}
+.notice{border-color:var(--bord)}
+.pl-ok strong,.pl-sous{color:#7fd0a8}
+.pl-ko strong{color:#ff9d94}
+.pl-sur{color:#8a94a0}
+.page-illu{opacity:.88}
 }`; }
 
 /* --------------------------- Écriture ------------------------------- */
@@ -3003,6 +3096,7 @@ llms.push(`- [Diagnostic logement](${B}/diagnostic/): 7 questions, une feuille d
 llms.push(`- [Recherche](${B}/recherche/): commune, résidence, dispositif. Index JSON : ${B}/search-index.json`);
 llms.push(`- [Contenu intégral pour les LLM](${B}/llms-full.txt)`);
 llms.push(`- [Mentions légales](${B}/mentions-legales/)`);
+if (A_PROPOS_ACTIF) llms.push(`- [Qui fait ce site ?](${B}/a-propos/)`);
 fs.writeFileSync(path.join(DIST, 'llms.txt'), llms.join('\n') + '\n');
 
 const full = [];
@@ -3023,7 +3117,7 @@ full.push('## GUIDES');
 for (const g of GUIDES) {
   full.push('');
   full.push(`### ${g.h1} (${B}/guides/${g.slug}/)`);
-  full.push(`Mis à jour le ${DATE_FR}.`);
+  full.push(`Mis à jour le ${dateFrOf(DATES_GUIDES.fr[g.slug].modifie)}.`);
   full.push(g.intro);
   if (g.tldr && g.tldr.length) full.push(`L'essentiel : ${g.tldr.join(' ')}`);
   for (const s of g.sections) {
@@ -3042,7 +3136,7 @@ full.push('English adaptations of our fact-checked French guides, for internatio
 for (const g of EN.guides) {
   full.push('');
   full.push(`### ${g.h1} (${B}/en/guides/${g.slug}/)`);
-  full.push(`Updated ${DATE_EN}. French version: ${B}/guides/${g.frSlug}/`);
+  full.push(`Updated ${dateEnOf(DATES_GUIDES.en[g.slug].modifie)}. French version: ${B}/guides/${g.frSlug}/`);
   full.push(g.intro);
   if (g.tldr && g.tldr.length) full.push(`In short: ${g.tldr.join(' ')}`);
   for (const s of g.sections) {
@@ -3127,7 +3221,7 @@ for (const f of ['favicon.ico', 'apple-touch-icon.png']) {
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${pages.map(p => `  <url><loc>${SITE.baseUrl}${p.urlPath}</loc><lastmod>${DATE_ISO}</lastmod><priority>${p.priority}</priority></url>`).join('\n')}
+${pages.map(p => `  <url><loc>${SITE.baseUrl}${p.urlPath}</loc><lastmod>${p.lastmod || DATE_ISO}</lastmod><priority>${p.priority}</priority></url>`).join('\n')}
 </urlset>`;
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
 
