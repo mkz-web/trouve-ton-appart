@@ -19,8 +19,10 @@ const DIST = path.join(__dirname, 'dist');
 /* Fichiers atteints sans qu'aucune page ne les cite : ce sont des conventions
  * du web, réclamées par le navigateur ou le robot à une URL fixe. Tout ajout
  * ici doit être une convention documentée, jamais un fichier qu'on n'arrive
- * plus à rattacher. */
-const CONVENTIONS = new Set(['/404.html', '/robots.txt']);
+ * plus à rattacher. La clé IndexNow en fait partie : les moteurs la
+ * réclament à la racine pour accepter les pings (voir indexnow-cle.js). */
+const INDEXNOW_KEY = require('./indexnow-cle.js');
+const CONVENTIONS = new Set(['/404.html', '/robots.txt', `/${INDEXNOW_KEY}.txt`]);
 
 const fichiers = [];
 (function walk(d) {

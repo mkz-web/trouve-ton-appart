@@ -21,6 +21,11 @@
   "guides": [
     {
       "slug": "visale-guarantee",
+      "tldr": [
+        "The Visale guarantee from Action Logement acts as a free rent guarantor for tenants aged 18 to 30, mobility lease signers and eligible private-sector employees over 30.",
+        "Visale covers unpaid rent and charges up to 36 monthly payments in the private market, with a rent cap of €1,940 in Île-de-France (€1,575 or €1,365 elsewhere).",
+        "Apply on visale.fr before viewing apartments: the answer usually arrives within 2 working days and the Visale visa is then valid for 6 months."
+      ],
       "frSlug": "visale",
       "parcours": ["etudiant", "mobilite"],
       "title": "Visale: France's free rent guarantor, explained in English",
@@ -95,6 +100,11 @@
     },
     {
       "slug": "guarantor-in-france",
+      "tldr": [
+        "For tenants without a guarantor in France, several options can replace a family guarantor: the free Visale guarantee, paid guarantor services or a bank guarantee.",
+        "Paid guarantor services charge 3 to 5% of the annual rent, while landlords expect a personal guarantor to earn 3 to 4 times the rent including charges.",
+        "Start with Visale if you qualify, then request your visa or guarantor certificate before the viewings, and never send money before the lease is signed."
+      ],
       "frSlug": "garant-location",
       "parcours": ["etudiant", "mobilite"],
       "title": "Guarantor in France: 4 solutions when you don't have one",
@@ -162,6 +172,11 @@
     },
     {
       "slug": "dossierfacile",
+      "tldr": [
+        "DossierFacile, the free public service run by the French Ministry of Housing, turns a tenant's supporting documents into a certified, watermarked rental file.",
+        "DossierFacile verifies your file within 72 working hours at most, often faster, and every document is watermarked for rental use only.",
+        "Create your account on dossierfacile.logement.gouv.fr, upload your documents, then share the unique link to your certified file in every application."
+      ],
       "frSlug": "dossierfacile",
       "parcours": ["etudiant", "mobilite"],
       "title": "DossierFacile: France's certified rental file, in English",
@@ -236,6 +251,11 @@
     },
     {
       "slug": "mobility-lease",
+      "tldr": [
+        "The bail mobilité (mobility lease) is a furnished rental contract for tenants in a mobility situation: training, studies, internships, assignments or transfers.",
+        "A mobility lease lasts 1 to 10 months, adjustable once but never beyond 10 months in total, with no security deposit and a tenant's notice of 1 month at any time.",
+        "Prove your mobility situation when signing the lease, and secure the guarantee with Visale, which covers this lease with no age condition."
+      ],
       "frSlug": "bail-mobilite",
       "parcours": ["mobilite", "etudiant"],
       "title": "Bail mobilité: the 1-to-10-month furnished lease in France",
@@ -298,6 +318,11 @@
     },
     {
       "slug": "paris-rent-control",
+      "tldr": [
+        "Paris rent control caps the rent of most leases at a maximum reference rent set by decree for each neighbourhood, covering standard, furnished and mobility leases.",
+        "In Paris the cap is the reference rent +20%, a rent supplement can be contested within 3 months of signing, and the fine can reach €5,000 (€15,000 for a legal entity).",
+        "Check your rent in 5 minutes: divide the rent excluding charges by the living area and compare it to the official maximum reference rent of your neighbourhood."
+      ],
       "frSlug": "encadrement-des-loyers-paris",
       "parcours": ["mobilite"],
       "title": "Paris rent control: check your rent before you sign",

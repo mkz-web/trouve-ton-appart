@@ -75,6 +75,11 @@
         "label": "La garantie Visale sur Service-public.fr",
         "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33453"
       }
+    ],
+    "tldr": [
+      "La garantie Visale d'Action Logement se porte caution gratuitement pour les locataires sans garant, notamment tous les jeunes de 18 à 30 ans quel que soit leur statut.",
+      "Visale couvre un loyer charges comprises jusqu'à 1 940 € en Île-de-France (1 575 € ou 1 365 € ailleurs), dans la limite de 36 mensualités dans le parc privé.",
+      "La demande de visa Visale se fait en ligne sur visale.fr : la réponse arrive généralement sous 2 jours ouvrés et le visa certifié reste ensuite valable 6 mois."
     ]
   },
   {
@@ -160,6 +165,11 @@
         "label": "Demander un logement social à la Ville de Paris",
         "url": "https://www.paris.fr/pages/demander-un-logement-social-37"
       }
+    ],
+    "tldr": [
+      "La demande de logement social se dépose une seule fois en ligne et rend le candidat visible de tous les bailleurs sociaux d'Île-de-France via le Numéro Unique Régional.",
+      "En Île-de-France, la moitié des ménages ayant obtenu un logement social en 2025 attendaient depuis 31 mois ou moins, un délai médian de 10 à 57 mois selon la ville.",
+      "La demande se fait sur demande-logement-social.gouv.fr et doit être renouvelée chaque année, sous peine de radiation et de perte de toute l'ancienneté acquise."
     ]
   },
   {
@@ -230,6 +240,11 @@
         "label": "L'encadrement des loyers sur Paris.fr",
         "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712"
       }
+    ],
+    "tldr": [
+      "Le bail mobilité permet de louer un meublé de 1 à 10 mois sans dépôt de garantie, pour les personnes en formation, études, stage, service civique, mutation ou mission.",
+      "Le bail mobilité n'est pas renouvelable : il est modifiable une fois par avenant sans dépasser 10 mois au total, avec un préavis locataire de 1 mois à tout moment.",
+      "L'offre de bail mobilité se concentre chez les spécialistes du meublé ; à Paris, vérifier avant de signer que le loyer respecte le loyer de référence majoré du quartier."
     ]
   },
   {
@@ -308,6 +323,11 @@
         "label": "L'acte de cautionnement sur Service-public.fr",
         "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F31267"
       }
+    ],
+    "tldr": [
+      "Pour louer sans garant familial, plusieurs solutions existent : la garantie Visale gratuite, le garant physique, les garants payants et la caution bancaire.",
+      "Un garant physique doit justifier en pratique de revenus de 3 à 4 fois le loyer, quand un garant payant facture généralement 3 à 5 % du loyer annuel.",
+      "Un dossier certifié sur DossierFacile.logement.gouv.fr (service public gratuit) et un visa Visale demandé avant les visites font passer la candidature devant les autres."
     ]
   },
   {
@@ -384,6 +404,11 @@
         "label": "Mon Logement Étudiant, la plateforme publique",
         "url": "https://monlogementetudiant.beta.gouv.fr"
       }
+    ],
+    "tldr": [
+      "Un étudiant francilien peut réduire son coût de logement de plusieurs centaines d'euros par an en combinant l'APL de la CAF, les aides d'Action Logement et le CROUS.",
+      "L'aide Mobili-Jeune couvre jusqu'à 100 € de loyer par mois pour les alternants et l'avance Loca-Pass prête le dépôt de garantie à 0 %, remboursable sur 25 mois maximum.",
+      "La demande d'APL se fait sur caf.fr après l'emménagement et l'aide n'est pas rétroactive au-delà du mois de demande : un dossier à déposer sans tarder."
     ]
   },
   {
@@ -448,6 +473,11 @@
         "label": "Le logement locatif intermédiaire sur Service-public.fr",
         "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F37292"
       }
+    ],
+    "tldr": [
+      "Le logement locatif intermédiaire (LLI) est un parc réglementé destiné aux ménages qui ont trop de revenus pour le logement social et pas assez pour le marché libre.",
+      "Les loyers du LLI sont plafonnés par zone, en pratique 10 à 15 % sous les loyers de marché, avec des plafonds de ressources nettement plus élevés que ceux du HLM.",
+      "La candidature au LLI se fait directement auprès des opérateurs comme in'li ou CDC Habitat, annonce par annonce, sans numéro de demandeur de logement social."
     ]
   },
   {
@@ -533,6 +563,11 @@
         "label": "visale.fr, la caution gratuite à joindre au dossier",
         "url": "https://www.visale.fr"
       }
+    ],
+    "tldr": [
+      "DossierFacile, service public gratuit du ministère chargé du Logement, transforme les pièces justificatives en dossier certifié, filigrané et partageable en un lien.",
+      "L'équipe DossierFacile vérifie chaque dossier sous 72 heures ouvrées au maximum, souvent plus vite, avec une demande de correction précise si une pièce pose problème.",
+      "Tout se passe en ligne sur dossierfacile.logement.gouv.fr : créer un compte, téléverser ses pièces, puis coller le lien du dossier certifié dans chaque candidature."
     ]
   },
   {
@@ -619,6 +654,11 @@
         "label": "Trouver son ADIL (conseil juridique logement gratuit)",
         "url": "https://www.anil.org"
       }
+    ],
+    "tldr": [
+      "Le DALO (droit au logement opposable) permet au demandeur prioritaire dont les démarches échouent de saisir une commission pouvant obliger le préfet à le reloger.",
+      "Après un recours DALO, la commission statue en principe sous 3 mois, puis le préfet a 3 mois, jusqu'à 6 mois selon les départements, pour proposer un logement.",
+      "Le recours DALO se dépose par formulaire Cerfa à la commission de médiation du département, gratuitement et sans avocat, avec une demande de logement social à jour."
     ]
   },
   {
@@ -699,6 +739,11 @@
         "label": "Mon Logement Étudiant, la plateforme publique",
         "url": "https://monlogementetudiant.beta.gouv.fr"
       }
+    ],
+    "tldr": [
+      "L'aide Mobili-Jeune d'Action Logement est une subvention, rien à rembourser, qui allège le loyer des alternants de moins de 30 ans du secteur privé non agricole.",
+      "Mobili-Jeune couvre jusqu'à 100 € de loyer par mois pendant 11 mois, sur la part restant après déduction de l'APL, soit jusqu'à 1 100 € sur une année de formation.",
+      "La demande Mobili-Jeune se fait en ligne sur actionlogement.fr, de 3 mois avant le début du contrat jusqu'à 5 mois après, et se renouvelle chaque année de formation."
     ]
   },
   {
@@ -776,6 +821,11 @@
         "label": "L'avance Loca-Pass sur Service-public.fr",
         "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F18490"
       }
+    ],
+    "tldr": [
+      "L'avance Loca-Pass d'Action Logement finance le dépôt de garantie par un prêt à taux zéro, pour les salariés du privé et, sous conditions, les jeunes de moins de 30 ans.",
+      "L'avance Loca-Pass est plafonnée à 1 200 €, sans intérêt ni frais de dossier, et se rembourse par mensualités de 20 € minimum sur une durée allant jusqu'à 25 mois.",
+      "La demande d'avance Loca-Pass se dépose en ligne sur actionlogement.fr, dès la signature du bail et au plus près de l'entrée dans les lieux."
     ]
   },
   {
@@ -857,6 +907,11 @@
         "label": "Demander un logement social (à maintenir en parallèle)",
         "url": "https://www.demande-logement-social.gouv.fr"
       }
+    ],
+    "tldr": [
+      "Le Fonds de solidarité logement (FSL) est un fonds départemental qui aide les ménages en difficulté : dépôt de garantie, premier loyer, dettes de loyers et de charges.",
+      "L'aide est versée en subvention (rien à rembourser), en prêt sans intérêt ou en combinaison des deux ; chaque département fixe ses plafonds et son règlement.",
+      "La demande passe par un travailleur social (services sociaux du département, CCAS ou service social de la CAF), sans attendre l'assignation en cas de dette de loyer."
     ]
   },
   {
@@ -936,6 +991,11 @@
         "label": "Les FJT sur Service-public.fr",
         "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2018"
       }
+    ],
+    "tldr": [
+      "Le foyer de jeunes travailleurs (FJT), rebaptisé résidence Habitat Jeunes, loge en meublé les jeunes en début de vie active : redevance tout compris, éligible à l'APL.",
+      "Les FJT accueillent les jeunes de 16 à 25 ans, et jusqu'à 30 ans dans de nombreuses résidences, pour une durée d'accueil de quelques mois à deux ans environ.",
+      "Candidature directe en ligne sur aljt.com (principal opérateur francilien), résidences recensées sur habitatjeunes.org : viser plusieurs résidences à la fois."
     ]
   },
   {
@@ -1015,6 +1075,11 @@
         "label": "L'ADIL de Paris, conseil juridique gratuit",
         "url": "https://www.adil75.org"
       }
+    ],
+    "tldr": [
+      "À Paris, l'encadrement des loyers plafonne le loyer de la plupart des locations à un loyer de référence majoré fixé par arrêté, quartier par quartier.",
+      "Le loyer au m² ne peut pas dépasser la référence majorée (+20 %) ; le bailleur en dépassement s'expose à une amende jusqu'à 5 000 € (15 000 € pour une personne morale).",
+      "La vérification se fait sur le simulateur officiel des loyers de référence parisiens ; la contestation devant la commission départementale de conciliation est gratuite."
     ]
   },
   {
@@ -1258,6 +1323,11 @@
         "label": "DRIHL Île-de-France : le cadre unifié d'intervention des SIAO",
         "url": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/cadre-unifie-d-intervention-des-siao-a1305.html"
       }
+    ],
+    "tldr": [
+      "Le 115, numéro d'urgence gratuit ouvert 24h/24, oriente les personnes sans abri : le SIAO de chaque département attribue les places d'hébergement d'urgence disponibles.",
+      "Le 115 de Paris a reçu en 2025 environ 3 100 appels par jour en moyenne, pour environ 740 traités ; l'Île-de-France compte huit SIAO, un par département.",
+      "La demande d'hébergement stable (dossier SIAO) se monte obligatoirement avec un travailleur social : CCAS, service social, accueil de jour ou association agréée."
     ]
   },
   {
@@ -1427,6 +1497,11 @@
         "label": "La réduction d'impôt Loc'Avantages (Service-public.fr, fiche F34115)",
         "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34115"
       }
+    ],
+    "tldr": [
+      "Solibail est l'intermédiation locative de l'État en Île-de-France (hors Paris) : une association agréée loue un logement privé et y loge un ménage modeste accompagné.",
+      "Côté ménage, l'occupation est conclue pour 18 mois, renouvelable 18 mois sous conditions ; côté propriétaire, loyer garanti et bail de 3 ans minimum avec l'association.",
+      "Aucune candidature directe : un travailleur social saisit l'évaluation sociale dans SI-SIAO avec la préconisation Solibail ; les propriétaires contactent la DRIHL."
     ]
   },
   {
@@ -1593,6 +1668,11 @@
         "label": "Le logement temporaire d'Action Logement",
         "url": "https://www.actionlogement.fr/logement-temporaire"
       }
+    ],
+    "tldr": [
+      "La résidence sociale est un logement-foyer meublé et temporaire, destiné aux personnes qui ne peuvent pas accéder tout de suite à un logement ordinaire.",
+      "En résidence sociale, on verse une redevance unique toutes charges comprises, qui ouvre droit à l'APL, et l'accueil varie en général de un mois à deux ans.",
+      "Une place en résidence sociale s'obtient en direct auprès des gestionnaires comme Adoma, via un travailleur social et le SIAO, ou via Action Logement pour les salariés."
     ]
   },
   {
@@ -1780,6 +1860,11 @@
         "label": "La garantie Visale sur Service-public.fr",
         "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F33453"
       }
+    ],
+    "tldr": [
+      "Pour les agents publics, il n'existe pas de logement fonctionnaire unique : les dispositifs dépendent de la fonction publique, d'État, territoriale ou hospitalière.",
+      "L'AIP rembourse aux agents de l'État jusqu'à 1 500 € de frais d'installation en zone tendue, et le CGOS propose aux hospitaliers une aide remboursable de 400 à 8 000 €.",
+      "En Île-de-France, les agents de l'État candidatent sur la bourse Balae, après le dépôt d'une demande de logement social qui leur attribue le numéro unique régional."
     ]
   },
   {
@@ -1908,6 +1993,11 @@
         "label": "Déposer une demande de logement social",
         "url": "https://www.demande-logement-social.gouv.fr"
       }
+    ],
+    "tldr": [
+      "L'accès au logement social dépend de plafonds de ressources : environ 70 % des ménages français passent sous le plafond du PLS, le plus élevé des trois.",
+      "Pour une personne seule en Île-de-France en 2026, le plafond est de 14 811 € de revenu fiscal de référence en PLAI, 26 920 € en PLUS et 34 996 € en PLS.",
+      "L'éligibilité au logement social se calcule sur le revenu fiscal de référence de 2024, figurant sur l'avis d'impôt reçu en 2025, additionné pour tout le foyer."
     ]
   },
   {
@@ -2106,6 +2196,11 @@
         "label": "Plafonds de ressources et de prix du PSLA 2026 (ANIL)",
         "url": "https://www.anil.org/aj-accession-sociale-psla-zones-anru-plafonds-2026/"
       }
+    ],
+    "tldr": [
+      "Le bail réel solidaire (BRS) permet aux ménages sous plafonds de ressources d'acheter les murs de leur logement, un organisme de foncier solidaire gardant le terrain.",
+      "En Île-de-France, le bail dure le plus souvent 80 ans et la redevance médiane est de 2,30 €/m² habitable par mois dans la Métropole du Grand Paris (Apur).",
+      "La plateforme officielle BoRiS recense les logements disponibles et les organismes agréés, avec un simulateur d'éligibilité : 94 entrées franciliennes en juillet 2026."
     ]
   }
 ]

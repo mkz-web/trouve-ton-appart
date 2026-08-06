@@ -283,6 +283,15 @@ const CREDIT_EN = '<p class="footer-credit">Website designed and published by <a
  * (ad_Storage denied / analytics_Storage granted, S majuscules), cookies
  * constatés _clck 365 j et _clsk 1 j, clarity('consent', false) les
  * efface immédiatement. */
+/* Pré-rendu des navigations internes (Speculation Rules, Chromium) : au
+ * survol d'un lien interne (eagerness moderate), le navigateur pré-rend la
+ * page cible, navigation perçue instantanée sur ce site statique léger.
+ * Script de type inconnu ailleurs : no-op. Contrepartie gérée : une page
+ * pré-rendue EXÉCUTE son JS avant d'être affichée, d'où la garde
+ * document.prerendering posée sur le bootstrap consentement (ne jamais
+ * charger Clarity ni afficher le bandeau pour une page jamais montrée). */
+const SPECULATION = '<script type="speculationrules">{"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>';
+
 const CONSENT_BANNER = `
 <div class="consent" id="consent" role="region" aria-label="Consentement aux cookies" hidden>
   <p class="consent-txt">Avec votre accord, nous mesurons l'usage du site avec Microsoft Clarity pour l'améliorer. Ce que vous saisissez dans nos outils reste masqué et n'est jamais transmis. <a href="/mentions-legales/#cookies">En savoir plus</a></p>
@@ -328,9 +337,15 @@ ecrire('denied');fermer();
 if(actif){window.clarity('consentv2',{ad_Storage:"denied",analytics_Storage:"denied"});window.clarity('consent',false)}
 });
 for(var i=0,b=document.querySelectorAll('.js-cookies');i<b.length;i++)b[i].addEventListener('click',function(){ouvreur=this;banniere.hidden=false;document.getElementById('consent-ok').focus()});
+function demarrer(){
 var choix=lire();
 if(choix==='granted')charger();
 else if(choix===null&&PROD)banniere.hidden=false;
+}
+/* Speculation Rules : une page pré-rendue exécute son JS sans être
+ * affichée. Ni mesure ni bandeau tant que l'affichage n'est pas réel. */
+if(document.prerendering)document.addEventListener('prerenderingchange',demarrer,{once:true});
+else demarrer();
 })();
 </script>`;
 
@@ -552,6 +567,7 @@ ${FAVICON_LINKS}
 <style>${css()}</style>
 ${urlPath.startsWith('/logement-social/chiffres/') ? '' : VT_CSS}
 ${ld}
+${SPECULATION}
 </head>
 <body>
 <header class="site-header">
@@ -650,6 +666,7 @@ ${FAVICON_LINKS}
 <style>${css()}</style>
 ${VT_CSS}
 ${ld}
+${SPECULATION}
 </head>
 <body>
 <header class="site-header">
@@ -946,6 +963,20 @@ const OUTILS_DE_GUIDE = {
  * par un assistant, citation à la clé. Liens utilitaires, pas éditoriaux,
  * d'où le nofollow. Périmètre : les guides FR et EN uniquement (pages à
  * dominante rédactionnelle, résumables ; outils et annuaires exclus). */
+/* Encadré « L'essentiel » : la réponse avant le développement. Tactique GEO
+ * centrale 2026 (les moteurs IA découpent la page en passages et citent
+ * celui qui répond directement) et service au lecteur. Contenu : champ tldr
+ * du guide (guides.json / en.json), 3 phrases autoportantes SANS FAIT
+ * NOUVEAU : tout chiffre d'un tldr existe dans le corps du guide (contrôle
+ * mécanique à l'intégration). Optionnel : guide sans tldr, pas d'encadré. */
+function tldrBloc(tldr, en) {
+  if (!tldr || !tldr.length) return '';
+  return `<div class="tldr" role="note" aria-label="${en ? 'Key facts' : "L'essentiel du guide"}">
+<p class="tldr-titre">${en ? 'In short' : "L'essentiel"}</p>
+<ul>${tldr.map(t => `<li>${inline(t)}</li>`).join('')}</ul>
+</div>`;
+}
+
 function barreIa(urlPath, en) {
   const url = SITE.baseUrl + urlPath;
   const invite = en
@@ -1019,7 +1050,7 @@ ${barreIa(`/guides/${g.slug}/`, false)}
 <nav class="guide-toc" aria-label="Sommaire du guide"><details class="toc-box" open><summary>Dans ce guide</summary><ol>${tocItems.join('')}</ol></details></nav>
 <script>if(!matchMedia('(min-width:1020px)').matches){var tocD=document.querySelector('.guide-toc details');if(tocD)tocD.removeAttribute('open')}</script>
 <div class="guide-body">
-${outil}
+${tldrBloc(g.tldr, false)}${outil}
 ${sections}
 <section class="faq" id="faq"><h2>Questions fréquentes</h2>${faqHtml}</section>
 <section class="notice"><h2>Sources officielles</h2><ul class="sources">${srcHtml}</ul></section>
@@ -1060,6 +1091,7 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
       '@type': 'Article',
       headline: g.h1,
       description: g.metaDescription,
+      ...(g.tldr && g.tldr.length ? { abstract: g.tldr.join(' ') } : {}),
       datePublished: DATE_PUBLICATION,
       dateModified: DATE_ISO,
       inLanguage: 'fr-FR',
@@ -1160,7 +1192,7 @@ ${barreIa(`/en/guides/${g.slug}/`, true)}
 <nav class="guide-toc" aria-label="Guide contents"><details class="toc-box" open><summary>In this guide</summary><ol>${tocItems.join('')}</ol></details></nav>
 <script>if(!matchMedia('(min-width:1020px)').matches){var tocD=document.querySelector('.guide-toc details');if(tocD)tocD.removeAttribute('open')}</script>
 <div class="guide-body">
-${sections}
+${tldrBloc(g.tldr, true)}${sections}
 <section class="faq" id="faq"><h2>Frequently asked questions</h2>${faqHtml}</section>
 <section class="notice"><h2>Official sources</h2><ul class="sources">${srcHtml}</ul></section>
 ${related ? `<p class="pills"><strong>More guides in English:</strong> ${related}</p>` : ''}
@@ -2725,6 +2757,10 @@ main p a:not([class]):hover,main li a:not([class]):hover,main p a:not([class]):f
 .barre-ia-titre{font-size:.92rem;color:var(--gris);font-weight:600}
 .chip-ia{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;background:var(--surface);color:var(--bleu);font-weight:600;font-size:.93rem;text-decoration:none;border-radius:999px;box-shadow:inset 0 0 0 2px var(--bleu2)}
 .chip-ia:hover{background:var(--ciel)}
+.tldr{background:var(--creme);border:1px solid var(--bord);border-left:4px solid var(--accent);border-radius:12px;padding:.9rem 1.1rem;margin:0 0 1.4rem}
+.tldr-titre{margin:0 0 .35rem;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.04em;color:var(--encre)}
+.tldr ul{margin:0;padding-left:1.1rem}
+.tldr li{margin:.25rem 0}
 /* ---- Annuaires de données (Phase 2) ---- */
 [id]{scroll-margin-top:16px}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -2989,6 +3025,7 @@ for (const g of GUIDES) {
   full.push(`### ${g.h1} (${B}/guides/${g.slug}/)`);
   full.push(`Mis à jour le ${DATE_FR}.`);
   full.push(g.intro);
+  if (g.tldr && g.tldr.length) full.push(`L'essentiel : ${g.tldr.join(' ')}`);
   for (const s of g.sections) {
     full.push(`#### ${s.h2}`);
     if (s.paragraphs) for (const t of s.paragraphs) full.push(t);
@@ -3007,6 +3044,7 @@ for (const g of EN.guides) {
   full.push(`### ${g.h1} (${B}/en/guides/${g.slug}/)`);
   full.push(`Updated ${DATE_EN}. French version: ${B}/guides/${g.frSlug}/`);
   full.push(g.intro);
+  if (g.tldr && g.tldr.length) full.push(`In short: ${g.tldr.join(' ')}`);
   for (const s of g.sections) {
     full.push(`#### ${s.h2}`);
     if (s.paragraphs) for (const t of s.paragraphs) full.push(t);
@@ -3094,6 +3132,11 @@ ${pages.map(p => `  <url><loc>${SITE.baseUrl}${p.urlPath}</loc><lastmod>${DATE_I
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
 
 fs.writeFileSync(path.join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE.baseUrl}/sitemap.xml\n\n# Index pour les moteurs IA : ${SITE.baseUrl}/llms.txt\n`);
+
+/* IndexNow : la clé publique est servie à la racine, preuve de propriété du
+ * domaine exigée par les moteurs avant d'accepter les pings d'indexnow.js. */
+const INDEXNOW_KEY = require('./indexnow-cle.js');
+fs.writeFileSync(path.join(DIST, `${INDEXNOW_KEY}.txt`), INDEXNOW_KEY);
 
 console.log(`OK : ${pages.length} pages générées dans dist/ (+ sitemap.xml, robots.txt, llms.txt)`);
 pages.forEach(p => console.log('  ' + p.urlPath));
