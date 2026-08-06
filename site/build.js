@@ -937,6 +937,33 @@ const OUTILS_DE_GUIDE = {
   },
 };
 
+/* Barre « résumer avec l'IA » : liens profonds pré-remplis vers Claude,
+ * ChatGPT et Perplexity (patterns ?q= vérifiés en navigateur le 07/08/2026 :
+ * Perplexity réécrit vers sa route interne /search/new en gardant la
+ * requête, ChatGPT consomme q et arme le mode Recherche via hints=search,
+ * Claude pré-remplit le composer après connexion). Double rôle : service au
+ * lecteur pressé, et GEO : chaque clic fait lire l'URL canonique du guide
+ * par un assistant, citation à la clé. Liens utilitaires, pas éditoriaux,
+ * d'où le nofollow. Périmètre : les guides FR et EN uniquement (pages à
+ * dominante rédactionnelle, résumables ; outils et annuaires exclus). */
+function barreIa(urlPath, en) {
+  const url = SITE.baseUrl + urlPath;
+  const invite = en
+    ? `Read ${url} and give me a clear summary: who qualifies, the amounts, and the step-by-step process. Then answer my questions about it.`
+    : `Lis ${url} et fais-m'en un résumé clair : qui est concerné, les montants, les démarches pas à pas. Puis réponds à mes questions dessus.`;
+  const q = encodeURIComponent(invite);
+  const nt = en ? 'new tab' : 'nouvel onglet';
+  const chips = [
+    ['Claude', `https://claude.ai/new?q=${q}`],
+    ['ChatGPT', `https://chatgpt.com/?hints=search&amp;q=${q}`],
+    ['Perplexity', `https://www.perplexity.ai/search?q=${q}`],
+  ].map(([nom, href]) => `<a class="chip-ia" href="${href}" target="_blank" rel="noopener nofollow" aria-label="${en ? `Summarize with ${nom} (${nt})` : `Résumer avec ${nom} (${nt})`}">${nom}</a>`).join('\n  ');
+  return `<div class="barre-ia" role="group" aria-label="${en ? 'Summarize this guide with an AI assistant' : 'Résumer ce guide avec une intelligence artificielle'}">
+  <span class="barre-ia-titre">${en ? 'In a hurry? Have your AI assistant read it:' : 'Pressé&nbsp;? Faites-le lire à votre assistant IA&nbsp;:'}</span>
+  ${chips}
+</div>`;
+}
+
 for (const g of GUIDES) {
   const usedIds = new Set(['faq', 'verifier']);
   const tocItems = [];
@@ -987,6 +1014,7 @@ for (const g of GUIDES) {
     <p class="maj">Mis à jour le ${DATE_FR}</p>
   </div>
 </header>
+${barreIa(`/guides/${g.slug}/`, false)}
 <div class="guide-layout">
 <nav class="guide-toc" aria-label="Sommaire du guide"><details class="toc-box" open><summary>Dans ce guide</summary><ol>${tocItems.join('')}</ol></details></nav>
 <script>if(!matchMedia('(min-width:1020px)').matches){var tocD=document.querySelector('.guide-toc details');if(tocD)tocD.removeAttribute('open')}</script>
@@ -1127,6 +1155,7 @@ for (const g of EN.guides) {
     <p class="maj">Updated ${DATE_EN}</p>
   </div>
 </header>
+${barreIa(`/en/guides/${g.slug}/`, true)}
 <div class="guide-layout">
 <nav class="guide-toc" aria-label="Guide contents"><details class="toc-box" open><summary>In this guide</summary><ol>${tocItems.join('')}</ol></details></nav>
 <script>if(!matchMedia('(min-width:1020px)').matches){var tocD=document.querySelector('.guide-toc details');if(tocD)tocD.removeAttribute('open')}</script>
@@ -2692,6 +2721,10 @@ main p a:not([class]):hover,main li a:not([class]):hover,main p a:not([class]):f
 .consent-btn{background:#fff;color:var(--bleu);font:inherit;font-weight:600;font-size:.97rem;border:0;box-shadow:inset 0 0 0 2px var(--bleu2);border-radius:10px;padding:11px 22px;min-height:44px;min-width:110px;cursor:pointer}
 .consent-btn:hover{background:var(--ciel)}
 .js-cookies{background:none;border:0;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer;padding:12px 4px;margin:-12px -4px}
+.barre-ia{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem .7rem;margin:1.1rem 0 .3rem;padding:.65rem .9rem;background:var(--fond2);border:1px solid var(--bord);border-radius:12px}
+.barre-ia-titre{font-size:.92rem;color:var(--gris);font-weight:600}
+.chip-ia{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;background:var(--surface);color:var(--bleu);font-weight:600;font-size:.93rem;text-decoration:none;border-radius:999px;box-shadow:inset 0 0 0 2px var(--bleu2)}
+.chip-ia:hover{background:var(--ciel)}
 /* ---- Annuaires de données (Phase 2) ---- */
 [id]{scroll-margin-top:16px}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
