@@ -967,15 +967,12 @@ const OUTILS_DE_GUIDE = {
   },
 };
 
-/* Barre « résumer avec l'IA » : liens profonds pré-remplis vers Claude,
- * ChatGPT et Perplexity (patterns ?q= vérifiés en navigateur le 07/08/2026 :
- * Perplexity réécrit vers sa route interne /search/new en gardant la
- * requête, ChatGPT consomme q et arme le mode Recherche via hints=search,
- * Claude pré-remplit le composer après connexion). Double rôle : service au
- * lecteur pressé, et GEO : chaque clic fait lire l'URL canonique du guide
- * par un assistant, citation à la clé. Liens utilitaires, pas éditoriaux,
- * d'où le nofollow. Périmètre : les guides FR et EN uniquement (pages à
- * dominante rédactionnelle, résumables ; outils et annuaires exclus). */
+/* Barre « résumer avec l'IA » : liens profonds pré-remplis vers les cinq
+ * assistants. Patterns et pièges : skill `barre-resume-ia`, qui fait foi.
+ * Double rôle : service au lecteur pressé, et GEO : chaque clic fait lire
+ * l'URL canonique du guide par un assistant, citation à la clé. Liens
+ * utilitaires, pas éditoriaux, d'où le nofollow. Périmètre : les guides FR
+ * et EN uniquement (pages rédactionnelles ; outils et annuaires exclus). */
 /* Encadré « L'essentiel » : la réponse avant le développement. Tactique GEO
  * centrale 2026 (les moteurs IA découpent la page en passages et citent
  * celui qui répond directement) et service au lecteur. Contenu : champ tldr
@@ -997,19 +994,24 @@ function barreIa(urlPath, en) {
     : `Lis ${url} et fais-m'en un résumé clair : qui est concerné, les montants, les démarches pas à pas. Puis réponds à mes questions dessus.`;
   const q = encodeURIComponent(invite);
   const nt = en ? 'new tab' : 'nouvel onglet';
-  /* Patterns vérifiés en navigateur le 07/08/2026 (et re-vérifiés le 08/08 pour
-   * les deux derniers) : Mistral accepte ?q=, ENVOIE la requête et lit l'URL
-   * sans connexion (le meilleur parcours des cinq) ; « Gemini » passe par le
-   * Mode IA de Google (udm=50, requête exécutée, guide cité en source), car
+  /* Patterns mesurés en navigateur (skill `barre-resume-ia`) : Mistral accepte
+   * ?q=, ENVOIE la requête et lit l'URL sans connexion (le meilleur parcours
+   * des cinq) ; « Gemini » passe par le Mode IA de Google (udm=50), car
    * gemini.google.com/app?q= n'est pas pré-rempli, mesuré connecté comme
-   * anonyme : un bouton qui ouvre un composer vide trahirait la promesse. */
+   * anonyme : un bouton qui ouvre un composer vide trahirait la promesse.
+   * ⚠️ ChatGPT (corrigé le 08/08/2026, deux conditions CUMULATIVES) : « q »
+   * SEUL, jamais hints=search (ChatGPT le consomme, réécrit l'URL pour l'en
+   * retirer et emporte q au passage), ET un rel contenant noreferrer (avec un
+   * referrer tiers il refuse de soumettre, garde anti-abus). D'où le rel réglé
+   * par assistant : les quatre autres sont mesurés verts SANS noreferrer, le
+   * généraliser changerait les conditions de mesures déjà vertes. */
   const chips = [
     ['Claude', `https://claude.ai/new?q=${q}`],
-    ['ChatGPT', `https://chatgpt.com/?hints=search&amp;q=${q}`],
+    ['ChatGPT', `https://chatgpt.com/?q=${q}`, 'noopener noreferrer nofollow'],
     ['Perplexity', `https://www.perplexity.ai/search?q=${q}`],
     ['Mistral', `https://chat.mistral.ai/chat?q=${q}`],
     ['Gemini', `https://www.google.com/search?udm=50&amp;q=${q}`],
-  ].map(([nom, href]) => `<a class="chip-ia" href="${href}" target="_blank" rel="noopener nofollow" aria-label="${en ? `Summarize with ${nom} (${nt})` : `Résumer avec ${nom} (${nt})`}">${nom}</a>`).join('\n  ');
+  ].map(([nom, href, rel]) => `<a class="chip-ia" href="${href}" target="_blank" rel="${rel || 'noopener nofollow'}" aria-label="${en ? `Summarize with ${nom} (${nt})` : `Résumer avec ${nom} (${nt})`}">${nom}</a>`).join('\n  ');
   return `<div class="barre-ia" role="group" aria-label="${en ? 'Summarize this guide with an AI assistant' : 'Résumer ce guide avec une intelligence artificielle'}">
   <span class="barre-ia-titre">${en ? 'In a hurry? Have your AI assistant read it:' : 'Pressé&nbsp;? Faites-le lire à votre assistant IA&nbsp;:'}</span>
   ${chips}
