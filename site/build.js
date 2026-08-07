@@ -999,6 +999,14 @@ function barreIa(urlPath, en) {
    * des cinq) ; « Gemini » passe par le Mode IA de Google (udm=50), car
    * gemini.google.com/app?q= n'est pas pré-rempli, mesuré connecté comme
    * anonyme : un bouton qui ouvre un composer vide trahirait la promesse.
+   * ⚠️ PAS de puce Gemini (décision du 08/08/2026, Mickaël) : aucun envoi
+   * d'invite par URL n'existe côté gemini.google.com, ni ?q= ni ?prompt= ne
+   * remplissent le composer (remesuré dans un Chrome connecté au compte
+   * Google ; les solutions qui circulent sont des extensions de navigateur,
+   * hors de portée d'un visiteur). Le repli par le Mode IA de Google
+   * fonctionnait, mais ce n'est pas Gemini : plutôt qu'un libellé qui ne
+   * tient pas sa promesse de destination, la puce est retirée. À rouvrir si
+   * Google publie un jour un vrai lien profond.
    * ⚠️ ChatGPT (corrigé le 08/08/2026, deux conditions CUMULATIVES) : « q »
    * SEUL, jamais hints=search (ChatGPT le consomme, réécrit l'URL pour l'en
    * retirer et emporte q au passage), ET un rel contenant noreferrer (avec un
@@ -1010,7 +1018,6 @@ function barreIa(urlPath, en) {
     ['ChatGPT', `https://chatgpt.com/?q=${q}`, 'noopener noreferrer nofollow'],
     ['Perplexity', `https://www.perplexity.ai/search?q=${q}`],
     ['Mistral', `https://chat.mistral.ai/chat?q=${q}`],
-    ['Gemini', `https://www.google.com/search?udm=50&amp;q=${q}`],
   ].map(([nom, href, rel]) => `<a class="chip-ia" href="${href}" target="_blank" rel="${rel || 'noopener nofollow'}" aria-label="${en ? `Summarize with ${nom} (${nt})` : `Résumer avec ${nom} (${nt})`}">${nom}</a>`).join('\n  ');
   return `<div class="barre-ia" role="group" aria-label="${en ? 'Summarize this guide with an AI assistant' : 'Résumer ce guide avec une intelligence artificielle'}">
   <span class="barre-ia-titre">${en ? 'In a hurry? Have your AI assistant read it:' : 'Pressé&nbsp;? Faites-le lire à votre assistant IA&nbsp;:'}</span>
