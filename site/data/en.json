@@ -27,6 +27,7 @@
         "Apply on visale.fr before viewing apartments: the answer usually arrives within 2 working days and the Visale visa is then valid for 6 months."
       ],
       "frSlug": "visale",
+      "suite": ["guarantor-in-france", "dossierfacile", "mobility-lease"],
       "parcours": ["etudiant", "mobilite"],
       "title": "Visale: France's free rent guarantor, explained in English",
       "metaDescription": "No guarantor in France? Visale stands as your rent guarantor for free. Who qualifies, how to apply on visale.fr, and the rent caps in Paris.",
@@ -106,6 +107,7 @@
         "Start with Visale if you qualify, then request your visa or guarantor certificate before the viewings, and never send money before the lease is signed."
       ],
       "frSlug": "garant-location",
+      "suite": ["visale-guarantee", "dossierfacile", "mobility-lease"],
       "parcours": ["etudiant", "mobilite"],
       "title": "Guarantor in France: 4 solutions when you don't have one",
       "metaDescription": "No guarantor in France? Compare the free Visale guarantee, paid guarantor services and bank guarantees, and learn how to strengthen your application.",
@@ -178,6 +180,7 @@
         "Create your account on dossierfacile.logement.gouv.fr, upload your documents, then share the unique link to your certified file in every application."
       ],
       "frSlug": "dossierfacile",
+      "suite": ["visale-guarantee", "guarantor-in-france", "mobility-lease"],
       "parcours": ["etudiant", "mobilite"],
       "title": "DossierFacile: France's certified rental file, in English",
       "metaDescription": "DossierFacile certifies your French rental application for free: verified documents, anti-fraud watermark, one shareable link. How it works, in English.",
@@ -257,6 +260,7 @@
         "Prove your mobility situation when signing the lease, and secure the guarantee with Visale, which covers this lease with no age condition."
       ],
       "frSlug": "bail-mobilite",
+      "suite": ["visale-guarantee", "paris-rent-control", "dossierfacile"],
       "parcours": ["mobilite", "etudiant"],
       "title": "Bail mobilité: the 1-to-10-month furnished lease in France",
       "metaDescription": "The bail mobilité is France's furnished lease for 1 to 10 months, with no security deposit. Who can sign one, the rules, and the traps to avoid.",
@@ -324,6 +328,7 @@
         "Check your rent in 5 minutes: divide the rent excluding charges by the living area and compare it to the official maximum reference rent of your neighbourhood."
       ],
       "frSlug": "encadrement-des-loyers-paris",
+      "suite": ["mobility-lease", "visale-guarantee", "guarantor-in-france"],
       "parcours": ["mobilite"],
       "title": "Paris rent control: check your rent before you sign",
       "metaDescription": "Most Paris rents are legally capped. How to check yours against the official reference rent, spot an unjustified rent supplement, and take action.",

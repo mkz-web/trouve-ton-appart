@@ -5,6 +5,11 @@
       "etudiant",
       "mobilite"
     ],
+    "suite": [
+      "dossierfacile",
+      "garant-location",
+      "bail-mobilite"
+    ],
     "title": "Garantie Visale : conditions et démarches en Île-de-France",
     "metaDescription": "La garantie Visale remplace gratuitement un garant pour louer. Qui y a droit, comment l'obtenir, quels plafonds à Paris et en Île-de-France.",
     "h1": "Garantie Visale : le garant gratuit pour louer en Île-de-France",
@@ -22,7 +27,7 @@
         "bullets": [
           "Tous les jeunes de 18 à 30 ans, quel que soit leur statut : étudiant, alternant, salarié, en recherche d'emploi.",
           "Les salariés du privé de plus de 30 ans, s'ils demandent leur visa dans les 6 mois qui suivent leur embauche ou leur mutation, ou si leur salaire net ne dépasse pas 1 710 € par mois.",
-          "Les titulaires d'un bail mobilité, sans condition d'âge.",
+          "Les titulaires d'un [bail mobilité](/guides/bail-mobilite/), sans condition d'âge.",
           "Les étudiants et chercheurs étrangers en mobilité, sous conditions de titre de séjour."
         ],
         "paragraphs": [
@@ -43,7 +48,7 @@
       {
         "h2": "Visale, garant familial ou garant payant : que choisir ?",
         "paragraphs": [
-          "Visale est gratuit, là où les garants privés payants (GarantMe, Cautioneo…) facturent généralement 3 à 5 % du loyer annuel. Si vous êtes éligible à Visale, commencez toujours par là.",
+          "Visale est gratuit, là où les [garants privés payants](/guides/garant-location/) (GarantMe, Cautioneo…) facturent généralement 3 à 5 % du loyer annuel. Si vous êtes éligible à Visale, commencez toujours par là.",
           "Attention : un bailleur ne peut pas cumuler une caution (garant ou Visale) avec une assurance loyers impayés, sauf pour les étudiants et apprentis. Si un bailleur refuse Visale au motif qu'il a déjà une assurance, c'est cohérent avec la règle. Cherchez alors un logement compatible."
         ]
       }
@@ -87,6 +92,12 @@
     "parcours": [
       "logement-social"
     ],
+    "suite": [
+      "plafond-ressources-logement-social",
+      "/logement-social/delais/",
+      "recours-dalo",
+      "logement-fonctionnaire"
+    ],
     "title": "Demande de logement social en Île-de-France : le guide 2026",
     "metaDescription": "Demande de logement social à Paris et en Île-de-France : dossier unique en ligne, plafonds, délais réels, DALO et erreurs à éviter.",
     "h1": "Demande de logement social en Île-de-France : le guide complet",
@@ -105,8 +116,8 @@
       {
         "h2": "Les plafonds de ressources : PLAI, PLUS, PLS",
         "paragraphs": [
-          "L'accès au logement social dépend de plafonds de revenus (revenu fiscal de référence N-2) selon la composition du foyer et le type de financement du logement : PLAI (très social), PLUS (HLM classique, la majorité du parc), PLS (intermédiaire supérieur). Les plafonds franciliens sont plus élevés qu'en région : beaucoup de salariés, y compris des classes moyennes, sont éligibles sans le savoir.",
-          "Au-dessus des plafonds HLM, pensez au logement locatif intermédiaire (LLI) : loyers 10 à 15 % sous le marché, plafonds nettement plus hauts. Voir notre guide dédié."
+          "L'accès au logement social dépend de [plafonds de revenus](/guides/plafond-ressources-logement-social/) (revenu fiscal de référence N-2) selon la composition du foyer et le type de financement du logement : PLAI (très social), PLUS (HLM classique, la majorité du parc), PLS (intermédiaire supérieur). Les plafonds franciliens sont plus élevés qu'en région : beaucoup de salariés, y compris des classes moyennes, sont éligibles sans le savoir.",
+          "Au-dessus des plafonds HLM, pensez au [logement locatif intermédiaire (LLI)](/guides/logement-intermediaire/) : loyers 10 à 15 % sous le marché, plafonds nettement plus hauts. Voir notre guide dédié."
         ]
       },
       {
@@ -119,13 +130,13 @@
           "AL'in (al-in.fr) : si vous êtes salarié d'une entreprise privée cotisante, Action Logement dispose de son propre contingent de logements réservés, un canal souvent plus rapide que le circuit classique.",
           "Bienvéo (bienveo.fr) : les annonces de logements sociaux et intermédiaires réellement disponibles, publiées par les bailleurs eux-mêmes. Vous pouvez candidater sur des biens précis.",
           "Les bailleurs en location voulue : certains bailleurs (CDC Habitat, in'li pour l'intermédiaire) publient leurs offres et acceptent des candidatures directes.",
-          "Le DALO : si votre demande dépasse le « délai anormalement long » de votre département sans proposition, vous pouvez saisir la commission de médiation. C'est un droit, pas une faveur."
+          "Le [DALO](/guides/recours-dalo/) : si votre demande dépasse le « délai anormalement long » de votre département sans proposition, vous pouvez saisir la commission de médiation. C'est un droit, pas une faveur."
         ]
       },
       {
         "h2": "Cas particuliers : urgence, handicap, seniors",
         "paragraphs": [
-          "Les situations d'urgence (perte de logement, violence, insalubrité, handicap) relèvent de critères de priorité légaux : signalez-les explicitement dans votre demande avec justificatifs. Pour l'hébergement d'urgence immédiat, le 115 et les SIAO restent les bons interlocuteurs.",
+          "Les situations d'urgence (perte de logement, violence, insalubrité, handicap) relèvent de critères de priorité légaux : signalez-les explicitement dans votre demande avec justificatifs. Pour l'[hébergement d'urgence](/guides/siao-115-hebergement-urgence/) immédiat, le 115 et les SIAO restent les bons interlocuteurs.",
           "Pour les besoins d'accessibilité (PMR), précisez vos contraintes dans la demande : les bailleurs disposent de logements adaptés, mais ils sont rarement identifiables dans les moteurs de recherche classiques, d'où l'intérêt de candidater finement via Bienvéo et les bailleurs directement."
         ]
       }
@@ -178,6 +189,11 @@
       "mobilite",
       "etudiant"
     ],
+    "suite": [
+      "visale",
+      "encadrement-des-loyers-paris",
+      "dossierfacile"
+    ],
     "title": "Bail mobilité : durée, conditions, loyers (guide 2026)",
     "metaDescription": "Le bail mobilité : un meublé de 1 à 10 mois sans dépôt de garantie. Conditions, encadrement des loyers à Paris, compatibilité Visale.",
     "h1": "Bail mobilité : louer un meublé de 1 à 10 mois en Île-de-France",
@@ -200,9 +216,9 @@
         "bullets": [
           "Logement meublé uniquement, résidence principale du locataire pendant le séjour.",
           "Durée de 1 à 10 mois, modifiable une fois par avenant mais sans jamais dépasser 10 mois au total, car le contrat n'est pas renouvelable. Au-delà, il faut basculer sur un bail meublé classique (1 an, ou 9 mois étudiant).",
-          "Aucun dépôt de garantie ne peut être exigé : c'est la loi. Le bailleur peut en revanche demander une caution, et c'est là que Visale entre en jeu (éligible sans condition d'âge sur ce bail).",
+          "Aucun dépôt de garantie ne peut être exigé : c'est la loi. Le bailleur peut en revanche demander une caution, et c'est là que [Visale](/guides/visale/) entre en jeu (éligible sans condition d'âge sur ce bail).",
           "Préavis locataire : 1 mois, à tout moment. Le bailleur, lui, ne peut pas rompre le bail en cours.",
-          "À Paris et dans certaines communes de la Métropole du Grand Paris, l'encadrement des loyers s'applique aussi au bail mobilité : vérifiez le loyer de référence majoré de votre quartier avant de signer."
+          "À Paris et dans certaines communes de la Métropole du Grand Paris, l'[encadrement des loyers](/guides/encadrement-des-loyers-paris/) s'applique aussi au bail mobilité : vérifiez le loyer de référence majoré de votre quartier avant de signer."
         ]
       },
       {
@@ -253,6 +269,11 @@
       "etudiant",
       "mobilite"
     ],
+    "suite": [
+      "visale",
+      "dossierfacile",
+      "avance-loca-pass"
+    ],
     "title": "Garant de location : solutions et alternatives (2026)",
     "metaDescription": "Pas de garant pour louer ? Visale gratuite, garants payants, caution bancaire : les solutions comparées pour faire accepter votre dossier.",
     "h1": "Garant de location : solutions et alternatives quand on n'en a pas",
@@ -261,7 +282,7 @@
       {
         "h2": "Option 1 : la garantie Visale, gratuite et à tester en premier",
         "paragraphs": [
-          "Si vous avez moins de 30 ans, si vous venez d'être embauché, ou si vous signez un bail mobilité, la garantie publique Visale se porte caution gratuitement. C'est l'option à activer en priorité. Voir notre guide complet Visale pour les conditions et démarches."
+          "Si vous avez moins de 30 ans, si vous venez d'être embauché, ou si vous signez un [bail mobilité](/guides/bail-mobilite/), la garantie publique Visale se porte caution gratuitement. C'est l'option à activer en priorité. Voir notre [guide complet Visale](/guides/visale/) pour les conditions et démarches."
         ]
       },
       {
@@ -335,6 +356,12 @@
     "parcours": [
       "etudiant"
     ],
+    "suite": [
+      "aide-mobili-jeune",
+      "avance-loca-pass",
+      "/residences-crous/",
+      "/diagnostic/"
+    ],
     "title": "Aides au logement étudiant : APL, Loca-Pass, Mobili-Jeune",
     "metaDescription": "APL, ALS, avance Loca-Pass, aide Mobili-Jeune, FSL : toutes les aides au logement étudiant en Île-de-France et comment les cumuler.",
     "h1": "Aides au logement étudiant : ce que vous pouvez vraiment toucher",
@@ -350,21 +377,21 @@
       {
         "h2": "Avance Loca-Pass : le dépôt de garantie prêté à 0 %",
         "paragraphs": [
-          "Action Logement avance votre dépôt de garantie (prêt à taux zéro, remboursable sur 25 mois maximum). Étudiants boursiers, alternants et jeunes de moins de 30 ans en activité y sont éligibles. La demande se fait en ligne avant ou juste après la signature du bail."
+          "Action Logement [avance votre dépôt de garantie](/guides/avance-loca-pass/) (prêt à taux zéro, remboursable sur 25 mois maximum). Étudiants boursiers, alternants et jeunes de moins de 30 ans en activité y sont éligibles. La demande se fait en ligne avant ou juste après la signature du bail."
         ]
       },
       {
         "h2": "Mobili-Jeune : jusqu'à 100 € par mois pour les alternants",
         "paragraphs": [
-          "Si vous êtes en apprentissage ou contrat de professionnalisation dans une entreprise du secteur privé, l'aide Mobili-Jeune d'Action Logement prend en charge une partie de votre loyer (jusqu'à 100 € par mois) pendant votre formation. Cumulable avec l'APL : le combo le plus rentable du logement étudiant."
+          "Si vous êtes en apprentissage ou contrat de professionnalisation dans une entreprise du secteur privé, l'[aide Mobili-Jeune](/guides/aide-mobili-jeune/) d'Action Logement prend en charge une partie de votre loyer (jusqu'à 100 € par mois) pendant votre formation. Cumulable avec l'APL : le combo le plus rentable du logement étudiant."
         ]
       },
       {
         "h2": "Les autres leviers franciliens",
         "bullets": [
-          "Le logement CROUS : loyers très inférieurs au marché ; demande via le Dossier Social Étudiant (DSE) sur messervices.etudiant.gouv.fr entre mars et mai, et phase complémentaire ensuite sur trouverunlogement.lescrous.fr.",
-          "Le FSL (Fonds de Solidarité Logement) de votre département : aide ponctuelle pour le dépôt de garantie, le premier loyer ou les dettes locatives, selon ressources.",
-          "La garantie Visale (voir notre guide) : pas une aide financière directe, mais elle débloque les dossiers sans garant, souvent le vrai obstacle.",
+          "Le [logement CROUS](/residences-crous/) : loyers très inférieurs au marché ; demande via le Dossier Social Étudiant (DSE) sur messervices.etudiant.gouv.fr entre mars et mai, et phase complémentaire ensuite sur trouverunlogement.lescrous.fr.",
+          "Le [FSL (Fonds de Solidarité Logement)](/guides/fonds-solidarite-logement/) de votre département : aide ponctuelle pour le dépôt de garantie, le premier loyer ou les dettes locatives, selon ressources.",
+          "La [garantie Visale](/guides/visale/) (voir notre guide) : pas une aide financière directe, mais elle débloque les dossiers sans garant, souvent le vrai obstacle.",
           "Les aides locales et d'écoles : certaines collectivités et établissements ont leurs propres coups de pouce. Renseignez-vous auprès du service vie étudiante."
         ]
       }
@@ -417,6 +444,11 @@
       "logement-social",
       "mobilite"
     ],
+    "suite": [
+      "plafond-ressources-logement-social",
+      "logement-fonctionnaire",
+      "bail-reel-solidaire"
+    ],
     "title": "Logement intermédiaire (LLI) : pour qui, où candidater ?",
     "metaDescription": "Le logement locatif intermédiaire : des loyers 10 à 15 % sous le marché. Plafonds, opérateurs franciliens (in'li, CDC Habitat), candidature.",
     "h1": "Logement intermédiaire : le chaînon manquant entre HLM et marché libre",
@@ -432,7 +464,7 @@
       {
         "h2": "Êtes-vous éligible ?",
         "paragraphs": [
-          "Les plafonds de ressources du LLI sont nettement plus élevés que ceux du HLM : ils correspondent peu ou prou aux plafonds du dispositif fiscal intermédiaire (revenu fiscal de référence N-2, selon composition du foyer et zone). En Île-de-France, un célibataire cadre ou un couple bi-actif avec enfant rentrent très souvent dans les clous.",
+          "Les [plafonds de ressources](/guides/plafond-ressources-logement-social/) du LLI sont nettement plus élevés que ceux du HLM : ils correspondent peu ou prou aux plafonds du dispositif fiscal intermédiaire (revenu fiscal de référence N-2, selon composition du foyer et zone). En Île-de-France, un célibataire cadre ou un couple bi-actif avec enfant rentrent très souvent dans les clous.",
           "Le logement doit être votre résidence principale, et votre dossier (revenus stables, taux d'effort) est examiné comme dans le privé."
         ]
       },
@@ -486,6 +518,11 @@
       "etudiant",
       "mobilite"
     ],
+    "suite": [
+      "visale",
+      "garant-location",
+      "bail-mobilite"
+    ],
     "title": "DossierFacile : le dossier de location certifié par l'État",
     "metaDescription": "DossierFacile certifie gratuitement votre dossier de location : pièces vérifiées, filigrane anti-fraude, lien partageable. Mode d'emploi complet.",
     "h1": "DossierFacile : le dossier de location certifié qui rassure les bailleurs",
@@ -505,7 +542,7 @@
           "Justificatif de situation : contrat de travail ou attestation employeur, certificat de scolarité ou contrat d'alternance.",
           "Justificatifs de ressources : trois derniers bulletins de salaire, dernier avis d'imposition, justificatifs de bourse ou de pension le cas échéant.",
           "Justificatif de domicile actuel (quittances, attestation d'hébergement…).",
-          "Pour votre garant physique : les mêmes pièces le concernant. Un visa Visale peut remplacer le garant."
+          "Pour votre [garant physique](/guides/garant-location/) : les mêmes pièces le concernant. Un [visa Visale](/guides/visale/) peut remplacer le garant."
         ],
         "paragraphs": [
           "Conseil : scannez des documents complets et nets (toutes les pages, sans doigt ni recadrage sauvage). Les rejets pour pièce illisible sont la première cause d'allers-retours."
@@ -575,6 +612,11 @@
     "parcours": [
       "logement-social"
     ],
+    "suite": [
+      "demande-logement-social",
+      "/logement-social/delais/",
+      "siao-115-hebergement-urgence"
+    ],
     "title": "Recours DALO : obliger l'État à vous reloger (guide 2026)",
     "metaDescription": "Sans logement malgré vos démarches ? Le recours DALO oblige le préfet à vous reloger. Conditions, formulaire, délais : procédure gratuite, sans avocat.",
     "h1": "Recours DALO : le droit au logement opposable, mode d'emploi",
@@ -597,7 +639,7 @@
           "Votre demande de logement social dépasse le « délai anormalement long » de votre département sans proposition adaptée."
         ],
         "paragraphs": [
-          "Le délai anormalement long est fixé par chaque préfecture ; en Île-de-France, il se compte en années et figure parmi les plus longs de France. Condition commune à tous les motifs : être de bonne foi et avoir fait les démarches préalables, à commencer par une demande de logement social à jour."
+          "Le délai anormalement long est fixé par chaque préfecture ; en Île-de-France, il se compte en années et figure parmi les plus longs de France. Condition commune à tous les motifs : être de bonne foi et avoir fait les démarches préalables, à commencer par une [demande de logement social](/guides/demande-logement-social/) à jour."
         ]
       },
       {
@@ -619,7 +661,7 @@
           "Laisser expirer sa demande de logement social : le renouvellement annuel reste obligatoire pendant toute la procédure.",
           "Un dossier sans preuves : photos, courriers au bailleur, signalements, certificats médicaux… tout ce qui documente la situation compte.",
           "Refuser une proposition de logement adaptée : cela fait perdre le bénéfice du DALO.",
-          "Confondre DALO et DAHO : le DAHO est le recours équivalent pour obtenir un hébergement (sans condition de logement autonome). En urgence immédiate, appelez d'abord le 115."
+          "Confondre DALO et DAHO : le DAHO est le recours équivalent pour obtenir un hébergement (sans condition de logement autonome). En urgence immédiate, [appelez d'abord le 115](/guides/siao-115-hebergement-urgence/)."
         ]
       }
     ],
@@ -666,6 +708,11 @@
     "parcours": [
       "etudiant"
     ],
+    "suite": [
+      "aide-logement-etudiant",
+      "avance-loca-pass",
+      "foyer-jeune-travailleur"
+    ],
     "title": "Aide Mobili-Jeune : jusqu'à 100 € de loyer pris en charge",
     "metaDescription": "L'aide Mobili-Jeune d'Action Logement prend en charge jusqu'à 100 € de loyer par mois pendant l'alternance. Conditions, demande en ligne, cumul APL.",
     "h1": "Aide Mobili-Jeune : le loyer allégé pour les alternants",
@@ -674,7 +721,7 @@
       {
         "h2": "Qu'est-ce que l'aide Mobili-Jeune ?",
         "paragraphs": [
-          "Mobili-Jeune est une subvention d'Action Logement (ce n'est pas un prêt : rien à rembourser) destinée aux jeunes en formation en alternance. Elle couvre une partie du loyer qui reste à votre charge après déduction de l'aide au logement de la CAF, jusqu'à 100 € par mois versés pendant 11 mois.",
+          "Mobili-Jeune est une subvention d'Action Logement (ce n'est pas un prêt : rien à rembourser) destinée aux jeunes en formation en alternance. Elle couvre une partie du loyer qui reste à votre charge après déduction de l'[aide au logement de la CAF](/guides/aide-logement-etudiant/), jusqu'à 100 € par mois versés pendant 11 mois.",
           "Sur une année de formation, cela représente jusqu'à 1 100 € : de quoi changer l'équation d'un studio francilien."
         ]
       },
@@ -684,7 +731,7 @@
           "Avoir moins de 30 ans à la date de la demande.",
           "Être en contrat d'apprentissage ou de professionnalisation dans une entreprise du secteur privé non agricole (le secteur agricole a son équivalent, Agri-Mobili-Jeune).",
           "Percevoir une rémunération d'alternant : l'aide est attribuée sous conditions de ressources, de l'ordre du SMIC.",
-          "Louer un logement pendant la période de formation : bail classique, meublé, colocation, résidence, foyer ou bail mobilité.",
+          "Louer un logement pendant la période de formation : bail classique, meublé, colocation, résidence, foyer ou [bail mobilité](/guides/bail-mobilite/).",
           "Le logement doit être proche de votre lieu de formation ou d'emploi (c'est l'esprit du dispositif : rapprocher les alternants de leur poste)."
         ]
       },
@@ -703,7 +750,7 @@
       {
         "h2": "Le pack alternant complet : Mobili-Jeune + APL + Loca-Pass + Visale",
         "paragraphs": [
-          "Les aides se cumulent, et l'ordre compte. Simulez d'abord votre APL sur caf.fr (Mobili-Jeune couvre le reliquat de loyer après APL). Financez le dépôt de garantie avec l'avance Loca-Pass (prêt à 0 €). Sécurisez la caution avec Visale, gratuite. Et présentez le tout dans un dossier certifié DossierFacile.",
+          "Les aides se cumulent, et l'ordre compte. Simulez d'abord votre APL sur caf.fr (Mobili-Jeune couvre le reliquat de loyer après APL). Financez le dépôt de garantie avec l'[avance Loca-Pass](/guides/avance-loca-pass/) (prêt à 0 €). Sécurisez la caution avec [Visale](/guides/visale/), gratuite. Et présentez le tout dans un [dossier certifié DossierFacile](/guides/dossierfacile/).",
           "Ce pack complet, entièrement gratuit ou à taux zéro, peut réduire le coût réel d'un logement d'alternant de plusieurs milliers d'euros sur la durée de la formation. Détail des autres aides dans notre guide des aides au logement étudiant."
         ]
       }
@@ -751,6 +798,11 @@
     "parcours": [
       "etudiant"
     ],
+    "suite": [
+      "visale",
+      "aide-mobili-jeune",
+      "fonds-solidarite-logement"
+    ],
     "title": "Avance Loca-Pass : le dépôt de garantie financé à 0 %",
     "metaDescription": "L'avance Loca-Pass d'Action Logement prête jusqu'à 1 200 € à taux zéro pour payer votre dépôt de garantie. Conditions, démarches, remboursement.",
     "h1": "Avance Loca-Pass : payez votre dépôt de garantie sans avancer l'argent",
@@ -760,7 +812,7 @@
         "h2": "Qu'est-ce que l'avance Loca-Pass ?",
         "paragraphs": [
           "C'est un prêt à taux zéro accordé par Action Logement pour financer le dépôt de garantie demandé à la signature du bail, dans la limite de 1 200 €. Vous payez le dépôt avec ce prêt, puis vous le remboursez par petites mensualités (20 € minimum), sur une durée allant jusqu'à 25 mois, avec un différé qui laisse le temps de s'installer.",
-          "Aucun intérêt, aucun frais : vous remboursez exactement ce que vous avez emprunté. À ne pas confondre avec la garantie Visale, qui couvre les loyers impayés : les deux se cumulent très bien."
+          "Aucun intérêt, aucun frais : vous remboursez exactement ce que vous avez emprunté. À ne pas confondre avec la [garantie Visale](/guides/visale/), qui couvre les loyers impayés : les deux se cumulent très bien."
         ]
       },
       {
@@ -772,7 +824,7 @@
           "Le logement doit être votre résidence principale, en location ou colocation (bail classique, meublé, résidence, foyer)."
         ],
         "paragraphs": [
-          "Cas particulier : avec un bail mobilité, aucun dépôt de garantie ne peut être exigé. L'avance Loca-Pass n'a alors pas d'objet, c'est la loi qui vous dispense du dépôt."
+          "Cas particulier : avec un [bail mobilité](/guides/bail-mobilite/), aucun dépôt de garantie ne peut être exigé. L'avance Loca-Pass n'a alors pas d'objet, c'est la loi qui vous dispense du dépôt."
         ]
       },
       {
@@ -789,8 +841,8 @@
       {
         "h2": "Loca-Pass, FSL ou économies : comment arbitrer ?",
         "paragraphs": [
-          "Si vous êtes éligible à Loca-Pass, c'est en général la solution la plus rapide et la plus simple. Le Fonds de solidarité logement (FSL) de votre département peut aussi prendre en charge le dépôt de garantie, sous conditions de ressources plus strictes ; les deux dispositifs ne se cumulent pas pour financer le même dépôt. Notre guide FSL détaille ce second filet de sécurité.",
-          "Le pack complet du locataire jeune actif : avance Loca-Pass pour le dépôt, Visale pour la caution, Mobili-Jeune si vous êtes alternant, le tout présenté dans un dossier certifié DossierFacile."
+          "Si vous êtes éligible à Loca-Pass, c'est en général la solution la plus rapide et la plus simple. Le Fonds de solidarité logement (FSL) de votre département peut aussi prendre en charge le dépôt de garantie, sous conditions de ressources plus strictes ; les deux dispositifs ne se cumulent pas pour financer le même dépôt. [Notre guide FSL](/guides/fonds-solidarite-logement/) détaille ce second filet de sécurité.",
+          "Le pack complet du locataire jeune actif : avance Loca-Pass pour le dépôt, Visale pour la caution, [Mobili-Jeune](/guides/aide-mobili-jeune/) si vous êtes alternant, le tout présenté dans un [dossier certifié DossierFacile](/guides/dossierfacile/)."
         ]
       }
     ],
@@ -833,6 +885,12 @@
     "parcours": [
       "logement-social"
     ],
+    "suite": [
+      "avance-loca-pass",
+      "demande-logement-social",
+      "siao-115-hebergement-urgence",
+      "/diagnostic/"
+    ],
     "title": "Fonds de solidarité logement (FSL) : qui y a droit en 2026 ?",
     "metaDescription": "Caution, premier loyer, dettes de loyer, factures d'énergie : le FSL peut les payer, en subvention ou en prêt à 0 %. Conditions et démarches en Île-de-France.",
     "h1": "FSL : le fonds de solidarité logement, dernier filet avant la rupture",
@@ -849,7 +907,7 @@
         "h2": "Qui peut en bénéficier ?",
         "bullets": [
           "Locataires et sous-locataires, dans le parc privé comme dans le parc social.",
-          "Personnes hébergées en résidence sociale ou en foyer.",
+          "Personnes hébergées en [résidence sociale](/guides/residence-sociale/) ou en foyer.",
           "Propriétaires occupants en difficulté, dans certains départements.",
           "Sous conditions de ressources : chaque département fixe ses plafonds et son règlement intérieur."
         ],
@@ -871,8 +929,8 @@
       {
         "h2": "FSL et autres aides : comment les articuler",
         "paragraphs": [
-          "Pour le dépôt de garantie, le FSL et l'avance Loca-Pass ne se cumulent pas sur le même objet : Loca-Pass (prêt à 0 %, sans condition de ressources strictes) est en général plus rapide si vous y êtes éligible ; le FSL prend le relais pour les ménages aux ressources modestes ou hors critères Action Logement.",
-          "Le FSL se combine en revanche très bien avec une demande de logement social en cours, un recours DALO documenté, ou les aides au logement de la CAF. En cas de menace d'expulsion, contactez aussi l'ADIL de votre département : le conseil juridique est gratuit."
+          "Pour le dépôt de garantie, le FSL et l'[avance Loca-Pass](/guides/avance-loca-pass/) ne se cumulent pas sur le même objet : Loca-Pass (prêt à 0 %, sans condition de ressources strictes) est en général plus rapide si vous y êtes éligible ; le FSL prend le relais pour les ménages aux ressources modestes ou hors critères Action Logement.",
+          "Le FSL se combine en revanche très bien avec une [demande de logement social](/guides/demande-logement-social/) en cours, un [recours DALO](/guides/recours-dalo/) documenté, ou les aides au logement de la CAF. En cas de menace d'expulsion, contactez aussi l'ADIL de votre département : le conseil juridique est gratuit."
         ]
       }
     ],
@@ -919,6 +977,11 @@
     "parcours": [
       "etudiant"
     ],
+    "suite": [
+      "/foyers-jeunes-travailleurs/",
+      "aide-mobili-jeune",
+      "residence-sociale"
+    ],
     "title": "Foyer de jeunes travailleurs : logement meublé à petit prix",
     "metaDescription": "Les foyers de jeunes travailleurs logent les 16-25 ans (jusqu'à 30) en meublé tout compris, APL possible. Conditions, prix et candidature en Île-de-France.",
     "h1": "Foyer de jeunes travailleurs (FJT) : le meublé tout compris pour démarrer",
@@ -928,7 +991,7 @@
         "h2": "Un FJT, c'est quoi exactement ?",
         "paragraphs": [
           "Les foyers de jeunes travailleurs sont des résidences meublées destinées aux jeunes qui démarrent leur vie active. On y loue une chambre ou un studio avec une « redevance » mensuelle qui inclut le loyer, les charges, et souvent l'accès à des espaces collectifs (cuisine, laverie, salles communes).",
-          "La redevance est éligible à l'APL, ce qui ramène le coût réel bien en dessous du marché francilien. Les résidences proposent aussi un accompagnement (budget, démarches, recherche du logement suivant) : un vrai sas vers le logement autonome."
+          "La redevance est éligible à l'[APL](/guides/aide-logement-etudiant/), ce qui ramène le coût réel bien en dessous du marché francilien. Les résidences proposent aussi un accompagnement (budget, démarches, recherche du logement suivant) : un vrai sas vers le logement autonome."
         ]
       },
       {
@@ -936,7 +999,7 @@
         "bullets": [
           "Les jeunes de 16 à 25 ans, et jusqu'à 30 ans dans de nombreuses résidences : salariés, alternants, stagiaires, intérimaires, demandeurs d'emploi.",
           "Les étudiants peuvent être admis dans certaines résidences, en général en minorité du public accueilli.",
-          "Pas de condition de garant dans la plupart des résidences : le contrat est une convention d'occupation, plus souple qu'un bail classique.",
+          "Pas de condition de [garant](/guides/garant-location/) dans la plupart des résidences : le contrat est une convention d'occupation, plus souple qu'un bail classique.",
           "Durée d'accueil : de quelques mois à deux ans environ, le temps de stabiliser sa situation."
         ]
       },
@@ -955,8 +1018,8 @@
       {
         "h2": "FJT, CROUS ou studio privé : comment choisir ?",
         "paragraphs": [
-          "Le CROUS reste imbattable sur le prix mais cible prioritairement les étudiants boursiers. Le studio privé offre l'indépendance mais exige garant, dépôt et mobilier. Le FJT se situe entre les deux : meublé, sans garant, tout compris, avec un accompagnement, idéal pour une première installation ou une alternance.",
-          "Pensez au cumul avec les aides : APL sur la redevance, Mobili-Jeune si vous êtes alternant, et avance Loca-Pass si un dépôt est demandé. Le coût mensuel réel peut descendre très bas."
+          "Le [CROUS](/residences-crous/) reste imbattable sur le prix mais cible prioritairement les étudiants boursiers. Le studio privé offre l'indépendance mais exige garant, dépôt et mobilier. Le FJT se situe entre les deux : meublé, sans garant, tout compris, avec un accompagnement, idéal pour une première installation ou une alternance.",
+          "Pensez au cumul avec les aides : APL sur la redevance, [Mobili-Jeune](/guides/aide-mobili-jeune/) si vous êtes alternant, et [avance Loca-Pass](/guides/avance-loca-pass/) si un dépôt est demandé. Le coût mensuel réel peut descendre très bas."
         ]
       }
     ],
@@ -1002,6 +1065,11 @@
     "slug": "encadrement-des-loyers-paris",
     "parcours": [
       "mobilite"
+    ],
+    "suite": [
+      "bail-mobilite",
+      "logement-intermediaire",
+      "/outils/"
     ],
     "title": "Encadrement des loyers à Paris : vérifier et faire respecter",
     "metaDescription": "Loyer de référence, complément de loyer, recours en cas de dépassement : comment vérifier que votre loyer parisien respecte l'encadrement.",
@@ -1086,6 +1154,11 @@
     "slug": "siao-115-hebergement-urgence",
     "parcours": [
       "logement-social"
+    ],
+    "suite": [
+      "solibail",
+      "residence-sociale",
+      "recours-dalo"
     ],
     "title": "SIAO et 115 : obtenir un hébergement d'urgence (guide 2026)",
     "metaDescription": "Le 115 oriente, le SIAO attribue les places. Qui est prioritaire, que faire si ça ne répond pas, comment passer de l'urgence au logement : le guide complet.",
@@ -1324,6 +1397,11 @@
     "parcours": [
       "logement-social"
     ],
+    "suite": [
+      "residence-sociale",
+      "demande-logement-social",
+      "fonds-solidarite-logement"
+    ],
     "title": "Solibail : conditions, démarches et loyers garantis (2026)",
     "metaDescription": "Solibail loge des ménages modestes dans le parc privé et garantit le loyer au propriétaire. Conditions, entrée via le SIAO, avantage fiscal : le guide 2026.",
     "h1": "Solibail : l'intermédiation locative qui loge les ménages et sécurise les propriétaires",
@@ -1487,6 +1565,11 @@
     "parcours": [
       "logement-social"
     ],
+    "suite": [
+      "foyer-jeune-travailleur",
+      "siao-115-hebergement-urgence",
+      "/residences-autonomie/"
+    ],
     "title": "Résidence sociale : conditions, redevance et demande (2026)",
     "metaDescription": "Logement meublé tout compris, redevance éligible APL : qui peut vivre en résidence sociale, comment candidater (Adoma, SIAO, Action Logement), combien de temps.",
     "h1": "Résidence sociale : le logement meublé tremplin, mode d'emploi",
@@ -1648,6 +1731,11 @@
     "parcours": [
       "logement-social",
       "mobilite"
+    ],
+    "suite": [
+      "demande-logement-social",
+      "logement-intermediaire",
+      "plafond-ressources-logement-social"
     ],
     "title": "Logement fonctionnaire : qui a droit à quoi (guide 2026)",
     "metaDescription": "BALAE, AIP, logement social, LLI : les solutions de logement fonctionnaire en Île-de-France selon votre versant, État, territorial ou hospitalier.",
@@ -1829,6 +1917,12 @@
     "parcours": [
       "logement-social"
     ],
+    "suite": [
+      "demande-logement-social",
+      "logement-intermediaire",
+      "/logement-social/delais/",
+      "/logement-social/chiffres/"
+    ],
     "title": "Plafond de ressources logement social 2026 : le calcul",
     "metaDescription": "Vérifiez en 30 secondes si vos revenus passent sous le plafond PLAI, PLUS ou PLS. Barèmes 2026 pour Paris et l'Île-de-France, simulateur gratuit.",
     "h1": "Avez-vous droit à un logement social en 2026 ?",
@@ -1950,6 +2044,11 @@
     "slug": "bail-reel-solidaire",
     "parcours": [
       "logement-social"
+    ],
+    "suite": [
+      "plafond-ressources-logement-social",
+      "logement-intermediaire",
+      "demande-logement-social"
     ],
     "title": "Bail réel solidaire (BRS) en Île-de-France : le guide 2026",
     "metaDescription": "Ce qu'on achète vraiment, les plafonds de ressources 2026, la redevance et la revente encadrée : le guide honnête du BRS, avantages et limites compris.",

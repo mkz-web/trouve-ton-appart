@@ -34,14 +34,14 @@
     "intro": "Le parcours du logement social francilien est le plus opaque de tous : guichets multiples, critères complexes, délais longs. Et pour les besoins spécifiques (accessibilité PMR, seniors, urgence), les filtres n'existent tout simplement pas sur les sites classiques. On remet de l'ordre.",
     "etapes": [
       {
-        "titre": "1. Déposez (et renouvelez !) votre demande unique",
-        "texte": "Une seule demande en ligne vous ouvre tous les bailleurs d'Île-de-France. Le piège mortel : oublier le renouvellement annuel, qui efface toute votre ancienneté.",
-        "guides": ["demande-logement-social"]
+        "titre": "1. Vérifiez vos plafonds, puis déposez (et renouvelez !) votre demande unique",
+        "texte": "Première condition d'accès : passer sous les plafonds de ressources, qui dépendent de la composition du foyer et de la commune. Ensuite, une seule demande en ligne vous ouvre tous les bailleurs d'Île-de-France. Le piège mortel : oublier le renouvellement annuel, qui efface toute votre ancienneté.",
+        "guides": ["plafond-ressources-logement-social", "demande-logement-social"]
       },
       {
         "titre": "2. Activez les canaux parallèles",
-        "texte": "Salarié du privé ? Le contingent Action Logement (AL'in) est souvent plus rapide. Agent public ? La bourse Balae et les aides de votre versant existent. Au-dessus des plafonds HLM ? Le logement intermédiaire (in'li, CDC Habitat) est fait pour vous, avec candidature directe.",
-        "guides": ["demande-logement-social", "logement-intermediaire", "logement-fonctionnaire"]
+        "texte": "Salarié du privé ? Le contingent Action Logement (AL'in) est souvent plus rapide. Agent public ? La bourse Balae et les aides de votre versant existent. Au-dessus des plafonds HLM ? Le logement intermédiaire (in'li, CDC Habitat) est fait pour vous, avec candidature directe. Et si votre projet est d'acheter, le bail réel solidaire dissocie le logement du terrain et abaisse d'autant le prix d'entrée.",
+        "guides": ["demande-logement-social", "logement-intermediaire", "logement-fonctionnaire", "bail-reel-solidaire"]
       },
       {
         "titre": "3. Situations spécifiques : dites-le explicitement",
@@ -73,6 +73,11 @@
         "titre": "3. Cherchez sur les sources fiables, jamais en versant d'argent avant le bail",
         "texte": "Spécialistes du meublé, coliving, résidences : notre annuaire liste les acteurs établis. Règle d'or à distance : visite vidéo en direct, jamais de paiement avant signature, et méfiance absolue sur les prix trop beaux. Un dossier certifié DossierFacile accélère les candidatures à distance.",
         "guides": ["dossierfacile"]
+      },
+      {
+        "titre": "4. La mobilité dure : passez sur un parc fait pour ça",
+        "texte": "Au-delà de quelques mois, le meublé coûte cher pour ce qu'il apporte. Le logement intermédiaire (in'li, CDC Habitat) vise exactement les salariés trop aisés pour le HLM et trop justes pour le marché libre, avec candidature directe et sans ancienneté à accumuler. Et si vous êtes agent public muté, votre administration a ses propres portes d'entrée, souvent ignorées.",
+        "guides": ["logement-intermediaire", "logement-fonctionnaire"]
       }
     ],
     "annuaireCategories": ["mobilite"]

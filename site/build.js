@@ -72,6 +72,64 @@ const delaisTries = TENSION_CLASSABLES
 const statsMin = delaisTries.length ? Math.round(delaisTries[0]) : null;
 const statsMax = delaisTries.length ? Math.round(delaisTries[delaisTries.length - 1]) : null;
 
+/* ---- Maillage interne : les suites de lecture ----
+ * Cibles admises dans le champ `suite` d'un guide en plus des autres guides.
+ * `dispo` dit si la page sera réellement construite (snapshot open data
+ * présent) : une suite qui pointerait vers une page absente doit faire échouer
+ * le build, pas produire un lien mort. */
+const SUITES_HORS_GUIDES = {
+  '/logement-social/delais/': { titre: 'Les délais réels, commune par commune', resume: "Combien de mois d'attente et combien de demandes pour une attribution, dans chaque commune classable.", icone: 'demande-logement-social', theme: 'logement-social', dispo: () => !!TENSION },
+  '/logement-social/chiffres/': { titre: 'Le logement social en chiffres', resume: 'Parc, loyer médian au m², vacance et taux SRU, commune par commune.', icone: 'logement-social', theme: 'logement-social', dispo: () => !!LS_COMMUNES },
+  '/diagnostic/': { titre: 'Le diagnostic logement en 2 minutes', resume: 'Sept questions, et votre feuille de route : urgences, démarches, aides et pistes.', icone: 'diagnostic', theme: null, dispo: () => !!DIAG },
+  '/outils/': { titre: 'Les trois outils gratuits du site', resume: 'Diagnostic, simulateur de plafonds et vérificateur de loyer, sans inscription.', icone: 'diagnostic', theme: null, dispo: () => true },
+  '/residences-crous/': { titre: "L'annuaire des résidences CROUS", resume: 'Adresses, services et lien de candidature des résidences universitaires publiques.', icone: 'etudiant', theme: 'etudiant', dispo: () => !!CROUS },
+  '/foyers-jeunes-travailleurs/': { titre: "L'annuaire des foyers de jeunes travailleurs", resume: "Les FJT d'Île-de-France département par département, avec adresses et téléphones.", icone: 'foyer-jeune-travailleur', theme: 'etudiant', dispo: () => !!FJT },
+  '/residences-autonomie/': { titre: "L'annuaire des résidences autonomie", resume: 'Les résidences pour seniors autonomes, département par département.', icone: 'logement-social', theme: 'logement-social', dispo: () => !!RES_AUTONOMIE },
+};
+
+/* Deux invariants de maillage tenus par le build, pas par la vigilance.
+ * (1) Un guide qui déclare un parcours DOIT figurer dans une étape de ce
+ *     parcours : sinon le pilier ne lie pas son article, et le guide n'existe
+ *     que par le menu. Quatre guides étaient exactement dans ce cas.
+ * (2) Un guide DOIT désigner 2 à 4 suites de lecture (champ `suite`), cibles
+ *     existantes et jamais lui-même : cela remplace la sélection automatique
+ *     par ordre du tableau, qui renvoyait toujours vers les mêmes pages.
+ * Fail-closed des deux côtés : on refuse de construire plutôt que de publier
+ * un maillage muet, qui ne se voit sur aucune page. */
+(function controleMaillage() {
+  const SLUGS = new Set(GUIDES.map(g => g.slug));
+  const rates = [];
+  for (const g of GUIDES) {
+    for (const ps of g.parcours || []) {
+      const p = PARCOURS.find(x => x.slug === ps);
+      if (!p) { rates.push(`${g.slug} : parcours inconnu « ${ps} »`); continue; }
+      if (!p.etapes.some(e => (e.guides || []).includes(g.slug))) {
+        rates.push(`${g.slug} : déclare le parcours « ${ps} » mais n'est cité dans aucune étape de /${ps}/`);
+      }
+    }
+    const s = g.suite;
+    if (!Array.isArray(s) || s.length < 2 || s.length > 4) {
+      rates.push(`${g.slug} : champ « suite » attendu, de 2 à 4 entrées (trouvé : ${Array.isArray(s) ? s.length : typeof s})`);
+      continue;
+    }
+    if (new Set(s).size !== s.length) rates.push(`${g.slug} : doublon dans « suite »`);
+    for (const c of s) {
+      if (c === g.slug) rates.push(`${g.slug} : se cite lui-même en suite de lecture`);
+      else if (SLUGS.has(c)) continue;
+      else if (!SUITES_HORS_GUIDES[c]) rates.push(`${g.slug} : suite « ${c} » inconnue`);
+      else if (!SUITES_HORS_GUIDES[c].dispo()) rates.push(`${g.slug} : suite « ${c} » pointe vers une page non construite (snapshot absent)`);
+    }
+  }
+  for (const p of PARCOURS) {
+    for (const e of p.etapes) {
+      for (const slug of e.guides || []) {
+        if (!SLUGS.has(slug)) rates.push(`parcours ${p.slug} : guide inconnu « ${slug} »`);
+      }
+    }
+  }
+  if (rates.length) throw new Error(`Maillage interne incohérent :\n  - ${rates.join('\n  - ')}`);
+})();
+
 const DEPS_IDF = ['75', '77', '78', '91', '92', '93', '94', '95'];
 const DEP_NOMS = {
   75: 'Paris', 77: 'Seine-et-Marne', 78: 'Yvelines', 91: 'Essonne',
@@ -307,7 +365,7 @@ const A_PROPOS_ACTIF = false;
 
 const CONSENT_BANNER = `
 <div class="consent" id="consent" role="region" aria-label="Consentement aux cookies" hidden>
-  <p class="consent-txt">Avec votre accord, nous mesurons l'usage du site avec Microsoft Clarity pour l'améliorer. Ce que vous saisissez dans nos outils reste masqué et n'est jamais transmis. <a href="/mentions-legales/#cookies">En savoir plus</a></p>
+  <p class="consent-txt">Avec votre accord, nous mesurons l'usage du site avec Microsoft Clarity pour l'améliorer. Ce que vous saisissez dans nos outils reste masqué et n'est jamais transmis. <a href="/mentions-legales/#cookies">En savoir plus sur les cookies</a></p>
   <p class="consent-actions">
     <button type="button" class="consent-btn" id="consent-ok">Accepter</button>
     <button type="button" class="consent-btn" id="consent-non">Refuser</button>
@@ -987,6 +1045,33 @@ function tldrBloc(tldr, en) {
 </div>`;
 }
 
+/* Suites de lecture : ce que le lecteur a le plus de chances de vouloir faire
+ * juste après CE guide. Sélection éditoriale (champ `suite` de guides.json,
+ * contrôlée au démarrage), jamais les trois premiers guides du tableau, qui
+ * concentraient tous les liens sur les mêmes pages. Placé après la FAQ et
+ * AVANT les sources : la suite du parcours passe avant la bibliographie.
+ * Cartes et non pastilles : cible tactile confortable et titre entier lisible. */
+function suiteBloc(g) {
+  const cards = (g.suite || []).map(c => {
+    const cible = GUIDES.find(x => x.slug === c);
+    const url = cible ? `/guides/${cible.slug}/` : c;
+    const hors = cible ? null : SUITES_HORS_GUIDES[c];
+    const titre = cible ? cible.h1 : hors.titre;
+    const resume = cible ? cible.metaDescription.split('. ')[0] + '.' : hors.resume;
+    const th = themeOf(cible ? (cible.parcours && cible.parcours[0]) : hors.theme);
+    return `
+    <a class="card card-guide" href="${url}" style="${themeStyle(th)}">
+      <span class="card-icon card-icon-sm">${icon(cible ? cible.slug : hors.icone, th.c)}</span>
+      <div><h3>${esc(titre)}</h3>
+      <p>${esc(resume)}</p></div>
+    </a>`;
+  }).join('');
+  return `<section class="suite" aria-labelledby="suite-t">
+<h2 id="suite-t">Et maintenant&nbsp;?</h2>
+<div class="grid">${cards}</div>
+</section>`;
+}
+
 function barreIa(urlPath, en) {
   const url = SITE.baseUrl + urlPath;
   const invite = en
@@ -1026,7 +1111,7 @@ function barreIa(urlPath, en) {
 }
 
 for (const g of GUIDES) {
-  const usedIds = new Set(['faq', 'verifier']);
+  const usedIds = new Set(['faq', 'verifier', 'suite-t']);
   const tocItems = [];
   const sections = g.sections.map(s => {
     const id = anchorOf(s.h2, usedIds);
@@ -1050,9 +1135,6 @@ for (const g of GUIDES) {
   const related = PARCOURS.filter(p => g.parcours.includes(p.slug))
     .map(p => `<a class="pill" href="/${p.slug}/">${esc(p.nav)}</a>`).join(' ');
   const t = guideTheme(g);
-  const aLireAussi = GUIDES.filter(x => x.slug !== g.slug && x.parcours.some(s => g.parcours.includes(s)))
-    .slice(0, 3)
-    .map(x => `<a class="pill" href="/guides/${x.slug}/">${esc(x.h1)}</a>`).join(' ');
   const outil = (g.slug === 'encadrement-des-loyers-paris' && ENCADREMENT) ? encadrementWidget()
     : (g.slug === 'plafond-ressources-logement-social' && PLAFONDS && LS_COMMUNES) ? plafondsWidget() + plafondsTables()
       : '';
@@ -1083,9 +1165,9 @@ ${barreIa(`/guides/${g.slug}/`, false)}
 ${tldrBloc(g.tldr, false)}${outil}
 ${sections}
 <section class="faq" id="faq"><h2>Questions fréquentes</h2>${faqHtml}</section>
-<section class="notice"><h2>Sources officielles</h2><ul class="sources">${srcHtml}</ul></section>
-${aLireAussi ? `<p class="pills"><strong>À lire aussi&nbsp;:</strong> ${aLireAussi}</p>` : ''}
+${suiteBloc(g)}
 <p class="pills"><strong>Parcours liés&nbsp;:</strong> ${related}</p>
+<section class="notice"><h2>Sources officielles</h2><ul class="sources">${srcHtml}</ul></section>
 </div>
 </div>
 </article>
@@ -1186,7 +1268,7 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
 for (const g of EN.guides) {
   const frGuide = GUIDES.find(x => x.slug === g.frSlug);
   if (!frGuide) throw new Error(`en.json : frSlug inconnu « ${g.frSlug} » (guide ${g.slug})`);
-  const usedIds = new Set(['faq']);
+  const usedIds = new Set(['faq', 'suite-t']);
   const tocItems = [];
   const sections = g.sections.map(s => {
     const id = anchorOf(s.h2, usedIds);
@@ -1200,8 +1282,19 @@ for (const g of EN.guides) {
   tocItems.push('<li><a href="#faq">Frequently asked questions</a></li>');
   const faqHtml = g.faq.map(f => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('');
   const srcHtml = g.sourcesOfficielles.map(s => `<li><a href="${esc(s.url)}" rel="noopener" target="_blank">${esc(s.label)}</a></li>`).join('');
-  const related = EN.guides.filter(x => x.slug !== g.slug).slice(0, 3)
-    .map(x => `<a class="pill" href="/en/guides/${x.slug}/">${esc(x.h1)}</a>`).join(' ');
+  /* Même règle que côté français : suites de lecture choisies (champ `suite`
+   * de en.json), pas les trois premiers guides du tableau. */
+  const suiteEn = (g.suite || []).map(s => EN.guides.find(x => x.slug === s)).filter(Boolean);
+  if (suiteEn.length !== (g.suite || []).length) throw new Error(`en.json : suite inconnue sur ${g.slug}`);
+  const suiteCards = suiteEn.map(x => {
+    const th = guideTheme(x);
+    return `
+    <a class="card card-guide" href="/en/guides/${x.slug}/" style="${themeStyle(th)}">
+      <span class="card-icon card-icon-sm">${icon(x.frSlug, th.c)}</span>
+      <div><h3>${esc(x.h1)}</h3>
+      <p>${esc(x.metaDescription.split('. ')[0])}.</p></div>
+    </a>`;
+  }).join('');
   const t = guideTheme(g);
   const frUrl = `/guides/${g.frSlug}/`;
   const content = `
@@ -1224,9 +1317,12 @@ ${barreIa(`/en/guides/${g.slug}/`, true)}
 <div class="guide-body">
 ${tldrBloc(g.tldr, true)}${sections}
 <section class="faq" id="faq"><h2>Frequently asked questions</h2>${faqHtml}</section>
-<section class="notice"><h2>Official sources</h2><ul class="sources">${srcHtml}</ul></section>
-${related ? `<p class="pills"><strong>More guides in English:</strong> ${related}</p>` : ''}
+${suiteCards ? `<section class="suite" aria-labelledby="suite-t">
+<h2 id="suite-t">What to read next</h2>
+<div class="grid">${suiteCards}</div>
+</section>` : ''}
 <p class="pills"><strong>En français&nbsp;:</strong> <a class="pill" href="${frUrl}" lang="fr" hreflang="fr">${esc(frGuide.h1)}</a></p>
+<section class="notice"><h2>Official sources</h2><ul class="sources">${srcHtml}</ul></section>
 </div>
 </div>
 </article>
@@ -1415,6 +1511,52 @@ const DEP_PREP = {
   92: 'dans les Hauts-de-Seine', 93: 'en Seine-Saint-Denis', 94: 'dans le Val-de-Marne', 95: "dans le Val-d'Oise",
 };
 
+/* ---- Liens latéraux entre pages d'un même département ----
+ * Un visiteur qui regarde les FJT du 93 cherche à se loger DANS LE 93 : les
+ * résidences CROUS, les résidences autonomie et les chiffres du logement
+ * social du même département sont la suite naturelle de sa recherche, et
+ * c'étaient jusqu'ici les seules pages du site qu'aucun lien ne reliait.
+ * Le compte affiché est celui des données, jamais un ordre de grandeur ;
+ * une famille sans adresse dans ce département n'est pas proposée. */
+const FAMILLES_DEP = [
+  { base: 'residences-crous', titre: 'Résidences CROUS', theme: 'etudiant', icone: 'etudiant', data: () => CROUS, mot: (n) => `${n} résidence${n > 1 ? 's' : ''} universitaire${n > 1 ? 's' : ''}` },
+  { base: 'foyers-jeunes-travailleurs', titre: 'Foyers de jeunes travailleurs', theme: 'etudiant', icone: 'foyer-jeune-travailleur', data: () => FJT, mot: (n) => `${n} foyer${n > 1 ? 's' : ''} pour les 16-25 ans` },
+  { base: 'residences-autonomie', titre: 'Résidences autonomie', theme: 'logement-social', icone: 'logement-social', data: () => RES_AUTONOMIE, mot: (n) => `${n} résidence${n > 1 ? 's' : ''} pour seniors autonomes` },
+];
+
+function ressourcesDep(dep, sauf) {
+  const cartes = FAMILLES_DEP.filter(f => f.base !== sauf).map(f => {
+    const d = f.data();
+    if (!d) return '';
+    const n = d.records.filter(r => r.dep === dep).length;
+    if (!n) return '';
+    const th = themeOf(f.theme);
+    return `
+  <a class="card card-parcours" href="/${f.base}/${DEP_SLUGS[dep]}/" style="${themeStyle(th)}">
+    <h3>${esc(f.titre)}</h3>
+    <p>${esc(f.mot(n))} ${esc(DEP_PREP[dep])}</p>
+    <span class="card-cta"><span class="cta-label">Voir les adresses</span> <span class="cta-arrow" aria-hidden="true">→</span></span>
+  </a>`;
+  }).filter(Boolean);
+  if (sauf !== 'logement-social/chiffres' && LS_COMMUNES) {
+    const n = LS_COMMUNES.records.filter(r => r.dep === dep && (dep === '75' ? r.arrondissement : !r.arrondissement)).length;
+    if (n) {
+      const th = themeOf('logement-social');
+      cartes.push(`
+  <a class="card card-parcours" href="/logement-social/chiffres/${DEP_SLUGS[dep]}/" style="${themeStyle(th)}">
+    <h3>Le logement social en chiffres</h3>
+    <p>Parc, loyers et vacance ${dep === '75' ? `des ${n} arrondissements` : `de ${n} communes`}</p>
+    <span class="card-cta"><span class="cta-label">Voir les chiffres</span> <span class="cta-arrow" aria-hidden="true">→</span></span>
+  </a>`);
+    }
+  }
+  if (!cartes.length) return '';
+  return `<section>
+<h2>Se loger ${DEP_PREP[dep]}&nbsp;: les autres ressources du site</h2>
+<div class="grid">${cartes.join('')}</div>
+</section>`;
+}
+
 /** Bandeau source/licence commun aux pages construites sur l'open data. */
 function sourceNotice(meta) {
   return `<p class="maj">${esc(meta.attribution)} · données extraites le ${esc(dateFrOf(meta.collectedAt))}. Les informations évoluent&nbsp;: vérifiez toujours auprès de l'établissement ou de la source officielle.</p>`;
@@ -1531,6 +1673,7 @@ ${items.map(cfg.renderItem).join('\n')}
   ${guidePills ? `<p class="pills"><strong>Guides utiles&nbsp;:</strong> ${guidePills}</p>` : ''}
   ${sourceNotice(data._meta)}
 </section>
+${ressourcesDep(d, baseSlug)}
 <p class="pills"><strong>Autres départements&nbsp;:</strong> ${others}</p>`;
     for (const r of items) {
       pushIndex(r.nom, `${urlPath}#r-${r.finess || r.id}`, [r.adresse, r.cp, r.commune].filter(Boolean).join(', '), cfg.searchCat);
@@ -1794,6 +1937,7 @@ ${(() => {
 ${sorted.filter(r => r.note).map(r => `<p class="maj">* ${esc(r.nom)}&nbsp;: ${esc(r.note)}</p>`).join('')}
 ${filterScript}
 ${legende}
+${ressourcesDep(d, 'logement-social/chiffres')}
 <p class="pills"><strong>Autres départements&nbsp;:</strong> ${others}</p>`;
     for (const r of sorted) {
       pushIndex(r.nom + (r.arrondissement ? '' : ` (${r.dep})`), `${urlPath}#c-${r.code}`,
@@ -2462,6 +2606,18 @@ rendQ();
 <p class="result-count" id="count" aria-live="polite" aria-atomic="true"></p>
 <ul class="result-list" id="results"></ul>
 <noscript><p>La recherche a besoin de JavaScript. Sans lui, parcourez les <a href="/annuaire/">annuaires</a> ou les <a href="/">parcours</a>.</p></noscript>
+${/* Une page de recherche vide est un cul-de-sac : tant que le visiteur n'a
+    * rien tapé, elle n'offrait aucune route. Ces trois portes restent
+    * affichées en permanence, sous les résultats. */''}
+<section class="notice">
+  <h2>Vous ne savez pas par où commencer&nbsp;?</h2>
+  <p>Trois portes d'entrée, selon ce que vous cherchez&nbsp;:</p>
+  <ul>
+    <li><a href="/diagnostic/">Le diagnostic logement en 2&nbsp;minutes</a> répond à «&nbsp;à quoi ai-je droit dans MA situation&nbsp;?&nbsp;» et rend une feuille de route personnalisée.</li>
+    <li><a href="/guides/">Les ${GUIDES.length} guides pratiques</a> expliquent chaque dispositif&nbsp;: qui est concerné, quels montants, quelles démarches. Les <a href="/outils/">trois outils gratuits</a> vérifient vos plafonds et votre loyer.</li>
+    <li>Les <a href="/annuaire/">annuaires de données publiques</a> listent les adresses réelles&nbsp;: résidences CROUS, foyers de jeunes travailleurs, résidences autonomie, ainsi que les <a href="/logement-social/chiffres/">chiffres du logement social commune par commune</a>.</li>
+  </ul>
+</section>
 <script>
 (function(){
 var IDX=null,inp=document.getElementById('q'),out=document.getElementById('results'),cnt=document.getElementById('count');
@@ -2530,10 +2686,10 @@ const HTML_404 = layout({
 <p><strong>Contact</strong> : <a href="mailto:contact@mkz-consulting.fr">contact@mkz-consulting.fr</a></p>
 <p><strong>Hébergement</strong> : Cloudflare Pages, Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis.</p>
 <p><strong>Données personnelles</strong> : Ce site ne collecte aucune donnée personnelle et ne dépose aucun cookie de suivi sans consentement.</p>
-<p><strong>Nature du service</strong> : ${esc(SITE.name)} est un service d'information et d'orientation. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>
+<p><strong>Nature du service</strong> : ${esc(SITE.name)} est un service d'information et d'orientation : nos <a href="/guides/">guides pratiques</a> expliquent les dispositifs, nos <a href="/annuaire/">annuaires</a> listent des adresses issues de données publiques. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>
 <h2 id="cookies">Cookies et mesure d'audience</h2>
 <p>Avec votre accord, et seulement avec lui, nous utilisons <strong>Microsoft Clarity</strong> (Microsoft Ireland Operations Limited) pour comprendre comment le site est utilisé : pages consultées, zones cliquées, parcours de navigation. Tant que vous n'avez pas cliqué sur «&nbsp;Accepter&nbsp;» dans le bandeau, le script de mesure ne se charge pas et aucun cookie de mesure n'est déposé. Refuser ne change rien à votre navigation.</p>
-<p>Si vous acceptez, deux cookies internes sont déposés&nbsp;: <code>_clck</code> (identifiant pseudonyme propre à ce site, durée constatée de 12 mois) et <code>_clsk</code> (relie les pages d'une même visite, durée constatée de 1 jour). Nous refusons d'office le volet publicitaire de Microsoft (signal «&nbsp;ad storage&nbsp;» refusé). Ce que vous saisissez dans nos outils (diagnostic, simulateur de plafonds, vérificateur de loyer) est masqué dans votre navigateur et n'est jamais transmis à Clarity. Pour en savoir plus&nbsp;: <a href="https://privacy.microsoft.com/fr-fr/privacystatement" rel="noopener" target="_blank">déclaration de confidentialité de Microsoft</a>.</p>
+<p>Si vous acceptez, deux cookies internes sont déposés&nbsp;: <code>_clck</code> (identifiant pseudonyme propre à ce site, durée constatée de 12 mois) et <code>_clsk</code> (relie les pages d'une même visite, durée constatée de 1 jour). Nous refusons d'office le volet publicitaire de Microsoft (signal «&nbsp;ad storage&nbsp;» refusé). Ce que vous saisissez dans nos <a href="/outils/">outils</a> (<a href="/diagnostic/">diagnostic</a>, <a href="/guides/plafond-ressources-logement-social/#simulateur">simulateur de plafonds</a>, <a href="/guides/encadrement-des-loyers-paris/#verifier">vérificateur de loyer</a>) est masqué dans votre navigateur et n'est jamais transmis à Clarity. Pour en savoir plus&nbsp;: <a href="https://privacy.microsoft.com/fr-fr/privacystatement" rel="noopener" target="_blank">déclaration de confidentialité de Microsoft</a>.</p>
 <p>Votre choix, accord comme refus, est conservé sur votre appareil pendant 6 mois, puis la question vous est reposée. Vous pouvez changer d'avis à tout moment&nbsp;: <button type="button" class="js-cookies">gérer les cookies</button>, aussi accessible en pied de chaque page. Le retrait de l'accord supprime immédiatement les cookies Clarity.</p>`;
   addPage('/mentions-legales/', layout({
     title: `Mentions légales | ${SITE.name}`,
@@ -2774,10 +2930,12 @@ th[aria-sort="ascending"],th[aria-sort="descending"]{color:var(--bleu2)}
 /* ---- Divers ---- */
 .notice{background:var(--creme);border:1px solid #efe5d6;border-radius:16px;padding:8px 24px 20px;margin:2.2rem 0}
 .pills{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.pill{display:inline-block;background:var(--surface);border:1px solid var(--bord);border-radius:999px;padding:6px 15px;font-size:.85rem;text-decoration:none;transition:border-color .15s,background .15s}
-/* Pills bouton = vraies cibles tactiles : min 44px (les pills lien restent
- * des tags secondaires au gabarit historique). */
-button.pill{font:inherit;font-size:.85rem;color:var(--encre);cursor:pointer;padding:11px 16px;min-height:44px}
+/* Toute pill est une vraie cible tactile : 44 px de haut minimum, standard du
+ * projet (au-delà des 24 px du critère WCAG 2.5.8). Les pills lien mesuraient
+ * 36 px : conformes au critère, sous notre propre règle. Le centrage passe par
+ * inline-flex, la taille du texte ne bouge pas. */
+.pill{display:inline-flex;align-items:center;min-height:44px;background:var(--surface);border:1px solid var(--bord);border-radius:999px;padding:6px 15px;font-size:.85rem;text-decoration:none;transition:border-color .15s,background .15s}
+button.pill{font:inherit;font-size:.85rem;color:var(--encre);cursor:pointer;padding:6px 16px}
 .compte{font-variant-numeric:tabular-nums}
 .pill:hover{border-color:var(--t,var(--bleu2));background:var(--tbg,var(--ciel))}
 .sources{padding-left:1.1rem}.sources li{margin:.5rem 0}
@@ -3116,6 +3274,12 @@ llms.push(`- [Mentions légales](${B}/mentions-legales/)`);
 if (A_PROPOS_ACTIF) llms.push(`- [Qui fait ce site ?](${B}/a-propos/)`);
 fs.writeFileSync(path.join(DIST, 'llms.txt'), llms.join('\n') + '\n');
 
+/* Les liens in-body des guides sont écrits en chemins internes (« /guides/x/ »).
+ * Dans une page servie, le navigateur les résout ; dans llms-full.txt, non :
+ * un moteur qui lit ce fichier ne peut pas reconstruire l'URL, donc il ne peut
+ * pas la citer. On les absolutise ici, et là seulement. */
+const absolutiser = (t) => String(t).replace(/\]\((\/[^\s)]*)\)/g, (_, u) => `](${B}${u})`);
+
 const full = [];
 full.push(`# ${SITE.name} : contenu intégral (llms-full.txt)`);
 full.push('');
@@ -3139,9 +3303,9 @@ for (const g of GUIDES) {
   if (g.tldr && g.tldr.length) full.push(`L'essentiel : ${g.tldr.join(' ')}`);
   for (const s of g.sections) {
     full.push(`#### ${s.h2}`);
-    if (s.paragraphs) for (const t of s.paragraphs) full.push(t);
-    if (s.bullets) for (const b of s.bullets) full.push(`- ${b}`);
-    if (s.table) { full.push(s.table.caption); for (const r of s.table.rows) full.push(`- ${r.join(' · ')}`); }
+    if (s.paragraphs) for (const t of s.paragraphs) full.push(absolutiser(t));
+    if (s.bullets) for (const b of s.bullets) full.push(`- ${absolutiser(b)}`);
+    if (s.table) { full.push(s.table.caption); for (const r of s.table.rows) full.push(`- ${absolutiser(r.join(' · '))}`); }
   }
   full.push('FAQ :');
   for (const f of g.faq) { full.push(`Q : ${f.q}`); full.push(`R : ${f.a}`); }
@@ -3158,8 +3322,8 @@ for (const g of EN.guides) {
   if (g.tldr && g.tldr.length) full.push(`In short: ${g.tldr.join(' ')}`);
   for (const s of g.sections) {
     full.push(`#### ${s.h2}`);
-    if (s.paragraphs) for (const t of s.paragraphs) full.push(t);
-    if (s.bullets) for (const b of s.bullets) full.push(`- ${b}`);
+    if (s.paragraphs) for (const t of s.paragraphs) full.push(absolutiser(t));
+    if (s.bullets) for (const b of s.bullets) full.push(`- ${absolutiser(b)}`);
   }
   full.push('FAQ:');
   for (const f of g.faq) { full.push(`Q: ${f.q}`); full.push(`A: ${f.a}`); }
