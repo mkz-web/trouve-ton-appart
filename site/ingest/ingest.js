@@ -14,7 +14,7 @@
 const { execFileSync } = require('child_process');
 const path = require('path');
 
-const SCRIPTS = ['ingest-crous.js', 'ingest-encadrement.js', 'ingest-rpls.js', 'ingest-finess.js', 'ingest-tension.js'];
+const SCRIPTS = ['ingest-crous.js', 'ingest-encadrement.js', 'ingest-rpls.js', 'ingest-finess.js', 'ingest-tension.js', 'ingest-contours.js'];
 
 let failed = 0;
 for (const s of SCRIPTS) {

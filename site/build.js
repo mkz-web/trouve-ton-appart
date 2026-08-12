@@ -66,6 +66,9 @@ const SEUIL_CLASSEMENT = 50;
 const TENSION_CLASSABLES = TENSION ? TENSION.records.filter(t =>
   t.delaiMois != null && t.tension != null && t.attributions != null
   && t.attributions >= SEUIL_CLASSEMENT && t.code !== '75056') : [];
+/* Contours communaux simplifiés (fond de la carte des délais). Optionnels
+ * comme tout snapshot : sans eux, la carte est simplement omise. */
+const CONTOURS = readOpen('contours-communes-idf');
 const delaisTries = TENSION_CLASSABLES
   .map(t => (t.delaiMoisExact != null ? t.delaiMoisExact : t.delaiMois))
   .sort((a, b) => a - b);
@@ -78,7 +81,7 @@ const statsMax = delaisTries.length ? Math.round(delaisTries[delaisTries.length 
  * présent) : une suite qui pointerait vers une page absente doit faire échouer
  * le build, pas produire un lien mort. */
 const SUITES_HORS_GUIDES = {
-  '/logement-social/delais/': { titre: 'Les délais réels, commune par commune', resume: "Combien de mois d'attente et combien de demandes pour une attribution, dans chaque commune classable.", icone: 'demande-logement-social', theme: 'logement-social', dispo: () => !!TENSION },
+  '/logement-social/delais/': { titre: "L'Observatoire des délais, commune par commune", resume: "Combien de mois d'attente et combien de demandes pour une attribution, dans chaque commune classable.", icone: 'demande-logement-social', theme: 'logement-social', dispo: () => !!TENSION },
   '/logement-social/chiffres/': { titre: 'Le logement social en chiffres', resume: 'Parc, loyer médian au m², vacance et taux SRU, commune par commune.', icone: 'logement-social', theme: 'logement-social', dispo: () => !!LS_COMMUNES },
   '/diagnostic/': { titre: 'Le diagnostic logement en 2 minutes', resume: 'Sept questions, et votre feuille de route : urgences, démarches, aides et pistes.', icone: 'diagnostic', theme: null, dispo: () => !!DIAG },
   '/outils/': { titre: 'Les trois outils gratuits du site', resume: 'Diagnostic, simulateur de plafonds et vérificateur de loyer, sans inscription.', icone: 'diagnostic', theme: null, dispo: () => true },
@@ -608,7 +611,7 @@ function layout({ title, metaDescription, urlPath, h1: _h1, content, jsonLd = []
     FJT && '<li><a href="/foyers-jeunes-travailleurs/">Foyers de jeunes travailleurs</a></li>',
     RES_AUTONOMIE && '<li><a href="/residences-autonomie/">Résidences autonomie (seniors)</a></li>',
     LS_COMMUNES && '<li><a href="/logement-social/chiffres/">Le logement social en chiffres</a></li>',
-    TENSION && '<li><a href="/logement-social/delais/">Délais du logement social</a></li>',
+    TENSION && '<li><a href="/logement-social/delais/">Observatoire des délais du logement social</a></li>',
     '<li><a href="/outils/">Nos outils gratuits</a></li>',
     '<li><a href="/diagnostic/">Diagnostic logement (2 min)</a></li>',
     '<li><a href="/recherche/">Rechercher sur le site</a></li>',
@@ -785,9 +788,96 @@ ${content.includes('table class="data"') ? TABLE_JS : ''}
 </html>`;
 }
 
+/* ------------------- Carte des délais (SVG) --------------------------
+ * Choroplèthe des communes d'Île-de-France colorées par délai médian
+ * d'attribution. Mêmes données et mêmes règles que le classement de la
+ * page délais : seules les communes classables (délai connu, au moins
+ * SEUIL_CLASSEMENT attributions) sont colorées, les autres restent grises
+ * (un délai médian sur un petit effectif n'est pas un signal). Paris porte
+ * sa valeur départementale : la ligne commune 75056 du socle est un
+ * reliquat sans attribution. Fichier écrit dans dist/, servi en visuel
+ * presse téléchargeable et embarqué sur la page délais. */
+
+const CARTE_DELAIS_FICHIER = 'carte-delais-logement-social-idf.svg';
+const CARTE_DELAIS_CLASSES = [
+  { max: 20, fill: '#f7e3cf', label: 'moins de 20 mois' },
+  { max: 30, fill: '#eeb088', label: '20 à 29 mois' },
+  { max: 40, fill: '#d97b52', label: '30 à 39 mois' },
+  { max: Infinity, fill: '#a34424', label: '40 mois et plus' },
+];
+const CARTE_DELAIS_GRIS = '#d9dee3';
+
+function construireCarteDelais() {
+  if (!CONTOURS || !TENSION || !TENSION._meta.region) return null;
+  const valeur = new Map();
+  for (const t of TENSION_CLASSABLES) valeur.set(t.code, t.delaiMois);
+  const paris = (TENSION._meta.departements || []).find((d) => d.code === '75');
+  if (paris && paris.delaiMois != null) valeur.set('75056', paris.delaiMois);
+
+  /* Projection équirectangulaire corrigée en latitude : suffisante à
+   * l'échelle régionale, et sans dépendance. */
+  let minLon = Infinity, maxLon = -Infinity, minLat = Infinity, maxLat = -Infinity;
+  for (const c of CONTOURS.records) for (const ring of c.rings) for (const [lon, lat] of ring) {
+    if (lon < minLon) minLon = lon; if (lon > maxLon) maxLon = lon;
+    if (lat < minLat) minLat = lat; if (lat > maxLat) maxLat = lat;
+  }
+  const W = 1000;
+  const coslat = Math.cos(((minLat + maxLat) / 2) * Math.PI / 180);
+  const s = W / ((maxLon - minLon) * coslat);
+  const hCarte = Math.round((maxLat - minLat) * s);
+  const px = (lon) => ((lon - minLon) * coslat * s).toFixed(1);
+  const py = (lat) => ((maxLat - lat) * s).toFixed(1);
+
+  const classeDe = (v) => CARTE_DELAIS_CLASSES.find((c) => v < c.max);
+  const stats = { colorees: 0, grises: 0, parClasse: CARTE_DELAIS_CLASSES.map(() => 0) };
+  const chemins = [];
+  for (const c of CONTOURS.records) {
+    const v = valeur.get(c.code);
+    let fill = CARTE_DELAIS_GRIS;
+    if (v != null) {
+      const idx = CARTE_DELAIS_CLASSES.indexOf(classeDe(v));
+      fill = CARTE_DELAIS_CLASSES[idx].fill;
+      stats.parClasse[idx]++; stats.colorees++;
+    } else {
+      stats.grises++;
+    }
+    const d = c.rings.map((ring) => 'M' + ring.map(([lon, lat]) => `${px(lon)} ${py(lat)}`).join('L') + 'Z').join('');
+    /* data-c : code INSEE, pour sonder l'invariant « la commune X porte la
+     * couleur de sa classe » directement dans le fichier servi. */
+    chemins.push(`<path data-c="${c.code}" d="${d}" fill="${fill}"/>`);
+  }
+
+  const yCarte = 96;
+  const yLegende = yCarte + hCarte + 34;
+  const H = yLegende + 96;
+  const m = TENSION._meta;
+  const swatches = CARTE_DELAIS_CLASSES.map((c, i) =>
+    `<g transform="translate(${20 + i * 172},${yLegende})"><rect width="26" height="18" rx="3" fill="${c.fill}" stroke="#b8c0c8" stroke-width="0.5"/><text x="34" y="14" font-size="15">${c.label}</text></g>`
+  ).join('') +
+    `<g transform="translate(${20 + CARTE_DELAIS_CLASSES.length * 172},${yLegende})"><rect width="26" height="18" rx="3" fill="${CARTE_DELAIS_GRIS}" stroke="#b8c0c8" stroke-width="0.5"/><text x="34" y="14" font-size="15">donnée non fiable ou masquée</text></g>`;
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" font-family="system-ui,Segoe UI,Arial,sans-serif" role="img" aria-labelledby="cd-titre">
+<title id="cd-titre">Observatoire des délais du logement social : délai médian d'attribution par commune, Île-de-France, millésime ${m.millesime}</title>
+<rect width="${W}" height="${H}" fill="#ffffff"/>
+<text x="20" y="38" font-size="26" font-weight="700" fill="#1f4e79">Logement social : le délai médian d'attribution, commune par commune</text>
+<text x="20" y="64" font-size="16" fill="#38424b">Île-de-France, millésime ${m.millesime} · médiane régionale : ${fmt(TENSION._meta.region.delaiMois)} mois · Observatoire des délais, ${esc(SITE.name)}</text>
+<g transform="translate(0,${yCarte})" stroke="#ffffff" stroke-width="0.6" fill-rule="evenodd">${chemins.join('')}</g>
+${swatches}
+<text x="20" y="${yLegende + 44}" font-size="12" fill="#5b6770">Un délai court n'est pas un accès facile : lisez la pression de la demande sur ${esc(SITE.baseUrl.replace('https://', ''))}/logement-social/delais/</text>
+<text x="20" y="${yLegende + 62}" font-size="12" fill="#5b6770">Paris : valeur départementale (arrondissements agrégés) · ${esc(m.license)} · Fond : contours communaux Admin Express (IGN-Insee), API Géo (Etalab)</text>
+<text x="20" y="${yLegende + 80}" font-size="12" fill="#5b6770">Données : ${esc(m.attribution)}</text>
+</svg>
+`;
+  return { svg, stats, hCarte, H };
+}
+
 /* ----------------------------- Pages -------------------------------- */
 
 const pages = []; // { urlPath, html, priority }
+
+/* Construit ici (les pages délais et presse s'y réfèrent) ; le FICHIER est
+ * écrit dans la section Écriture, après le vidage de dist/. */
+const CARTE_DELAIS = construireCarteDelais();
 
 function addPage(urlPath, html, priority, lastmod) {
   pages.push({ urlPath, html, priority, lastmod });
@@ -872,7 +962,7 @@ ${TENSION && TENSION._meta.region ? `
     <div class="stat"><strong class="stat-n">${fmt(TENSION._meta.region.tension, 1)}</strong><span class="stat-u">demandes</span><span class="stat-l">en cours pour une attribution</span></div>
     <div class="stat"><strong class="stat-n">${statsMin}<span class="stat-sep">→</span>${statsMax}</strong><span class="stat-u">mois</span><span class="stat-l">selon la commune : l'écart change tout</span></div>
   </div>
-  <p class="stats-cta"><a class="btn" href="/logement-social/delais/">Voir les délais commune par commune</a></p>
+  <p class="stats-cta"><a class="btn" href="/logement-social/delais/">Ouvrir l'observatoire des délais</a></p>
   <p class="maj">${esc(TENSION._meta.attribution)} · ${esc(TENSION._meta.license)}</p>
 </section>` : ''}
 <section>
@@ -931,7 +1021,7 @@ for (const p of PARCOURS) {
       FJT && { u: '/foyers-jeunes-travailleurs/', t: 'Les foyers de jeunes travailleurs (FJT)' },
     ],
     'logement-social': [
-      TENSION && { u: '/logement-social/delais/', t: "Délais d'attribution : où l'attente est la plus courte" },
+      TENSION && { u: '/logement-social/delais/', t: "Observatoire des délais : où l'attente est la plus courte" },
       LS_COMMUNES && { u: '/logement-social/chiffres/', t: 'Le logement social commune par commune : parc, loyers, vacance' },
       RES_AUTONOMIE && { u: '/residences-autonomie/', t: `Les ${RES_AUTONOMIE.records.length} résidences autonomie (seniors)` },
       FJT && { u: '/foyers-jeunes-travailleurs/', t: 'Les foyers de jeunes travailleurs (FJT)' },
@@ -967,7 +1057,7 @@ ${p.slug === 'logement-social' && TENSION && TENSION._meta.region ? `
     <div class="stat"><strong class="stat-n">${fmt(TENSION._meta.region.tension, 1)}</strong><span class="stat-u">demandes</span><span class="stat-l">en cours pour une attribution</span></div>
     <div class="stat"><strong class="stat-n">${fmt(TENSION._meta.region.partAnc5ans, 1)}<span class="stat-sep">%</span></strong><span class="stat-u">des ménages</span><span class="stat-l">attendent depuis 5 ans ou plus</span></div>
   </div>
-  <p class="stats-cta"><a class="btn" href="/logement-social/delais/">Voir les délais commune par commune</a></p>
+  <p class="stats-cta"><a class="btn" href="/logement-social/delais/">Ouvrir l'observatoire des délais</a></p>
 </section>` : ''}
 <section class="notice">
   <h2>Où chercher&nbsp;: les sources fiables pour ce profil</h2>
@@ -1440,7 +1530,7 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
 <section class="notice">
   <h2>The rest of the site is in French</h2>
   <p>${esc(EN.home.frenchSite)}</p>
-  <p class="pills"><a class="pill" href="/" lang="fr" hreflang="fr">Accueil en français</a> <a class="pill" href="/diagnostic/" lang="fr" hreflang="fr">Diagnostic logement (2 min)</a> <a class="pill" href="/outils/" lang="fr" hreflang="fr">Outils gratuits</a> <a class="pill" href="/logement-social/delais/" lang="fr" hreflang="fr">Délais du logement social</a></p>
+  <p class="pills"><a class="pill" href="/" lang="fr" hreflang="fr">Accueil en français</a> <a class="pill" href="/diagnostic/" lang="fr" hreflang="fr">Diagnostic logement (2 min)</a> <a class="pill" href="/outils/" lang="fr" hreflang="fr">Outils gratuits</a> <a class="pill" href="/logement-social/delais/" lang="fr" hreflang="fr">Observatoire des délais du logement social</a></p>
 </section>
 <section class="notice">
   <h2>Who we are</h2>
@@ -1877,7 +1967,7 @@ if (LS_COMMUNES) {
   <thead><tr><th scope="col">Département</th><th scope="col" class="num">Parc social (RPLS)</th><th scope="col" class="num">Communes couvertes</th><th scope="col" class="num">Communes déficitaires (SRU)</th>${TENSION ? '<th scope="col" class="num">Délai médian</th><th scope="col" class="num">Demandes / attribution</th>' : ''}</tr></thead>
   <tbody>${depRows}</tbody>
 </table></div>
-${TENSION && TENSION._meta.region ? `<p>En Île-de-France, le délai médian d'attribution est de <strong>${fmt(TENSION._meta.region.delaiMois)} mois</strong> et l'on compte <strong>${fmt(TENSION._meta.region.tension, 1)} demandes en cours pour une attribution</strong> (${esc(TENSION._meta.dateReference)}, source DRIHL). <a href="/logement-social/delais/">Voir le classement des communes où l'attente est la plus courte →</a></p>` : ''}
+${TENSION && TENSION._meta.region ? `<p>En Île-de-France, le délai médian d'attribution est de <strong>${fmt(TENSION._meta.region.delaiMois)} mois</strong> et l'on compte <strong>${fmt(TENSION._meta.region.tension, 1)} demandes en cours pour une attribution</strong> (${esc(TENSION._meta.dateReference)}, source DRIHL). <a href="/logement-social/delais/">Ouvrir l'observatoire des délais et le classement des communes →</a></p>` : ''}
 <p>Choisissez un département pour le détail commune par commune, ou utilisez la <a href="/recherche/">recherche</a> pour aller directement à votre commune.</p>
 ${legende}
 <p class="pills"><strong>Guides utiles&nbsp;:</strong> <a class="pill" href="/guides/demande-logement-social/">Demande de logement social</a> <a class="pill" href="/guides/recours-dalo/">Recours DALO</a> <a class="pill" href="/guides/logement-intermediaire/">Logement intermédiaire</a></p>`;
@@ -1926,7 +2016,7 @@ ${(() => {
     ? (tn.delaiMois < reg.delaiMois ? `, soit moins que la moyenne francilienne (${fmt(reg.delaiMois)} mois)`
       : tn.delaiMois > reg.delaiMois ? `, soit plus que la moyenne francilienne (${fmt(reg.delaiMois)} mois)`
         : `, comme la moyenne francilienne`) : '';
-  return `<p>Dans ce département, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(tn.delaiMois)} mois ou moins</strong>${cmp}. On y compte <strong>${fmt(tn.tension, 1)} demandes en cours pour une attribution</strong>. Le détail commune par commune figure dans les deux dernières colonnes du tableau, et le <a href="/logement-social/delais/">classement francilien des délais</a> situe ces chiffres dans la région.</p>`;
+  return `<p>Dans ce département, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(tn.delaiMois)} mois ou moins</strong>${cmp}. On y compte <strong>${fmt(tn.tension, 1)} demandes en cours pour une attribution</strong>. Le détail commune par commune figure dans les deux dernières colonnes du tableau, et <a href="/logement-social/delais/">l'Observatoire des délais</a> situe ces chiffres dans la région.</p>`;
 })()}
 <p><label for="filtre"><strong>Filtrer&nbsp;:</strong></label> <input id="filtre" type="search" placeholder="Nom de ${d === '75' ? "l'arrondissement" : 'la commune'}…" class="search-input search-inline"></p>
 <div class="table-wrap"><table class="data">
@@ -2001,12 +2091,12 @@ ${ressourcesDep(d, 'logement-social/chiffres')}
     const borneMin = rapides.length ? Math.round(dExact(rapides[0])) : null;
     const borneMax = lentes.length ? Math.round(dExact(lentes[0])) : null;
     const contenu = `
-<nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/logement-social/">Logement social</a> › <a href="/logement-social/chiffres/">Chiffres</a> › Délais</nav>
+<nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/logement-social/">Logement social</a> › <a href="/logement-social/chiffres/">Chiffres</a> › Observatoire des délais</nav>
 <header class="page-head" style="${themeStyle(t)}">
   <span class="page-head-icon">${icon('demande-logement-social', t.c)}</span>
   <div>
-    <p class="kicker">Observatoire · données officielles</p>
-    <h1>Où le logement social va le plus vite en Île-de-France</h1>
+    <p class="kicker">L'observatoire ${esc(SITE.name)} · données officielles</p>
+    <h1>L'Observatoire des délais du logement social en Île-de-France</h1>
     <p class="lead">En Île-de-France, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(reg.delaiMois)} mois ou moins</strong>, et l'on compte <strong>${fmt(reg.tension, 1)} demandes en cours pour une attribution</strong>. Mais ce chiffre régional cache tout&nbsp;: ${borneMin != null && borneMax != null ? `d'une commune à l'autre, le délai médian va de ${fmt(borneMin)} à ${fmt(borneMax)} mois` : "l'attente varie fortement d'une commune à l'autre"}.</p>
   </div>
 </header>
@@ -2019,6 +2109,13 @@ ${ressourcesDep(d, 'logement-social/chiffres')}
     <li>La pression n'est pas la même selon la typologie&nbsp;: <strong>${fmt(reg.tensionT1, 1)} demandes par attribution pour un studio</strong>, contre ${fmt(reg.tensionT3, 1)} pour un trois-pièces. Attention à la lecture&nbsp;: la source classe chaque ménage dans la <em>plus petite</em> typologie qu'il a demandée, et la taille du logement attribuable dépend de la composition du foyer. Ce n'est donc pas un levier libre.</li>
   </ul>
 </section>
+${CARTE_DELAIS ? `<section>
+  <h2>La carte des délais, commune par commune</h2>
+  <figure class="carte-delais">
+    <img src="/${CARTE_DELAIS_FICHIER}" alt="Carte des communes d'Île-de-France colorées selon le délai médian d'attribution d'un logement social (millésime ${TENSION._meta.millesime}) : du beige clair pour moins de 20 mois au brun foncé pour 40 mois et plus. Les communes sans donnée fiable sont en gris. Le détail chiffré figure dans les tableaux de cette page." width="1000" height="${CARTE_DELAIS.H}" loading="lazy">
+    <figcaption>Délai médian d'attribution par commune (${esc(TENSION._meta.dateReference)}). En gris&nbsp;: moins de ${SEUIL} attributions dans l'année ou valeurs masquées par la source, un délai médian n'y serait pas un signal fiable. Paris est représenté par sa valeur départementale. La carte est <a href="/${CARTE_DELAIS_FICHIER}" download>téléchargeable en SVG</a> et librement réutilisable avec la mention «&nbsp;${esc(SITE.name)}&nbsp;» (fond de carte&nbsp;: IGN-Insee via l'API Géo, Etalab).</figcaption>
+  </figure>
+</section>` : ''}
 <section>
   <h2>Les 20 communes où l'attente est la plus courte</h2>
   <p>Communes ayant attribué au moins ${SEUIL} logements en ${TENSION._meta.millesime}, classées par délai médian croissant. À délai affiché identique, les communes sont ordonnées par nombre d'attributions décroissant.</p>
@@ -2054,25 +2151,31 @@ ${ressourcesDep(d, 'logement-social/chiffres')}
   </ul>
   <p class="maj">${esc(TENSION._meta.attribution)} · ${esc(TENSION._meta.license)} · ${esc(TENSION._meta.dateReference)} · extraction du ${esc(dateFrOf(TENSION._meta.collectedAt))}.</p>
 </section>
+<section class="notice">
+  <h2>Citer l'observatoire</h2>
+  <p>Ces chiffres sont librement réutilisables. Formule prête à l'emploi, exacte et sourcée&nbsp;:</p>
+  <p>«&nbsp;Selon l'Observatoire des délais de ${esc(SITE.name)}, construit sur les données publiques du SNE (DRIHL, millésime ${TENSION._meta.millesime}), le délai médian d'attribution d'un logement social est de ${fmt(reg.delaiMois)}&nbsp;mois en Île-de-France, et va de ${fmt(statsMin)} à ${fmt(statsMax)}&nbsp;mois selon la commune.&nbsp;»</p>
+  <p>Mention souhaitée&nbsp;: «&nbsp;${esc(SITE.name)}&nbsp;» avec un lien vers cette page. Les données sources restent sous ${esc(TENSION._meta.license)}. Journalistes&nbsp;: chiffres à façon, méthodologie et visuels sur demande via <a href="/presse/">l'espace presse</a>, réponse le jour même en semaine.</p>
+</section>
 <section>
   <h2>Améliorer vos chances</h2>
   <p>Ces écarts décrivent des territoires, pas des trajectoires individuelles&nbsp;: votre délai dépend d'abord de votre situation, des priorités reconnues et du parc réellement libéré près de chez vous. Ces chiffres servent à situer une commune, pas à promettre un délai. Nos guides détaillent la marche à suivre.</p>
   <p class="pills"><a class="pill" href="/guides/demande-logement-social/">Déposer et renouveler sa demande</a> <a class="pill" href="/guides/recours-dalo/">Le recours DALO</a> <a class="pill" href="/diagnostic/">Faire le diagnostic</a> <a class="pill" href="/logement-social/chiffres/">Les chiffres commune par commune</a></p>
 </section>`;
-    pushIndex("Où le logement social va le plus vite en Île-de-France", '/logement-social/delais/',
-      `Délai médian ${fmt(reg.delaiMois)} mois en Île-de-France : le classement des communes.`, 'Chiffres');
+    pushIndex("L'Observatoire des délais du logement social", '/logement-social/delais/',
+      `Délai médian ${fmt(reg.delaiMois)} mois en Île-de-France : le classement des communes et la carte.`, 'Chiffres');
     addPage('/logement-social/delais/', layout({
-      title: `Délais du logement social en Île-de-France : le classement`,
-      metaDescription: `Combien de temps attend-on un logement social ? Délai médian ${fmt(reg.delaiMois)} mois en Île-de-France, et le classement des communes où l'attente est la plus courte.`,
+      title: `Observatoire des délais du logement social en Île-de-France`,
+      metaDescription: `Combien de temps attend-on un logement social ? L'observatoire ${SITE.name} : délai médian ${fmt(reg.delaiMois)} mois en Île-de-France, carte et classement des communes.`,
       urlPath: '/logement-social/delais/',
       content: contenu,
       breadcrumbs: [
         { name: 'Logement social & situations spécifiques', url: '/logement-social/' },
         { name: 'Les chiffres', url: '/logement-social/chiffres/' },
-        { name: 'Délais', url: '/logement-social/delais/' },
+        { name: 'Observatoire des délais', url: '/logement-social/delais/' },
       ],
       jsonLd: [datasetLd(TENSION._meta, {
-        name: `Délais et pression de la demande de logement social en Île-de-France (${TENSION._meta.millesime})`,
+        name: `Observatoire des délais du logement social en Île-de-France (${TENSION._meta.millesime}) : délais d'attribution et pression de la demande`,
         description: `Délai médian d'attribution et nombre de demandes pour une attribution, par commune et par département d'Île-de-France, d'après le socle DRIHL (Infocentre SNE).`,
         urlPath: '/logement-social/delais/',
       })],
@@ -2511,7 +2614,7 @@ rendQ();
   ].filter(Boolean);
 
   const donnees = [
-    TENSION ? { url: '/logement-social/delais/', t: 'Délais du logement social', d: `Délai médian d'attribution et pression de la demande, commune par commune.` } : null,
+    TENSION ? { url: '/logement-social/delais/', t: "Observatoire des délais du logement social", d: `Délai médian d'attribution et pression de la demande, commune par commune, avec la carte.` } : null,
     LS_COMMUNES ? { url: '/logement-social/chiffres/', t: 'Le logement social en chiffres', d: `Parc, loyers au m², vacance et taux SRU pour ${fmt(LS_COMMUNES.records.filter(r => !r.arrondissement).length)} communes.` } : null,
     CROUS ? { url: '/residences-crous/', t: 'Résidences CROUS', d: `Les ${CROUS.records.length} résidences universitaires publiques d'Île-de-France.` } : null,
     FJT ? { url: '/foyers-jeunes-travailleurs/', t: 'Foyers de jeunes travailleurs', d: `Les ${FJT.records.length} FJT franciliens, adresses et contacts.` } : null,
@@ -2791,7 +2894,7 @@ const HTML_404 = layout({
 <section>
   <h2>Chiffres clés prêts à citer</h2>
   <p>Chaque chiffre ci-dessous est calculé à partir d'une source publique officielle, citée avec sa date. Réutilisation libre&nbsp;: citez la source primaire, et ajoutez un lien vers la page détaillée si vous reprenez nos classements ou nos calculs.</p>
-  ${reg ? `<h3>Les délais du logement social (${TENSION._meta.millesime})</h3>
+  ${reg ? `<h3>L'Observatoire des délais du logement social (${TENSION._meta.millesime})</h3>
   <ul>
     <li>Délai médian d'attribution en Île-de-France&nbsp;: <strong>${fmt(reg.delaiMois)}&nbsp;mois</strong>${statsMin != null && statsMax != null ? `, et d'une commune à l'autre il va de ${fmt(statsMin)} à ${fmt(statsMax)}&nbsp;mois` : ''}.</li>
     <li><strong>${fmt(reg.tension, 1)} demandes en cours pour une attribution</strong> (${fmt(reg.demandes)} demandes en premier choix pour ${fmt(reg.attributions)} attributions dans l'année).</li>
@@ -2835,11 +2938,12 @@ const HTML_404 = layout({
 <section>
   <h2>Visuels et réutilisation</h2>
   <ul>
+    ${CARTE_DELAIS ? `<li>Carte des délais d'attribution par commune&nbsp;: <a href="/${CARTE_DELAIS_FICHIER}">${CARTE_DELAIS_FICHIER}</a> (SVG vectoriel, prêt à publier, mention «&nbsp;${esc(SITE.name)}&nbsp;»).</li>` : ''}
     <li>Bannière du site&nbsp;: <a href="/og-image.png">og-image.png</a> (PNG, 1200&nbsp;×&nbsp;630).</li>
     <li>Logo&nbsp;: <a href="/favicon.svg">favicon.svg</a> (vectoriel).</li>
-    <li>Cartes, graphiques et tableaux à votre format&nbsp;: sur simple demande, envoyés sous 24&nbsp;heures.</li>
+    <li>Autres cartes, graphiques et tableaux à votre format&nbsp;: sur simple demande, envoyés sous 24&nbsp;heures.</li>
   </ul>
-  <p>Les textes du site peuvent être cités librement avec la mention «&nbsp;${esc(SITE.name)}&nbsp;» et un lien vers la page citée. Les données sources restent sous leur licence d'origine&nbsp;: Licence Ouverte Etalab 2.0 (DRIHL, Insee, CNOUS, FINESS) et ODbL avec attribution Ville de Paris (encadrement des loyers).</p>
+  <p>Les textes du site peuvent être cités librement avec la mention «&nbsp;${esc(SITE.name)}&nbsp;» et un lien vers la page citée. Pour les délais, la formule «&nbsp;selon l'Observatoire des délais de ${esc(SITE.name)} (données DRIHL/SNE)&nbsp;» est la plus précise. Les données sources restent sous leur licence d'origine&nbsp;: Licence Ouverte Etalab 2.0 (DRIHL, Insee, CNOUS, FINESS) et ODbL avec attribution Ville de Paris (encadrement des loyers).</p>
 </section>
 <section class="notice">
   <h2>Contact presse</h2>
@@ -2975,6 +3079,10 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .page-head-icon{flex:none;width:46px;height:46px;background:#fff;border-radius:12px;padding:9px;box-shadow:0 4px 12px var(--ts,rgba(31,78,121,.18));margin-top:4px}
 .page-head-icon svg{width:100%;height:100%}
 .page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 17px 17px 0;margin:-22px -26px -22px 8px;box-shadow:-14px 0 24px -18px rgba(31,78,121,.25)}
+.carte-delais{margin:1.2rem 0}
+.carte-delais img{display:block;width:100%;height:auto;border:1px solid var(--bord);border-radius:14px;background:#fff}
+.carte-delais figcaption{font-size:.88rem;color:var(--gris);margin-top:.6rem;line-height:1.55}
+.carte-delais figcaption a{display:inline-block;padding:.3rem 0;margin:-.3rem 0}
 .page-head h1{margin:.1rem 0 .5rem}.page-head .lead{margin:0}
 /* ---- Hub des outils ---- */
 .grid-outils{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin:1.6rem 0}
@@ -3320,6 +3428,13 @@ try {
 }
 fs.mkdirSync(DIST, { recursive: true });
 
+/* Carte des délais : écrite après le vidage de dist/ (une écriture avant le
+ * vidage serait supprimée en silence, mode de panne payé le 12/08/2026). Si
+ * les pages la référencent, son absence doit faire échouer le build. */
+if (CARTE_DELAIS) {
+  fs.writeFileSync(path.join(DIST, CARTE_DELAIS_FICHIER), CARTE_DELAIS.svg);
+}
+
 /* Les commentaires du source documentent le POURQUOI du code : ils n'ont rien à
  * faire dans la sortie servie (même règle que le raisonnement du crédit MKZ).
  * Le CSS et le JS étant inline, 56 blocs partaient dans CHAQUE page : 6,9 Ko par
@@ -3390,7 +3505,7 @@ if (CROUS) llms.push(`- [Résidences CROUS d'Île-de-France](${B}/residences-cro
 if (FJT) llms.push(`- [Foyers de jeunes travailleurs](${B}/foyers-jeunes-travailleurs/): les ${FJT.records.length} FJT franciliens pour les 16-25 ans, adresses et téléphones (source : FINESS).`);
 if (RES_AUTONOMIE) llms.push(`- [Résidences autonomie (seniors)](${B}/residences-autonomie/): les ${RES_AUTONOMIE.records.length} résidences pour seniors autonomes (source : FINESS).`);
 if (LS_COMMUNES) llms.push(`- [Le logement social en chiffres](${B}/logement-social/chiffres/): parc, loyers au m², vacance et taux SRU, commune par commune (sources : RPLS Insee-SDES 01/01/2024, inventaire SRU, zonage ABC).`);
-if (TENSION && TENSION._meta.region) llms.push(`- [Délais du logement social : où l'attente est la plus courte](${B}/logement-social/delais/): délai médian d'attribution et nombre de demandes pour une attribution, par commune et par département. Île-de-France ${TENSION._meta.millesime} : ${fmt(TENSION._meta.region.delaiMois)} mois de délai médian, ${fmt(TENSION._meta.region.tension, 1)} demandes pour une attribution (source : DRIHL, socle demandes et attributions, Infocentre SNE, Licence Ouverte Etalab 2.0). Attention : ce ratio est une pression, pas une durée.`);
+if (TENSION && TENSION._meta.region) llms.push(`- [Observatoire des délais du logement social](${B}/logement-social/delais/): délai médian d'attribution et nombre de demandes pour une attribution, par commune et par département, avec carte téléchargeable${CARTE_DELAIS ? ` (${B}/${CARTE_DELAIS_FICHIER})` : ''}. Île-de-France ${TENSION._meta.millesime} : ${fmt(TENSION._meta.region.delaiMois)} mois de délai médian, ${fmt(TENSION._meta.region.tension, 1)} demandes pour une attribution (source : DRIHL, socle demandes et attributions, Infocentre SNE, Licence Ouverte Etalab 2.0). Attention : ce ratio est une pression, pas une durée.`);
 if (ENCADREMENT) llms.push(`- [Vérificateur d'encadrement des loyers à Paris](${B}/guides/encadrement-des-loyers-paris/): les ${ENCADREMENT.records.length} loyers de référence ${ENCADREMENT._meta.millesime} (80 quartiers × pièces × époque × meublé). Grille complète en JSON : ${B}/data/encadrement-loyers-paris.json (ODbL, Ville de Paris).`);
 llms.push('');
 llms.push('## Divers');
@@ -3484,7 +3599,7 @@ if (LS_COMMUNES) {
   if (TENSION && TENSION._meta.region) {
     const reg = TENSION._meta.region;
     full.push('');
-    full.push(`## DONNÉES : DÉLAIS DU LOGEMENT SOCIAL PAR DÉPARTEMENT (Île-de-France, ${TENSION._meta.millesime})`);
+    full.push(`## DONNÉES : OBSERVATOIRE DES DÉLAIS DU LOGEMENT SOCIAL, PAR DÉPARTEMENT (Île-de-France, ${TENSION._meta.millesime})`);
     full.push(`${TENSION._meta.attribution}. ${TENSION._meta.license}. Détail : ${B}/logement-social/delais/`);
     full.push(`- Île-de-France : délai médian ${fmt(reg.delaiMois)} mois, ${fmt(reg.tension, 1)} demandes en cours pour une attribution (${fmt(reg.demandes)} demandes en choix 1, ${fmt(reg.attributions)} attributions), ${fmt(reg.partAnc5ans, 1)} % des ménages attendent depuis 5 ans ou plus, pression ${fmt(reg.tensionT1, 1)} sur les studios contre ${fmt(reg.tensionT3, 1)} sur les trois-pièces.`);
     for (const x of (TENSION._meta.departements || [])) {
