@@ -1059,6 +1059,12 @@ ${p.slug === 'logement-social' && TENSION && TENSION._meta.region ? `
   </div>
   <p class="stats-cta"><a class="btn" href="/logement-social/delais/">Ouvrir l'observatoire des délais</a></p>
 </section>` : ''}
+${p.slug === 'etudiant' ? `
+<section class="notice">
+  <h2>C'est la rentrée&nbsp;?</h2>
+  <p>Les démarches logement ont un ordre et des fenêtres qui ne se rattrapent pas&nbsp;: dossier certifié avant les visites, garant avant de candidater, APL dès l'emménagement. Le récapitulatif tient sur une page.</p>
+  <p class="stats-cta"><a class="btn" href="/rentree/">Ouvrir la check-list de la rentrée</a></p>
+</section>` : ''}
 <section class="notice">
   <h2>Où chercher&nbsp;: les sources fiables pour ce profil</h2>
   ${annuaireBlock}
@@ -2766,6 +2772,54 @@ inp.focus();
   }), '0.3');
 })();
 
+/* Check-list logement de la rentrée : page saisonnière permanente (URL sans
+ * millésime), pensée pour l'outreach écoles/CFA (vague 1) et l'angle rentrée
+ * de la vague 3 presse. Sa valeur ajoutée est L'ORDRE et les FENÊTRES des
+ * démarches ; chaque fait (délai, montant, fenêtre) est repris MOT POUR MOT
+ * du guide lié, même discipline que les tldr : zéro fait nouveau ici. Toute
+ * correction d'un des 5 guides sources doit être répercutée sur cette page. */
+(function buildRentree() {
+  const t = themeOf('etudiant');
+  const content = `
+<nav class="breadcrumb"><a href="/">Accueil</a> › La rentrée</nav>
+<header class="page-head" style="${themeStyle(t)}">
+  <span class="page-head-icon">${icon('etudiant', t.c)}</span>
+  <div>
+    <p class="kicker">Étudiants &amp; alternants · spécial rentrée</p>
+    <h1>La check-list logement de la rentrée étudiante</h1>
+    <p class="lead">Les aides au logement ne se demandent pas «&nbsp;un jour&nbsp;»&nbsp;: chacune a son moment, et certaines fenêtres ne se rattrapent pas. Voici les démarches dans le bon ordre. Chaque étape renvoie au guide complet, vérifié sur les sources officielles.</p>
+  </div>
+</header>
+<div class="steps" style="${themeStyle(t)}">
+  <div class="step"><h3>Avant les visites&nbsp;: le dossier certifié</h3><p><a href="/guides/dossierfacile/">DossierFacile</a>, le service public gratuit du ministère du Logement, vérifie votre dossier de location sous 72&nbsp;heures ouvrées au maximum. Constituez-le avant de commencer les visites, pas le soir où un bailleur réclame vos pièces.</p></div>
+  <div class="step"><h3>Avant de candidater&nbsp;: le garant</h3><p>Sans garant familial, la garantie <a href="/guides/visale/">Visale</a> est gratuite et le visa se demande en ligne sur visale.fr avant de candidater. En Île-de-France, elle couvre un loyer jusqu'à 1&nbsp;940&nbsp;€ charges comprises selon la situation (1&nbsp;000&nbsp;€ pour un étudiant ou alternant sans justificatifs de ressources). Un garant classique reste possible&nbsp;: <a href="/guides/garant-location/">toutes les solutions</a>.</p></div>
+  <div class="step"><h3>À la signature&nbsp;: le dépôt de garantie</h3><p>L'<a href="/guides/avance-loca-pass/">avance Loca-Pass</a> prête le dépôt de garantie à taux zéro, dans la limite de 1&nbsp;200&nbsp;€. La demande se dépose en ligne dès la signature du bail, au plus près de l'entrée dans les lieux.</p></div>
+  <div class="step"><h3>Dès l'emménagement&nbsp;: l'aide au logement</h3><p>L'<a href="/guides/aide-logement-etudiant/">aide au logement (APL)</a> se demande sur caf.fr après l'emménagement. Elle n'est pas rétroactive au-delà du mois de demande et n'est due qu'à partir du mois suivant&nbsp;: ne tardez pas, déposez le dossier dès l'emménagement.</p></div>
+  <div class="step"><h3>Alternants&nbsp;: la fenêtre Mobili-Jeune</h3><p>L'<a href="/guides/aide-mobili-jeune/">aide Mobili-Jeune</a> prend en charge jusqu'à 100&nbsp;€ de loyer par mois pendant l'alternance. Sa fenêtre de dépôt va de 3&nbsp;mois avant le début du contrat à 5&nbsp;mois après, et se rouvre à chaque date anniversaire&nbsp;: notez-la, elle ne se rattrape pas entre-temps.</p></div>
+</div>
+<section>
+  <h2>Pas encore de logement&nbsp;?</h2>
+  <p>Trois pistes à prix maîtrisé, avec adresses et contacts issus des données publiques&nbsp;: les <a href="/residences-crous/">résidences CROUS</a>, les <a href="/foyers-jeunes-travailleurs/">foyers de jeunes travailleurs</a> (le guide <a href="/guides/foyer-jeune-travailleur/">FJT</a> explique conditions et redevances), et le <a href="/etudiant/">parcours étudiant complet</a> pour comparer toutes les options.</p>
+</section>
+<section class="notice">
+  <h2>Si ça coince</h2>
+  <p>Budget qui ne passe pas, dépôt impayable, situation qui se tend&nbsp;: le <a href="/guides/fonds-solidarite-logement/">FSL</a> est le dernier filet avant la rupture. Et pour savoir en 2 minutes à quoi votre situation ouvre droit, faites le <a href="/diagnostic/">diagnostic logement</a>&nbsp;: 7 questions, rien n'est stocké ni envoyé.</p>
+</section>
+<section class="notice">
+  <h2>Vous accompagnez des étudiants ou des alternants&nbsp;?</h2>
+  <p>Écoles, CFA, missions locales, services de vie étudiante&nbsp;: cette page est faite pour être partagée telle quelle à chaque rentrée. Elle est gratuite, sans compte, et suit les mises à jour de nos guides. Vous pouvez la lier depuis vos ressources sans nous demander l'autorisation.</p>
+</section>`;
+  pushIndex('La check-list logement de la rentrée', '/rentree/',
+    "Les démarches dans le bon ordre : DossierFacile, Visale, Loca-Pass, APL, Mobili-Jeune.", 'Guide');
+  addPage('/rentree/', layout({
+    title: `Rentrée étudiante : la check-list logement, étape par étape`,
+    metaDescription: `DossierFacile avant les visites, Visale avant de candidater, APL dès l'emménagement, Mobili-Jeune dans sa fenêtre : chaque démarche logement au bon moment.`,
+    urlPath: '/rentree/',
+    content,
+    breadcrumbs: [{ name: 'La rentrée', url: '/rentree/' }],
+  }), '0.7');
+})();
+
 /* Page 404 : sa présence désactive aussi le fallback SPA de Cloudflare Pages
  * (sans elle, toute URL inconnue renvoyait l'accueil en 200 : soft-404). */
 const HTML_404 = layout({
@@ -2919,7 +2973,7 @@ const HTML_404 = layout({
   <h2>Trois angles prêts à travailler</h2>
   <ul>
     <li><strong>Votre commune, en chiffres</strong>&nbsp;: pour toute commune francilienne couverte, nous sortons le délai médian, la pression de la demande, le parc et le loyer médian, situés dans leur département et dans la région. De quoi nourrir un papier local à la donnée près.</li>
-    <li><strong>La rentrée étudiante</strong>&nbsp;: les aides que les étudiants et alternants ne demandent pas (garantie <a href="/guides/visale/">Visale</a>, <a href="/guides/aide-mobili-jeune/">aide Mobili-Jeune</a>, <a href="/guides/avance-loca-pass/">avance Loca-Pass</a>)${CROUS ? `, et les résidences CROUS département par département` : ''}.</li>
+    <li><strong>La rentrée étudiante</strong>&nbsp;: les aides que les étudiants et alternants ne demandent pas (garantie <a href="/guides/visale/">Visale</a>, <a href="/guides/aide-mobili-jeune/">aide Mobili-Jeune</a>, <a href="/guides/avance-loca-pass/">avance Loca-Pass</a>)${CROUS ? `, et les résidences CROUS département par département` : ''}. Notre <a href="/rentree/">check-list de la rentrée</a> donne l'ordre et les fenêtres des démarches.</li>
     <li><strong>Ce que cachent les délais courts</strong>&nbsp;: pourquoi une commune en tête du classement n'est pas forcément une commune «&nbsp;ouverte&nbsp;», démonstration chiffrée à l'appui.</li>
   </ul>
   <p>Sur demande, nous fournissons <strong>chiffres, méthodologie et visuels sous 24&nbsp;heures</strong>, pour n'importe quelle commune ou n'importe quel dispositif couvert par le site.</p>
@@ -3510,6 +3564,7 @@ if (ENCADREMENT) llms.push(`- [Vérificateur d'encadrement des loyers à Paris](
 llms.push('');
 llms.push('## Divers');
 llms.push(`- [Annuaire des sources fiables](${B}/annuaire/): ${ANNUAIRE.metaDescription}`);
+llms.push(`- [Check-list logement de la rentrée](${B}/rentree/): les démarches dans le bon ordre et leurs fenêtres : DossierFacile avant les visites, Visale avant de candidater, Loca-Pass à la signature, APL dès l'emménagement (non rétroactive), Mobili-Jeune pour les alternants (3 mois avant à 5 mois après le début du contrat).`);
 llms.push(`- [Diagnostic logement](${B}/diagnostic/): 7 questions, une feuille de route personnalisée (aides, garanties, pistes de logement, démarches) selon la situation. Critères repris des guides.`);
 llms.push(`- [Recherche](${B}/recherche/): commune, résidence, dispositif. Index JSON : ${B}/search-index.json`);
 llms.push(`- [Contenu intégral pour les LLM](${B}/llms-full.txt)`);
