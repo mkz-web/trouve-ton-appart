@@ -2106,6 +2106,16 @@ ${ressourcesDep(d, 'logement-social/chiffres')}
     <p class="lead">En Île-de-France, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(reg.delaiMois)} mois ou moins</strong>, et l'on compte <strong>${fmt(reg.tension, 1)} demandes en cours pour une attribution</strong>. Mais ce chiffre régional cache tout&nbsp;: ${borneMin != null && borneMax != null ? `d'une commune à l'autre, le délai médian va de ${fmt(borneMin)} à ${fmt(borneMax)} mois` : "l'attente varie fortement d'une commune à l'autre"}.</p>
   </div>
 </header>
+<section id="votre-commune">
+  <h2>Combien de temps dans votre commune&nbsp;?</h2>
+  <div id="delai-lookup" data-clarity-mask="true">
+    <label for="dl-q">Tapez le nom de votre commune</label>
+    <input id="dl-q" type="text" inputmode="search" autocomplete="off" spellcheck="false" placeholder="Meaux, Créteil, Argenteuil…" aria-describedby="dl-aide">
+    <p id="dl-aide" class="dl-aide">Délai médian et pression de la demande, d'après le socle DRIHL (millésime ${TENSION._meta.millesime}). Tout s'affiche ici&nbsp;: votre saisie n'est ni stockée ni envoyée.</p>
+    <div id="dl-sugg" class="pills" aria-label="Communes correspondantes"></div>
+    <div id="dl-out" aria-live="polite" aria-atomic="true"></div>
+  </div>
+</section>
 <section>
   <h2>Ce que disent les chiffres</h2>
   <ul>
@@ -2167,7 +2177,63 @@ ${CARTE_DELAIS ? `<section>
   <h2>Améliorer vos chances</h2>
   <p>Ces écarts décrivent des territoires, pas des trajectoires individuelles&nbsp;: votre délai dépend d'abord de votre situation, des priorités reconnues et du parc réellement libéré près de chez vous. Ces chiffres servent à situer une commune, pas à promettre un délai. Nos guides détaillent la marche à suivre.</p>
   <p class="pills"><a class="pill" href="/guides/demande-logement-social/">Déposer et renouveler sa demande</a> <a class="pill" href="/guides/recours-dalo/">Le recours DALO</a> <a class="pill" href="/diagnostic/">Faire le diagnostic</a> <a class="pill" href="/logement-social/chiffres/">Les chiffres commune par commune</a></p>
-</section>`;
+</section>
+<script>
+(function(){
+var q=document.getElementById('dl-q'),sg=document.getElementById('dl-sugg'),out=document.getElementById('dl-out');
+if(!q||!sg||!out)return;
+var D=null,enCharge=false,tm=null;
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[-']/g,' ').replace(/\\s+/g,' ').trim()}
+function fnb(n,dec){return n.toLocaleString('fr-FR',{minimumFractionDigits:dec||0,maximumFractionDigits:dec||0})}
+function charger(){
+  if(D||enCharge)return;enCharge=true;
+  fetch('/data/delais-communes.json').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){
+    for(var i=0;i<j.communes.length;i++)j.communes[i].k=norm(j.communes[i].n);
+    D=j;maj();
+  }).catch(function(){enCharge=false;out.innerHTML='<div class="dl-verdict"><p>Impossible de charger les données pour le moment. Réessayez, ou consultez les tableaux ci-dessous.</p></div>'});
+}
+function verdict(c){
+  var R=D.reg,M=D.mil,S=D.seuil,h='';
+  var nom=c.n+(c.d?' ('+c.d+')':'');
+  if(c.m==null){
+    h='<p><strong>'+nom+'</strong>&nbsp;: valeurs masquées par la source (secret statistique&nbsp;: moins de 10 demandes ou attributions dans l\\'année). Le délai n\\'est pas publiable pour cette commune.</p>';
+  }else if(c.a!=null&&c.a<S){
+    h='<p><strong>'+nom+'</strong> a compté <strong>'+fnb(c.a)+' attribution'+(c.a>1?'s':'')+'</strong> en '+M+', sous le seuil de '+S+' du classement&nbsp;: à cet effectif, un délai médian n\\'est pas un signal fiable, nous ne l\\'affichons pas (même règle que le classement et la carte).</p>';
+  }else{
+    var diff=c.m-R.m,comp;
+    if(Math.abs(diff)<=1)comp='dans la médiane régionale ('+fnb(R.m)+' mois)';
+    else if(diff<0)comp=fnb(-diff)+' mois de moins que la médiane régionale ('+fnb(R.m)+' mois)';
+    else comp=fnb(diff)+' mois de plus que la médiane régionale ('+fnb(R.m)+' mois)';
+    h='<p>À <strong>'+nom+'</strong>, la moitié des ménages logés en '+M+' avaient déposé leur demande depuis <strong>'+fnb(c.m)+' mois ou moins</strong>, soit '+comp+'.</p>'
+     +'<p><strong>'+fnb(c.t,1)+' demandes en cours pour une attribution</strong> ('+fnb(c.a)+' attributions dans l\\'année&nbsp;; Île-de-France&nbsp;: '+fnb(R.t,1)+').</p>';
+    if(c.m<R.m&&c.t>R.t)h+='<p class="dl-garde">Attention à la lecture&nbsp;: un délai court associé à une pression élevée signale un afflux ponctuel d\\'offre, pas une commune ouverte.</p>';
+    if(c.c==='75056')h+='<p class="dl-garde">Valeur de l\\'ensemble de Paris (arrondissements agrégés)&nbsp;: tapez «&nbsp;Paris 11e&nbsp;» pour un arrondissement précis.</p>';
+  }
+  if(c.d&&D.deps[c.d]){var lien='/logement-social/chiffres/'+D.deps[c.d]+'/';h+='<p><a href="'+lien+'">Le détail du département&nbsp;: parc, loyers, vacance <span aria-hidden="true">→</span></a></p>'}
+  out.innerHTML='<div class="dl-verdict">'+h+'</div>';
+  sg.innerHTML='';
+}
+function maj(){
+  if(!D)return;
+  var v=norm(q.value);
+  if(v.length<2){sg.innerHTML='';return}
+  var pre=[],inc=[];
+  for(var i=0;i<D.communes.length;i++){var c=D.communes[i];
+    if(c.k.indexOf(v)===0)pre.push(c);else if(c.k.indexOf(v)>0)inc.push(c)}
+  var tri=function(a,b){return (b.a||0)-(a.a||0)};pre.sort(tri);inc.sort(tri);
+  var res=pre.concat(inc).slice(0,8);
+  if(!res.length){sg.innerHTML='';out.innerHTML='<div class="dl-verdict"><p>Aucune commune d\\'Île-de-France ne correspond à cette saisie. L\\'observatoire couvre les 8 départements franciliens.</p></div>';return}
+  if(res.length===1&&res[0].k===v){verdict(res[0]);return}
+  sg.innerHTML=res.map(function(c){return '<button type="button" class="pill" data-c="'+c.c+'">'+c.n+' ('+c.d+')</button>'}).join(' ');
+}
+sg.addEventListener('click',function(e){
+  var b=e.target.closest('button[data-c]');if(!b||!D)return;
+  for(var i=0;i<D.communes.length;i++)if(D.communes[i].c===b.getAttribute('data-c')){q.value=D.communes[i].n;verdict(D.communes[i]);break}
+});
+q.addEventListener('input',function(){charger();clearTimeout(tm);tm=setTimeout(maj,150)});
+q.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();var b=sg.querySelector('button');if(b)b.click()}});
+})();
+</script>`;
     pushIndex("L'Observatoire des délais du logement social", '/logement-social/delais/',
       `Délai médian ${fmt(reg.delaiMois)} mois en Île-de-France : le classement des communes et la carte.`, 'Chiffres');
     addPage('/logement-social/delais/', layout({
@@ -3133,6 +3199,14 @@ h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .page-head-icon{flex:none;width:46px;height:46px;background:#fff;border-radius:12px;padding:9px;box-shadow:0 4px 12px var(--ts,rgba(31,78,121,.18));margin-top:4px}
 .page-head-icon svg{width:100%;height:100%}
 .page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 17px 17px 0;margin:-22px -26px -22px 8px;box-shadow:-14px 0 24px -18px rgba(31,78,121,.25)}
+#delai-lookup{margin:.4rem 0 .8rem}
+#delai-lookup label{display:block;font-weight:650;margin-bottom:.35rem}
+#delai-lookup input{width:100%;max-width:430px;min-height:48px;padding:.55rem .9rem;font-size:1.02rem;color:var(--encre);background:var(--surface);border:1.5px solid var(--bord);border-radius:12px}
+#delai-lookup input:focus-visible{outline:2px solid var(--bleu2);outline-offset:1px}
+.dl-aide{font-size:.88rem;color:var(--gris);margin:.45rem 0 .6rem}
+.dl-verdict{background:var(--surface);border:1px solid var(--bord);border-radius:14px;padding:1rem 1.2rem;margin-top:.7rem}
+.dl-verdict p{margin:.35rem 0}
+.dl-garde{font-size:.92rem;color:var(--gris)}
 .carte-delais{margin:1.2rem 0}
 .carte-delais img{display:block;width:100%;height:auto;border:1px solid var(--bord);border-radius:14px;background:#fff}
 .carte-delais figcaption{font-size:.88rem;color:var(--gris);margin-top:.6rem;line-height:1.55}
@@ -3528,6 +3602,23 @@ if (ENCADREMENT) {
     grille,
   }));
 }
+if (TENSION && TENSION._meta.region) {
+  /* Lookup « votre commune » de l'Observatoire : mêmes enregistrements que
+   * le socle ingéré (y compris la ligne Paris 75056 aux valeurs
+   * départementales et les 20 arrondissements), champs réduits au besoin
+   * du widget. Le seuil embarqué est CELUI du classement : le client
+   * applique la même règle que la page, jamais une règle à lui. */
+  fs.mkdirSync(path.join(DIST, 'data'), { recursive: true });
+  fs.writeFileSync(path.join(DIST, 'data', 'delais-communes.json'), JSON.stringify({
+    mil: TENSION._meta.millesime,
+    seuil: SEUIL_CLASSEMENT,
+    reg: { m: TENSION._meta.region.delaiMois, t: TENSION._meta.region.tension },
+    deps: DEP_SLUGS,
+    communes: TENSION.records.map((r) => ({
+      c: r.code, n: r.nom, d: r.dep, m: r.delaiMois, t: r.tension, a: r.attributions,
+    })),
+  }));
+}
 fs.writeFileSync(path.join(DIST, 'search-index.json'), JSON.stringify(SEARCH_INDEX));
 
 fs.writeFileSync(path.join(DIST, '404.html'), sansCommentaires(HTML_404));
@@ -3559,7 +3650,7 @@ if (CROUS) llms.push(`- [Résidences CROUS d'Île-de-France](${B}/residences-cro
 if (FJT) llms.push(`- [Foyers de jeunes travailleurs](${B}/foyers-jeunes-travailleurs/): les ${FJT.records.length} FJT franciliens pour les 16-25 ans, adresses et téléphones (source : FINESS).`);
 if (RES_AUTONOMIE) llms.push(`- [Résidences autonomie (seniors)](${B}/residences-autonomie/): les ${RES_AUTONOMIE.records.length} résidences pour seniors autonomes (source : FINESS).`);
 if (LS_COMMUNES) llms.push(`- [Le logement social en chiffres](${B}/logement-social/chiffres/): parc, loyers au m², vacance et taux SRU, commune par commune (sources : RPLS Insee-SDES 01/01/2024, inventaire SRU, zonage ABC).`);
-if (TENSION && TENSION._meta.region) llms.push(`- [Observatoire des délais du logement social](${B}/logement-social/delais/): délai médian d'attribution et nombre de demandes pour une attribution, par commune et par département, avec carte téléchargeable${CARTE_DELAIS ? ` (${B}/${CARTE_DELAIS_FICHIER})` : ''}. Île-de-France ${TENSION._meta.millesime} : ${fmt(TENSION._meta.region.delaiMois)} mois de délai médian, ${fmt(TENSION._meta.region.tension, 1)} demandes pour une attribution (source : DRIHL, socle demandes et attributions, Infocentre SNE, Licence Ouverte Etalab 2.0). Attention : ce ratio est une pression, pas une durée.`);
+if (TENSION && TENSION._meta.region) llms.push(`- [Observatoire des délais du logement social](${B}/logement-social/delais/): délai médian d'attribution et nombre de demandes pour une attribution, par commune et par département, avec carte téléchargeable${CARTE_DELAIS ? ` (${B}/${CARTE_DELAIS_FICHIER})` : ''} et recherche par commune sur la page. Données par commune en JSON : ${B}/data/delais-communes.json. Île-de-France ${TENSION._meta.millesime} : ${fmt(TENSION._meta.region.delaiMois)} mois de délai médian, ${fmt(TENSION._meta.region.tension, 1)} demandes pour une attribution (source : DRIHL, socle demandes et attributions, Infocentre SNE, Licence Ouverte Etalab 2.0). Attention : ce ratio est une pression, pas une durée.`);
 if (ENCADREMENT) llms.push(`- [Vérificateur d'encadrement des loyers à Paris](${B}/guides/encadrement-des-loyers-paris/): les ${ENCADREMENT.records.length} loyers de référence ${ENCADREMENT._meta.millesime} (80 quartiers × pièces × époque × meublé). Grille complète en JSON : ${B}/data/encadrement-loyers-paris.json (ODbL, Ville de Paris).`);
 llms.push('');
 llms.push('## Divers');
