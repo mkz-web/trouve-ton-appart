@@ -29,7 +29,14 @@
 
 const lib = require('./lib');
 
-const MILLESIME = 2025;
+/* Millésime surchargeable pour le baromètre annuel : à la publication du
+ * socle N (fin juin N+1), relancer avec --millesime=N. Les libellés de
+ * colonnes qui embarquent l'année suivent automatiquement. */
+const ARG_MILLESIME = (process.argv.find((a) => a.startsWith('--millesime=')) || '').split('=')[1];
+const MILLESIME = ARG_MILLESIME ? Number(ARG_MILLESIME) : 2025;
+if (!Number.isInteger(MILLESIME) || MILLESIME < 2024 || MILLESIME > 2100) {
+  console.error(`✗ millésime invalide : ${ARG_MILLESIME}`); process.exit(1);
+}
 const URL = `https://www.drihl.ile-de-france.developpement-durable.gouv.fr/IMG/xlsx/socle_demandes_attributions_${MILLESIME}.xlsx`;
 const PAGE = 'https://www.drihl.ile-de-france.developpement-durable.gouv.fr/socle-de-donnees-demandes-et-attributions-de-a1510.html';
 
@@ -144,6 +151,24 @@ async function main() {
     region,
     departements: deps,
   });
+
+  /* Archive par millésime : la mémoire du baromètre annuel. Sans elle,
+   * impossible de dire en N+1 « l'attente a augmenté de X mois à Y » :
+   * le snapshot courant est écrasé à chaque ingestion. L'archive est un
+   * COPIE CONFORME du snapshot écrit ci-dessus (même collectedAt), committée
+   * comme lui. Comparaisons N vs N-1 : joindre par code INSEE, ne comparer
+   * que les communes classables dans LES DEUX millésimes, et gare aux
+   * fusions de communes (précédent Pierrefitte 93059 → Saint-Denis). */
+  const fs = require('fs');
+  const path = require('path');
+  const openDir = path.join(__dirname, '..', 'data', 'open');
+  const archDir = path.join(openDir, 'archives');
+  fs.mkdirSync(archDir, { recursive: true });
+  fs.copyFileSync(
+    path.join(openDir, 'tension-communes.json'),
+    path.join(archDir, `tension-communes-${MILLESIME}.json`)
+  );
+  console.log(`  ✓ archive millésime : archives/tension-communes-${MILLESIME}.json`);
 }
 
 main().catch((e) => { console.error('✗ ' + e.message); process.exit(1); });
