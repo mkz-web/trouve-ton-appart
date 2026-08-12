@@ -60,7 +60,7 @@ const GABARITS = [
   '/guides/encadrement-des-loyers-paris/', '/outils/', '/diagnostic/', '/recherche/',
   '/annuaire/', '/residences-crous/', '/residences-crous/paris-75/',
   '/logement-social/chiffres/', '/logement-social/chiffres/seine-et-marne-77/',
-  '/logement-social/delais/', '/mentions-legales/', '/404.html',
+  '/logement-social/delais/', '/mentions-legales/', '/presse/', '/404.html',
   '/en/', '/en/guides/', '/en/guides/visale-guarantee/',
 ];
 

@@ -670,7 +670,7 @@ ${content}
     </div>
   </div>
   <div class="container footer-legal">
-    <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/">Mentions légales</a>${A_PROPOS_ACTIF ? ' · <a href="/a-propos/">Qui fait ce site&nbsp;?</a>' : ''} · <button type="button" class="js-cookies">Gérer les cookies</button></p>
+    <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/">Mentions légales</a> · <a href="/presse/">Presse</a>${A_PROPOS_ACTIF ? ' · <a href="/a-propos/">Qui fait ce site&nbsp;?</a>' : ''} · <button type="button" class="js-cookies">Gérer les cookies</button></p>
     ${CREDIT}
   </div>
 </footer>
@@ -2746,6 +2746,134 @@ const HTML_404 = layout({
   }), '0.3');
 })();
 
+/* Espace presse : dossier permanent pour les journalistes. Chaque chiffre
+ * cité ici est calculé depuis les MÊMES données et les MÊMES règles que la
+ * page qui le publie (tri du classement délais, filtre communes, min/max
+ * encadrement) : jamais de valeur en dur qui pourrait dériver du site. */
+(function buildPresse() {
+  const reg = TENSION ? TENSION._meta.region : null;
+  const dExact = (x) => (x.delaiMoisExact != null ? x.delaiMoisExact : x.delaiMois);
+  const rapides = TENSION_CLASSABLES.slice().sort((a, b) => dExact(a) - dExact(b) || b.attributions - a.attributions);
+  const nomDe = LS_COMMUNES ? new Map(LS_COMMUNES.records.map(r => [r.code, r.nom])) : new Map();
+  const rapide1 = rapides.length ? rapides[0] : null;
+  const nbCommunes = LS_COMMUNES ? LS_COMMUNES.records.filter(r => !r.arrondissement).length : 0;
+  const majores = ENCADREMENT ? ENCADREMENT.records.map(r => r.refMajore) : null;
+  const annuaires = [
+    CROUS ? `<a href="/residences-crous/">les ${CROUS.records.length} résidences CROUS</a>` : null,
+    FJT ? `<a href="/foyers-jeunes-travailleurs/">les ${FJT.records.length} foyers de jeunes travailleurs</a>` : null,
+    RES_AUTONOMIE ? `<a href="/residences-autonomie/">les ${RES_AUTONOMIE.records.length} résidences autonomie</a>` : null,
+  ].filter(Boolean);
+  const annuairesTxt = annuaires.length > 1
+    ? `${annuaires.slice(0, -1).join(', ')} et ${annuaires[annuaires.length - 1]}`
+    : annuaires.join('');
+  const nbAdresses = (CROUS ? CROUS.records.length : 0) + (FJT ? FJT.records.length : 0) + (RES_AUTONOMIE ? RES_AUTONOMIE.records.length : 0);
+  const t = themeOf();
+
+  const content = `
+<nav class="breadcrumb"><a href="/">Accueil</a> › Presse</nav>
+<header class="page-head" style="${themeStyle(t)}">
+  <span class="page-head-icon">${icon('demande-logement-social', t.c)}</span>
+  <div>
+    <p class="kicker">Presse &amp; médias</p>
+    <h1>Espace presse</h1>
+    <p class="lead">Vous préparez un papier sur le logement en Île-de-France&nbsp;? Cette page rassemble nos chiffres prêts à citer, avec leur source primaire et leur date, notre méthode, nos visuels et un contact qui répond vite.</p>
+  </div>
+</header>
+<section>
+  <h2>${esc(SITE.name)} en une minute</h2>
+  <p>${esc(SITE.name)} est un service d'orientation <strong>indépendant et gratuit</strong> sur le logement à Paris et en Île-de-France, édité par MKZ (<a href="/mentions-legales/">mentions légales</a>). Pas d'annonces, pas de compte, pas de collecte de données&nbsp;: des guides vérifiés sur les textes officiels, des <a href="/outils/">outils qui calculent dans le navigateur</a> et des données publiques consolidées que personne d'autre ne réunit à l'échelle francilienne.</p>
+  <ul>
+    <li><strong>${GUIDES.length} <a href="/guides/">guides pratiques</a></strong> fact-checkés sur les sources primaires (Légifrance, fiches Service-public, arrêtés), chacun avec sa vraie date de mise à jour.</li>
+    <li>Des <strong><a href="/outils/">outils gratuits</a></strong>&nbsp;: <a href="/diagnostic/">diagnostic logement</a>, <a href="/guides/plafond-ressources-logement-social/">simulateur de plafonds de ressources</a>, <a href="/guides/encadrement-des-loyers-paris/">vérificateur d'encadrement des loyers</a>.</li>
+    ${nbAdresses ? `<li><strong>${fmt(nbAdresses)} adresses</strong> issues des données publiques${nbCommunes ? ` et les chiffres du logement social pour ${fmt(nbCommunes)} communes` : ''}.</li>` : ''}
+  </ul>
+</section>
+<section>
+  <h2>Chiffres clés prêts à citer</h2>
+  <p>Chaque chiffre ci-dessous est calculé à partir d'une source publique officielle, citée avec sa date. Réutilisation libre&nbsp;: citez la source primaire, et ajoutez un lien vers la page détaillée si vous reprenez nos classements ou nos calculs.</p>
+  ${reg ? `<h3>Les délais du logement social (${TENSION._meta.millesime})</h3>
+  <ul>
+    <li>Délai médian d'attribution en Île-de-France&nbsp;: <strong>${fmt(reg.delaiMois)}&nbsp;mois</strong>${statsMin != null && statsMax != null ? `, et d'une commune à l'autre il va de ${fmt(statsMin)} à ${fmt(statsMax)}&nbsp;mois` : ''}.</li>
+    <li><strong>${fmt(reg.tension, 1)} demandes en cours pour une attribution</strong> (${fmt(reg.demandes)} demandes en premier choix pour ${fmt(reg.attributions)} attributions dans l'année).</li>
+    <li><strong>${fmt(reg.partAnc5ans, 1)}&nbsp;%</strong> des ménages en attente ont déposé leur demande il y a au moins 5&nbsp;ans.</li>
+    <li>Pression par typologie&nbsp;: <strong>${fmt(reg.tensionT1, 1)} demandes par attribution pour un studio</strong>, contre ${fmt(reg.tensionT3, 1)} pour un trois-pièces.</li>
+  </ul>
+  ${rapide1 ? `<p><strong>Le piège de lecture à éviter</strong>&nbsp;: un délai court n'est pas un «&nbsp;bon plan&nbsp;». ${esc(nomDe.get(rapide1.code) || rapide1.nom)} affiche ${fmt(rapide1.delaiMois)}&nbsp;mois de délai médian, mais ${fmt(rapide1.tension, 1)} demandes pour une attribution&nbsp;: un programme neuf livré dans l'année fait chuter le délai sans «&nbsp;ouvrir&nbsp;» la commune. Les deux indicateurs se lisent toujours ensemble.</p>` : ''}
+  <p class="maj">Source&nbsp;: ${esc(TENSION._meta.attribution)} · ${esc(TENSION._meta.license)} · ${esc(TENSION._meta.dateReference)}. Classements, tableaux par département et précautions de lecture&nbsp;: <a href="/logement-social/delais/">l'observatoire des délais</a>.</p>` : ''}
+  ${ENCADREMENT ? `<h3>L'encadrement des loyers à Paris (références ${esc(ENCADREMENT._meta.millesime)})</h3>
+  <ul>
+    <li><strong>${fmt(ENCADREMENT.records.length)} loyers de référence officiels</strong> (80 quartiers, 1 à 4 pièces, 4 époques de construction, meublé ou non).</li>
+    <li>Plafond légal (loyer de référence majoré)&nbsp;: de <strong>${fmt(Math.min(...majores), 2)} à ${fmt(Math.max(...majores), 2)}&nbsp;€/m²</strong> hors charges selon le profil du logement.</li>
+  </ul>
+  <p class="maj">${esc(ENCADREMENT._meta.attribution)}. Grille complète en JSON&nbsp;: <a href="/data/encadrement-loyers-paris.json">encadrement-loyers-paris.json</a> · vérificateur interactif&nbsp;: <a href="/guides/encadrement-des-loyers-paris/">guide de l'encadrement des loyers</a>.</p>` : ''}
+  ${LS_COMMUNES || nbAdresses ? `<h3>Le parc social et les adresses utiles</h3>
+  <ul>
+    ${LS_COMMUNES ? `<li>Parc, loyer médian au m², vacance et taux SRU pour <strong>${fmt(nbCommunes)} communes</strong> (RPLS au 01/01/2024, inventaire SRU, zonage ABC)&nbsp;: <a href="/logement-social/chiffres/">le logement social en chiffres</a>.</li>` : ''}
+    ${annuaires.length ? `<li>Adresses et contacts, département par département&nbsp;: ${annuairesTxt}.</li>` : ''}
+  </ul>` : ''}
+</section>
+<section>
+  <h2>Trois angles prêts à travailler</h2>
+  <ul>
+    <li><strong>Votre commune, en chiffres</strong>&nbsp;: pour toute commune francilienne couverte, nous sortons le délai médian, la pression de la demande, le parc et le loyer médian, situés dans leur département et dans la région. De quoi nourrir un papier local à la donnée près.</li>
+    <li><strong>La rentrée étudiante</strong>&nbsp;: les aides que les étudiants et alternants ne demandent pas (garantie <a href="/guides/visale/">Visale</a>, <a href="/guides/aide-mobili-jeune/">aide Mobili-Jeune</a>, <a href="/guides/avance-loca-pass/">avance Loca-Pass</a>)${CROUS ? `, et les résidences CROUS département par département` : ''}.</li>
+    <li><strong>Ce que cachent les délais courts</strong>&nbsp;: pourquoi une commune en tête du classement n'est pas forcément une commune «&nbsp;ouverte&nbsp;», démonstration chiffrée à l'appui.</li>
+  </ul>
+  <p>Sur demande, nous fournissons <strong>chiffres, méthodologie et visuels sous 24&nbsp;heures</strong>, pour n'importe quelle commune ou n'importe quel dispositif couvert par le site.</p>
+</section>
+<section class="notice">
+  <h2>Notre méthode, vérifiable</h2>
+  <ul>
+    <li><strong>Données publiques officielles uniquement</strong> (DRIHL, Insee, CNOUS, FINESS, Ville de Paris)&nbsp;: chaque page de données affiche sa source, sa licence et sa date d'extraction.</li>
+    <li><strong>Le secret statistique est respecté</strong>&nbsp;: les valeurs masquées par la source restent masquées («&nbsp;n.d.&nbsp;»), jamais recalculées.</li>
+    <li><strong>Chaque guide est vérifié sur les textes officiels</strong>, puis relu de manière contradictoire avant publication.</li>
+    <li><strong>Les dates affichées sont réelles</strong>&nbsp;: la date de mise à jour d'un guide ne change que quand son contenu change.</li>
+    <li><strong>Les limites sont écrites</strong>&nbsp;: chaque page de chiffres documente ce que les données ne disent pas (voir les précautions de lecture de <a href="/logement-social/delais/">l'observatoire des délais</a>).</li>
+  </ul>
+  <p><strong>Engagement de correction</strong>&nbsp;: signalez une inexactitude, nous la vérifions&nbsp;; toute erreur avérée est corrigée sous 48&nbsp;heures, et la correction est datée sur la page concernée.</p>
+</section>
+<section>
+  <h2>Visuels et réutilisation</h2>
+  <ul>
+    <li>Bannière du site&nbsp;: <a href="/og-image.png">og-image.png</a> (PNG, 1200&nbsp;×&nbsp;630).</li>
+    <li>Logo&nbsp;: <a href="/favicon.svg">favicon.svg</a> (vectoriel).</li>
+    <li>Cartes, graphiques et tableaux à votre format&nbsp;: sur simple demande, envoyés sous 24&nbsp;heures.</li>
+  </ul>
+  <p>Les textes du site peuvent être cités librement avec la mention «&nbsp;${esc(SITE.name)}&nbsp;» et un lien vers la page citée. Les données sources restent sous leur licence d'origine&nbsp;: Licence Ouverte Etalab 2.0 (DRIHL, Insee, CNOUS, FINESS) et ODbL avec attribution Ville de Paris (encadrement des loyers).</p>
+</section>
+<section class="notice">
+  <h2>Contact presse</h2>
+  <p>Écrivez à <a href="mailto:contact@mkz-consulting.fr">contact@mkz-consulting.fr</a>&nbsp;: réponse le jour même en semaine. Interlocuteur&nbsp;: Mickaël Leclerc, directeur de la publication (MKZ).</p>
+  <p>Pour vérifier un chiffre du site avant publication, citez-nous l'URL de la page concernée&nbsp;: nous confirmons la valeur, la source et la date.</p>
+</section>`;
+
+  addPage('/presse/', layout({
+    title: `Espace presse : chiffres vérifiés et contact | ${SITE.name}`,
+    metaDescription: `Chiffres sourcés sur le logement en Île-de-France, angles, méthode, visuels et contact : l'espace presse de ${SITE.name}. Réponse le jour même.`,
+    urlPath: '/presse/',
+    content,
+    breadcrumbs: [{ name: 'Presse', url: '/presse/' }],
+    jsonLd: [{
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: 'Espace presse',
+      url: `${SITE.baseUrl}/presse/`,
+      inLanguage: 'fr-FR',
+      mainEntity: {
+        '@type': 'Organization',
+        name: SITE.name,
+        url: SITE.baseUrl,
+        contactPoint: {
+          '@type': 'ContactPoint',
+          contactType: 'press',
+          email: 'contact@mkz-consulting.fr',
+          availableLanguage: 'French',
+        },
+      },
+    }],
+  }), '0.3');
+})();
+
 /* ------------------------------ CSS --------------------------------- */
 
 /* Déclaration de fonction (hoistée) : le CSS est inliné dans <head> par layout(),
@@ -3270,6 +3398,7 @@ llms.push(`- [Annuaire des sources fiables](${B}/annuaire/): ${ANNUAIRE.metaDesc
 llms.push(`- [Diagnostic logement](${B}/diagnostic/): 7 questions, une feuille de route personnalisée (aides, garanties, pistes de logement, démarches) selon la situation. Critères repris des guides.`);
 llms.push(`- [Recherche](${B}/recherche/): commune, résidence, dispositif. Index JSON : ${B}/search-index.json`);
 llms.push(`- [Contenu intégral pour les LLM](${B}/llms-full.txt)`);
+llms.push(`- [Espace presse](${B}/presse/): chiffres clés sourcés, méthode, visuels et contact pour les journalistes.`);
 llms.push(`- [Mentions légales](${B}/mentions-legales/)`);
 if (A_PROPOS_ACTIF) llms.push(`- [Qui fait ce site ?](${B}/a-propos/)`);
 fs.writeFileSync(path.join(DIST, 'llms.txt'), llms.join('\n') + '\n');
