@@ -758,7 +758,7 @@ ${content}
   <div class="container footer-grid">
     <div>
       <p class="footer-brand">${esc(SITE.name)}</p>
-      <p>The single front door to housing in Paris and Île-de-France. An independent, free orientation service: no listings, no signup, no data collected. We point you to the official schemes and sources.</p>
+      <p>The single front door to housing in Paris and Île-de-France. An independent, free orientation service: no listings, no signup, no tracking without your consent. We point you to the official schemes and sources.</p>
     </div>
     <div>
       <p class="footer-title">Guides in English</p>
@@ -919,7 +919,7 @@ function addPage(urlPath, html, priority, lastmod) {
 </section>
 <section>
   <h2>Répondez à votre question en 2 minutes</h2>
-  <p>Trois outils gratuits, sans inscription et sans collecte de données, construits sur les barèmes officiels.</p>
+  <p>Trois outils gratuits, sans inscription, construits sur les barèmes officiels&nbsp;: vos réponses restent dans votre navigateur.</p>
   <div class="grid grid-outils">
     <a class="card card-outil" href="/diagnostic/" style="${themeStyle(themeOf())}">
       <span class="card-icon card-icon-sm">${icon('diagnostic', PAL.bleu2)}</span>
@@ -1099,7 +1099,7 @@ const OUTILS_DE_GUIDE = {
     fonctions: [
       'Verdict PLAI, PLUS, PLS ou logement intermédiaire',
       'Zonage appliqué automatiquement à partir de la commune',
-      'Barèmes officiels à jour, sans inscription ni collecte de données',
+      'Barèmes officiels à jour, sans inscription, calcul dans votre navigateur',
     ],
   },
   'encadrement-des-loyers-paris': {
@@ -1110,7 +1110,7 @@ const OUTILS_DE_GUIDE = {
     fonctions: [
       'Comparaison au loyer de référence majoré',
       'Grille officielle des 80 quartiers parisiens',
-      'Verdict immédiat, sans inscription ni collecte de données',
+      'Verdict immédiat, sans inscription, calcul dans votre navigateur',
     ],
   },
 };
@@ -2644,7 +2644,7 @@ rendQ();
   <div>
     <p class="kicker">Gratuit · sans inscription</p>
     <h1>Nos outils pour se loger en Île-de-France</h1>
-    <p class="lead">${outils.length} simulateurs gratuits, construits sur les barèmes et les données officiels. Aucun compte à créer, aucune donnée personnelle collectée : tout se calcule dans votre navigateur, et rien n'est envoyé.</p>
+    <p class="lead">${outils.length} simulateurs gratuits, construits sur les barèmes et les données officiels. Aucun compte à créer, et vos réponses ne quittent jamais votre navigateur&nbsp;: rien n'est stocké ni envoyé, même si vous avez accepté la mesure d'audience (les outils lui sont masqués).</p>
   </div>
 </header>
 <div class="grid grid-outils">${cartes}</div>
@@ -2670,7 +2670,7 @@ rendQ();
   pushIndex('Nos outils gratuits', '/outils/', `${outils.length} simulateurs gratuits pour se loger en Île-de-France.`, 'Outil');
   addPage('/outils/', layout({
     title: `Outils logement gratuits en Île-de-France | ${SITE.name}`,
-    metaDescription: `${outils.length} simulateurs gratuits : éligibilité au logement social, plafonds de ressources, encadrement des loyers à Paris. Sans inscription, sans collecte de données.`,
+    metaDescription: `${outils.length} simulateurs gratuits : éligibilité au logement social, plafonds de ressources, encadrement des loyers à Paris. Sans inscription ni envoi de vos réponses.`,
     urlPath: '/outils/',
     content,
     breadcrumbs: [{ name: 'Outils', url: '/outils/' }],
@@ -2788,7 +2788,7 @@ const HTML_404 = layout({
 <p><strong>Directeur de la publication</strong> : Mickaël Leclerc, représentant légal.</p>
 <p><strong>Contact</strong> : <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a></p>
 <p><strong>Hébergement</strong> : Cloudflare Pages, Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis.</p>
-<p><strong>Données personnelles</strong> : Ce site ne collecte aucune donnée personnelle et ne dépose aucun cookie de suivi sans consentement.</p>
+<p><strong>Données personnelles</strong> : Ce site ne collecte aucune donnée personnelle en dehors de la mesure d'audience soumise à votre consentement (voir la section <a href="#cookies">Cookies et mesure d'audience</a>), et ne dépose aucun cookie sans votre accord. Ce que vous saisissez dans nos outils ne quitte pas votre navigateur. Pour exercer vos droits (accès, rectification, effacement, retrait du consentement), écrivez à <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a>.</p>
 <p><strong>Nature du service</strong> : ${esc(SITE.name)} est un service d'information et d'orientation : nos <a href="/guides/">guides pratiques</a> expliquent les dispositifs, nos <a href="/annuaire/">annuaires</a> listent des adresses issues de données publiques. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>
 <h2 id="cookies">Cookies et mesure d'audience</h2>
 <p>Avec votre accord, et seulement avec lui, nous utilisons <strong>Microsoft Clarity</strong> (Microsoft Ireland Operations Limited) pour comprendre comment le site est utilisé : pages consultées, zones cliquées, parcours de navigation. Tant que vous n'avez pas cliqué sur «&nbsp;Accepter&nbsp;» dans le bandeau, le script de mesure ne se charge pas et aucun cookie de mesure n'est déposé. Refuser ne change rien à votre navigation.</p>
@@ -2884,7 +2884,7 @@ const HTML_404 = layout({
 </header>
 <section>
   <h2>${esc(SITE.name)} en une minute</h2>
-  <p>${esc(SITE.name)} est un service d'orientation <strong>indépendant et gratuit</strong> sur le logement à Paris et en Île-de-France, édité par MKZ (<a href="/mentions-legales/">mentions légales</a>). Pas d'annonces, pas de compte, pas de collecte de données&nbsp;: des guides vérifiés sur les textes officiels, des <a href="/outils/">outils qui calculent dans le navigateur</a> et des données publiques consolidées que personne d'autre ne réunit à l'échelle francilienne.</p>
+  <p>${esc(SITE.name)} est un service d'orientation <strong>indépendant et gratuit</strong> sur le logement à Paris et en Île-de-France, édité par MKZ (<a href="/mentions-legales/">mentions légales</a>). Pas d'annonces, pas de compte, aucune donnée collectée sans consentement&nbsp;: des guides vérifiés sur les textes officiels, des <a href="/outils/">outils qui calculent dans le navigateur</a> et des données publiques consolidées que personne d'autre ne réunit à l'échelle francilienne.</p>
   <ul>
     <li><strong>${GUIDES.length} <a href="/guides/">guides pratiques</a></strong> fact-checkés sur les sources primaires (Légifrance, fiches Service-public, arrêtés), chacun avec sa vraie date de mise à jour.</li>
     <li>Des <strong><a href="/outils/">outils gratuits</a></strong>&nbsp;: <a href="/diagnostic/">diagnostic logement</a>, <a href="/guides/plafond-ressources-logement-social/">simulateur de plafonds de ressources</a>, <a href="/guides/encadrement-des-loyers-paris/">vérificateur d'encadrement des loyers</a>.</li>
