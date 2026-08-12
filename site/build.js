@@ -2683,7 +2683,7 @@ const HTML_404 = layout({
 <h1>Mentions légales</h1>
 <p><strong>Éditeur du site</strong> : MKZ, société par actions simplifiée (SAS) au capital social de 1 000 €, dont le siège social est situé 1 rue Françoise Sagan, 77230 Dammartin-en-Goële. SIRET : 983 662 784 00013 · TVA intracommunautaire : FR44983662784.</p>
 <p><strong>Directeur de la publication</strong> : Mickaël Leclerc, représentant légal.</p>
-<p><strong>Contact</strong> : <a href="mailto:contact@mkz-consulting.fr">contact@mkz-consulting.fr</a></p>
+<p><strong>Contact</strong> : <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a></p>
 <p><strong>Hébergement</strong> : Cloudflare Pages, Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis.</p>
 <p><strong>Données personnelles</strong> : Ce site ne collecte aucune donnée personnelle et ne dépose aucun cookie de suivi sans consentement.</p>
 <p><strong>Nature du service</strong> : ${esc(SITE.name)} est un service d'information et d'orientation : nos <a href="/guides/">guides pratiques</a> expliquent les dispositifs, nos <a href="/annuaire/">annuaires</a> listent des adresses issues de données publiques. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>
@@ -2721,7 +2721,7 @@ const HTML_404 = layout({
 <li>Aucun contenu sponsorisé, aucune annonce payée par un bailleur ou une résidence.</li>
 </ul>
 <h2>L'engagement</h2>
-<p>Une inexactitude, un chiffre périmé, un lien mort&nbsp;? Écrivez à <a href="mailto:contact@mkz-consulting.fr">contact@mkz-consulting.fr</a>&nbsp;: toute erreur avérée est corrigée sous 48&nbsp;heures, et la correction est datée sur la page concernée.</p>`;
+<p>Une inexactitude, un chiffre périmé, un lien mort&nbsp;? Écrivez à <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a>&nbsp;: toute erreur avérée est corrigée sous 48&nbsp;heures, et la correction est datée sur la page concernée.</p>`;
   addPage('/a-propos/', layout({
     title: `Qui fait ce site ? | ${SITE.name}`,
     metaDescription: `Qui édite ${SITE.name}, avec quelle méthode et quel engagement de correction : la transparence complète sur la fabrication du site.`,
@@ -2843,7 +2843,7 @@ const HTML_404 = layout({
 </section>
 <section class="notice">
   <h2>Contact presse</h2>
-  <p>Écrivez à <a href="mailto:contact@mkz-consulting.fr">contact@mkz-consulting.fr</a>&nbsp;: réponse le jour même en semaine. Interlocuteur&nbsp;: Mickaël Leclerc, directeur de la publication (MKZ).</p>
+  <p>Écrivez à <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a>&nbsp;: réponse le jour même en semaine. Interlocuteur&nbsp;: Mickaël Leclerc, directeur de la publication (MKZ).</p>
   <p>Pour vérifier un chiffre du site avant publication, citez-nous l'URL de la page concernée&nbsp;: nous confirmons la valeur, la source et la date.</p>
 </section>`;
 
@@ -2866,7 +2866,7 @@ const HTML_404 = layout({
         contactPoint: {
           '@type': 'ContactPoint',
           contactType: 'press',
-          email: 'contact@mkz-consulting.fr',
+          email: 'mickael@trouve-ton-appart.fr',
           availableLanguage: 'French',
         },
       },

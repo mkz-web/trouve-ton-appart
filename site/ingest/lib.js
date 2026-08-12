@@ -15,7 +15,7 @@ const zlib = require('zlib');
 const fs = require('fs');
 const path = require('path');
 
-const UA = 'TrouveTonAppart-ingest/1.0 (site statique; contact@mkz-consulting.fr)';
+const UA = 'TrouveTonAppart-ingest/1.0 (site statique; mickael@trouve-ton-appart.fr)';
 
 /* ------------------------------ HTTP -------------------------------- */
 
