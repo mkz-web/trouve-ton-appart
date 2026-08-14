@@ -937,13 +937,71 @@
       {
         "h2": "Comment déposer une demande",
         "bullets": [
-          "1. Prenez contact avec un travailleur social : services sociaux du département, CCAS de votre commune, ou service social de la CAF. C'est la porte d'entrée la plus sûre, certains départements acceptent aussi le dépôt direct en ligne.",
+          "1. Prenez contact avec un travailleur social : services sociaux du département, CCAS de votre commune, service social de votre bailleur ou de la CAF. C'est la porte d'entrée obligatoire : les huit départements franciliens décrivent tous une demande instruite par un professionnel, et non déposée seul par le ménage.",
           "2. Constituez le dossier avec ses pièces : ressources, charges, bail ou proposition de logement, justificatifs de la difficulté (dette, courriers…).",
           "3. La commission FSL du département statue et notifie l'aide accordée (subvention, prêt, ou les deux)."
         ],
         "paragraphs": [
           "Pour une dette de loyer, n'attendez pas l'assignation : plus la demande part tôt, plus la commission a de marges pour éviter la spirale de l'expulsion."
         ]
+      },
+      {
+        "h2": "Le FSL de votre département en Île-de-France",
+        "paragraphs": [
+          "Le FSL est départemental : le règlement intérieur, les plafonds de ressources, les montants et jusqu'au nom du dispositif changent d'un département à l'autre. Voici la porte d'entrée officielle des huit départements franciliens, chaque page vérifiée le 14 août 2026.",
+          "Premier piège, purement lexical : dans le Val-de-Marne, le fonds ne s'appelle pas FSL mais Fonds de solidarité habitat (FSH). Chercher « FSL 94 » peut donc ne rien donner alors que le dispositif existe bien. Le département y prend en charge la dette de loyer, les charges locatives et les frais de procédure, en subvention ou en prêt sans intérêt, dans la limite de 5 340 €, versés directement au bailleur.",
+          "Second point commun aux huit départements : la demande ne se dépose pas seul. Elle est montée par un travailleur social qui la transmet à la commission, qu'il exerce dans une maison départementale des solidarités, un centre communal d'action sociale, le service social de votre bailleur, à la CAF ou dans une association d'insertion. C'est ce professionnel qui connaît le règlement en vigueur cette année-là."
+        ],
+        "table": {
+          "caption": "Les huit fonds de solidarité logement d'Île-de-France et leur page officielle",
+          "headers": [
+            "Département",
+            "Nom du dispositif",
+            "Page officielle"
+          ],
+          "rows": [
+            [
+              "Paris (75)",
+              "Fonds de solidarité pour le logement de Paris (FSL)",
+              "[Aides au logement, Ville de Paris](https://www.paris.fr/pages/aides-au-logement-3827)"
+            ],
+            [
+              "Seine-et-Marne (77)",
+              "Fonds de solidarité pour le logement (FSL)",
+              "[Aides au logement, Département 77](https://www.seine-et-marne.fr/fr/aides-au-logement)"
+            ],
+            [
+              "Yvelines (78)",
+              "Fonds de solidarité pour le logement (FSL)",
+              "[Accès et maintien dans le logement](https://www.yvelines.fr/solidarite/adultes-en-difficulte/logement/acces-et-maintien-logement/)"
+            ],
+            [
+              "Essonne (91)",
+              "Fonds de solidarité pour le logement (FSL)",
+              "[Bénéficier du FSL, Département 91](https://www.essonne.fr/a-votre-service/habitat-et-logement/beneficier-du-fonds-de-solidarite-pour-le-logement-fsl)"
+            ],
+            [
+              "Hauts-de-Seine (92)",
+              "Fonds de solidarité logement (FSL 92)",
+              "[FSL 92, portail aides et services](https://aidesetservices.hauts-de-seine.fr/annuaire/aides-et-services/detail/le-fonds-de-solidarite-logement-fsl-92)"
+            ],
+            [
+              "Seine-Saint-Denis (93)",
+              "Fonds de solidarité logement (FSL)",
+              "[Fonds de solidarité logement, Département 93](https://seinesaintdenis.fr/solidarite/action-sociale/article/fonds-de-solidarite-logement)"
+            ],
+            [
+              "Val-de-Marne (94)",
+              "Fonds de solidarité habitat (FSH)",
+              "[Aide aux impayés de loyers (FSH)](https://www.valdemarne.fr/a-votre-service/habitat/logement/aide-aux-impayes-de-loyers-fonds-de-solidarite-habitat-fsh)"
+            ],
+            [
+              "Val-d'Oise (95)",
+              "Fonds de solidarité logement (FSL)",
+              "[FSL, aide aux impayés de loyers](https://www.valdoise.fr/aideEtService/21/176-fonds-de-solidarite-logement-aide-aux-impayes-de-loyers.htm)"
+            ]
+          ]
+        }
       },
       {
         "h2": "FSL et autres aides : comment les articuler",
@@ -969,6 +1027,14 @@
       {
         "q": "Peut-on cumuler FSL et Loca-Pass pour le dépôt de garantie ?",
         "a": "Non, pas pour financer le même dépôt. Choisissez Loca-Pass si vous êtes éligible (plus rapide), le FSL sinon."
+      },
+      {
+        "q": "Le fonds porte-t-il le même nom dans tous les départements ?",
+        "a": "Non. En Île-de-France, sept départements parlent de fonds de solidarité logement, mais le Val-de-Marne l'appelle fonds de solidarité habitat (FSH). Une recherche sur « FSL 94 » peut donc sembler ne rien donner alors que le dispositif existe."
+      },
+      {
+        "q": "Où trouver le FSL de mon département ?",
+        "a": "Le tableau de ce guide donne la page officielle des huit départements franciliens, de Paris au Val-d'Oise. Chaque département publie son propre règlement intérieur, qui fixe les plafonds et les montants de l'année."
       }
     ],
     "sourcesOfficielles": [
