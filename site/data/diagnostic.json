@@ -231,6 +231,18 @@
       ]
     },
     {
+      "id": "a-paris-ville",
+      "bloc": "aides",
+      "titre": "Les allocations logement de la Ville de Paris",
+      "texte": "En plus de l'aide de la CAF, Paris verse ses propres allocations mensuelles : de 84 à 116 € selon que vous vivez seul, en couple ou en couple avec un enfant, 128 ou 150 € pour un parent isolé, et jusqu'à 128 € plus un complément par enfant pour les familles. Elles ne se cumulent jamais entre elles, et le dossier se dépose à la Maison des Solidarités de votre arrondissement.",
+      "lien": "/guides/aides-logement-ville-de-paris/",
+      "lienLabel": "Le guide des aides parisiennes",
+      "regles": [
+        { "si": { "zone": ["paris"], "revenus": ["r1"] }, "pourquoi": "Vous cherchez à Paris avec moins de 1 500 € par mois : c'est la zone des plafonds de Paris Logement et de Paris Logement Familles Monoparentales." },
+        { "si": { "zone": ["paris"], "foyer": ["famille"] }, "pourquoi": "Famille à Paris : Paris Logement Familles retient des plafonds plus élevés, jusqu'à 5 000 € de revenu mensuel selon le nombre d'enfants et le handicap." }
+      ]
+    },
+    {
       "id": "p-crous",
       "bloc": "pistes",
       "titre": "Résidences CROUS : les loyers les plus bas du marché",

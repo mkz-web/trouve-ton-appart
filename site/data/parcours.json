@@ -14,8 +14,8 @@
       },
       {
         "titre": "2. Activez toutes les aides",
-        "texte": "APL/ALS dès l'emménagement, avance Loca-Pass pour le dépôt de garantie, Mobili-Jeune si vous êtes alternant : plusieurs centaines d'euros par an sont en jeu.",
-        "guides": ["aide-logement-etudiant", "aide-mobili-jeune", "avance-loca-pass"]
+        "texte": "APL/ALS dès l'emménagement, avance Loca-Pass pour le dépôt de garantie, Mobili-Jeune si vous êtes alternant : plusieurs centaines d'euros par an sont en jeu. À Paris, la Ville verse en plus ses propres allocations, y compris aux étudiants qui vivent seuls.",
+        "guides": ["aide-logement-etudiant", "aide-mobili-jeune", "avance-loca-pass", "aides-logement-ville-de-paris"]
       },
       {
         "titre": "3. Cherchez au bon endroit selon votre situation",
@@ -47,6 +47,11 @@
         "titre": "3. Situations spécifiques : dites-le explicitement",
         "texte": "Handicap, perte de logement, violences, insalubrité : ce sont des critères de priorité légaux : documentez-les dans votre demande. Urgence immédiate : le 115 / SIAO. Délai dépassé sans proposition : le recours DALO est un droit.",
         "guides": ["demande-logement-social", "recours-dalo", "fonds-solidarite-logement", "siao-115-hebergement-urgence", "solibail", "residence-sociale"]
+      },
+      {
+        "titre": "4. Faites baisser la facture pendant l'attente",
+        "texte": "L'attente se compte souvent en années : autant activer tout de suite ce qui allège le loyer. Le fonds de solidarité logement de votre département prend en charge les frais d'entrée et les impayés. Et si vous habitez Paris, la Ville verse ses propres allocations mensuelles, qui viennent après l'aide de la CAF sans la remplacer.",
+        "guides": ["fonds-solidarite-logement", "aides-logement-ville-de-paris"]
       }
     ],
     "annuaireCategories": ["logement-social", "seniors-pmr", "urgence"]

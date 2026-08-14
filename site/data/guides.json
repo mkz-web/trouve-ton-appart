@@ -2321,5 +2321,191 @@
       "En Île-de-France, le bail dure le plus souvent 80 ans et la redevance médiane est de 2,30 €/m² habitable par mois dans la Métropole du Grand Paris (Apur).",
       "La plateforme officielle BoRiS recense les logements disponibles et les organismes agréés, avec un simulateur d'éligibilité : 94 entrées franciliennes en juillet 2026."
     ]
+  },
+  {
+    "slug": "aides-logement-ville-de-paris",
+    "parcours": [
+      "logement-social",
+      "etudiant"
+    ],
+    "suite": [
+      "fonds-solidarite-logement",
+      "aide-logement-etudiant",
+      "demande-logement-social"
+    ],
+    "title": "Aides au logement de la Ville de Paris : montants 2026",
+    "metaDescription": "Paris Logement, Familles, Familles Monoparentales, AILE : qui y a droit, combien par mois, comment déposer le dossier. Barèmes au 1er juin 2026.",
+    "h1": "Les aides au logement de la Ville de Paris, montant par montant",
+    "intro": "Paris verse ses propres aides au logement, en plus de l'aide de la CAF. Trois allocations mensuelles qui ne se cumulent jamais entre elles, et une aide d'installation réservée aux étudiants boursiers. Voici qui a droit à quoi, combien exactement, et où déposer le dossier. Les plafonds de ressources de Paris Logement et de Paris Logement Familles Monoparentales sont ceux affichés par la Ville au 1er juin 2026.",
+    "sections": [
+      {
+        "h2": "Quatre aides, deux logiques à ne pas confondre",
+        "paragraphs": [
+          "La Ville de Paris verse trois allocations logement mensuelles : Paris Logement, Paris Logement Familles et Paris Logement Familles Monoparentales. Même logique pour les trois, alléger la charge de loyer d'un ménage parisien modeste, et une règle stricte : elles ne sont jamais cumulables entre elles. Votre composition familiale détermine celle qui vous concerne.",
+          "La quatrième, l'AILE, relève d'une autre logique : un versement unique pour s'installer, réservé aux étudiants boursiers, et géré par le CROUS de Paris plutôt que par la Ville.",
+          "Toutes viennent après l'aide au logement de la CAF, jamais à sa place. Il faut avoir fait valoir ses droits à l'[APL ou à l'ALS](/guides/aide-logement-etudiant/) avant de déposer la demande, et l'allocation municipale ne peut pas dépasser ce qui reste à votre charge une fois l'aide de la CAF déduite."
+        ],
+        "table": {
+          "caption": "Les trois allocations logement de la Ville de Paris, avec les plafonds de ressources en vigueur au 1er juin 2026",
+          "headers": [
+            "Allocation",
+            "Pour qui",
+            "Ressources",
+            "Montant / mois"
+          ],
+          "rows": [
+            [
+              "Paris Logement",
+              "Seul, couple, ou couple avec 1 enfant",
+              "1 480 à 1 600 €",
+              "84 à 116 €"
+            ],
+            [
+              "Paris Logement Familles",
+              "2 enfants, ou 1 enfant handicapé",
+              "2 000 à 5 000 €",
+              "84 à 128 €, plus par enfant"
+            ],
+            [
+              "Familles Monoparentales",
+              "Parent isolé",
+              "1 600 €",
+              "128 ou 150 €"
+            ]
+          ]
+        }
+      },
+      {
+        "h2": "Paris Logement : 84 à 116 € par mois",
+        "paragraphs": [
+          "Paris Logement s'adresse aux personnes seules et aux couples sans enfant, quel que soit leur âge, aux couples avec un enfant à charge, ainsi qu'aux seniors de 65 ans et plus (60 ans en cas d'inaptitude reconnue au travail) et aux personnes en situation de handicap titulaires de l'allocation aux adultes handicapés, de la prestation de compensation du handicap ou d'une pension d'invalidité.",
+          "Un point que presque personne ne dit : un étudiant qui vit seul peut la demander. La Ville publie d'ailleurs un formulaire intitulé « personnes isolées, étudiantes ou non »."
+        ],
+        "bullets": [
+          "Montant maximum : 84 € par mois pour une personne seule, 95 € pour un couple sans enfant, 116 € pour un couple avec 1 enfant à charge.",
+          "Ressources mensuelles du foyer : 1 480 € au plus pour une personne seule ou un couple sans enfant, 1 600 € pour un couple avec 1 enfant (plafonds au 1er juin 2026). Toutes les personnes vivant au foyer comptent, y compris celles qui y sont hébergées.",
+          "Être locataire en titre et titulaire du bail, dans un logement occupé à titre principal. Contrairement aux deux autres allocations, elle n'est pas ouverte aux propriétaires.",
+          "Consacrer au moins 30 % de ses ressources aux charges de logement, appréciées selon un taux d'effort. Ce sont les charges forfaitaires retenues par la CAF qui servent de base, pas vos charges réelles.",
+          "Habiter Paris et y avoir résidé au moins 3 ans sur les 5 dernières années. Pour un couple avec enfant muté par son employeur, le délai tombe à 1 an.",
+          "L'aide n'est pas ouverte si vous êtes hébergé en établissement hospitalier ou pour personnes âgées sans que vos charges de logement soient identifiables, ou si votre hébergement est déjà pris en charge par l'aide sociale."
+        ]
+      },
+      {
+        "h2": "Paris Logement Familles : de 84 à 128 € par mois, plus par enfant",
+        "paragraphs": [
+          "Cette allocation vise les familles d'au moins deux enfants à charge fiscale, ou d'un enfant en situation de handicap. Elle est ouverte aux locataires, mais aussi aux propriétaires et aux accédants à la propriété, ce qui la distingue de Paris Logement.",
+          "L'enfant en situation de handicap doit être à charge fiscale et titulaire de l'allocation aux adultes handicapés ou de l'allocation d'éducation de l'enfant handicapé. Il ne doit percevoir aucune ressource provenant du travail, ni bénéficier de Paris Solidarité ou du complément Santé Paris."
+        ],
+        "table": {
+          "caption": "Montant de Paris Logement Familles selon la composition du foyer et ses revenus",
+          "headers": [
+            "Situation du foyer",
+            "Revenu mensuel",
+            "Montant de l'aide"
+          ],
+          "rows": [
+            [
+              "2 enfants à charge",
+              "2 000 € au plus",
+              "116 € par mois"
+            ],
+            [
+              "3 enfants ou plus",
+              "3 000 € au plus",
+              "128 € par mois, plus 41 € par enfant à partir du 4e"
+            ],
+            [
+              "3 enfants ou plus",
+              "de 3 000 € à 5 000 €",
+              "84 € par mois, plus 21 € par enfant à partir du 4e"
+            ],
+            [
+              "Au moins 1 enfant en situation de handicap",
+              "5 000 € au plus",
+              "128 € par mois, plus 41 € par enfant à partir du 4e"
+            ]
+          ]
+        }
+      },
+      {
+        "h2": "Paris Logement Familles Monoparentales : 128 ou 150 € par mois",
+        "paragraphs": [
+          "Si vous élevez seul un ou plusieurs enfants à charge fiscale, c'est cette allocation qui s'applique, et le nombre d'enfants ne change rien au montant. Deux tranches seulement, calculées sur le revenu mensuel déclaré au dernier avis d'imposition : 150 € par mois jusqu'à 1 480 € de revenu, et 128 € par mois entre 1 481 € et 1 600 € (plafonds au 1er juin 2026).",
+          "Comme Paris Logement Familles, elle est ouverte aux locataires, aux propriétaires et aux accédants à la propriété. En cas de garde alternée, elle est versée pour moitié à chaque parent demandeur."
+        ]
+      },
+      {
+        "h2": "L'AILE : 500 à 1 000 € pour s'installer, une seule fois",
+        "paragraphs": [
+          "L'aide à l'installation dans un logement pour les étudiants est d'une autre nature que les trois allocations : un versement unique, entre 500 et 1 000 €, destiné aux frais d'entrée dans les lieux, électroménager, meubles ou matériel informatique. Elle est reconduite chaque année et gérée par le CROUS de Paris.",
+          "Deux limites à connaître avant de compter dessus : le versement se fait dans la limite de l'enveloppe budgétaire de l'année, et tout dossier déposé après la date limite est refusé, par une notification écrite et motivée. Déposez tôt."
+        ],
+        "bullets": [
+          "Une seule fois dans toute la scolarité, quel que soit le nombre de déménagements.",
+          "Être inscrit dans un établissement des académies de Paris, Créteil ou Versailles.",
+          "Être boursier sur critères sociaux, bénéficiaire de l'aide spécifique allocation annuelle du CROUS, ou bénéficiaire du repas à 1 €, boursier ou non.",
+          "Le bail doit être au nom de l'étudiant, hors résidence universitaire conventionnée. En colocation, il faut figurer sur le bail.",
+          "Le dossier se télécharge sur le site de la Maison étudiante et se renvoie par courriel, accompagné du bail, d'un justificatif de domicile parisien, d'un RIB au nom de l'étudiant et d'une attestation sur l'honneur des dépenses."
+        ]
+      },
+      {
+        "h2": "Déposer le dossier : la Maison des Solidarités de votre arrondissement",
+        "paragraphs": [
+          "Chaque allocation est accordée pour un an. Le renouvellement n'est pas automatique : il se demande avec un formulaire distinct, à retirer au même endroit.",
+          "Si votre difficulté est une dette de loyer ou d'énergie plutôt qu'un loyer trop lourd au quotidien, ce n'est pas là qu'il faut frapper : c'est le [Fonds de solidarité logement de Paris](/guides/fonds-solidarite-logement/) qui traite les impayés, et la Maison des Solidarités en est aussi la porte d'entrée."
+        ],
+        "bullets": [
+          "1. Téléchargez le formulaire correspondant à votre situation sur paris.fr, ou retirez-le dans une Maison des Solidarités, les anciens espaces parisiens des solidarités.",
+          "2. Envoyez-le par courriel ou par courrier, ou déposez-le dans la Maison des Solidarités de votre arrondissement.",
+          "3. Vous avez 2 mois au maximum, à compter de la réception de votre demande, pour fournir l'ensemble des justificatifs.",
+          "4. Après examen, un courrier d'accord ou de refus vous est adressé."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "q": "Peut-on cumuler les trois allocations Paris Logement ?",
+        "a": "Non, jamais. Paris Logement, Paris Logement Familles et Paris Logement Familles Monoparentales s'excluent mutuellement. C'est votre composition familiale qui détermine celle à laquelle vous pouvez prétendre."
+      },
+      {
+        "q": "Un étudiant peut-il toucher Paris Logement ?",
+        "a": "Oui, s'il vit seul, qu'il est locataire en titre du logement et que ses ressources restent sous le plafond. La Ville publie un formulaire dédié aux personnes isolées, étudiantes ou non. La condition de résidence à Paris depuis au moins 3 ans sur les 5 dernières années reste exigée."
+      },
+      {
+        "q": "Ces aides remplacent-elles l'APL ?",
+        "a": "Non, elles s'y ajoutent. Il faut même avoir fait valoir ses droits auprès de la CAF avant de déposer la demande, et l'allocation municipale ne peut pas dépasser ce qui reste à votre charge une fois l'aide de la CAF déduite."
+      },
+      {
+        "q": "Faut-il être locataire pour en bénéficier ?",
+        "a": "Pour Paris Logement, oui : locataire en titre et titulaire du bail. Paris Logement Familles et Paris Logement Familles Monoparentales sont également ouvertes aux propriétaires et aux accédants à la propriété."
+      },
+      {
+        "q": "Combien de temps l'aide est-elle versée ?",
+        "a": "Un an. Le renouvellement se demande avec un formulaire spécifique, il n'est jamais automatique."
+      },
+      {
+        "q": "Comment l'aide est-elle versée en cas de garde alternée ?",
+        "a": "Pour moitié. Paris Logement Familles et Paris Logement Familles Monoparentales sont versées de moitié à chaque parent demandeur, et Paris Logement de moitié au parent qui la demande."
+      }
+    ],
+    "sourcesOfficielles": [
+      {
+        "label": "Aides au logement et à l'énergie, Ville de Paris",
+        "url": "https://www.paris.fr/pages/aides-au-logement-3827"
+      },
+      {
+        "label": "L'aide à l'installation dans un logement pour les étudiants (AILE)",
+        "url": "https://www.paris.fr/pages/l-aide-a-l-installation-dans-un-logement-pour-les-etudiants-a-i-l-e-2257"
+      },
+      {
+        "label": "Le dossier AILE sur le site de la Maison étudiante",
+        "url": "https://maison-etudiante.paris/aides/aides-au-logement/"
+      }
+    ],
+    "tldr": [
+      "La Ville de Paris verse trois allocations logement mensuelles qui ne se cumulent jamais entre elles, plus une aide d'installation réservée aux étudiants boursiers.",
+      "Les montants vont de 84 à 150 € par mois selon la composition du foyer, sous des plafonds de ressources qui vont de 1 480 € à 5 000 € selon la situation.",
+      "Le dossier se dépose à la Maison des Solidarités de son arrondissement, avec 2 mois pour fournir les justificatifs, et se renouvelle chaque année."
+    ]
   }
 ]
