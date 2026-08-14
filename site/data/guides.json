@@ -383,7 +383,7 @@
       {
         "h2": "Mobili-Jeune : jusqu'à 100 € par mois pour les alternants",
         "paragraphs": [
-          "Si vous êtes en apprentissage ou contrat de professionnalisation dans une entreprise du secteur privé, l'[aide Mobili-Jeune](/guides/aide-mobili-jeune/) d'Action Logement prend en charge une partie de votre loyer (jusqu'à 100 € par mois) pendant votre formation. Cumulable avec l'APL : le combo le plus rentable du logement étudiant."
+          "Si vous êtes en apprentissage ou contrat de professionnalisation dans une entreprise du secteur privé, l'[aide Mobili-Jeune](/guides/aide-mobili-jeune/) d'Action Logement prend en charge une partie de votre loyer (de 10 à 100 € par mois) pendant votre formation. Cumulable avec l'APL : le combo le plus rentable du logement étudiant. Deux conditions filtrent beaucoup de candidats : un salaire brut sous 120 % du SMIC, et un déménagement qui vous rapproche d'au moins 70 km ou 40 minutes de trajet."
         ]
       },
       {
@@ -714,25 +714,27 @@
       "foyer-jeune-travailleur"
     ],
     "title": "Aide Mobili-Jeune : jusqu'à 100 € de loyer pris en charge",
-    "metaDescription": "L'aide Mobili-Jeune d'Action Logement prend en charge jusqu'à 100 € de loyer par mois pendant l'alternance. Conditions, demande en ligne, cumul APL.",
+    "metaDescription": "L'aide Mobili-Jeune prend en charge 10 à 100 € de loyer par mois pendant l'alternance. Conditions réelles (120 % du SMIC, 70 km), demande, cumul APL.",
     "h1": "Aide Mobili-Jeune : le loyer allégé pour les alternants",
-    "intro": "Alternant de moins de 30 ans dans une entreprise privée ? L'aide Mobili-Jeune d'Action Logement prend en charge jusqu'à 100 € de votre loyer par mois, versés pendant 11 mois, en plus de l'APL. C'est l'une des aides les plus généreuses du logement des jeunes, et l'une des moins demandées.",
+    "intro": "Alternant de moins de 30 ans dans une entreprise privée ? L'aide Mobili-Jeune d'Action Logement prend en charge jusqu'à 100 € de votre loyer par mois, versés pendant 11 mois, en plus de l'APL. C'est l'une des aides les plus généreuses du logement des jeunes, et l'une des moins demandées. À une condition que beaucoup de candidats découvrent trop tard : elle finance un rapprochement, donc un déménagement, pas le logement que vous occupiez déjà.",
     "sections": [
       {
         "h2": "Qu'est-ce que l'aide Mobili-Jeune ?",
         "paragraphs": [
-          "Mobili-Jeune est une subvention d'Action Logement (ce n'est pas un prêt : rien à rembourser) destinée aux jeunes en formation en alternance. Elle couvre une partie du loyer qui reste à votre charge après déduction de l'[aide au logement de la CAF](/guides/aide-logement-etudiant/), jusqu'à 100 € par mois versés pendant 11 mois.",
-          "Sur une année de formation, cela représente jusqu'à 1 100 € : de quoi changer l'équation d'un studio francilien."
+          "Mobili-Jeune est une subvention d'Action Logement (ce n'est pas un prêt : rien à rembourser) destinée aux jeunes en formation en alternance. Elle couvre une partie du loyer qui reste à votre charge après déduction de l'[aide au logement de la CAF](/guides/aide-logement-etudiant/), de 10 € à 100 € par mois, sur 11 mensualités par année de formation.",
+          "Sur une année de formation, cela représente jusqu'à 1 100 € : de quoi changer l'équation d'un studio francilien. L'aide peut être sollicitée sur deux années de formation au maximum, consécutives ou non, soit deux fois 11 mensualités.",
+          "Le calcul se fait sur le loyer charges comprises (ou votre quote-part en colocation), après déduction des aides au logement déjà perçues. Si ce qui reste à votre charge descend sous 10 € par mois, l'aide n'est pas attribuée : c'est le plancher du dispositif."
         ]
       },
       {
         "h2": "Les conditions d'éligibilité",
         "bullets": [
-          "Avoir moins de 30 ans à la date de la demande.",
+          "Avoir moins de 30 ans : la demande doit être déposée au plus tard la veille de votre trentième anniversaire.",
           "Être en contrat d'apprentissage ou de professionnalisation dans une entreprise du secteur privé non agricole (le secteur agricole a son équivalent, Agri-Mobili-Jeune).",
-          "Percevoir une rémunération d'alternant : l'aide est attribuée sous conditions de ressources, de l'ordre du SMIC.",
-          "Louer un logement pendant la période de formation : bail classique, meublé, colocation, résidence, foyer ou [bail mobilité](/guides/bail-mobilite/).",
-          "Le logement doit être proche de votre lieu de formation ou d'emploi (c'est l'esprit du dispositif : rapprocher les alternants de leur poste)."
+          "Percevoir un salaire brut mensuel inférieur ou égal à 120 % du SMIC. C'est le brut inscrit sur le contrat d'alternance qui compte, heures supplémentaires exclues, et la condition s'apprécie au moment de la demande.",
+          "S'être rapproché de son lieu de formation ou de travail, et c'est la condition la plus filtrante : le logement doit être à plus de 70 km de votre ancienne adresse, ou à plus de 40 minutes de trajet. À défaut, il faut justifier d'une double charge de loyer, c'est-à-dire être signataire de deux baux sur la même période.",
+          "Louer un logement pendant la période de formation : bail classique, meublé, colocation (sur votre seule quote-part), foyer, [résidence sociale](/guides/residence-sociale/), chambre en internat ou [bail mobilité](/guides/bail-mobilite/). Les chambres d'hôtes, gîtes et résidences de tourisme sont exclus.",
+          "Ne pas avoir de dossier Mobili-Jeune en cours : le précédent doit être terminé."
         ]
       },
       {
@@ -740,11 +742,12 @@
         "bullets": [
           "La demande se fait en ligne sur actionlogement.fr, rubrique Mobili-Jeune.",
           "Fenêtre de dépôt : de 3 mois avant le début du contrat d'alternance jusqu'à 5 mois après, et elle se rouvre à chaque date anniversaire du contrat. Ne la laissez pas passer.",
-          "Pièces à prévoir : contrat d'alternance, bail signé, RIB, et votre attestation CAF (l'aide se calcule après APL).",
-          "L'aide est ensuite versée par périodes, sur justificatifs de quittances."
+          "Pièces à prévoir : contrat d'alternance, bail signé, RIB à votre nom (le versement à un tiers est impossible), et votre attestation CAF (l'aide se calcule après APL).",
+          "Un dossier complet est étudié sous 7 jours ouvrés, avec des délais plus longs aux rentrées de septembre et de janvier.",
+          "Le versement suit vos dépôts de justificatifs (quittance de loyer et bulletin de salaire) : vous choisissez le rythme, mensuel, tous les deux mois ou par semestre, et vous pouvez en changer en cours d'année."
         ],
         "paragraphs": [
-          "Si votre alternance dure plusieurs années, la demande se renouvelle à chaque année de formation."
+          "Si votre alternance dure plusieurs années, la demande se renouvelle à chaque année de formation, dans la limite de deux années au total. Tout changement en cours de route se déclare sur votre espace personnel : déménagement, changement d'entreprise, fin d'alternance anticipée ou nouveau montant d'aide au logement."
         ]
       },
       {
@@ -766,17 +769,33 @@
       },
       {
         "q": "Faut-il refaire la demande chaque année ?",
-        "a": "Oui, le renouvellement se fait à chaque année de formation, dans les mêmes conditions."
+        "a": "Oui, le renouvellement se fait à chaque année de formation, dans les mêmes conditions. L'aide peut être sollicitée sur deux années de formation au maximum, consécutives ou non."
       },
       {
         "q": "Quel est le montant exact de l'aide ?",
-        "a": "Jusqu'à 100 € par mois, versés pendant 11 mois, selon votre loyer et le montant de votre APL. Le simulateur d'Action Logement donne le chiffre exact en quelques minutes."
+        "a": "De 10 à 100 € par mois, sur 11 mensualités par année de formation, selon votre loyer charges comprises et le montant de votre APL. Si ce qui reste à votre charge après APL est inférieur à 10 €, l'aide n'est pas attribuée."
+      },
+      {
+        "q": "Puis-je toucher Mobili-Jeune en restant dans mon logement actuel ?",
+        "a": "Non, sauf cas particulier : le dispositif finance un rapprochement. Le logement doit être à plus de 70 km de votre ancienne adresse, ou à plus de 40 minutes de trajet. La seule autre porte d'entrée est la double charge de loyer, quand vous êtes signataire de deux baux sur la même période."
+      },
+      {
+        "q": "Que se passe-t-il si mon salaire dépasse 120 % du SMIC en cours d'année ?",
+        "a": "Rien : les conditions s'apprécient au moment de la demande. C'est le salaire brut mensuel inscrit sur le contrat d'apprentissage ou de professionnalisation qui est examiné, et une augmentation ultérieure ne remet pas l'aide en cause."
+      },
+      {
+        "q": "L'alternance signée avec une entreprise de travail temporaire ouvre-t-elle droit à l'aide ?",
+        "a": "Oui. Les contrats d'apprentissage et de professionnalisation conclus avec une entreprise de travail temporaire ouvrent droit à Mobili-Jeune."
       }
     ],
     "sourcesOfficielles": [
       {
         "label": "L'aide Mobili-Jeune d'Action Logement",
         "url": "https://www.actionlogement.fr/l-aide-mobili-jeune"
+      },
+      {
+        "label": "La FAQ officielle de l'aide Mobili-Jeune",
+        "url": "https://www.actionlogement.fr/faq/aide-mobili-jeune"
       },
       {
         "label": "Simuler et demander l'APL sur caf.fr",
@@ -789,8 +808,8 @@
     ],
     "tldr": [
       "L'aide Mobili-Jeune d'Action Logement est une subvention, rien à rembourser, qui allège le loyer des alternants de moins de 30 ans du secteur privé non agricole.",
-      "Mobili-Jeune couvre jusqu'à 100 € de loyer par mois pendant 11 mois, sur la part restant après déduction de l'APL, soit jusqu'à 1 100 € sur une année de formation.",
-      "La demande Mobili-Jeune se fait en ligne sur actionlogement.fr, de 3 mois avant le début du contrat jusqu'à 5 mois après, et se renouvelle chaque année de formation."
+      "Mobili-Jeune verse 10 à 100 € par mois sur 11 mensualités, après déduction de l'APL, soit jusqu'à 1 100 € par année de formation et deux années de formation au maximum.",
+      "Elle suppose d'avoir déménagé pour se rapprocher, à plus de 70 km ou 40 minutes de trajet, et se demande de 3 mois avant le début du contrat à 5 mois après."
     ]
   },
   {

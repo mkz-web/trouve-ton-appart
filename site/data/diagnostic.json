@@ -186,11 +186,11 @@
       "id": "a-mobili",
       "bloc": "aides",
       "titre": "Aide Mobili-Jeune : jusqu'à 100 € de loyer en moins par mois",
-      "texte": "Pour les alternants du secteur privé de moins de 30 ans : jusqu'à 100 € par mois pendant 11 mois, en plus de l'APL. La fenêtre de demande est stricte : ne la laissez pas passer.",
+      "texte": "Pour les alternants du secteur privé non agricole de moins de 30 ans, payés jusqu'à 120 % du SMIC : 10 à 100 € par mois sur 11 mensualités, en plus de l'APL. Elle finance un rapprochement, donc un déménagement de plus de 70 km ou de plus de 40 minutes de trajet. La fenêtre de demande est stricte : ne la laissez pas passer.",
       "lien": "/guides/aide-mobili-jeune/",
       "lienLabel": "Le guide Mobili-Jeune",
       "regles": [
-        { "si": { "statut": ["alternant"], "age": ["a1", "a2"] }, "pourquoi": "Alternant de moins de 30 ans : c'est l'une des aides les plus généreuses, et l'une des moins demandées." }
+        { "si": { "statut": ["alternant"], "age": ["a1", "a2"] }, "pourquoi": "Alternant de moins de 30 ans : c'est l'une des aides les plus généreuses, et l'une des moins demandées. Vérifiez la condition d'éloignement avant de monter le dossier, c'est elle qui écarte le plus de candidats." }
       ]
     },
     {
