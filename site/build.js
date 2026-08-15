@@ -3796,7 +3796,37 @@ ${pages.map(p => `  <url><loc>${SITE.baseUrl}${p.urlPath}</loc><lastmod>${p.last
 </urlset>`;
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
 
-fs.writeFileSync(path.join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${SITE.baseUrl}/sitemap.xml\n\n# Index pour les moteurs IA : ${SITE.baseUrl}/llms.txt\n`);
+/* Content Signals (contentsignals.org, spécification relevée en source primaire
+ * le 15/08/2026) : trois signaux, « search », « ai-input » et « ai-train », à
+ * yes ou no, dans le groupe User-agent avant Allow.
+ *
+ * Les trois sont à yes, sciemment. La visibilité auprès des moteurs IA est la
+ * stratégie du projet depuis le déblocage des crawlers Cloudflare du 11/06 :
+ * exprimer une restriction ici la contredirait. Conséquence juridique assumée,
+ * écrite noir sur blanc par la spécification : seule une restriction vaut
+ * réserve de droits au titre de l'article 4 de la directive (UE) 2019/790, donc
+ * ce fichier n'en exprime aucune.
+ *
+ * Ce n'est PAS un levier d'acquisition, et il ne faut pas le vendre comme tel :
+ * même famille que llms.txt (règle du 19/07, Google et Mueller en source
+ * primaire). L'absence de signal valait déjà absence de restriction ; le gain
+ * est de le déclarer explicitement plutôt que de le laisser déduire.
+ *
+ * Le « pourquoi » reste ici, en commentaire JS. Seules les définitions
+ * normatives partent dans le fichier servi (règle du 26/07 : un raisonnement de
+ * build n'a rien à faire dans la sortie publique). */
+fs.writeFileSync(path.join(DIST, 'robots.txt'), `# Content-Signal (contentsignals.org) : aucune restriction n'est exprimée.
+# search   : indexation et résultats de recherche
+# ai-input : usage comme source d'une réponse générative
+# ai-train : entraînement ou affinage de modèles
+User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
+Allow: /
+
+Sitemap: ${SITE.baseUrl}/sitemap.xml
+
+# Index pour les moteurs IA : ${SITE.baseUrl}/llms.txt
+`);
 
 /* IndexNow : la clé publique est servie à la racine, preuve de propriété du
  * domaine exigée par les moteurs avant d'accepter les pings d'indexnow.js. */
