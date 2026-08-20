@@ -24,6 +24,14 @@ const DIST = path.join(__dirname, 'dist');
 const INDEXNOW_KEY = require('./indexnow-cle.js');
 const CONVENTIONS = new Set(['/404.html', '/robots.txt', `/${INDEXNOW_KEY}.txt`]);
 
+/* Configuration de l'hébergeur : Cloudflare Pages CONSOMME ces fichiers au
+ * déploiement et ne les sert jamais, donc ils ne font pas partie du site
+ * publié. Aucune page ne peut les citer, par construction : ce n'est pas un
+ * orphelin, c'est un fichier qui n'a pas vocation à être atteint. Distinct des
+ * conventions ci-dessus, qui sont elles bien servies, à une URL fixe.
+ * « _headers » porte le noindex du sous-domaine technique (voir build.js). */
+const CONFIG_HEBERGEUR = new Set(['/_headers']);
+
 const fichiers = [];
 (function walk(d) {
   for (const f of fs.readdirSync(d, { withFileTypes: true })) {
@@ -64,7 +72,7 @@ const corpus = fichiers
 let orphelins = 0;
 for (const p of fichiers) {
   const u = url(p);
-  if (u.endsWith('/index.html') || CONVENTIONS.has(u)) continue;
+  if (u.endsWith('/index.html') || CONVENTIONS.has(u) || CONFIG_HEBERGEUR.has(u)) continue;
   const nom = path.basename(p);
   /* Le fichier se contient lui-même : on retire ses propres occurrences. */
   const propre = /\.(html|css|js|txt|xml|json)$/.test(p) ? fs.readFileSync(p, 'utf8') : '';

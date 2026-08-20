@@ -3828,6 +3828,33 @@ Sitemap: ${SITE.baseUrl}/sitemap.xml
 # Index pour les moteurs IA : ${SITE.baseUrl}/llms.txt
 `);
 
+/* Sous-domaine technique de l'hébergeur (règle MKZ du 20/08/2026) :
+ * trouve-ton-appart.pages.dev sert une copie complète du site en 200 et n'est
+ * pas supprimable. Le canonical suffit à Google, mais ce n'est qu'une consigne :
+ * un moteur de réponse IA peut très bien citer la mauvaise URL, et se faire
+ * citer est justement la stratégie du projet. D'où un noindex servi à l'hôte
+ * technique, et à lui seul.
+ *
+ * Recette documentée par Cloudflare Pages, jamais bricolée : un bloc de
+ * « _headers » dont la clé est une URL ABSOLUE ne s'applique qu'à cet hôte. Les
+ * domaines de production (apex et www) ne matchent aucun des deux blocs, donc
+ * ne reçoivent rien. Invariant à mesurer en live après déploiement, jamais à
+ * déduire de ce fichier : « verify-livraison.js --miroir ».
+ *
+ * Les deux blocs sont nécessaires, un placeholder ne capturant qu'UN segment :
+ *   :project           vaut trouve-ton-appart.pages.dev, l'alias de production
+ *   :version.:project  vaut <branche|hash>.trouve-ton-appart.pages.dev, les préversions
+ *
+ * Cloudflare CONSOMME ce fichier et ne le sert pas : il ne fait pas partie du
+ * site publié (vérifié en live). C'est pourquoi check-links.js le range dans la
+ * configuration d'hébergement et non dans les conventions du web. */
+fs.writeFileSync(path.join(DIST, '_headers'), `https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex
+`);
+
 /* IndexNow : la clé publique est servie à la racine, preuve de propriété du
  * domaine exigée par les moteurs avant d'accepter les pings d'indexnow.js. */
 const INDEXNOW_KEY = require('./indexnow-cle.js');
