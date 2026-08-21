@@ -3837,18 +3837,34 @@ Sitemap: ${SITE.baseUrl}/sitemap.xml
  *
  * Recette documentée par Cloudflare Pages, jamais bricolée : un bloc de
  * « _headers » dont la clé est une URL ABSOLUE ne s'applique qu'à cet hôte. Les
- * domaines de production (apex et www) ne matchent aucun des deux blocs, donc
- * ne reçoivent rien. Invariant à mesurer en live après déploiement, jamais à
- * déduire de ce fichier : « verify-livraison.js --miroir ».
+ * domaines de production (apex et www) ne matchent aucun des deux blocs
+ * pages.dev, donc ne reçoivent jamais le noindex. Invariant à mesurer en live
+ * après déploiement, jamais à déduire de ce fichier :
+ * « verify-livraison.js --miroir ».
  *
  * Les deux blocs sont nécessaires, un placeholder ne capturant qu'UN segment :
  *   :project           vaut trouve-ton-appart.pages.dev, l'alias de production
  *   :version.:project  vaut <branche|hash>.trouve-ton-appart.pages.dev, les préversions
  *
+ * En-têtes de sécurité (21/08/2026, sur audit) : le bloc à clé RELATIVE
+ * s'applique à tous les hôtes, production comprise.
+ *   HSTS sans includeSubDomains : le domaine porte du mail OVH Zimbra, ne pas
+ *   forcer HTTPS sur d'éventuels sous-domaines hors de notre contrôle.
+ *   Pas de Content-Security-Policy : tout le CSS et le JS du site sont inline
+ *   (choix de perf assumé), une CSP honnête exigerait unsafe-inline et ne
+ *   protégerait rien ; décision de Mickaël en attente.
+ *   x-content-type-options et referrer-policy ne sont PAS doublonnés ici :
+ *   Cloudflare Pages les pose déjà par défaut (mesuré en live le 21/08).
+ *
  * Cloudflare CONSOMME ce fichier et ne le sert pas : il ne fait pas partie du
  * site publié (vérifié en live). C'est pourquoi check-links.js le range dans la
  * configuration d'hébergement et non dans les conventions du web. */
-fs.writeFileSync(path.join(DIST, '_headers'), `https://:project.pages.dev/*
+fs.writeFileSync(path.join(DIST, '_headers'), `/*
+  Strict-Transport-Security: max-age=31536000
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+https://:project.pages.dev/*
   X-Robots-Tag: noindex
 
 https://:version.:project.pages.dev/*
