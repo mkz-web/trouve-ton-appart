@@ -3850,9 +3850,18 @@ Sitemap: ${SITE.baseUrl}/sitemap.xml
  * s'applique à tous les hôtes, production comprise.
  *   HSTS sans includeSubDomains : le domaine porte du mail OVH Zimbra, ne pas
  *   forcer HTTPS sur d'éventuels sous-domaines hors de notre contrôle.
- *   Pas de Content-Security-Policy : tout le CSS et le JS du site sont inline
- *   (choix de perf assumé), une CSP honnête exigerait unsafe-inline et ne
- *   protégerait rien ; décision de Mickaël en attente.
+ *   CSP pragmatique (go de Mickaël du 21/08) : unsafe-inline assumé sur les
+ *   scripts et les styles, tout le CSS et le JS du site étant inline (choix
+ *   de perf). Sa valeur restante : verrouiller les ORIGINES. Scripts et
+ *   connexions limités à self et Clarity, object-src none, base-uri self,
+ *   frame-ancestors none (double X-Frame-Options pour les navigateurs
+ *   modernes). Origines Clarity relevées en source primaire
+ *   (learn.microsoft.com, page clarity-csp) : *.clarity.ms et c.bing.com,
+ *   Clarity répartissant sa charge entre a.clarity.ms et z.clarity.ms.
+ *   data: dans img-src : les flèches de tri des tableaux sont des SVG en
+ *   data URI dans le CSS. inline-speculation-rules : le script
+ *   type=speculationrules inline des pages ; mot-clé inconnu ignoré par les
+ *   navigateurs plus anciens, unsafe-inline couvre en repli.
  *   x-content-type-options et referrer-policy ne sont PAS doublonnés ici :
  *   Cloudflare Pages les pose déjà par défaut (mesuré en live le 21/08).
  *
@@ -3863,6 +3872,7 @@ fs.writeFileSync(path.join(DIST, '_headers'), `/*
   Strict-Transport-Security: max-age=31536000
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'inline-speculation-rules' https://*.clarity.ms; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.clarity.ms https://c.bing.com; connect-src 'self' https://*.clarity.ms https://c.bing.com; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 
 https://:project.pages.dev/*
   X-Robots-Tag: noindex
