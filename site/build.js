@@ -423,6 +423,42 @@ else demarrer();
 })();
 </script>`;
 
+/* ---- Rappels d'action (sprint UX parcours, 29/08/2026) ----
+ * Règle MKZ du 21/08/2026 : une page de service porte une action dans le
+ * premier écran, puis au plus tous les ~8 000 caractères de texte. Sur ce
+ * site, l'action est un OUTIL (diagnostic, simulateur, vérificateur), jamais
+ * un formulaire de contact. C'est le GABARIT qui tient la cadence, pas les
+ * contenus : ces blocs ne vivent ni dans guides.json ni dans llms-full.txt
+ * (chrome, pas contenu, même règle que la barre IA). Les formulations sont
+ * toutes différentes : le contrôle parcours de verify-livraison refuse une
+ * ligne >= 60 caractères répétée dans une même page. Les promesses chiffrées
+ * (7 questions, 2 minutes, sans inscription) sont celles déjà publiées sur
+ * /diagnostic/. */
+function rappelBloc(html) { return `<aside class="rappel" role="note">${html}</aside>`; }
+const RAPPEL_HAUT = `<aside class="rappel rappel-haut" role="note"><p>Par où commencer&nbsp;? <a href="/diagnostic/">Faites le diagnostic logement</a>&nbsp;: 7 questions, 2&nbsp;minutes, et vos aides comme vos démarches dans le bon ordre.</p></aside>`;
+const RAPPELS_MILIEU = [
+  `<p>Vous ne savez pas si ce dispositif vous concerne&nbsp;? <a href="/diagnostic/">Le diagnostic logement</a> croise votre situation avec les aides du site&nbsp;: 7 questions, 2&nbsp;minutes, aucune inscription.</p>`,
+  `<p>Perdu dans les dispositifs&nbsp;? Répondez à 7 questions&nbsp;: <a href="/diagnostic/">le diagnostic logement</a> vous liste vos aides et vos pistes de logement, dans le bon ordre.</p>`,
+  `<p>Chaque situation ouvre des droits différents&nbsp;: <a href="/diagnostic/">le diagnostic logement</a> vous dit lesquels sont les vôtres, en 2&nbsp;minutes et sans inscription.</p>`,
+  `<p>Un cas particulier&nbsp;? <a href="/diagnostic/">Le diagnostic logement</a> tient compte de votre statut, de votre foyer et de vos revenus pour vous orienter.</p>`,
+];
+const RAPPEL_AVANT_FAQ = `<p>Encore un doute sur votre éligibilité&nbsp;? <a href="/diagnostic/">Le diagnostic logement</a> vous répond en 2&nbsp;minutes, puis vous renvoie vers les bons guides.</p>`;
+/* Les deux guides-outils rappellent LEUR outil (il est sur la page). */
+const RAPPELS_OUTIL = {
+  'plafond-ressources-logement-social': [
+    `<p>Votre cas précis&nbsp;? <a href="#simulateur">Remontez au simulateur</a>&nbsp;: votre commune, votre foyer, votre revenu fiscal, et le verdict PLAI, PLUS, PLS ou logement intermédiaire.</p>`,
+    `<p>Pas besoin de lire tous les barèmes&nbsp;: <a href="#simulateur">le simulateur</a> applique le bon plafond à votre situation, dans votre navigateur.</p>`,
+    `<p>Un doute sur votre catégorie de foyer&nbsp;? <a href="#simulateur">Le simulateur</a> la détermine pour vous, majorations comprises.</p>`,
+    `<p>Ces montants changent chaque année&nbsp;: <a href="#simulateur">le simulateur</a> applique toujours le barème en vigueur.</p>`,
+  ],
+  'encadrement-des-loyers-paris': [
+    `<p>Un loyer à contrôler&nbsp;? <a href="#verifier">Remontez au vérificateur</a>&nbsp;: adresse, surface, meublé ou non, et le verdict face aux références officielles.</p>`,
+    `<p>Inutile de chercher votre quartier dans la grille&nbsp;: <a href="#verifier">le vérificateur</a> retrouve les références de votre adresse pour vous.</p>`,
+    `<p>Avant de signer ou de contester, <a href="#verifier">passez votre loyer au vérificateur</a>&nbsp;: le calcul reste dans votre navigateur.</p>`,
+    `<p>Le plafond dépend du quartier, des pièces et de l'époque du bâti&nbsp;: <a href="#verifier">le vérificateur</a> croise les quatre pour vous.</p>`,
+  ],
+};
+
 /* Wordmark : dernier mot du nom en accent, son « A » initial remplacé par
  * une maison-lettre (pignon = chapeau du A, porte = contrepoinçon). */
 const BRAND_A = `<svg class="brand-a" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12 1l11 9.5V25h-7v-7.6H8V25H1V10.5z" fill="currentColor"/></svg>`;
@@ -662,14 +698,14 @@ ${content}
       <p>${esc(SITE.tagline)}. Un service d'orientation indépendant : nous vous guidons vers les dispositifs et les sources officielles, gratuitement.</p>
     </div>
     <div>
-      <p class="footer-title">Parcours</p>
-      <ul>${footParcours}<li><a href="/annuaire/">Annuaire des sources fiables</a></li></ul>
-      <p class="footer-title">Données &amp; annuaires</p>
-      <ul>${footData}</ul>
+      <details class="foot-acc" open><summary class="footer-title">Parcours</summary>
+      <ul>${footParcours}<li><a href="/annuaire/">Annuaire des sources fiables</a></li></ul></details>
+      <details class="foot-acc" open><summary class="footer-title">Données &amp; annuaires</summary>
+      <ul>${footData}</ul></details>
     </div>
     <div>
-      <p class="footer-title">Guides pratiques</p>
-      <ul>${footGuides}</ul>
+      <details class="foot-acc" open><summary class="footer-title">Guides pratiques</summary>
+      <ul>${footGuides}</ul></details>
     </div>
   </div>
   <div class="container footer-legal">
@@ -677,6 +713,7 @@ ${content}
     ${CREDIT}
   </div>
 </footer>
+<script>(function(){if(matchMedia('(min-width:768px)').matches)return;for(var a=document.querySelectorAll('.foot-acc'),i=0;i<a.length;i++)a[i].removeAttribute('open')})()</script>
 ${CONSENT_BANNER}
 ${CONSENT_JS}
 ${ANIM_JS}
@@ -919,7 +956,7 @@ function addPage(urlPath, html, priority, lastmod) {
 </section>
 <section>
   <h2>Répondez à votre question en 2 minutes</h2>
-  <p>Trois outils gratuits, sans inscription, construits sur les barèmes officiels&nbsp;: vos réponses restent dans votre navigateur.</p>
+  <p class="section-intro">Trois outils gratuits, sans inscription, construits sur les barèmes officiels&nbsp;: vos réponses restent dans votre navigateur.</p>
   <div class="grid grid-outils">
     <a class="card card-outil" href="/diagnostic/" style="${themeStyle(themeOf())}">
       <span class="card-icon card-icon-sm">${icon('diagnostic', PAL.bleu2)}</span>
@@ -948,7 +985,7 @@ function addPage(urlPath, html, priority, lastmod) {
 <section>
   <h2>Les guides essentiels</h2>
   <div class="grid grid-guides">${guideCards}</div>
-  <p><a href="/guides/">Voir tous les guides <span class="cta-arrow" aria-hidden="true">→</span></a></p>
+  <p><a href="/guides/">Voir tous les guides <span class="cta-arrow" aria-hidden="true">→</span></a> · <a href="/recherche/">Chercher une commune, une résidence ou une aide</a></p>
 </section>
 ${TENSION && TENSION._meta.region ? `
 <section class="stats-bloc">
@@ -970,12 +1007,13 @@ ${TENSION && TENSION._meta.region ? `
   <div class="steps">
     <div class="step"><h3>Identifiez votre profil</h3><p>Étudiant ou jeune actif, demandeur de logement social, senior, personne à mobilité réduite, salarié en mission ou expatrié de retour&nbsp;: chaque situation ouvre des droits différents. Choisissez le parcours qui correspond à la vôtre.</p></div>
     <div class="step"><h3>Suivez les étapes dans le bon ordre</h3><p>Sécuriser un garant avant de candidater, déposer sa demande unique avant de viser un bailleur précis, vérifier l'encadrement des loyers avant de signer&nbsp;: l'ordre des démarches change tout. Chaque parcours vous donne la séquence qui fonctionne.</p></div>
-    <div class="step"><h3>Candidatez à la source</h3><p>Nous ne publions pas d'annonces&nbsp;: chaque guide renvoie vers le site officiel ou la plateforme qui fait foi (CROUS, demande-logement-social.gouv.fr, Action Logement, bailleurs). Vous candidatez là où votre dossier est réellement traité.</p></div>
+    <div class="step"><h3>Candidatez à la source</h3><p>Nous ne publions pas d'annonces&nbsp;: chaque guide renvoie vers le site officiel ou la plateforme qui fait foi (CROUS, demande-logement-social.gouv.fr, Action Logement, bailleurs). Vous candidatez là où votre dossier est réellement traité. L'<a href="/annuaire/">annuaire des sources fiables</a> regroupe tous ces liens officiels.</p></div>
   </div>
 </section>
 <section class="notice">
   <h2>Pourquoi ce site&nbsp;?</h2>
   <p>Le logement francilien est éclaté entre des dizaines de plateformes, de guichets et de dispositifs. Résultat&nbsp;: des droits non utilisés (Visale, Loca-Pass, logement intermédiaire…) et des parcours subis. Nous remettons de l'ordre&nbsp;: pas d'annonces dupliquées, pas de fausses promesses, mais des parcours clairs et des liens directs vers les sources qui font foi.</p>
+  <p>Par où commencer&nbsp;? <a href="/diagnostic/">Le diagnostic logement</a> vous répond en 2&nbsp;minutes, gratuitement et sans inscription.</p>
 </section>`;
   pushIndex(`${SITE.name}, accueil`, '/', SITE.description, 'Page');
   addPage('/', layout({
@@ -1042,6 +1080,7 @@ for (const p of PARCOURS) {
   </div>
   ${ILLUS[p.slug] || ''}
 </header>
+${RAPPEL_HAUT}
 <div class="steps" style="${themeStyle(t)}">
 ${etapes}
 </div>
@@ -1120,6 +1159,8 @@ const OUTILS_DE_GUIDE = {
     ],
   },
 };
+
+
 
 /* Barre « résumer avec l'IA » : liens profonds pré-remplis vers les cinq
  * assistants. Patterns et pièges : skill `barre-resume-ia`, qui fait foi.
@@ -1207,9 +1248,22 @@ function barreIa(urlPath, en) {
 }
 
 for (const g of GUIDES) {
-  const usedIds = new Set(['faq', 'verifier', 'suite-t']);
+  const usedIds = new Set(['faq', 'verifier', 'simulateur', 'suite-t']);
   const tocItems = [];
-  const sections = g.sections.map(s => {
+  /* Cadence d'action tenue par le gabarit, jamais par les contenus : après
+   * ~4 500 caractères de texte de sections sans action, un rappel vers
+   * l'outil (celui de la page pour les deux guides-outils, sinon le
+   * diagnostic). Jamais après la dernière section : le rappel pré-FAQ prend
+   * le relais, sinon deux encadrés se suivraient. */
+  const rappels = RAPPELS_OUTIL[g.slug] || RAPPELS_MILIEU;
+  /* Le cumul part du texte déjà servi avant les sections (fil d'Ariane, h1,
+   * chapo, essentiel, titres du sommaire, barre IA ≈ 300 car.) : sans lui,
+   * le premier rappel arrivait un à deux écrans trop tard. */
+  let cumulTexte = (g.h1 || '').length * 2 + (g.intro || '').length
+    + (g.tldr || []).join(' ').length
+    + g.sections.reduce((n, x) => n + x.h2.length, 0) + 300;
+  let iRappel = 0;
+  const sections = g.sections.map((s, iSection) => {
     const id = anchorOf(s.h2, usedIds);
     tocItems.push(`<li><a href="#${id}">${esc(s.h2)}</a></li>`);
     let html = `<h2 id="${id}">${esc(s.h2)}</h2>`;
@@ -1224,6 +1278,11 @@ for (const g of GUIDES) {
   <thead><tr>${s.table.headers.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>
   <tbody>${s.table.rows.map(r => `<tr>${r.map(c => `<td>${inline(c)}</td>`).join('')}</tr>`).join('')}</tbody>
 </table></div>`;
+    cumulTexte += html.replace(/<[^>]+>/g, ' ').length;
+    if (cumulTexte >= 4200 && iRappel < rappels.length && iSection < g.sections.length - 1) {
+      html += rappelBloc(rappels[iRappel++]);
+      cumulTexte = 0;
+    }
     return html;
   }).join('');
   const faqHtml = g.faq.map(f => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('');
@@ -1234,7 +1293,13 @@ for (const g of GUIDES) {
   const outil = (g.slug === 'encadrement-des-loyers-paris' && ENCADREMENT) ? encadrementWidget()
     : (g.slug === 'plafond-ressources-logement-social' && PLAFONDS && LS_COMMUNES) ? plafondsWidget() + plafondsTables()
       : '';
-  if (outil) tocItems.unshift('<li><a href="#verifier">Vérifier votre loyer</a></li>');
+  /* L'ancre et le libellé suivent l'outil de CE guide : le simulateur de
+   * plafonds vit sous #simulateur (l'ancien #verifier commun envoyait le
+   * sommaire du guide plafonds vers une ancre inexistante, avec un libellé
+   * « loyer » pour un outil d'éligibilité). */
+  if (outil) tocItems.unshift(g.slug === 'plafond-ressources-logement-social'
+    ? '<li><a href="#simulateur">Vérifier votre éligibilité</a></li>'
+    : '<li><a href="#verifier">Vérifier votre loyer</a></li>');
   tocItems.push('<li><a href="#faq">Questions fréquentes</a></li>');
   /* Sommaire actif : sticky en desktop, replié en mobile par un micro-script
    * placé JUSTE APRÈS le nav (repli avant le paint du corps : pas de flash) ;
@@ -1260,6 +1325,7 @@ ${barreIa(`/guides/${g.slug}/`, false)}
 <div class="guide-body">
 ${tldrBloc(g.tldr, false)}${outil}
 ${sections}
+${rappelBloc(RAPPEL_AVANT_FAQ)}
 <section class="faq" id="faq"><h2>Questions fréquentes</h2>${faqHtml}</section>
 ${suiteBloc(g)}
 <p class="pills"><strong>Parcours liés&nbsp;:</strong> ${related}</p>
@@ -1267,6 +1333,7 @@ ${suiteBloc(g)}
 </div>
 </div>
 </article>
+<button type="button" class="haut-page" hidden aria-label="Revenir en haut de la page">↑</button>
 <script>
 (function(){
 var toc=document.querySelector('.guide-toc');if(!toc)return;
@@ -1285,6 +1352,15 @@ var io=new IntersectionObserver(function(es){
 ordre.forEach(function(id){var el=document.getElementById(id);if(el)io.observe(el)});
 toc.addEventListener('click',function(e){var a=e.target.closest('a[href^="#"]');if(a)on(a.getAttribute('href').slice(1))});
 if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
+})();
+/* Retour en haut : apparaît après 2 écrans de défilement (guides jusqu'à
+ * 19 écrans mobiles, sans autre échappatoire que le pouce). scrollTo
+ * respecte scroll-behavior:smooth, lui-même sous no-preference uniquement ;
+ * le focus est rendu au h1 pour les lecteurs d'écran. */
+(function(){
+var hp=document.querySelector('.haut-page');if(!hp)return;
+addEventListener('scroll',function(){var v=scrollY>innerHeight*2;if(v===hp.hidden)hp.hidden=!v},{passive:true});
+hp.addEventListener('click',function(){scrollTo(0,0);var h1=document.querySelector('h1');if(h1){h1.setAttribute('tabindex','-1');h1.focus({preventScroll:true})}});
 })();
 </script>`;
   pushIndex(g.h1, `/guides/${g.slug}/`, g.metaDescription, 'Guide');
@@ -1340,6 +1416,7 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
   </div>
   ${illu('illu-guides', 'Illustration : un personnage consulte une carte à un carrefour de panneaux indiquant différents logements')}
 </header>
+${RAPPEL_HAUT}
 <div class="grid grid-guides">${cards}</div>`;
   pushIndex('Les guides pratiques', '/guides/', `Les ${GUIDES.length} guides logement Île-de-France.`, 'Page');
   addPage('/guides/', layout({
@@ -1422,6 +1499,7 @@ ${suiteCards ? `<section class="suite" aria-labelledby="suite-t">
 </div>
 </div>
 </article>
+<button type="button" class="haut-page" hidden aria-label="Back to the top of the page">↑</button>
 <script>
 (function(){
 var toc=document.querySelector('.guide-toc');if(!toc)return;
@@ -1437,6 +1515,15 @@ var io=new IntersectionObserver(function(es){
 ordre.forEach(function(id){var el=document.getElementById(id);if(el)io.observe(el)});
 toc.addEventListener('click',function(e){var a=e.target.closest('a[href^="#"]');if(a)on(a.getAttribute('href').slice(1))});
 if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
+})();
+/* Retour en haut : apparaît après 2 écrans de défilement (guides jusqu'à
+ * 19 écrans mobiles, sans autre échappatoire que le pouce). scrollTo
+ * respecte scroll-behavior:smooth, lui-même sous no-preference uniquement ;
+ * le focus est rendu au h1 pour les lecteurs d'écran. */
+(function(){
+var hp=document.querySelector('.haut-page');if(!hp)return;
+addEventListener('scroll',function(){var v=scrollY>innerHeight*2;if(v===hp.hidden)hp.hidden=!v},{passive:true});
+hp.addEventListener('click',function(){scrollTo(0,0);var h1=document.querySelector('h1');if(h1){h1.setAttribute('tabindex','-1');h1.focus({preventScroll:true})}});
 })();
 </script>`;
   addPage(`/en/guides/${g.slug}/`, layoutEn({
@@ -1587,6 +1674,7 @@ if(location.hash&&links[location.hash.slice(1)])on(location.hash.slice(1));
     <p class="lead">${esc(ANNUAIRE.intro)}</p>
   </div>
 </header>
+${RAPPEL_HAUT}
 ${notresBlock}
 ${cats}`;
   pushIndex(ANNUAIRE.h1, '/annuaire/', ANNUAIRE.metaDescription, 'Annuaire');
@@ -1724,6 +1812,7 @@ function buildDirectory(cfg) {
   </div>
   ${cfg.illu || ''}
 </header>
+${RAPPEL_HAUT}
 <section>
   <h2>Choisissez votre département</h2>
   <div class="grid">${depCards}</div>
@@ -1745,8 +1834,54 @@ function buildDirectory(cfg) {
 
   /* Pages département */
   for (const d of DEPS_IDF) {
-    const items = byDep.get(d);
+    /* Tri par commune (par code postal à Paris : un CP = un arrondissement),
+     * puis par nom : un visiteur cherche SA commune, pas l'ordre du fichier
+     * source. Les ancres r-… des cartes ne changent pas. */
+    const groupeDe = (r) => {
+      if (d === '75' && /^75\d{3}$/.test(String(r.cp || ''))) {
+        const n = parseInt(String(r.cp).slice(3), 10);
+        if (n >= 1 && n <= 20) return `${n}${n === 1 ? 'er' : 'e'} arrondissement`;
+      }
+      return r.commune || 'Commune non précisée';
+    };
+    const cleTri = (r) => (d === '75' ? String(r.cp || '75999') : (r.commune || 'zzz'));
+    const items = byDep.get(d).slice().sort((a, b) =>
+      cleTri(a).localeCompare(cleTri(b), 'fr', { numeric: true }) || (a.nom || '').localeCompare(b.nom || '', 'fr'));
     if (!items.length) continue;
+    /* Regroupement quand la liste est longue : sommaire ancré en tête (une
+     * page annuaire montait à 26 200 px à 375 px sans un seul repère),
+     * intertitres par commune, et rappel d'action tous les ~4 500 caractères
+     * (même cadence de parcours que les guides). Les petites listes restent
+     * plates : 12 intertitres pour 14 adresses seraient du bruit. */
+    const groupes = [];
+    for (const r of items) {
+      const gNom = groupeDe(r);
+      if (!groupes.length || groupes[groupes.length - 1].nom !== gNom) groupes.push({ nom: gNom, items: [] });
+      groupes[groupes.length - 1].items.push(r);
+    }
+    const estGroupe = items.length >= 12 && groupes.length >= 4;
+    const idDeGroupe = (nom) => 'g-' + nom.toLowerCase().normalize('NFD').replace(DIACRITIQUES, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    let sommaireGroupes = '', listeHtml;
+    if (estGroupe) {
+      sommaireGroupes = `<nav class="pills dir-sommaire" aria-label="${d === '75' ? 'Aller directement à un arrondissement' : 'Aller directement à une commune'}">${groupes.map(gr => `<a class="pill" href="#${idDeGroupe(gr.nom)}">${esc(gr.nom)} (${gr.items.length})</a>`).join(' ')}</nav>`;
+      let cumul = 0, iR = 0;
+      listeHtml = groupes.map((gr, iG) => {
+        let bloc = `<h2 class="dir-commune" id="${idDeGroupe(gr.nom)}">${esc(gr.nom)} <span class="dir-compte">· ${gr.items.length}</span></h2>
+<ul class="dir-list" style="${themeStyle(t)}">
+${gr.items.map(cfg.renderItem).join('\n')}
+</ul>`;
+        cumul += bloc.replace(/<[^>]+>/g, ' ').length;
+        if (cumul >= 4500 && iR < RAPPELS_MILIEU.length && iG < groupes.length - 1) {
+          bloc += rappelBloc(RAPPELS_MILIEU[iR++]);
+          cumul = 0;
+        }
+        return bloc;
+      }).join('\n');
+    } else {
+      listeHtml = `<ul class="dir-list" style="${themeStyle(t)}">
+${items.map(cfg.renderItem).join('\n')}
+</ul>`;
+    }
     const urlPath = `/${baseSlug}/${DEP_SLUGS[d]}/`;
     const h1 = `${cfg.nomPlurielCap} ${DEP_PREP[d]} (${d})`;
     const others = DEPS_IDF.filter(x => x !== d && byDep.get(x).length)
@@ -1761,9 +1896,9 @@ function buildDirectory(cfg) {
     <p class="lead">${compteur(items.length)} ${items.length > 1 ? cfg.nomPluriel : cfg.nom} ${DEP_PREP[d]}, d'après ${esc(data._meta.source.split('(')[0].trim())}.</p>
   </div>
 </header>
-<ul class="dir-list" style="${themeStyle(t)}">
-${items.map(cfg.renderItem).join('\n')}
-</ul>
+${RAPPEL_HAUT}
+${sommaireGroupes}
+${listeHtml}
 <section class="notice">
   ${cfg.comment}
   ${guidePills ? `<p class="pills"><strong>Guides utiles&nbsp;:</strong> ${guidePills}</p>` : ''}
@@ -2033,6 +2168,7 @@ ${(() => {
 ${sorted.filter(r => r.note).map(r => `<p class="maj">* ${esc(r.nom)}&nbsp;: ${esc(r.note)}</p>`).join('')}
 ${filterScript}
 ${legende}
+${PLAFONDS && LS_COMMUNES ? rappelBloc(`<p>Ce parc est soumis à des plafonds de revenus&nbsp;: <a href="/guides/plafond-ressources-logement-social/#simulateur">vérifiez votre éligibilité avec le simulateur</a>, d'après votre commune, votre foyer et votre revenu fiscal.</p>`) : rappelBloc(RAPPELS_MILIEU[0])}
 ${ressourcesDep(d, 'logement-social/chiffres')}
 <p class="pills"><strong>Autres départements&nbsp;:</strong> ${others}</p>`;
     for (const r of sorted) {
@@ -2147,6 +2283,7 @@ ${CARTE_DELAIS ? `<section>
     ${tete}<tbody>${lentes.map(rangee).join('')}</tbody>
   </table></div>
 </section>
+${PLAFONDS && LS_COMMUNES ? rappelBloc(`<p>Pendant l'attente, sécurisez le dossier&nbsp;: <a href="/guides/plafond-ressources-logement-social/#simulateur">vérifiez vos plafonds avec le simulateur</a>, et gardez votre demande à jour.</p>`) : rappelBloc(RAPPELS_MILIEU[0])}
 <section>
   <h2>Département par département</h2>
   <div class="table-wrap"><table class="data">
@@ -2443,7 +2580,8 @@ function plafondsTables() {
 <section id="baremes">
   <h2>Les barèmes ${esc(P._meta.millesime)} en Île-de-France, catégorie par catégorie</h2>
   <p>Montants annuels de <strong>revenu fiscal de référence</strong> à ne pas dépasser, en vigueur depuis le ${esc(dateFrOf(P._meta.dateEffet))} (revalorisation de ${esc(P._meta.revalorisation)}). Le revenu pris en compte est celui de ${esc(P._meta.rfrAnnee)}, soit l'avis d'impôt reçu en ${esc(String(+P._meta.rfrAnnee + 1))}.</p>
-  ${P.hlm.types.map(tableHlm).join('')}
+  ${P.hlm.types.map((t2, i2) => tableHlm(t2) + (i2 === 1 ? rappelBloc(`<p>Inutile de chercher votre ligne&nbsp;: <a href="#simulateur">remontez au simulateur</a>, il choisit la catégorie et la zone pour vous.</p>`) : '')).join('')}
+  ${rappelBloc(`<p>Au-dessus du PLS&nbsp;? Avant de lire le barème intermédiaire, <a href="#simulateur">le simulateur</a> vous dit si le LLI vous concerne.</p>`)}
   <h3 id="bareme-lli">Au-dessus des plafonds : le logement intermédiaire (LLI)</h3>
   <p>Si vous dépassez le PLS, le logement locatif intermédiaire prend le relais. Attention, il ne suit pas le même découpage géographique&nbsp;: c'est le zonage A/B/C qui s'applique, plus large que « Paris et communes limitrophes ».</p>
   <div class="table-wrap"><table class="data nosort">
@@ -2856,6 +2994,7 @@ inp.focus();
     <p class="lead">Les aides au logement ne se demandent pas «&nbsp;un jour&nbsp;»&nbsp;: chacune a son moment, et certaines fenêtres ne se rattrapent pas. Voici les démarches dans le bon ordre. Chaque étape renvoie au guide complet, vérifié sur les sources officielles.</p>
   </div>
 </header>
+${RAPPEL_HAUT}
 <div class="steps" style="${themeStyle(t)}">
   <div class="step"><h3>Avant les visites&nbsp;: le dossier certifié</h3><p><a href="/guides/dossierfacile/">DossierFacile</a>, le service public gratuit du ministère du Logement, vérifie votre dossier de location sous 72&nbsp;heures ouvrées au maximum. Constituez-le avant de commencer les visites, pas le soir où un bailleur réclame vos pièces.</p></div>
   <div class="step"><h3>Avant de candidater&nbsp;: le garant</h3><p>Sans garant familial, la garantie <a href="/guides/visale/">Visale</a> est gratuite et le visa se demande en ligne sur visale.fr avant de candidater. En Île-de-France, elle couvre un loyer jusqu'à 1&nbsp;940&nbsp;€ charges comprises selon la situation (1&nbsp;000&nbsp;€ pour un étudiant ou alternant sans justificatifs de ressources). Un garant classique reste possible&nbsp;: <a href="/guides/garant-location/">toutes les solutions</a>.</p></div>
@@ -3112,7 +3251,8 @@ h1{font-size:clamp(1.75rem,3.6vw,2.5rem);line-height:1.15;font-weight:800;letter
 h2{font-size:clamp(1.32rem,2.2vw,1.55rem);line-height:1.25;font-weight:700;letter-spacing:-.012em;margin-top:2.6rem}
 h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .lead{font-size:1.14rem;line-height:1.6;color:var(--gris)}
-.kicker{font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ttx,var(--bleu2));margin:0 0 .2rem}
+.kicker{font-size:.8125rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ttx,var(--bleu2));margin:0 0 .2rem}
+small{font-size:.8125rem}
 /* ---- Header ---- */
 .site-header{background:linear-gradient(135deg,#163a5c,var(--bleu) 60%,#26619a);padding:8px 0 0}
 .site-header .container.header-lang{justify-content:flex-end;margin-bottom:2px}
@@ -3308,6 +3448,30 @@ button.pill{font:inherit;font-size:.85rem;color:var(--encre);cursor:pointer;padd
 main p a:not([class]),main li a:not([class]){text-decoration-thickness:1px;text-underline-offset:2px;transition:text-decoration-color .18s,text-decoration-thickness .18s,text-underline-offset .18s}
 main p a:not([class]):hover,main li a:not([class]):hover,main p a:not([class]):focus-visible,main li a:not([class]):focus-visible{text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
 .breadcrumb{font-size:.85rem;color:var(--gris);margin:1.3rem 0 1rem}.breadcrumb a{color:var(--gris)}
+/* Cibles tactiles : zone cliquable élargie SANS décalage du texte (padding
+ * compensé par une marge négative, motif déjà toléré par check-rendu). Fil
+ * d'Ariane à ~44 px, rangées de listes de liens à >= 30 px. */
+.breadcrumb a{display:inline-block;padding:.8rem 0;margin:-.8rem 0}
+li a:not(.pill):not(.btn),td a,.dir-links a,.dir-meta a,.result-list a{display:inline-block;padding:.3rem 0;margin:-.3rem 0}
+/* Mesure de ligne. Piège de l'unité ch mesuré ici : le « 0 » de Segoe UI est
+ * large (72ch ≈ 634 px, soit la largeur du conteneur, règle sans effet) ;
+ * 62ch ≈ 547 px donnent 75-78 caractères réels par ligne (mesurés 93-99
+ * avant, cible 60-80). Les boîtes à cadre (tldr, rappel) gardent leur
+ * largeur. */
+.guide-body p,.guide-body ul,.guide-body ol,.step p,.notice p,.stats-head p,.section-intro,.sources li,.maj{max-width:62ch}
+.tldr ul{max-width:none}
+/* Rappels d'action (cadence du parcours, tenue par les gabarits). */
+.rappel{background:var(--fond2);border-left:4px solid var(--bleu2);border-radius:10px;padding:12px 18px;margin:1.7rem 0;max-width:72ch}
+.rappel p{margin:0;max-width:none}
+.rappel-haut{margin:1.1rem 0 0}
+/* Sommaire des annuaires groupés + intertitres de commune. */
+.dir-sommaire{margin:1.2rem 0 0}
+.dir-commune{font-size:1.06rem;margin:2.2rem 0 .2rem}
+.dir-compte{color:var(--gris);font-weight:400;font-size:.9rem}
+/* Retour en haut (guides) : caché tant qu'on n'a pas défilé 2 écrans. */
+.haut-page{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:15;width:48px;height:48px;border-radius:50%;border:1px solid var(--bord);background:var(--encre);color:var(--fond);font-size:1.3rem;line-height:1;cursor:pointer;box-shadow:0 8px 22px -10px rgba(28,39,51,.55)}
+.haut-page:hover{transform:translateY(-2px)}
+body:has(.consent:not([hidden])) .haut-page{display:none}
 .faq details{border:1px solid var(--bord);border-radius:12px;padding:12px 18px;margin:.7rem 0;background:var(--surface);transition:border-color .15s}
 .faq details[open]{border-color:var(--bleu2);background:linear-gradient(180deg,var(--ciel),#fff 140%)}
 /* Chevron accent commun FAQ + sommaire de guide (le marker natif saute). */
@@ -3337,7 +3501,15 @@ main p a:not([class]):hover,main li a:not([class]):hover,main p a:not([class]):f
 .site-footer{background:linear-gradient(180deg,#1c2733,#16202a);color:#cdd6de;margin-top:0;padding:2.4rem 0 1rem;font-size:.88rem}
 .footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}
 .footer-brand{color:#fff;font-weight:700;font-size:1.05rem}
-.footer-title{font-size:.78rem;font-weight:650;text-transform:uppercase;letter-spacing:.08em;color:#9fb3c8;margin-bottom:.4rem}
+.footer-title{font-size:.8125rem;font-weight:650;text-transform:uppercase;letter-spacing:.08em;color:#9fb3c8;margin-bottom:.4rem}
+/* Groupes du pied de page en accordéons sous 768 px (le footer mesurait
+ * 1 879 px à 375 px, 2,3 écrans de liens) : le HTML reste complet pour les
+ * crawlers, seul l'attribut open est retiré par le micro-script mobile. */
+.foot-acc{margin:0 0 .9rem}
+.foot-acc summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;margin-bottom:0}
+.foot-acc summary::-webkit-details-marker{display:none}
+.foot-acc summary::after{content:"▾";font-size:.9rem;color:#9fb3c8;transition:transform .2s}
+.foot-acc[open] summary::after{transform:rotate(180deg)}
 .site-footer ul{list-style:none;padding:0;margin:0}.site-footer li{margin:.38rem 0}.site-footer a{color:#9fc1e0;text-decoration:none}.site-footer a:hover{text-decoration:underline;color:#cfe3f4}
 .footer-legal{border-top:1px solid #33414e;margin-top:1.6rem;padding-top:1rem;color:#8a98a5;display:flex;flex-wrap:wrap;gap:.3rem 1.4rem;justify-content:space-between}
 /* Liens en ligne dans une phrase : soulignés en permanence (WCAG 1.4.1, ils ne
@@ -3379,7 +3551,7 @@ main p a:not([class]):hover,main li a:not([class]):hover,main p a:not([class]):f
 /* ---- Tableaux de données ---- */
 .table-wrap{overflow-x:auto;margin:1.2rem 0;border:1px solid var(--bord);border-radius:14px;box-shadow:0 1px 2px rgba(22,51,82,.05),0 6px 18px -12px rgba(22,51,82,.10)}
 table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(--surface)}
-.data th{background:linear-gradient(#edf4fa,#dfecf7);border-bottom:2px solid #c9dcec;color:var(--bleu);text-align:left;padding:9px 12px;white-space:nowrap;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}
+.data th{background:linear-gradient(#edf4fa,#dfecf7);border-bottom:2px solid #c9dcec;color:var(--bleu);text-align:left;padding:9px 12px;white-space:nowrap;font-size:.8125rem;text-transform:uppercase;letter-spacing:.05em}
 .data td{border-top:1px solid var(--bord);padding:7px 12px}
 .data tbody tr:nth-child(even) td{background:#f8fbfd}
 .data tbody tr:hover td{background:var(--fond2)}
@@ -3395,7 +3567,7 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .jauge-anim tbody tr:not(.in-view) td.bar{--pct:0%!important}
 .jauge-anim tbody tr:not(.in-view) .badge{opacity:0}
 .jauge-anim tbody tr.in-view .badge{animation:badgepop .45s .5s cubic-bezier(.34,1.56,.64,1) backwards}
-.badge{display:inline-block;border-radius:6px;padding:1px 8px;font-size:.74rem;font-weight:650;white-space:nowrap}
+.badge{display:inline-block;border-radius:6px;padding:1px 8px;font-size:.8125rem;font-weight:650;white-space:nowrap}
 .badge-def{background:#fdecdd;color:#a8492f}
 .badge-car{background:#b04a30;color:#fff}
 /* ---- Outil encadrement ---- */
@@ -3435,7 +3607,7 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .result-list{list-style:none;padding:0}
 .result-list li{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--bord);border-radius:12px;padding:10px 16px;margin:.55rem 0;background:var(--surface)}
 .result-list small{color:var(--gris)}
-.badge-cat{flex:none;background:var(--ciel);color:var(--bleu);border-radius:6px;padding:2px 8px;font-size:.72rem;font-weight:650;margin-top:2px;white-space:nowrap}
+.badge-cat{flex:none;background:var(--ciel);color:var(--bleu);border-radius:6px;padding:2px 8px;font-size:.8125rem;font-weight:650;margin-top:2px;white-space:nowrap}
 /* ---- Animations (CSS pur, désactivées si reduced-motion) ---- */
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
