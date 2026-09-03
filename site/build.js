@@ -51,6 +51,39 @@ const FJT = readOpen('fjt');
 const RES_AUTONOMIE = readOpen('residences-autonomie');
 const LS_COMMUNES = readOpen('logement-social-communes');
 const ENCADREMENT = readOpen('encadrement-loyers-paris');
+/* Etat de la grille servie contre l'arrete reellement en vigueur.
+ * Mesure du 04/09/2026 : le jeu opendata.paris.fr est fige au 17/06/2025 et
+ * s'arrete au millesime 2025, alors que paris.fr publie l'arrete du 12 juin
+ * 2026, applicable du 1er juillet au 24 novembre 2026. On sert donc la grille
+ * de l'arrete precedent, et on le DIT, plutot que de laisser croire a un
+ * verdict a jour. La nouvelle grille n'existe qu'en PDF : son extraction est
+ * un chantier separe, une grille de loyers fausse serait pire qu'une grille
+ * datee. Quand opendata publiera le millesime suivant, la garde ci-dessous
+ * fait echouer le build pour forcer la mise a jour de ce bloc. */
+const ENCADREMENT_VIGUEUR = ENCADREMENT ? {
+  grilleMillesime: '2025',
+  grilleArrete: "arrêté du 16 juin 2025",
+  grilleFin: '30 juin 2026',
+  arrete: "arrêté du 12 juin 2026",
+  debut: '1er juillet 2026',
+  fin: '24 novembre 2026',
+  arreteUrl: 'https://cdn.paris.fr/paris/2026/06/17/arrete-prefectoral-encadrement-des-loyers-12-06-2026-publie-n4wk.pdf',
+  pageUrl: 'https://www.paris.fr/pages/l-encadrement-des-loyers-comprendre-le-dispositif-29091',
+  constateLe: '4 septembre 2026',
+} : null;
+if (ENCADREMENT && ENCADREMENT._meta.millesime !== ENCADREMENT_VIGUEUR.grilleMillesime) {
+  throw new Error("encadrement : le millesime ingere (" + ENCADREMENT._meta.millesime +
+    ") ne correspond plus a ENCADREMENT_VIGUEUR.grilleMillesime (" + ENCADREMENT_VIGUEUR.grilleMillesime +
+    "). Mettre a jour ce bloc, ou le retirer si la grille servie est redevenue celle en vigueur.");
+}
+/* Phrase unique, reprise partout : page, JSON servi, llms.txt. */
+function encadrementAvertissement() {
+  const v = ENCADREMENT_VIGUEUR;
+  return "Attention : la grille servie ici est celle de l'" + v.grilleArrete + ", en vigueur jusqu'au " +
+    v.grilleFin + ". Depuis le " + v.debut + ", c'est l'" + v.arrete + " qui s'applique, jusqu'au " + v.fin +
+    ", et ses valeurs ne sont pas encore publiées en données ouvertes par la Ville de Paris (constaté le " +
+    v.constateLe + "). Vérifiez votre plafond sur l'arrêté en vigueur avant toute démarche.";
+}
 /* Barèmes de plafonds de ressources (revalorisés par arrêté chaque 1er janvier :
  * re-vérifier site/data/plafonds.json début janvier). */
 const PLAFONDS = read('plafonds.json');
@@ -2605,6 +2638,7 @@ function encadrementWidget() {
 <section class="tool" id="verifier" data-clarity-mask="true">
   <h2>Vérifiez votre loyer&nbsp;: les références ${esc(m.millesime)}, quartier par quartier</h2>
   <p>Les loyers de référence officiels (arrêté préfectoral, références ${esc(m.millesime)}) pour chacun des 80 quartiers de Paris. Sélectionnez les caractéristiques du logement&nbsp;:</p>
+  <div class="rappel avert"><p><strong>${esc(encadrementAvertissement())}</strong> <a href="${ENCADREMENT_VIGUEUR.arreteUrl}" rel="noopener" target="_blank">Arrêté du 12 juin 2026 (PDF)</a> · <a href="${ENCADREMENT_VIGUEUR.pageUrl}" rel="noopener" target="_blank">page officielle de la Ville de Paris</a>.</p></div>
   <div class="tool-form">
     <div><label for="enc-q">Quartier</label><select id="enc-q"><option value="">Choisir…</option>${optQ}</select></div>
     <div><label for="enc-p">Pièces</label><select id="enc-p"><option value="">Choisir…</option><option value="1">1 pièce</option><option value="2">2 pièces</option><option value="3">3 pièces</option><option value="4">4 pièces et plus</option></select></div>
@@ -3463,6 +3497,7 @@ li a:not(.pill):not(.btn),td a,.dir-links a,.dir-meta a,.result-list a{display:i
 /* Rappels d'action (cadence du parcours, tenue par les gabarits). */
 .rappel{background:var(--fond2);border-left:4px solid var(--bleu2);border-radius:10px;padding:12px 18px;margin:1.7rem 0;max-width:72ch}
 .rappel p{margin:0;max-width:none}
+.avert{border-left-color:#b4573c;background:#fff6f3}
 .rappel-haut{margin:1.1rem 0 0}
 /* Sommaire des annuaires groupés + intertitres de commune. */
 .dir-sommaire{margin:1.2rem 0 0}
@@ -3771,6 +3806,8 @@ if (ENCADREMENT) {
   fs.writeFileSync(path.join(DIST, 'data', 'encadrement-loyers-paris.json'), JSON.stringify({
     millesime: ENCADREMENT._meta.millesime,
     attribution: ENCADREMENT._meta.attribution,
+    avertissement: encadrementAvertissement(),
+    arreteEnVigueur: { nom: ENCADREMENT_VIGUEUR.arrete, debut: ENCADREMENT_VIGUEUR.debut, fin: ENCADREMENT_VIGUEUR.fin, url: ENCADREMENT_VIGUEUR.arreteUrl },
     grille,
   }));
 }
@@ -3823,7 +3860,7 @@ if (FJT) llms.push(`- [Foyers de jeunes travailleurs](${B}/foyers-jeunes-travail
 if (RES_AUTONOMIE) llms.push(`- [Résidences autonomie (seniors)](${B}/residences-autonomie/): les ${RES_AUTONOMIE.records.length} résidences pour seniors autonomes (source : FINESS).`);
 if (LS_COMMUNES) llms.push(`- [Le logement social en chiffres](${B}/logement-social/chiffres/): parc, loyers au m², vacance et taux SRU, commune par commune (sources : RPLS Insee-SDES 01/01/2024, inventaire SRU, zonage ABC).`);
 if (TENSION && TENSION._meta.region) llms.push(`- [Observatoire des délais du logement social](${B}/logement-social/delais/): délai médian d'attribution et nombre de demandes pour une attribution, par commune et par département, avec carte téléchargeable${CARTE_DELAIS ? ` (${B}/${CARTE_DELAIS_FICHIER})` : ''} et recherche par commune sur la page. Données par commune en JSON : ${B}/data/delais-communes.json. Île-de-France ${TENSION._meta.millesime} : ${fmt(TENSION._meta.region.delaiMois)} mois de délai médian, ${fmt(TENSION._meta.region.tension, 1)} demandes pour une attribution (source : DRIHL, socle demandes et attributions, Infocentre SNE, Licence Ouverte Etalab 2.0). Attention : ce ratio est une pression, pas une durée.`);
-if (ENCADREMENT) llms.push(`- [Vérificateur d'encadrement des loyers à Paris](${B}/guides/encadrement-des-loyers-paris/): les ${ENCADREMENT.records.length} loyers de référence ${ENCADREMENT._meta.millesime} (80 quartiers × pièces × époque × meublé). Grille complète en JSON : ${B}/data/encadrement-loyers-paris.json (ODbL, Ville de Paris).`);
+if (ENCADREMENT) llms.push(`- [Vérificateur d'encadrement des loyers à Paris](${B}/guides/encadrement-des-loyers-paris/): les ${ENCADREMENT.records.length} loyers de référence ${ENCADREMENT._meta.millesime} (80 quartiers × pièces × époque × meublé). Grille complète en JSON : ${B}/data/encadrement-loyers-paris.json (ODbL, Ville de Paris). ${encadrementAvertissement()}`);
 llms.push('');
 llms.push('## Divers');
 llms.push(`- [Annuaire des sources fiables](${B}/annuaire/): ${ANNUAIRE.metaDescription}`);
@@ -3863,6 +3900,9 @@ for (const g of GUIDES) {
   full.push(`Mis à jour le ${dateFrOf(DATES_GUIDES.fr[g.slug].modifie)}.`);
   full.push(g.intro);
   if (g.tldr && g.tldr.length) full.push(`L'essentiel : ${g.tldr.join(' ')}`);
+  /* L'avertissement de millesime doit suivre le guide dans le corpus citable :
+   * c'est llms-full.txt qu'un moteur de reponse reprend, pas le chrome de la page. */
+  if (g.slug === 'encadrement-des-loyers-paris' && ENCADREMENT) full.push(encadrementAvertissement());
   for (const s of g.sections) {
     full.push(`#### ${s.h2}`);
     if (s.paragraphs) for (const t of s.paragraphs) full.push(absolutiser(t));
