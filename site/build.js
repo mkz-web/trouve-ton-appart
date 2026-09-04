@@ -3394,7 +3394,13 @@ small{font-size:.8125rem}
 .page-head h1{margin:.1rem 0 .5rem}.page-head .lead{margin:0}
 /* ---- Hub des outils ---- */
 .grid-outils{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin:1.6rem 0}
-.card-outil{align-items:flex-start}
+/* Les CTA des cartes outils tombent sur la meme ligne quelle que soit la longueur
+ * du texte au-dessus : la carte et son bloc de contenu sont des colonnes flex, le
+ * CTA est pousse en bas par margin-top:auto. Le padding-top remplace la marge du
+ * .card-cta (sans lui, plus aucun espace quand la carte est seule sur sa ligne). */
+.card-outil{display:flex;flex-direction:column;align-items:flex-start}
+.card-outil>div{display:flex;flex-direction:column;flex:1 1 auto;width:100%}
+.card-outil .card-cta{margin-top:auto;padding-top:.9rem;align-self:flex-start}
 .card-outil h3{margin:0 0 .15rem}
 .outil-accroche{font-weight:650;color:var(--ttx,var(--bleu2));margin:0 0 .5rem;font-size:.95rem}
 .outil-quoi{margin:.7rem 0 0;padding-left:1.1rem;font-size:.9rem;color:#5a6b7c}
