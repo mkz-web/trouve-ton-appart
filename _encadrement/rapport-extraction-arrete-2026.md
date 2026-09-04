@@ -10,7 +10,8 @@ Mesuré le 4 septembre 2026. Chantier ouvert depuis le 4 septembre au matin
 |---|---|
 | `site/ingest/pdf.js` | Lecture d'un PDF en Node natif : objets, flux compressés, texte AVEC positions, récursion dans les XObject de type Form. Zéro dépendance. |
 | `site/ingest/ingest-encadrement-arrete.js` | Extraction de la grille depuis l'arrêté, contrôles, dépliage sur les 80 quartiers, écriture du jeu. |
-| `site/data/open/encadrement-loyers-paris-2026.json` | **2 560 enregistrements**, même forme que le jeu servi aujourd'hui (plus trois champs : `majorationMeuble`, `arrondissement`, `quartierArrete`). |
+| `site/data/open/encadrement-loyers-paris.json` | **2 560 enregistrements**, même forme que le jeu précédent (plus trois champs : `majorationMeuble`, `arrondissement`, `quartierArrete`). Copie par millésime dans `archives/`. |
+| `~/.claude/skills/extraire-donnees-pdf/` | Le lecteur PDF et la méthode, promus en skill : la procédure est répétable sur tout document dont la donnée n'existe qu'en PDF. |
 
 Commandes :
 
@@ -22,9 +23,9 @@ node site/ingest/ingest-encadrement-arrete.js
 node site/ingest/ingest-encadrement-arrete.js --recette
 ```
 
-Le site n'est PAS modifié : `build.js` lit toujours `encadrement-loyers-paris.json`
-(millésime 2025) et affiche toujours son avertissement. La barrière
-`node site/check-tout.js` reste verte (4 étapes, 14,4 s).
+**Publié le 4 septembre 2026** (commit e691623) : le fichier produit a pris le nom
+canonique `encadrement-loyers-paris.json`, le millésime 2025 est archivé, et le
+site sert la grille en vigueur. Détail de la bascule en fin de rapport.
 
 ## Ce que contient l'arrêté, et pourquoi 2 560 enregistrements
 
@@ -75,37 +76,35 @@ le PDF (secteur 2, une pièce, avant 1946 : 25,3 | 36,1 | 43,3 | 5,1 | 28,8 |
 - **Plafond légal** (loyer de référence majoré) : de 18,1 à **52,2 euros par
   mètre carré** hors charges, contre 18,1 à 50,2 en 2025.
 
-## Ce qui reste à décider pour publier
+## La bascule, faite le 4 septembre 2026
 
-Publier, c'est changer ce que le site sert : c'est ta décision, pas la mienne.
-Une fois le go donné, les points à traiter, tous repérés :
+1. **Source** : millésime 2025 archivé dans `site/data/open/archives/`, grille de
+   l'arrêté promue au nom canonique `encadrement-loyers-paris.json`. L'URL servie
+   `/data/encadrement-loyers-paris.json` ne change pas, donc rien à réindexer de ce
+   côté. Le script d'ingestion archive désormais chaque millésime au passage.
+2. **Garde-fou de millésime devenu garde-fou de période.** La phrase servie énonce
+   la période d'application (« applicable du 1er juillet au 24 novembre 2026 ») au
+   lieu d'affirmer qu'on est dedans : elle reste vraie même sans rebuild. Après le
+   dernier jour d'application, le premier build ajoute de lui-même la mention
+   d'échéance et repasse le bloc en avertissement. Les deux branches validées par
+   réintroduction, ainsi que l'échec de build sur un millésime inattendu.
+3. **Attributions corrigées** : les cinq mentions en dur qui attribuaient la grille
+   à l'ODbL de la Ville de Paris sont réécrites. Zéro occurrence d'ODbL ou du
+   millésime 2025 dans les 76 pages publiées.
+4. **Le jeu open data ne peut plus faire reculer la grille** : `ingest-encadrement.js`
+   écrit dans `archives/` et sort de la liste de `ingest.js`. Sans cela, un simple
+   `node site/ingest/ingest.js` aurait réinstallé la grille périmée sans rien casser.
+5. **Noms de quartier** : les noms actuels restent servis, le nom officiel est gardé
+   dans `quartierArrete`. Basculer sur la typographie de l'arrêté reste ouvert.
+6. **Le guide n'a pas été re-daté**, et c'est volontaire : son texte n'a pas changé,
+   seule la donnée, qui porte sa propre date (« références 2026, extraites le
+   4 septembre 2026 »). Re-dater aurait menti sur le texte.
 
-1. **Basculer la source** : `readOpen('encadrement-loyers-paris-2026')` dans
-   `build.js`, ou renommer le fichier après avoir archivé le millésime 2025
-   (le dépôt a déjà `site/data/open/archives/` pour ça).
-2. **Refaire le bloc `ENCADREMENT_VIGUEUR`** : l'avertissement « la grille
-   servie n'est plus celle en vigueur » n'a plus lieu d'être, mais l'arrêté
-   du 12 juin 2026 **cesse de s'appliquer le 24 novembre 2026**. Le garde-fou
-   fail-closed doit donc devenir un garde-fou de PÉRIODE, pas de millésime.
-3. **Cinq mentions d'attribution en dur dans `build.js`** citent l'ODbL et la
-   Ville de Paris pour l'encadrement (lignes 3239, 3845, 3863 notamment). Un
-   arrêté préfectoral n'est pas sous ODbL : c'est un acte administratif. À
-   réécrire en même temps, sinon le site attribue la grille à la mauvaise
-   source et à la mauvaise licence.
-4. **Le libellé de licence du nouveau jeu n'existe pas dans `LICENSE_URLS`.**
-   C'est voulu et sans effet aujourd'hui (la page encadrement n'émet pas de
-   JSON-LD Dataset), mais le jour où elle en émettrait un, le build échouerait
-   avec le bon message. Ne pas « corriger » en collant une licence ouverte qui
-   ne s'applique pas.
-5. **Noms de quartier** : 13 des 80 diffèrent du jeu open data, presque tous
-   par un accent manquant côté données ouvertes (« Arts-et-Metiers »,
-   « Epinettes », « Val-de-Grace »), plus deux vrais artefacts
-   (« Javel 15Art » pour « Javel », « La Chapelle » pour « Chapelle »). Le
-   fichier sert aujourd'hui les noms actuels pour ne rien changer à l'écran, et
-   garde le nom officiel dans `quartierArrete`. Basculer sur les noms de
-   l'arrêté serait une amélioration, à trancher séparément.
-6. Puis la routine du dépôt : `node site/check-tout.js`, publication, contrôle
-   de la prod par le CONTENU, IndexNow, et demande d'indexation.
+Livraison : barrière `check-tout.js` verte, vérificateur rejoué en navigateur
+(plafond 43,30 euros/m² pour St-Germain-l'Auxerrois, une pièce, avant 1946, soit
+1 732 euros pour 40 m²), production vérifiée par le CONTENU (JSON servi identique
+au build local, octet pour octet), IndexNow 200 sur 76 URLs, sitemap re-soumis,
+« Indexation demandée » confirmée par lecture de la modale visible.
 
 ## Pièges consignés
 
