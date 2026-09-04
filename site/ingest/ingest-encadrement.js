@@ -8,11 +8,22 @@
  *               opendata.paris.fr, dataset logement-encadrement-des-loyers.
  *               Export allégé (sans geo_shape) filtré sur le dernier millésime.
  * Licence     : ODbL, attribution obligatoire « Ville de Paris / opendata.paris.fr ».
- * Sortie      : site/data/open/encadrement-loyers-paris.json
+ * Sortie      : site/data/open/archives/encadrement-loyers-paris-{millesime}.json
  * ------------------------------------------------------------------
+ * ⚠️ CE SCRIPT N'ALIMENTE PLUS LA GRILLE SERVIE (04/09/2026).
+ * Le jeu opendata.paris.fr est figé au 17/06/2025 et s'arrête au millésime
+ * 2025, alors que le site sert désormais la grille de l'arrêté préfectoral en
+ * vigueur, lue dans son PDF par ingest-encadrement-arrete.js. Le laisser
+ * écrire sur le fichier canonique ferait revenir la grille périmée en un seul
+ * `node site/ingest/ingest.js`, sans que rien ne casse : il écrit donc dans
+ * archives/ et refuse d'écraser une grille plus récente. Il a aussi été retiré
+ * de la liste de ingest.js. À rouvrir le jour où la Ville de Paris republie ce
+ * jeu de données.
  */
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const { getJson, writeDataset } = require('./lib');
 
 const BASE = 'https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/logement-encadrement-des-loyers';
@@ -45,7 +56,14 @@ const SELECT = 'select=annee%2Cid_zone%2Cid_quartier%2Cnom_quartier%2Cpiece%2Cep
     console.log(`  ! attendu 2560 records / 80 quartiers, obtenu ${records.length} / ${quartiers.size}, vérifier le dataset`);
   }
 
-  writeDataset('encadrement-loyers-paris', records, {
+  /* Garde-fou : ne jamais faire reculer la grille servie. */
+  const canonique = path.join(__dirname, '..', 'data', 'open', 'encadrement-loyers-paris.json');
+  if (fs.existsSync(canonique)) {
+    const servi = JSON.parse(fs.readFileSync(canonique, 'utf8'))._meta.millesime;
+    if (servi && servi > annee) console.log(`  ! grille servie au millésime ${servi}, plus récent que ${annee} : rien n'est écrasé.`);
+  }
+
+  writeDataset(path.join('archives', `encadrement-loyers-paris-${annee}`), records, {
     source: 'Ville de Paris, Logement : encadrement des loyers',
     sourceUrl: `${BASE}/exports/json?where=annee%3D%22${annee}%22&${SELECT}`,
     portal: 'opendata.paris.fr',

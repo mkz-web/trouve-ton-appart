@@ -14,7 +14,12 @@
 const { execFileSync } = require('child_process');
 const path = require('path');
 
-const SCRIPTS = ['ingest-crous.js', 'ingest-encadrement.js', 'ingest-rpls.js', 'ingest-finess.js', 'ingest-tension.js', 'ingest-contours.js'];
+/* ingest-encadrement.js (open data Ville de Paris) est volontairement HORS de
+ * cette liste depuis le 04/09/2026 : son jeu est figé au millésime 2025, et la
+ * grille servie vient désormais de l'arrêté préfectoral, lue dans son PDF par
+ * ingest-encadrement-arrete.js (URL du PDF non prédictible, donc lancement
+ * manuel à chaque nouvel arrêté). */
+const SCRIPTS = ['ingest-crous.js', 'ingest-rpls.js', 'ingest-finess.js', 'ingest-tension.js', 'ingest-contours.js'];
 
 let failed = 0;
 for (const s of SCRIPTS) {
