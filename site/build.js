@@ -3354,6 +3354,11 @@ small{font-size:.8125rem}
 .card h3{margin:0 0 .5rem;font-size:1.06rem}.card p{margin:0;color:var(--gris);font-size:.92rem}
 .card-parcours::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--t,var(--bleu2));transform-origin:top left;transition:transform .22s cubic-bezier(.2,.7,.3,1)}
 .card-parcours:hover::before,.card-parcours:focus-visible::before{transform:scaleY(1.8)}
+/* Meme regle que les cartes outils : la grille egalise la HAUTEUR des cartes, elle ne pousse
+ * pas leur pied de page. Colonne flex + margin-top:auto pour que les CTA tombent sur la meme
+ * ligne, et padding-top a la place de la marge du .card-cta, que le auto mange. */
+.card-parcours{display:flex;flex-direction:column}
+.card-parcours .card-cta{margin-top:auto;padding-top:.9rem;align-self:flex-start}
 /* Ouverture en escalier des 3 parcours (accueil). Fill BACKWARDS uniquement :
  * un fill forwards sur transform tuerait le lift et le scaleY du survol. */
 .grid-accueil .card{animation:rise .5s cubic-bezier(.2,.7,.3,1) .32s backwards}
