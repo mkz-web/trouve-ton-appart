@@ -94,6 +94,13 @@ function appliquer(contenu, entrees) {
   return { refus: [], contenu: eol === 'CRLF' ? t.replace(/\n/g, '\r\n') : t, eol };
 }
 
+/** Un remplacement laisse par resoudre-lot.js quand il n'etait pas devinable.
+ *  Le detecter est la difference entre un lot inacheve et un TODO publie. */
+function estTodo(valeur) {
+  const premier = String(valeur).trim().split(' ')[0];
+  return premier.toUpperCase() === 'TODO';
+}
+
 /** Groupe les chiffres par milliers avec le séparateur demandé, sans regex. */
 function grouperMilliers(chiffres, sep) {
   let out = '';
@@ -199,6 +206,11 @@ function autotest() {
   const g3 = { tldr: ['Jusqu a 1' + ESPACE_INSEC + '940 euros.'], intro: 'plafond de 1 940 euros', sections: [], faq: [] };
   ok('tldr tolere les espaces insecables', tldrSansFaitNeuf(g3).length === 0);
 
+  ok('estTodo repere un remplacement non ecrit', estTodo('TODO ecrire le remplacement'));
+  ok('estTodo tolere une espace en tete', estTodo('  todo faire'));
+  ok('estTodo laisse passer un vrai texte', !estTodo('Le plafond atteint 1 940 euros.'));
+  ok('estTodo ne se declenche pas sur un mot contenant todo', !estTodo('Todorov a ecrit'));
+
   const rates = cas.filter(c => !c[1]).length;
   console.log('\n' + (rates === 0
     ? 'Autotest vert : ' + cas.length + ' cas.'
@@ -250,6 +262,9 @@ function main() {
   const parFichier = new Map();
   for (const r of remplacements) {
     if (!r.fichier || !r.old || r.new === undefined) { console.error('Entrée mal formée : ' + JSON.stringify(r).slice(0, 120)); process.exit(1); }
+    /* Un lot résolu par resoudre-lot.js porte un TODO là où le remplacement n'était
+     * pas devinable. Sans cette garde, le TODO partirait dans le site. */
+    if (estTodo(r.new)) { console.error('REFUS : remplacement non écrit (TODO) sur ' + r.fichier + ' : « ' + r.old.slice(0, 70).replace(/\s+/g, ' ') + ' »'); process.exit(1); }
     if (!parFichier.has(r.fichier)) parFichier.set(r.fichier, []);
     parFichier.get(r.fichier).push(r);
   }
@@ -325,4 +340,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { occurrences, finDeLigne, appliquer, balayer, variantes, grouperMilliers, tldrSansFaitNeuf };
+module.exports = { occurrences, finDeLigne, appliquer, balayer, variantes, grouperMilliers, estTodo, tldrSansFaitNeuf };
