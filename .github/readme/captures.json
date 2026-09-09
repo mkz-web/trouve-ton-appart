@@ -1,0 +1,49 @@
+{
+  "date": "2026-09-09T07:50:45.126Z",
+  "origine": "https://trouve-ton-appart.fr",
+  "qualite": 82,
+  "captures": [
+    {
+      "fichier": "accueil-1280.webp",
+      "octets": 57104,
+      "innerWidth": 1280,
+      "scrollWidth": 1280,
+      "h1": "Le logement en Île-de-France, enfin dans le bon ordre.",
+      "bandeau": "masque",
+      "imagesEnEchec": 0,
+      "clarity": "undefined",
+      "url": "https://trouve-ton-appart.fr/",
+      "largeurCss": 1280,
+      "hauteurCss": 800,
+      "dpr": 1.25
+    },
+    {
+      "fichier": "accueil-375.webp",
+      "octets": 64934,
+      "innerWidth": 375,
+      "scrollWidth": 375,
+      "h1": "Le logement en Île-de-France, enfin dans le bon ordre.",
+      "bandeau": "masque",
+      "imagesEnEchec": 0,
+      "clarity": "undefined",
+      "url": "https://trouve-ton-appart.fr/",
+      "largeurCss": 375,
+      "hauteurCss": 812,
+      "dpr": 2
+    },
+    {
+      "fichier": "observatoire-1280.webp",
+      "octets": 78466,
+      "innerWidth": 1280,
+      "scrollWidth": 1280,
+      "h1": "L'Observatoire des délais du logement social en Île-de-France",
+      "bandeau": "masque",
+      "imagesEnEchec": 0,
+      "clarity": "undefined",
+      "url": "https://trouve-ton-appart.fr/logement-social/delais/",
+      "largeurCss": 1280,
+      "hauteurCss": 800,
+      "dpr": 1.25
+    }
+  ]
+}
