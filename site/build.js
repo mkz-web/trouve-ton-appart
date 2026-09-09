@@ -2269,14 +2269,18 @@ ${ressourcesDep(d, 'logement-social/chiffres')}
       </tr>`).join('');
     const borneMin = rapides.length ? Math.round(dExact(rapides[0])) : null;
     const borneMax = lentes.length ? Math.round(dExact(lentes[0])) : null;
+    /* Premier écran mobile (mesuré le 10/09/2026 à 375x812 : bas du champ à 1 089 px
+     * pour un pli de 812 px, faute de Clarity sur mobile qui s'arrêtait à 38 %) : le titre,
+     * puis l'action, puis le chiffre régional. Le lead SUIT le champ, il ne le précède plus,
+     * et le kicker tient sur une ligne. Invariant mesuré après build : #dl-q entièrement
+     * visible à 375x812 et à 1 280x900. */
     const contenu = `
 <nav class="breadcrumb"><a href="/">Accueil</a> › <a href="/logement-social/">Logement social</a> › <a href="/logement-social/chiffres/">Chiffres</a> › Observatoire des délais</nav>
-<header class="page-head" style="${themeStyle(t)}">
+<header class="page-head page-head-compact" style="${themeStyle(t)}">
   <span class="page-head-icon">${icon('demande-logement-social', t.c)}</span>
   <div>
-    <p class="kicker">L'observatoire ${esc(SITE.name)} · données officielles</p>
+    <p class="kicker">L'observatoire ${esc(SITE.name)}</p>
     <h1>L'Observatoire des délais du logement social en Île-de-France</h1>
-    <p class="lead">En Île-de-France, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(reg.delaiMois)} mois ou moins</strong>, et l'on compte <strong>${fmt(reg.tension, 1)} demandes en cours pour une attribution</strong>. Mais ce chiffre régional cache tout&nbsp;: ${borneMin != null && borneMax != null ? `d'une commune à l'autre, le délai médian va de ${fmt(borneMin)} à ${fmt(borneMax)} mois` : "l'attente varie fortement d'une commune à l'autre"}.</p>
   </div>
 </header>
 <section id="votre-commune">
@@ -2288,6 +2292,7 @@ ${ressourcesDep(d, 'logement-social/chiffres')}
     <div id="dl-sugg" class="pills" aria-label="Communes correspondantes"></div>
     <div id="dl-out" aria-live="polite" aria-atomic="true"></div>
   </div>
+  <p class="lead">En Île-de-France, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(reg.delaiMois)} mois ou moins</strong>, et l'on compte <strong>${fmt(reg.tension, 1)} demandes en cours pour une attribution</strong>. Mais ce chiffre régional cache tout&nbsp;: ${borneMin != null && borneMax != null ? `d'une commune à l'autre, le délai médian va de ${fmt(borneMin)} à ${fmt(borneMax)} mois` : "l'attente varie fortement d'une commune à l'autre"}.</p>
 </section>
 <section>
   <h2>Ce que disent les chiffres</h2>
@@ -3384,7 +3389,10 @@ small{font-size:.8125rem}
 .page-head-icon{flex:none;width:46px;height:46px;background:#fff;border-radius:12px;padding:9px;box-shadow:0 4px 12px var(--ts,rgba(31,78,121,.18));margin-top:4px}
 .page-head-icon svg{width:100%;height:100%}
 .page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 17px 17px 0;margin:-22px -26px -22px 8px;box-shadow:-14px 0 24px -18px rgba(31,78,121,.25)}
-#delai-lookup{margin:.4rem 0 .8rem}
+#votre-commune>h2{margin-top:0}
+#delai-lookup{margin:0 0 .8rem}
+#votre-commune .lead{margin:1rem 0 0}
+@media(max-width:600px){.page-head-compact .page-head-icon{display:none}}
 #delai-lookup label{display:block;font-weight:650;margin-bottom:.35rem}
 #delai-lookup input{width:100%;max-width:430px;min-height:48px;padding:.55rem .9rem;font-size:1.02rem;color:var(--encre);background:var(--surface);border:1.5px solid var(--bord);border-radius:12px}
 #delai-lookup input:focus-visible{outline:2px solid var(--bleu2);outline-offset:1px}
