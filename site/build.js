@@ -76,7 +76,7 @@ if (ENCADREMENT && ENCADREMENT._meta.millesime !== ENCADREMENT_VIGUEUR.grilleMil
 /* La periode d'application est-elle passee ? Compare des dates ISO, jamais des
  * objets Date : une comparaison de chaines AAAA-MM-JJ est exacte et sans fuseau. */
 function encadrementEchue() {
-  return ENCADREMENT_VIGUEUR ? new Date().toISOString().slice(0, 10) > ENCADREMENT_VIGUEUR.finIso : false;
+  return ENCADREMENT_VIGUEUR ? isoFrOf(new Date()) > ENCADREMENT_VIGUEUR.finIso : false;
 }
 /* Phrase unique, reprise partout : page, JSON servi, llms.txt, llms-full.txt.
  * Elle enonce la PERIODE d'application au lieu d'affirmer qu'on est dedans :
@@ -187,11 +187,18 @@ const fmt = (n, dec = 0) => (n == null ? 'n.d.' : n.toLocaleString('fr-FR', { mi
 const compteur = (n) => n >= 10
   ? `<span class="compte" data-compte="${n}">${fmt(n)}</span>`
   : fmt(n);
-const dateFrOf = (iso) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-const dateEnOf = (iso) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+/* Toutes les dates affichées sont des dates CIVILES de Paris, quel que soit le
+ * fuseau de la machine qui construit : Cloudflare Pages construit en UTC, et
+ * un horodatage à 23:03Z du 18 juillet est le 19 à Paris (mesuré le
+ * 10/09/2026 : la prod servait « extraction du 18 juillet », le poste le 19,
+ * et llms.txt une date de mise à jour de la veille). Invariant : deux builds
+ * sous TZ=UTC et TZ=Europe/Paris rendent un dist identique octet pour octet. */
+const FUSEAU = 'Europe/Paris';
+const dateFrOf = (iso) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: FUSEAU });
+const dateEnOf = (iso) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: FUSEAU });
 /* AAAA-MM-JJ dans le même fuseau que dateFrOf (heure de Paris) : le JSON-LD et
  * le texte visible doivent annoncer la même date d'extraction. */
-const isoFrOf = (iso) => new Date(iso).toLocaleDateString('sv-SE', { timeZone: 'Europe/Paris' });
+const isoFrOf = (iso) => new Date(iso).toLocaleDateString('sv-SE', { timeZone: FUSEAU });
 /* Époques de construction de l'encadrement, dans l'ordre canonique du dataset
  * (« Apres 1990 » sans accent : clé de données, pas un libellé d'affichage). */
 const EPOQUES = ['Avant 1946', '1946-1970', '1971-1990', 'Apres 1990'];
@@ -634,9 +641,9 @@ if(illo){new IntersectionObserver(function(es){es.forEach(function(en){
 </script>`;
 
 const BUILD_DATE = new Date();
-const DATE_ISO = BUILD_DATE.toISOString().slice(0, 10);
-const DATE_FR = BUILD_DATE.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-const DATE_EN = BUILD_DATE.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+const DATE_ISO = isoFrOf(BUILD_DATE);
+const DATE_FR = dateFrOf(BUILD_DATE);
+const DATE_EN = dateEnOf(BUILD_DATE);
 const DATE_PUBLICATION = '2026-06-10';
 
 /* Échappement spécifique au contexte <script> : JSON.stringify ne protège
@@ -1827,7 +1834,7 @@ function datasetLd(meta, { name, description, urlPath }) {
 function buildDirectory(cfg) {
   const { data, baseSlug } = cfg;
   /* Année des données (pas de l'exécution du build) : suit les snapshots open data. */
-  const anneeData = String(data._meta.collectedAt || DATE_PUBLICATION).slice(0, 4);
+  const anneeData = isoFrOf(data._meta.collectedAt || DATE_PUBLICATION).slice(0, 4);
   const t = themeOf(cfg.themeSlug);
   const byDep = new Map(DEPS_IDF.map(d => [d, data.records.filter(r => r.dep === d)]));
   const guidePills = (cfg.guides || []).map(slug => {

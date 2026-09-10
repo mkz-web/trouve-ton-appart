@@ -53,7 +53,8 @@ if (require.main === module) {
   const G = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'guides.json'), 'utf8'));
   const EN = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'en.json'), 'utf8')).guides;
   const carte = fs.existsSync(FICHIER) ? JSON.parse(fs.readFileSync(FICHIER, 'utf8')) : { fr: {}, en: {} };
-  const jour = process.argv.slice(2).find(a => /^\d{4}-\d{2}-\d{2}$/.test(a)) || new Date().toISOString().slice(0, 10);
+  /* Date civile de Paris, jamais la date UTC : après minuit à Paris, l'UTC est encore la veille. */
+  const jour = process.argv.slice(2).find(a => /^\d{4}-\d{2}-\d{2}$/.test(a)) || new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Paris' });
   let changements = 0;
   for (const [langue, liste] of [['fr', G], ['en', EN]]) {
     carte[langue] = carte[langue] || {};
