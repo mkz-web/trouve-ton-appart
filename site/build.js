@@ -2003,7 +2003,23 @@ ${ressourcesDep(d, baseSlug)}
   }
 }
 
-const osmLink = (r) => (r.lat != null ? ` · <a href="https://www.openstreetmap.org/?mlat=${r.lat}&amp;mlon=${r.lon}#map=17/${r.lat}/${r.lon}" rel="noopener" target="_blank">voir sur la carte</a>` : '');
+/* Lien « voir sur Google Maps » de chaque résidence : format documenté « Maps URLs »
+   (google.com/maps/search/?api=1&query=...), qui ouvre l'application Google Maps sur
+   mobile quand elle est installée et le site sinon. La requête porte l'ADRESSE affichée,
+   et rien d'autre, parce que c'est la seule forme mesurée juste à tous les coups
+   (10/09/2026, 9 résidences rejouées dans Google Maps) : les coordonnées donnent un
+   repère exact mais une fiche titrée par des degrés, illisible (refusée par Mickaël) ;
+   le nom suivi de l'adresse ouvre la fiche d'établissement quand Google la connaît,
+   mais dès que le nom ne correspond à aucune fiche, Google bascule en recherche par
+   catégorie et envoie vers un AUTRE foyer (3 cas sur 9, dont un concurrent sponsorisé),
+   quelle que soit la place du nom, avec ou sans virgules, même centrée sur nos
+   coordonnées à fort zoom ; le repère nommé (?q=lat,lon(Nom)) est ignoré, Google titre
+   par les coordonnées. Le nom, le visiteur l'a sous les yeux sur la carte du site.
+   Ouvrir la fiche par son nom sans risque supposerait son place_id (paramètre
+   query_place_id) : décision séparée. Remplace OpenStreetMap le 10/09/2026. Le
+   libellé nomme la destination (règle du 08/08). */
+const adresseLigne = (r) => [r.adresse, [r.cp, r.commune].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+const mapsLink = (adresse) => (adresse ? ` · <a href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(adresse)}" rel="noopener" target="_blank">voir sur Google Maps</a>` : '');
 
 if (CROUS) {
   buildDirectory({
@@ -2027,7 +2043,7 @@ if (CROUS) {
     searchCat: 'Résidence CROUS',
     renderItem: (r) => `<li class="dir-item" id="r-${r.id}">
   <h3>${esc(r.nom)}</h3>
-  <p class="dir-addr">${esc(r.adresse)}${osmLink(r)}</p>
+  <p class="dir-addr">${esc(r.adresse)}${mapsLink(r.adresse)}</p>
   ${(r.tel || r.mail) ? `<p class="dir-meta">${[r.tel && esc(r.tel), r.mail && `<a href="mailto:${esc(r.mail)}">${esc(r.mail)}</a>`].filter(Boolean).join(' · ')}</p>` : ''}
   ${r.services.length ? `<p class="dir-tags">${r.services.map(s => `<span>${esc(s)}</span>`).join('')}</p>` : ''}
   <p class="dir-links"><a href="${esc(safeUrl(r.bookingUrl || 'https://trouverunlogement.lescrous.fr'))}" rel="noopener" target="_blank">Demander un logement</a>${r.url ? ` · <a href="${esc(safeUrl(r.url))}" rel="noopener" target="_blank">site du CROUS</a>` : ''}</p>
@@ -2057,7 +2073,7 @@ if (FJT) {
     searchCat: 'FJT',
     renderItem: (r) => `<li class="dir-item" id="r-${r.finess}">
   <h3>${esc(r.nom)}</h3>
-  <p class="dir-addr">${esc([r.adresse, [r.cp, r.commune].filter(Boolean).join(' ')].filter(Boolean).join(', '))}${osmLink(r)}</p>
+  <p class="dir-addr">${esc(adresseLigne(r))}${mapsLink(adresseLigne(r))}</p>
   ${r.tel ? `<p class="dir-meta">${esc(r.tel)}</p>` : ''}
 </li>`,
   });
@@ -2085,7 +2101,7 @@ if (RES_AUTONOMIE) {
     searchCat: 'Résidence autonomie',
     renderItem: (r) => `<li class="dir-item" id="r-${r.finess}">
   <h3>${esc(r.nom)}</h3>
-  <p class="dir-addr">${esc([r.adresse, [r.cp, r.commune].filter(Boolean).join(' ')].filter(Boolean).join(', '))}${osmLink(r)}</p>
+  <p class="dir-addr">${esc(adresseLigne(r))}${mapsLink(adresseLigne(r))}</p>
   ${r.tel ? `<p class="dir-meta">${esc(r.tel)}</p>` : ''}
 </li>`,
   });
