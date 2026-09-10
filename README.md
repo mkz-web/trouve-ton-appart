@@ -139,6 +139,7 @@ Tous en Node natif, sans rien installer. Chaque script porte en tête sa command
 | `build.js` | Génère le site dans `dist/` depuis `data/` ; refuse de construire si un invariant est cassé |
 | `check-tout.js` | La barrière avant publication : build, liens, rendu, SEO, arrêt à la première étape en échec |
 | `check-links.js` | Tout lien interne pointe sur une page, tout fichier publié est cité quelque part |
+| `check-liens-externes.js` | Les liens sortants répondent-ils encore ? 404, 5xx, hôte disparu et soft-404 listés avec leurs pages ; les anti-robots (Légifrance) en « non mesurable » ; hors barrière parce qu'il a besoin du réseau |
 | `check-rendu.js` | Mesure les pages rendues dans le navigateur installé, à 3 largeurs : débordements, chevauchements, cibles trop petites |
 | `check-seo.js` | Titles, metas, JSON-LD reparsés, règles ItemList et BreadcrumbList |
 | `date-guides.js` | Dates réelles de publication et de modification par guide, empreinte du contenu à l'appui |

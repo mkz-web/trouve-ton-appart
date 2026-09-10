@@ -2067,12 +2067,19 @@ if (CROUS) {
   <p>On ne candidate pas auprès d'une résidence&nbsp;: tout passe par le <strong>Dossier social étudiant (DSE)</strong>, à constituer entre mars et mai sur messervices.etudiant.gouv.fr, puis par les vœux sur <a href="https://trouverunlogement.lescrous.fr" rel="noopener" target="_blank">trouverunlogement.lescrous.fr</a>. Une phase complémentaire ouvre en juillet pour les logements restés vacants, accessible aussi aux non-boursiers.</p>`,
     guides: ['aide-logement-etudiant', 'visale', 'dossierfacile'],
     searchCat: 'Résidence CROUS',
+    /* « Demander un logement » vise toujours la plateforme nationale : c'est le seul endroit
+       où l'on candidate (DSE puis vœux), et le champ bookingurl du jeu CNOUS pointe des pages
+       régionales d'explication qui meurent sans prévenir : mesuré le 10/09/2026, 107 des 135
+       URL renseignées répondaient 404 (76 Paris, 30 Versailles, 1 Créteil), signalé par
+       Mickaël sur Versailles. Le champ reste dans la donnée, il n'est plus servi. Le lien
+       « site du CROUS » garde la racine du site régional (les trois répondent 200) ; contrôle
+       de tous les liens sortants du site : node site/check-liens-externes.js. */
     renderItem: (r) => `<li class="dir-item" id="r-${r.id}">
   <h3>${esc(r.nom)}</h3>
   <p class="dir-addr">${esc(r.adresse)}${mapsLink(r.adresse, placeIdDe('crous', r.id))}</p>
   ${(r.tel || r.mail) ? `<p class="dir-meta">${[r.tel && esc(r.tel), r.mail && `<a href="mailto:${esc(r.mail)}">${esc(r.mail)}</a>`].filter(Boolean).join(' · ')}</p>` : ''}
   ${r.services.length ? `<p class="dir-tags">${r.services.map(s => `<span>${esc(s)}</span>`).join('')}</p>` : ''}
-  <p class="dir-links"><a href="${esc(safeUrl(r.bookingUrl || 'https://trouverunlogement.lescrous.fr'))}" rel="noopener" target="_blank">Demander un logement</a>${r.url ? ` · <a href="${esc(safeUrl(r.url))}" rel="noopener" target="_blank">site du CROUS</a>` : ''}</p>
+  <p class="dir-links"><a href="https://trouverunlogement.lescrous.fr/" rel="noopener" target="_blank">Demander un logement</a>${r.url ? ` · <a href="${esc(safeUrl(r.url))}" rel="noopener" target="_blank">site du CROUS</a>` : ''}</p>
 </li>`,
   });
 }
