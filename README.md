@@ -119,7 +119,7 @@ Les lecteurs de PDF (`site/ingest/pdf.js`) et de XLSX (`site/ingest/lib.js`) son
 
 ```text
 site/build.js            le générateur : 76 pages, sitemap, robots.txt, llms.txt, JSON-LD, CSS et JS inline
-site/data/               contenu éditorial : guides.json, en.json, parcours.json, diagnostic.json, plafonds.json, dates-guides.json
+site/data/               contenu éditorial : guides.json, en.json, parcours.json, diagnostic.json, plafonds.json, dates-guides.json, place-ids.json (fiches Google Maps appariées)
 site/data/open/          instantanés des données ouvertes (committés, build sans réseau) ; archives/ par millésime
 site/ingest/             ingestion : CROUS, RPLS et SRU, FINESS, DRIHL, contours, arrêté PDF ; lib.js et pdf.js maison
 site/static/             favicon.ico, apple-touch-icon.png, og-image.png, illustrations WebP
@@ -152,7 +152,7 @@ Tous en Node natif, sans rien installer. Chaque script porte en tête sa command
 | `resoudre-lot.js` | Transforme les constats d'un rapport de veille en remplacements exacts pour l'atelier |
 | `deploy.js` | Upload direct, conservé comme plan B documentaire : le projet est déployé par git |
 
-Les 8 scripts d'ingestion de `site/ingest/` sont décrits avec leurs jeux dans le tableau des données ouvertes ; `ingest.js` enchaîne les cinq dont l'URL est prédictible, l'arrêté préfectoral se lance à la main à chaque nouvel arrêté.
+Les 9 scripts d'ingestion de `site/ingest/` sont décrits avec leurs jeux dans le tableau des données ouvertes ; `ingest.js` enchaîne les cinq dont l'URL est prédictible, l'arrêté préfectoral se lance à la main à chaque nouvel arrêté, et `ingest-place-ids.js` (la fiche Google Maps de chaque résidence, lue par la SERP en direct de DataForSEO et jugée sur la distance aux coordonnées officielles, l'adresse et le nom) se lance à la demande, parce qu'une passe complète coûte de l'ordre de deux dollars.
 
 ## Déploiement
 

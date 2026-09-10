@@ -2004,22 +2004,48 @@ ${ressourcesDep(d, baseSlug)}
 }
 
 /* Lien « voir sur Google Maps » de chaque résidence : format documenté « Maps URLs »
-   (google.com/maps/search/?api=1&query=...), qui ouvre l'application Google Maps sur
-   mobile quand elle est installée et le site sinon. La requête porte l'ADRESSE affichée,
-   et rien d'autre, parce que c'est la seule forme mesurée juste à tous les coups
-   (10/09/2026, 9 résidences rejouées dans Google Maps) : les coordonnées donnent un
-   repère exact mais une fiche titrée par des degrés, illisible (refusée par Mickaël) ;
-   le nom suivi de l'adresse ouvre la fiche d'établissement quand Google la connaît,
-   mais dès que le nom ne correspond à aucune fiche, Google bascule en recherche par
-   catégorie et envoie vers un AUTRE foyer (3 cas sur 9, dont un concurrent sponsorisé),
-   quelle que soit la place du nom, avec ou sans virgules, même centrée sur nos
-   coordonnées à fort zoom ; le repère nommé (?q=lat,lon(Nom)) est ignoré, Google titre
-   par les coordonnées. Le nom, le visiteur l'a sous les yeux sur la carte du site.
-   Ouvrir la fiche par son nom sans risque supposerait son place_id (paramètre
-   query_place_id) : décision séparée. Remplace OpenStreetMap le 10/09/2026. Le
-   libellé nomme la destination (règle du 08/08). */
+   (google.com/maps/search/?api=1&query=...&query_place_id=...), qui ouvre l'application
+   Google Maps sur mobile quand elle est installée et le site sinon. Deux niveaux, tous
+   deux mesurés le 10/09/2026 :
+   1. quand la fiche Google de la résidence a été appariée et vérifiée par
+      site/ingest/ingest-place-ids.js (verdict « accepte » dans data/place-ids.json :
+      fiche à moins de 150 m des coordonnées de la source officielle, adresse concordante
+      au numéro près ou nom concordant avec une catégorie d'hébergement), le lien porte
+      son query_place_id et Google ouvre EXACTEMENT cette fiche (nom, photos, avis,
+      itinéraire) ;
+   2. sinon, ou si l'identifiant a disparu (Google se replie alors sur query, mesuré
+      avec un identifiant faux), la requête porte l'ADRESSE affichée et rien d'autre :
+      seule forme juste à tous les coups (9 sur 9). Les coordonnées donnent une fiche
+      titrée par des degrés, illisible (refusée par Mickaël) ; le nom seul fait basculer
+      Google en recherche par catégorie dès qu'aucune fiche ne correspond, et envoie vers
+      un AUTRE foyer (3 cas sur 9), quelle que soit la place du nom, avec ou sans
+      virgules, même centrée sur nos coordonnées ; le repère nommé ?q=lat,lon(Nom) est
+      ignoré.
+   Fail-closed : le build refuse un verdict inconnu, un place_id mal formé, une fiche
+   acceptée au-delà du seuil de distance écrit dans le fichier, une résidence en double,
+   et une fiche acceptée qui ne correspond à aucune résidence des trois annuaires
+   (assertion après les trois annuaires). Le libellé nomme la destination (règle du
+   08/08). Remplace OpenStreetMap le 10/09/2026. */
+const PLACE_IDS = (() => {
+  const j = read('place-ids.json');
+  const seuil = j && j._meta && j._meta.seuils && j._meta.seuils.distanceAccepteM;
+  if (!(seuil > 0) || !Array.isArray(j.items)) throw new Error('place-ids.json : structure inattendue (seuil de distance ou items absents)');
+  const carte = new Map();
+  for (const it of j.items) {
+    if (!['accepte', 'a_verifier', 'aucun'].includes(it.verdict)) throw new Error(`place-ids.json : verdict inconnu « ${it.verdict} » (${it.jeu} ${it.id})`);
+    if (it.verdict !== 'accepte') continue;
+    if (!/^[A-Za-z0-9_-]{10,}$/.test(it.placeId || '')) throw new Error(`place-ids.json : place_id invalide pour ${it.jeu} ${it.id}`);
+    if (!(it.distanceM <= seuil)) throw new Error(`place-ids.json : fiche acceptée à ${it.distanceM} m pour ${it.jeu} ${it.id}, au-delà du seuil de ${seuil} m`);
+    const cle = `${it.jeu}:${it.id}`;
+    if (carte.has(cle)) throw new Error(`place-ids.json : résidence en double ${cle}`);
+    carte.set(cle, it.placeId);
+  }
+  return carte;
+})();
+const PLACE_IDS_SERVIS = new Set();
+const placeIdDe = (jeu, id) => { const cle = `${jeu}:${id}`; const p = PLACE_IDS.get(cle) || null; if (p) PLACE_IDS_SERVIS.add(cle); return p; };
 const adresseLigne = (r) => [r.adresse, [r.cp, r.commune].filter(Boolean).join(' ')].filter(Boolean).join(', ');
-const mapsLink = (adresse) => (adresse ? ` · <a href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(adresse)}" rel="noopener" target="_blank">voir sur Google Maps</a>` : '');
+const mapsLink = (adresse, placeId) => (adresse ? ` · <a href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(adresse)}${placeId ? `&amp;query_place_id=${encodeURIComponent(placeId)}` : ''}" rel="noopener" target="_blank">voir sur Google Maps</a>` : '');
 
 if (CROUS) {
   buildDirectory({
@@ -2043,7 +2069,7 @@ if (CROUS) {
     searchCat: 'Résidence CROUS',
     renderItem: (r) => `<li class="dir-item" id="r-${r.id}">
   <h3>${esc(r.nom)}</h3>
-  <p class="dir-addr">${esc(r.adresse)}${mapsLink(r.adresse)}</p>
+  <p class="dir-addr">${esc(r.adresse)}${mapsLink(r.adresse, placeIdDe('crous', r.id))}</p>
   ${(r.tel || r.mail) ? `<p class="dir-meta">${[r.tel && esc(r.tel), r.mail && `<a href="mailto:${esc(r.mail)}">${esc(r.mail)}</a>`].filter(Boolean).join(' · ')}</p>` : ''}
   ${r.services.length ? `<p class="dir-tags">${r.services.map(s => `<span>${esc(s)}</span>`).join('')}</p>` : ''}
   <p class="dir-links"><a href="${esc(safeUrl(r.bookingUrl || 'https://trouverunlogement.lescrous.fr'))}" rel="noopener" target="_blank">Demander un logement</a>${r.url ? ` · <a href="${esc(safeUrl(r.url))}" rel="noopener" target="_blank">site du CROUS</a>` : ''}</p>
@@ -2073,7 +2099,7 @@ if (FJT) {
     searchCat: 'FJT',
     renderItem: (r) => `<li class="dir-item" id="r-${r.finess}">
   <h3>${esc(r.nom)}</h3>
-  <p class="dir-addr">${esc(adresseLigne(r))}${mapsLink(adresseLigne(r))}</p>
+  <p class="dir-addr">${esc(adresseLigne(r))}${mapsLink(adresseLigne(r), placeIdDe('fjt', r.finess))}</p>
   ${r.tel ? `<p class="dir-meta">${esc(r.tel)}</p>` : ''}
 </li>`,
   });
@@ -2101,10 +2127,18 @@ if (RES_AUTONOMIE) {
     searchCat: 'Résidence autonomie',
     renderItem: (r) => `<li class="dir-item" id="r-${r.finess}">
   <h3>${esc(r.nom)}</h3>
-  <p class="dir-addr">${esc(adresseLigne(r))}${mapsLink(adresseLigne(r))}</p>
+  <p class="dir-addr">${esc(adresseLigne(r))}${mapsLink(adresseLigne(r), placeIdDe('residences-autonomie', r.finess))}</p>
   ${r.tel ? `<p class="dir-meta">${esc(r.tel)}</p>` : ''}
 </li>`,
   });
+}
+
+/* Toute fiche Google acceptée doit avoir servi dans un annuaire : une entrée orpheline
+   signale un identifiant de résidence qui a changé entre l'appariement et les données
+   (ré-ingestion FINESS ou CROUS), donc un lien qui ne serait plus vérifié. */
+if (PLACE_IDS_SERVIS.size !== PLACE_IDS.size) {
+  const orphelines = [...PLACE_IDS.keys()].filter((k) => !PLACE_IDS_SERVIS.has(k));
+  throw new Error(`place-ids.json : ${orphelines.length} fiche(s) acceptée(s) sans résidence dans les annuaires (${orphelines.slice(0, 5).join(', ')}). Relancer node site/ingest/ingest-place-ids.js.`);
 }
 
 /* ---- Le logement social en chiffres : hub + 1 page par département ---- */
