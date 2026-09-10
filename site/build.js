@@ -881,6 +881,7 @@ const CARTE_DELAIS_CLASSES = [
 ];
 const CARTE_DELAIS_GRIS = '#d9dee3';
 
+let CARTE_DELAIS_PROJ = null;
 function construireCarteDelais() {
   if (!CONTOURS || !TENSION || !TENSION._meta.region) return null;
   const valeur = new Map();
@@ -924,6 +925,9 @@ function construireCarteDelais() {
   const yCarte = 96;
   const yLegende = yCarte + hCarte + 34;
   const H = yLegende + 96;
+  /* Projection partagée avec la fiche commune (pin sur la carte servie en <img>) :
+   * pourcentages de la boîte complète du SVG, titre et légende compris. */
+  CARTE_DELAIS_PROJ = { xPct: (lon) => +(+px(lon) / W * 100).toFixed(2), yPct: (lat) => +((yCarte + +py(lat)) / H * 100).toFixed(2) };
   const m = TENSION._meta;
   const swatches = CARTE_DELAIS_CLASSES.map((c, i) =>
     `<g transform="translate(${20 + i * 172},${yLegende})"><rect width="26" height="18" rx="3" fill="${c.fill}" stroke="#b8c0c8" stroke-width="0.5"/><text x="34" y="14" font-size="15">${c.label}</text></g>`
@@ -2291,6 +2295,7 @@ ${ressourcesDep(d, 'logement-social/chiffres')}
     <p id="dl-aide" class="dl-aide">Délai médian et pression de la demande, d'après le socle DRIHL (millésime ${TENSION._meta.millesime}). Tout s'affiche ici&nbsp;: votre saisie n'est ni stockée ni envoyée.</p>
     <div id="dl-sugg" class="pills" aria-label="Communes correspondantes"></div>
     <div id="dl-out" aria-live="polite" aria-atomic="true"></div>
+    <div id="dl-fiche"></div>
   </div>
   <p class="lead">En Île-de-France, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(reg.delaiMois)} mois ou moins</strong>, et l'on compte <strong>${fmt(reg.tension, 1)} demandes en cours pour une attribution</strong>. Mais ce chiffre régional cache tout&nbsp;: ${borneMin != null && borneMax != null ? `d'une commune à l'autre, le délai médian va de ${fmt(borneMin)} à ${fmt(borneMax)} mois` : "l'attente varie fortement d'une commune à l'autre"}.</p>
 </section>
@@ -2305,8 +2310,9 @@ ${ressourcesDep(d, 'logement-social/chiffres')}
 </section>
 ${CARTE_DELAIS ? `<section>
   <h2>La carte des délais, commune par commune</h2>
-  <figure class="carte-delais">
+  <figure class="carte-delais" id="carte-delais"><div class="carte-cadre">
     <img src="/${CARTE_DELAIS_FICHIER}" alt="Carte des communes d'Île-de-France colorées selon le délai médian d'attribution d'un logement social (millésime ${TENSION._meta.millesime}) : du beige clair pour moins de 20 mois au brun foncé pour 40 mois et plus. Les communes sans donnée fiable sont en gris. Le détail chiffré figure dans les tableaux de cette page." width="1000" height="${CARTE_DELAIS.H}" loading="lazy">
+    <span class="dl-pin" hidden aria-hidden="true"></span></div>
     <figcaption>Délai médian d'attribution par commune (${esc(TENSION._meta.dateReference)}). En gris&nbsp;: moins de ${SEUIL} attributions dans l'année ou valeurs masquées par la source, un délai médian n'y serait pas un signal fiable. Paris est représenté par sa valeur départementale. La carte est <a href="/${CARTE_DELAIS_FICHIER}" download>téléchargeable en SVG</a> et librement réutilisable avec la mention «&nbsp;${esc(SITE.name)}&nbsp;» (fond de carte&nbsp;: IGN-Insee via l'API Géo, Etalab).</figcaption>
   </figure>
 </section>` : ''}
@@ -2361,7 +2367,7 @@ ${PLAFONDS && LS_COMMUNES ? rappelBloc(`<p>Pendant l'attente, sécurisez le doss
 (function(){
 var q=document.getElementById('dl-q'),sg=document.getElementById('dl-sugg'),out=document.getElementById('dl-out');
 if(!q||!sg||!out)return;
-var D=null,enCharge=false,tm=null;
+var D=null,enCharge=false,tm=null,F=null,fEnCharge=false,fAttente=null,fiche=document.getElementById('dl-fiche');
 function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[-']/g,' ').replace(/\\s+/g,' ').trim()}
 function fnb(n,dec){return n.toLocaleString('fr-FR',{minimumFractionDigits:dec||0,maximumFractionDigits:dec||0})}
 function charger(){
@@ -2390,7 +2396,63 @@ function verdict(c){
   }
   if(c.d&&D.deps[c.d]){var lien='/logement-social/chiffres/'+D.deps[c.d]+'/';h+='<p><a href="'+lien+'">Le détail du département&nbsp;: parc, loyers, vacance <span aria-hidden="true">→</span></a></p>'}
   out.innerHTML='<div class="dl-verdict">'+h+'</div>';
+  rendreFiche(c);
   sg.innerHTML='';
+}
+function e(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
+function km(a,b){var R=6371,p=Math.PI/180,x=Math.sin((b.la-a.la)*p/2),y=Math.sin((b.lo-a.lo)*p/2),h=x*x+Math.cos(a.la*p)*Math.cos(b.la*p)*y*y;return 2*R*Math.asin(Math.sqrt(h))}
+function viderFiche(){if(fiche)fiche.innerHTML='';var pin=document.querySelector('.dl-pin');if(pin)pin.hidden=true}
+function chargerFiche(){
+  if(F||fEnCharge)return;fEnCharge=true;
+  fetch('/data/fiche-communes.json').then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){F=j;if(fAttente)rendreFiche(fAttente)}).catch(function(){fEnCharge=false});
+}
+function rendreFiche(c){
+  if(!fiche)return;
+  if(!F){fAttente=c;chargerFiche();return}
+  fAttente=null;
+  var o=F.communes[c.c]||{},nom=e(c.n),dep=c.d,slug=F.deps[dep],uCh='/logement-social/chiffres/'+slug+'/',h='';
+  h+='<h3>Le parc social à '+nom+'</h3>';
+  if(o.p!=null||o.s!=null){
+    h+='<ul>';
+    if(o.p!=null)h+='<li><strong>'+fnb(o.p)+' logements sociaux</strong> (RPLS)'+(o.lm!=null?', loyer médian <strong>'+fnb(o.lm,2)+' €/m²</strong>':'')+(o.v!=null?', vacance '+fnb(o.v,1)+'&nbsp;%':'')+'.</li>';
+    if(o.s!=null)h+='<li>Taux SRU&nbsp;: <strong>'+fnb(o.s,1)+'&nbsp;%</strong> de logements sociaux'+(o.ca?', commune <strong>carencée</strong>':(o.df?', commune <strong>déficitaire</strong> (sous les 25&nbsp;% attendus)':''))+'.</li>';
+    h+='<li><a href="'+uCh+(c.c==='75056'?'':'#c-'+c.c)+'">Le détail dans les chiffres du département</a></li></ul>';
+  }else{
+    h+='<p>Pas de ligne RPLS pour cette commune dans nos données&nbsp;: voir <a href="'+uCh+'">les chiffres du département</a>.</p>';
+  }
+  var fam=[['crous','Résidences CROUS','residences-crous'],['fjt','Foyers de jeunes travailleurs','foyers-jeunes-travailleurs'],['aut','Résidences autonomie (seniors)','residences-autonomie']];
+  h+='<h3>Se loger près de '+nom+'</h3>';
+  if(o.lo==null){
+    h+='<p>Centre de la commune inconnu dans nos données&nbsp;: consultez les annuaires du département&nbsp;: '+fam.map(function(f){var u='/'+f[2]+'/'+slug+'/';return '<a href="'+u+'">'+f[1]+'</a>'}).join(', ')+'.</p>';
+  }else{
+    for(var i=0;i<fam.length;i++){
+      var t=fam[i][0],liste=[];
+      for(var j=0;j<F.res.length;j++)if(F.res[j].t===t){var r=F.res[j];liste.push({r:r,d:km(o,r)})}
+      liste.sort(function(a,b){return a.d-b.d});
+      var proches=liste.filter(function(x){return x.d<=5}).length,top=liste.slice(0,3);
+      h+='<p class="dl-fam"><strong>'+fam[i][1]+'</strong>&nbsp;: '+(proches?proches+' à moins de 5&nbsp;km':'aucune à moins de 5&nbsp;km')+'. Les plus proches&nbsp;:</p><ul>';
+      for(var k=0;k<top.length;k++){var x=top[k];h+='<li><a href="'+x.r.u+'">'+e(x.r.n)+'</a>, '+e(x.r.c)+' ('+(x.d<1?'moins d\\'1&nbsp;km':fnb(x.d,1)+'&nbsp;km')+')</li>'}
+      h+='</ul>';
+    }
+  }
+  var zone=(c.c.indexOf('75')===0||F.lim.indexOf(c.c)>=0)?'paris':'idf',P=F.plaf;
+  h+='<h3>Vos aides ici</h3>';
+  h+='<details><summary>Plafonds de ressources du logement social</summary><p>'+nom+' relève de la zone «&nbsp;'+e(P.zones[zone])+'&nbsp;»&nbsp;: plafond PLUS de <strong>'+fnb(P.hlm[zone][1])+'&nbsp;€</strong> pour une personne seule et <strong>'+fnb(P.hlm[zone][3])+'&nbsp;€</strong> pour trois personnes ('+e(F.mil.rfr)+', barème '+e(F.mil.plaf)+'). <a href="/guides/plafond-ressources-logement-social/#simulateur">Vérifier votre éligibilité</a></p></details>';
+  if(o.z&&P.lli[o.z]!=null)h+='<details><summary>Logement intermédiaire (LLI)</summary><p>'+e(P.lliZones[o.z]||o.z)+'&nbsp;: plafond de <strong>'+fnb(P.lli[o.z])+'&nbsp;€</strong> pour une personne seule. <a href="/guides/logement-intermediaire/">Le guide du logement intermédiaire</a></p></details>';
+  var f=F.fsl[dep];
+  if(f)h+='<details><summary>Le fonds de solidarité logement '+e(F.depPrep[dep])+'</summary><p>'+e(f.nom)+'. <a href="'+e(f.url)+'" rel="noopener">'+e(f.label)+'</a> · <a href="/guides/fonds-solidarite-logement/">Comment ça marche</a></p></details>';
+  if(dep==='75')h+='<details><summary>Encadrement des loyers et aides de la Ville</summary><p>À Paris, les loyers du parc privé sont plafonnés quartier par quartier&nbsp;: <a href="/guides/encadrement-des-loyers-paris/#verifier">vérifier un loyer</a>. La Ville verse ses propres allocations&nbsp;: <a href="/guides/aides-logement-ville-de-paris/">Paris Logement et l\\'AILE</a>.</p></details>';
+  h+='<p>Les aides qui dépendent de vous plutôt que du lieu (Visale, Mobili-Jeune, APL, Loca-Pass)&nbsp;: <a href="/diagnostic/">le diagnostic logement</a> les trie en 7 questions.</p>';
+  if(o.x!=null)h+='<p><a href="#carte-delais">Voir '+nom+' sur la carte</a></p>';
+  h+='<p class="dl-src">Sources&nbsp;: '+e(F.mil.rpls)+'&nbsp;; résidences CROUS (CNOUS) et établissements FINESS, extraction du '+e(F.mil.res)+'&nbsp;; barèmes '+e(F.mil.plaf)+'. Distances à vol d\\'oiseau depuis le centre de la commune ou de l\\'arrondissement, approximatives.</p>';
+  fiche.innerHTML='<div class="dl-fiche">'+h+'</div>';
+  poserPin(o);
+}
+function poserPin(o){
+  var pin=document.querySelector('.dl-pin');if(!pin)return;
+  if(o.x==null){pin.hidden=true;return}
+  pin.style.left=o.x+'%';pin.style.top=o.y+'%';pin.hidden=false;
+  pin.classList.remove('pop');void pin.offsetWidth;pin.classList.add('pop');
 }
 function maj(){
   if(!D)return;
@@ -2401,7 +2463,7 @@ function maj(){
     if(c.k.indexOf(v)===0)pre.push(c);else if(c.k.indexOf(v)>0)inc.push(c)}
   var tri=function(a,b){return (b.a||0)-(a.a||0)};pre.sort(tri);inc.sort(tri);
   var res=pre.concat(inc).slice(0,8);
-  if(!res.length){sg.innerHTML='';out.innerHTML='<div class="dl-verdict"><p>Aucune commune d\\'Île-de-France ne correspond à cette saisie. L\\'observatoire couvre les 8 départements franciliens.</p></div>';return}
+  if(!res.length){sg.innerHTML='';viderFiche();out.innerHTML='<div class="dl-verdict"><p>Aucune commune d\\'Île-de-France ne correspond à cette saisie. L\\'observatoire couvre les 8 départements franciliens.</p></div>';return}
   if(res.length===1&&res[0].k===v){verdict(res[0]);return}
   sg.innerHTML=res.map(function(c){return '<button type="button" class="pill" data-c="'+c.c+'">'+c.n+' ('+c.d+')</button>'}).join(' ');
 }
@@ -3400,6 +3462,21 @@ small{font-size:.8125rem}
 .dl-verdict{background:var(--surface);border:1px solid var(--bord);border-radius:14px;padding:1rem 1.2rem;margin-top:.7rem}
 .dl-verdict p{margin:.35rem 0}
 .dl-garde{font-size:.92rem;color:var(--gris)}
+#dl-fiche{margin-top:.6rem}
+.dl-fiche{background:var(--surface);border:1px solid var(--bord);border-radius:14px;padding:1rem 1.2rem}
+.dl-fiche h3{font-size:1.02rem;margin:.9rem 0 .35rem}
+.dl-fiche h3:first-child{margin-top:0}
+.dl-fiche ul{margin:.2rem 0 .5rem 1.1rem;padding:0}
+.dl-fiche li,.dl-fiche p{margin:.25rem 0}
+.dl-fiche .dl-fam{margin-top:.6rem}
+.dl-fiche a{display:inline-block;padding:.3rem 0;margin:-.3rem 0}
+.dl-fiche details{margin:.45rem 0;padding:6px 14px}
+.dl-fiche summary{cursor:pointer;font-weight:650;min-height:44px;display:flex;align-items:center}
+.dl-src{font-size:.85rem;color:var(--gris);margin-top:.7rem}
+.carte-cadre{position:relative}
+.dl-pin{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--bleu2);border:2px solid #fff;box-shadow:0 0 0 2px var(--bleu),0 2px 6px rgba(0,0,0,.35);pointer-events:none}
+.dl-pin.pop{animation:dl-pop .6s ease-out 2}
+@keyframes dl-pop{50%{transform:scale(1.7)}}
 .carte-delais{margin:1.2rem 0}
 .carte-delais img{display:block;width:100%;height:auto;border:1px solid var(--bord);border-radius:14px;background:#fff}
 .carte-delais figcaption{font-size:.88rem;color:var(--gris);margin-top:.6rem;line-height:1.55}
@@ -3853,6 +3930,89 @@ if (TENSION && TENSION._meta.region) {
     })),
   }));
 }
+/* ---------------- Fiche commune du lookup de l'Observatoire (10/09/2026) ----
+ * Le verdict « Combien de temps dans votre commune ? » s'étend en fiche :
+ * parc RPLS et SRU de la commune, résidences CROUS, FJT et autonomie les
+ * plus proches (distance à vol d'oiseau depuis le centre de la commune,
+ * calculé sur les contours simplifiés : suffisant pour un ordre de grandeur,
+ * jamais pour une adjacence), aides qui dépendent du lieu (zone des
+ * plafonds HLM, zone LLI, FSL du département, Paris). Zéro fait nouveau :
+ * chaque valeur vient d'un jeu déjà publié sur le site, avec sa date. Le
+ * fichier n'est chargé qu'au premier verdict. Les liens des résidences
+ * visent la carte de l'annuaire (ancre r-<id>) : la fiche ne duplique
+ * aucune adresse. Le FSL est LU dans la table du guide, jamais recopié. */
+if (TENSION && TENSION._meta.region && CONTOURS) {
+  const centroide = (rings) => {
+    let meilleur = null, aireMax = -1;
+    for (const ring of rings) {
+      let a = 0, cx = 0, cy = 0;
+      for (let i = 0, n = ring.length; i < n; i++) {
+        const [x1, y1] = ring[i], [x2, y2] = ring[(i + 1) % n];
+        const f = x1 * y2 - x2 * y1;
+        a += f; cx += (x1 + x2) * f; cy += (y1 + y2) * f;
+      }
+      const aire = Math.abs(a) / 2;
+      if (a !== 0 && aire > aireMax) { aireMax = aire; meilleur = [cx / (3 * a), cy / (3 * a)]; }
+    }
+    return meilleur;
+  };
+  const communes = {};
+  for (const c of CONTOURS.records) {
+    const p = centroide(c.rings);
+    if (p) communes[c.code] = { lo: +p[0].toFixed(4), la: +p[1].toFixed(4) };
+  }
+  for (const r of LS_COMMUNES.records) {
+    const o = communes[r.code] || (communes[r.code] = {});
+    o.p = r.nbLogementsSociaux; o.lm = r.loyerMedian; o.v = r.txVacance;
+    o.s = r.tauxSRU; o.ls = r.llsSRU; o.df = !!r.deficitaire; o.ca = !!r.carencee; o.z = r.zone;
+  }
+  const res = [];
+  const pousser = (jeu, t, base, idOf) => {
+    for (const r of jeu.records) {
+      if (r.lat == null || r.lon == null || !DEP_SLUGS[r.dep]) continue;
+      res.push({ t, n: r.nom, c: r.commune, cp: r.cp, d: r.dep, la: +(+r.lat).toFixed(4), lo: +(+r.lon).toFixed(4), u: `/${base}/${DEP_SLUGS[r.dep]}/#r-${idOf(r)}` });
+    }
+  };
+  pousser(CROUS, 'crous', 'residences-crous', (r) => r.id);
+  pousser(FJT, 'fjt', 'foyers-jeunes-travailleurs', (r) => r.finess);
+  pousser(RES_AUTONOMIE, 'aut', 'residences-autonomie', (r) => r.finess);
+  /* Arrondissements : pas de contour dans le fond de carte ; le centre
+   * retenu est la moyenne des résidences qui portent le code postal. */
+  for (const rec of TENSION.records) {
+    if (!/^751\d\d$/.test(rec.code)) continue;
+    const pts = res.filter((r) => r.cp === '750' + rec.code.slice(3));
+    if (!pts.length) continue;
+    const o = communes[rec.code] || (communes[rec.code] = {});
+    o.lo = +(pts.reduce((s, r) => s + r.lo, 0) / pts.length).toFixed(4);
+    o.la = +(pts.reduce((s, r) => s + r.la, 0) / pts.length).toFixed(4);
+    o.arr = 1;
+  }
+  if (CARTE_DELAIS_PROJ) for (const o of Object.values(communes)) if (o.lo != null) { o.x = CARTE_DELAIS_PROJ.xPct(o.lo); o.y = CARTE_DELAIS_PROJ.yPct(o.la); }
+  const fsl = {};
+  const gFsl = GUIDES.find((g) => g.slug === 'fonds-solidarite-logement');
+  for (const s of (gFsl ? gFsl.sections : [])) {
+    const tables = [s.table].concat(s.blocs || [], s.blocks || [], s.contenu || []).filter((b) => b && Array.isArray(b.rows));
+    for (const b of tables) for (const row of b.rows) {
+      const dep = (String(row[0]).match(/\((\d{2})\)/) || [])[1];
+      const lien = String(row[2]).match(/^\[([^\]]+)\]\((https:\/\/[^)]+)\)$/);
+      if (dep && lien) fsl[dep] = { nom: row[1], label: lien[1], url: lien[2] };
+    }
+  }
+  if (Object.keys(fsl).length !== 8) throw new Error(`Fiche commune : ${Object.keys(fsl).length} FSL lus dans le guide, 8 attendus`);
+  const H = PLAFONDS.hlm, L = PLAFONDS.lli;
+  const fiche = {
+    mil: { rpls: LS_COMMUNES._meta.millesime, res: dateFrOf(CROUS._meta.collectedAt), plaf: PLAFONDS._meta.millesime, rfr: PLAFONDS._meta.rfrLibelle },
+    lim: Object.keys(H.communesLimitrophes),
+    plaf: {
+      hlm: { paris: { 1: H.plafonds.PLUS.paris['1'], 3: H.plafonds.PLUS.paris['3'] }, idf: { 1: H.plafonds.PLUS.idf['1'], 3: H.plafonds.PLUS.idf['3'] } },
+      zones: Object.fromEntries(H.zones.map((z) => [z.id, z.label])),
+      lli: Object.fromEntries(Object.keys(L.plafonds).map((z) => [z, L.plafonds[z]['personne-seule']])),
+      lliZones: Object.fromEntries(L.zones.map((z) => [z.id, z.label])),
+    },
+    fsl, deps: DEP_SLUGS, depPrep: DEP_PREP, communes, res,
+  };
+  fs.writeFileSync(path.join(DIST, 'data', 'fiche-communes.json'), JSON.stringify(fiche));
+}
 fs.writeFileSync(path.join(DIST, 'search-index.json'), JSON.stringify(SEARCH_INDEX));
 
 fs.writeFileSync(path.join(DIST, '404.html'), sansCommentaires(HTML_404));
@@ -3884,7 +4044,7 @@ if (CROUS) llms.push(`- [Résidences CROUS d'Île-de-France](${B}/residences-cro
 if (FJT) llms.push(`- [Foyers de jeunes travailleurs](${B}/foyers-jeunes-travailleurs/): les ${FJT.records.length} FJT franciliens pour les 16-25 ans, adresses et téléphones (source : FINESS).`);
 if (RES_AUTONOMIE) llms.push(`- [Résidences autonomie (seniors)](${B}/residences-autonomie/): les ${RES_AUTONOMIE.records.length} résidences pour seniors autonomes (source : FINESS).`);
 if (LS_COMMUNES) llms.push(`- [Le logement social en chiffres](${B}/logement-social/chiffres/): parc, loyers au m², vacance et taux SRU, commune par commune (sources : RPLS Insee-SDES 01/01/2024, inventaire SRU, zonage ABC).`);
-if (TENSION && TENSION._meta.region) llms.push(`- [Observatoire des délais du logement social](${B}/logement-social/delais/): délai médian d'attribution et nombre de demandes pour une attribution, par commune et par département, avec carte téléchargeable${CARTE_DELAIS ? ` (${B}/${CARTE_DELAIS_FICHIER})` : ''} et recherche par commune sur la page. Données par commune en JSON : ${B}/data/delais-communes.json. Île-de-France ${TENSION._meta.millesime} : ${fmt(TENSION._meta.region.delaiMois)} mois de délai médian, ${fmt(TENSION._meta.region.tension, 1)} demandes pour une attribution (source : DRIHL, socle demandes et attributions, Infocentre SNE, Licence Ouverte Etalab 2.0). Attention : ce ratio est une pression, pas une durée.`);
+if (TENSION && TENSION._meta.region) llms.push(`- [Observatoire des délais du logement social](${B}/logement-social/delais/): délai médian d'attribution et nombre de demandes pour une attribution, par commune et par département, avec carte téléchargeable${CARTE_DELAIS ? ` (${B}/${CARTE_DELAIS_FICHIER})` : ''} et recherche par commune sur la page. Données par commune en JSON : ${B}/data/delais-communes.json. Fiche commune (parc RPLS et SRU, résidences CROUS, FJT et autonomie les plus proches, aides locales) en JSON : ${B}/data/fiche-communes.json. Île-de-France ${TENSION._meta.millesime} : ${fmt(TENSION._meta.region.delaiMois)} mois de délai médian, ${fmt(TENSION._meta.region.tension, 1)} demandes pour une attribution (source : DRIHL, socle demandes et attributions, Infocentre SNE, Licence Ouverte Etalab 2.0). Attention : ce ratio est une pression, pas une durée.`);
 if (ENCADREMENT) llms.push(`- [Vérificateur d'encadrement des loyers à Paris](${B}/guides/encadrement-des-loyers-paris/): les ${ENCADREMENT.records.length} loyers de référence ${ENCADREMENT._meta.millesime} (80 quartiers × pièces × époque × meublé). Grille complète en JSON : ${B}/data/encadrement-loyers-paris.json (source : ${ENCADREMENT._meta.arrete}). ${encadrementAvertissement()}`);
 llms.push('');
 llms.push('## Divers');
