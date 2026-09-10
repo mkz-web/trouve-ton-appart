@@ -536,6 +536,15 @@ const VT_CSS = `<style>@media(prefers-reduced-motion:no-preference){
  * que soit le sens : une donnée absente n'est ni la plus petite ni la plus
  * grande. Tri stable (index d'origine en départage) pour que deux passes
  * successives ne réordonnent pas les ex aequo. */
+/* Un tableau plus large que son conteneur défile horizontalement (overflow-x
+ * de .table-wrap), mais rien ne le dit au lecteur : sur les pages chiffres,
+ * deux colonnes restaient hors champ à 1 280 px (mesuré le 10/09/2026). Les
+ * en-têtes se replient désormais sur deux lignes, ce qui fait tenir les
+ * tableaux dans leur colonne sur desktop ; sous 768 px le défilement reste, et
+ * ce script pose la classe deborde qui affiche l'indice « faites glisser ».
+ * check-rendu.js refuse tout tableau plus large que sa colonne à 1 024 px et
+ * plus, et tout tableau défilant sans cette classe en dessous. */
+const TABLE_WRAP_JS = `<script>(function(){var w=document.querySelectorAll('.table-wrap');if(!w.length)return;function f(){for(var i=0;i<w.length;i++)w[i].classList.toggle('deborde',w[i].scrollWidth>w[i].clientWidth+1)}f();addEventListener('resize',f)})();</script>`;
 const TABLE_JS = `<script>
 (function(){
 var tables=[].slice.call(document.querySelectorAll('table.data:not(.nosort)'));
@@ -761,7 +770,7 @@ ${content}
 ${CONSENT_BANNER}
 ${CONSENT_JS}
 ${ANIM_JS}
-${content.includes('table class="data"') ? TABLE_JS : ''}
+${content.includes('table class="data"') ? TABLE_JS : ''}${content.includes('class="table-wrap"') ? TABLE_WRAP_JS : ''}
 </body>
 </html>`;
 }
@@ -864,7 +873,7 @@ ${content}
 ${CONSENT_BANNER_EN}
 ${CONSENT_JS}
 ${ANIM_JS}
-${content.includes('table class="data"') ? TABLE_JS : ''}
+${content.includes('table class="data"') ? TABLE_JS : ''}${content.includes('class="table-wrap"') ? TABLE_WRAP_JS : ''}
 </body>
 </html>`;
 }
@@ -2205,7 +2214,7 @@ ${(() => {
     ? (tn.delaiMois < reg.delaiMois ? `, soit moins que la moyenne francilienne (${fmt(reg.delaiMois)} mois)`
       : tn.delaiMois > reg.delaiMois ? `, soit plus que la moyenne francilienne (${fmt(reg.delaiMois)} mois)`
         : `, comme la moyenne francilienne`) : '';
-  return `<p>Dans ce département, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(tn.delaiMois)} mois ou moins</strong>${cmp}. On y compte <strong>${fmt(tn.tension, 1)} demandes en cours pour une attribution</strong>. Le détail commune par commune figure dans les deux dernières colonnes du tableau, et <a href="/logement-social/delais/">l'Observatoire des délais</a> situe ces chiffres dans la région.</p>`;
+  return `<p>Dans ce département, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(tn.delaiMois)} mois ou moins</strong>${cmp}. On y compte <strong>${fmt(tn.tension, 1)} demandes en cours pour une attribution</strong>. Le détail commune par commune figure dans les colonnes «&nbsp;Délai médian&nbsp;» et «&nbsp;Demandes / attribution&nbsp;» du tableau, et <a href="/logement-social/delais/">l'Observatoire des délais</a> situe ces chiffres dans la région.</p>`;
 })()}
 <p><label for="filtre"><strong>Filtrer&nbsp;:</strong></label> <input id="filtre" type="search" placeholder="Nom de ${d === '75' ? "l'arrondissement" : 'la commune'}…" class="search-input search-inline"></p>
 <div class="table-wrap"><table class="data">
@@ -3539,7 +3548,7 @@ table.sortable thead th.th-triable{padding:0;cursor:pointer}
  * peut peindre après un premier rendu sur les tableaux longs ; sans cela
  * l'en-tête grandit de 6 px et pousse tout le contenu qui suit (CLS). */
 table.data:not(.nosort) thead th{height:44px}
-.th-sort{display:flex;align-items:center;gap:.35em;width:100%;min-height:44px;background:none;border:0;padding:9px 12px;margin:0;font:inherit;color:inherit;text-align:inherit;cursor:pointer}
+.th-sort{display:flex;align-items:center;gap:.35em;width:100%;min-height:44px;background:none;border:0;padding:9px 10px;margin:0;font:inherit;color:inherit;text-align:inherit;text-transform:inherit;letter-spacing:inherit;white-space:inherit;line-height:inherit;cursor:pointer}
 th.num .th-sort{justify-content:flex-end}
 .th-sort:hover{color:var(--bleu2)}
 /* Anneau vers l'intérieur : .table-wrap est en overflow auto avec un rayon,
@@ -3694,9 +3703,10 @@ body:has(.consent:not([hidden])) .haut-page{display:none}
 .dir-links{margin:.4rem 0 .1rem;font-size:.92rem}
 /* ---- Tableaux de données ---- */
 .table-wrap{overflow-x:auto;margin:1.2rem 0;border:1px solid var(--bord);border-radius:14px;box-shadow:0 1px 2px rgba(22,51,82,.05),0 6px 18px -12px rgba(22,51,82,.10)}
+.table-wrap.deborde::before{content:"Faites glisser le tableau pour voir toutes les colonnes";display:block;position:sticky;left:0;font-size:.8rem;color:var(--gris);padding:6px 12px;border-bottom:1px solid var(--bord)}
 table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(--surface)}
-.data th{background:linear-gradient(#edf4fa,#dfecf7);border-bottom:2px solid #c9dcec;color:var(--bleu);text-align:left;padding:9px 12px;white-space:nowrap;font-size:.8125rem;text-transform:uppercase;letter-spacing:.05em}
-.data td{border-top:1px solid var(--bord);padding:7px 12px}
+.data th{background:linear-gradient(#edf4fa,#dfecf7);border-bottom:2px solid #c9dcec;color:var(--bleu);text-align:left;padding:9px 10px;white-space:normal;vertical-align:bottom;line-height:1.2;font-size:.8125rem;text-transform:uppercase;letter-spacing:.05em}
+.data td{border-top:1px solid var(--bord);padding:7px 10px}
 .data tbody tr:nth-child(even) td{background:#f8fbfd}
 .data tbody tr:hover td{background:var(--fond2)}
 .data td.num,.data th.num{text-align:right;font-variant-numeric:tabular-nums}

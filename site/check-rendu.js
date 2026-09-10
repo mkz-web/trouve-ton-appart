@@ -92,6 +92,19 @@ const AUDIT = `(() => {
     add('BLOQUANT', 'scroll horizontal', document.documentElement.scrollWidth + ' > ' + vw + ' (suspects : ' + (c.join(', ') || 'non identifiés') + ')');
   }
 
+  /* 1 bis. Tableau plus large que son conteneur défilant. Sur desktop (1 024 px
+   *    et plus) c'est un défaut : des colonnes restent hors champ derrière un
+   *    défilement que rien n'annonce (payé le 10/09/2026 : Zone et Statut SRU
+   *    hors champ à 1 280 px sur les 9 pages chiffres, 131 à 154 px de trop).
+   *    Sous cette largeur, le défilement est admis à condition d'être annoncé :
+   *    la classe deborde, posée par le script du gabarit, rend l'indice. */
+  document.querySelectorAll('.table-wrap').forEach(w => {
+    const t = w.querySelector('table'); if (!t) return;
+    const exces = t.scrollWidth - w.clientWidth;
+    if (exces <= 1) return;
+    if (vw >= 1024) add('IMPORTANT', 'tableau plus large que sa colonne', nom(t) + ' : ' + t.scrollWidth + ' px pour ' + w.clientWidth + ' px de conteneur, ' + exces + ' px hors champ');
+    else if (!w.classList.contains('deborde')) add('IMPORTANT', 'tableau défilant sans indice', nom(t) + ' déborde de ' + exces + ' px sans la classe deborde');
+  });
   /* 2. Élément qui sort de son conteneur. Une marge négative est volontaire
    *    (elle compense un padding pour élargir une zone cliquable) : ignorée. */
   const scrollables = [...document.querySelectorAll('*')].filter(e => /auto|scroll/.test(getComputedStyle(e).overflowX));
