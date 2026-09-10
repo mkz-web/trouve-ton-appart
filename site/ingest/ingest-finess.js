@@ -60,6 +60,13 @@ const telFr = (t) => (t && /^\d{10}$/.test(t) ? t.match(/\d{2}/g).join(' ') : t 
   const lines = buf.toString('utf8').split('\n');
   console.log(`  ${lines.length} lignes nationales`);
 
+  /* Adresses FINESS fausses, corrigées sur preuve (10/09/2026) : pour chacune, la Base Adresse
+     Nationale résout l'adresse corrigée à 0 m du point FINESS, et l'adresse d'origine n'existe
+     pas (Google Maps rendait une liste de résultats ou un « correspondance partielle »). */
+  const CORRECTIONS = {
+    '750064826': { adresse: '8 rue Laure Diebold' },   // « Laurie Liebold » : coquille, BAN score 0,97
+    '910018670': { adresse: '1 avenue du Canal' },     // « allée du Canal » : type de voie faux, BAN score 0,65
+  };
   const kept = new Map(); // nofinesset → record en cours
   const geo = new Map();  // nofinesset → {lat, lon}
 
@@ -78,7 +85,7 @@ const telFr = (t) => (t && /^\d{10}$/.test(t) ? t.match(/\d{2}/g).join(' ') : t 
         finess: c[1],
         categorie: cat,
         nom: nomPropre(c[3] || c[4]),
-        adresse: adresse || null,
+        adresse: (CORRECTIONS[c[1]] && CORRECTIONS[c[1]].adresse) || adresse || null,
         cp,
         commune: commune ? frenchTitleCase(commune) : null,
         dep,

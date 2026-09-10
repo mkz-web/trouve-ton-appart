@@ -36,6 +36,11 @@ function parseAddress(address) {
 const COMPLEMENTS = {
   1293: { cp: '91440', commune: 'Bures-sur-Yvette' }, // « Rives de l'Yvette » : adresse sans ville ni CP
   1267: { commune: 'Paris' },                          // « Alésia » : adresse finissant par « 75014 » sans ville
+  /* Reuilly : le point CNOUS tombe à 1,2 km de l'adresse (mesuré le 10/09/2026 : la Base
+     Adresse Nationale place « 2 Passage Marie Rogissart 75012 Paris » à 48.847989, 2.385458,
+     score 0,81, et la fiche Google « Résidence Crous Reuilly » y est aussi). L'adresse est
+     juste, ce sont les coordonnées qui ne le sont pas : remplacées par celles de la BAN. */
+  1268: { lat: 48.847989, lon: 2.385458 },
 };
 
 (async () => {
@@ -66,8 +71,8 @@ const COMPLEMENTS = {
       commune: (addr && addr.commune) || fix.commune || null,
       dep,
       zone: r.zone || null,
-      lat: r.geocalisation ? r.geocalisation.lat : null,
-      lon: r.geocalisation ? r.geocalisation.lon : null,
+      lat: fix.lat != null ? fix.lat : (r.geocalisation ? r.geocalisation.lat : null),
+      lon: fix.lon != null ? fix.lon : (r.geocalisation ? r.geocalisation.lon : null),
       tel: r.phone || null,
       mail: r.mail || null,
       url: httpsify(r.interneturl || r.crousandgourl),

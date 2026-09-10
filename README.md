@@ -119,7 +119,7 @@ Les lecteurs de PDF (`site/ingest/pdf.js`) et de XLSX (`site/ingest/lib.js`) son
 
 ```text
 site/build.js            le générateur : 76 pages, sitemap, robots.txt, llms.txt, JSON-LD, CSS et JS inline
-site/data/               contenu éditorial : guides.json, en.json, parcours.json, diagnostic.json, plafonds.json, dates-guides.json, place-ids.json (fiches Google Maps appariées)
+site/data/               contenu éditorial : guides.json, en.json, parcours.json, diagnostic.json, plafonds.json, dates-guides.json, place-ids.json (fiches Google Maps appariées), maps-exceptions.json (adresses que Google ne résout pas)
 site/data/open/          instantanés des données ouvertes (committés, build sans réseau) ; archives/ par millésime
 site/ingest/             ingestion : CROUS, RPLS et SRU, FINESS, DRIHL, contours, arrêté PDF ; lib.js et pdf.js maison
 site/static/             favicon.ico, apple-touch-icon.png, og-image.png, illustrations WebP
@@ -140,6 +140,7 @@ Tous en Node natif, sans rien installer. Chaque script porte en tête sa command
 | `check-tout.js` | La barrière avant publication : build, liens, rendu, SEO, arrêt à la première étape en échec |
 | `check-links.js` | Tout lien interne pointe sur une page, tout fichier publié est cité quelque part |
 | `check-liens-externes.js` | Les liens sortants répondent-ils encore ? 404, 5xx, hôte disparu et soft-404 listés avec leurs pages ; les anti-robots (Légifrance) en « non mesurable » ; hors barrière parce qu'il a besoin du réseau |
+| `check-liens-maps.js` | Rejoue chaque lien « voir sur Google Maps » des annuaires dans le navigateur installé et lit le titre affiché : la fiche appariée ou l'adresse attendue, sinon échec ; hors barrière (réseau, Google) |
 | `check-rendu.js` | Mesure les pages rendues dans le navigateur installé, à 3 largeurs : débordements, chevauchements, cibles trop petites |
 | `check-seo.js` | Titles, metas, JSON-LD reparsés, règles ItemList et BreadcrumbList |
 | `date-guides.js` | Dates réelles de publication et de modification par guide, empreinte du contenu à l'appui |

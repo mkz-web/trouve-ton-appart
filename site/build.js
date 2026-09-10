@@ -2029,13 +2029,16 @@ ${ressourcesDep(d, baseSlug)}
 const PLACE_IDS = (() => {
   const j = read('place-ids.json');
   const seuil = j && j._meta && j._meta.seuils && j._meta.seuils.distanceAccepteM;
+  // Borne absolue écrite par l'ingestion (une fiche dont l'adresse porte le nom de la résidence
+  // peut être acceptée jusqu'à 300 m sur un site étendu) ; sans elle, le seuil courant.
+  const seuilMax = (j && j._meta && j._meta.seuils && j._meta.seuils.distanceMaxAccepteM) || seuil;
   if (!(seuil > 0) || !Array.isArray(j.items)) throw new Error('place-ids.json : structure inattendue (seuil de distance ou items absents)');
   const carte = new Map();
   for (const it of j.items) {
     if (!['accepte', 'a_verifier', 'aucun'].includes(it.verdict)) throw new Error(`place-ids.json : verdict inconnu « ${it.verdict} » (${it.jeu} ${it.id})`);
     if (it.verdict !== 'accepte') continue;
     if (!/^[A-Za-z0-9_-]{10,}$/.test(it.placeId || '')) throw new Error(`place-ids.json : place_id invalide pour ${it.jeu} ${it.id}`);
-    if (!(it.distanceM <= seuil)) throw new Error(`place-ids.json : fiche acceptée à ${it.distanceM} m pour ${it.jeu} ${it.id}, au-delà du seuil de ${seuil} m`);
+    if (!(it.distanceM <= seuilMax)) throw new Error(`place-ids.json : fiche acceptée à ${it.distanceM} m pour ${it.jeu} ${it.id}, au-delà de la borne de ${seuilMax} m`);
     const cle = `${it.jeu}:${it.id}`;
     if (carte.has(cle)) throw new Error(`place-ids.json : résidence en double ${cle}`);
     carte.set(cle, it.placeId);
@@ -2044,8 +2047,27 @@ const PLACE_IDS = (() => {
 })();
 const PLACE_IDS_SERVIS = new Set();
 const placeIdDe = (jeu, id) => { const cle = `${jeu}:${id}`; const p = PLACE_IDS.get(cle) || null; if (p) PLACE_IDS_SERVIS.add(cle); return p; };
+/* Exceptions (data/maps-exceptions.json) : les résidences dont Google ne résout pas l'adresse
+   affichée (liste de résultats sans rapport, mesuré) et qui n'ont pas de fiche vérifiée. Pour
+   elles seules, la requête porte les coordonnées de la source : repère exact, titre en degrés.
+   Fail-closed : mode inconnu, entrée sans résidence, ou entrée qui doublonne une fiche
+   acceptée, et le build échoue. */
+const MAPS_EXCEPTIONS = (() => {
+  const j = read('maps-exceptions.json');
+  const carte = new Map();
+  for (const it of (j && j.items) || []) {
+    if (it.mode !== 'coordonnees') throw new Error(`maps-exceptions.json : mode inconnu « ${it.mode} » (${it.jeu} ${it.id})`);
+    const cle = `${it.jeu}:${it.id}`;
+    if (PLACE_IDS.has(cle)) throw new Error(`maps-exceptions.json : ${cle} a déjà une fiche acceptée, l'exception est de trop`);
+    if (!it.motif || !it.mesure) throw new Error(`maps-exceptions.json : ${cle} sans motif ou sans date de mesure`);
+    carte.set(cle, it.mode);
+  }
+  return carte;
+})();
+const MAPS_EXCEPTIONS_SERVIES = new Set();
+const coordonneesDe = (jeu, id, r) => { const cle = `${jeu}:${id}`; if (!MAPS_EXCEPTIONS.has(cle)) return null; if (r.lat == null || r.lon == null) throw new Error(`maps-exceptions.json : ${cle} sans coordonnées dans la source`); MAPS_EXCEPTIONS_SERVIES.add(cle); return `${r.lat},${r.lon}`; };
 const adresseLigne = (r) => [r.adresse, [r.cp, r.commune].filter(Boolean).join(' ')].filter(Boolean).join(', ');
-const mapsLink = (adresse, placeId) => (adresse ? ` · <a href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(adresse)}${placeId ? `&amp;query_place_id=${encodeURIComponent(placeId)}` : ''}" rel="noopener" target="_blank">voir sur Google Maps</a>` : '');
+const mapsLink = (adresse, placeId, coordonnees) => (adresse ? ` · <a href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(coordonnees || adresse)}${placeId ? `&amp;query_place_id=${encodeURIComponent(placeId)}` : ''}" rel="noopener" target="_blank">voir sur Google Maps</a>` : '');
 
 if (CROUS) {
   buildDirectory({
@@ -2076,7 +2098,7 @@ if (CROUS) {
        de tous les liens sortants du site : node site/check-liens-externes.js. */
     renderItem: (r) => `<li class="dir-item" id="r-${r.id}">
   <h3>${esc(r.nom)}</h3>
-  <p class="dir-addr">${esc(r.adresse)}${mapsLink(r.adresse, placeIdDe('crous', r.id))}</p>
+  <p class="dir-addr">${esc(r.adresse)}${mapsLink(r.adresse, placeIdDe('crous', r.id), coordonneesDe('crous', r.id, r))}</p>
   ${(r.tel || r.mail) ? `<p class="dir-meta">${[r.tel && esc(r.tel), r.mail && `<a href="mailto:${esc(r.mail)}">${esc(r.mail)}</a>`].filter(Boolean).join(' · ')}</p>` : ''}
   ${r.services.length ? `<p class="dir-tags">${r.services.map(s => `<span>${esc(s)}</span>`).join('')}</p>` : ''}
   <p class="dir-links"><a href="https://trouverunlogement.lescrous.fr/" rel="noopener" target="_blank">Demander un logement</a>${r.url ? ` · <a href="${esc(safeUrl(r.url))}" rel="noopener" target="_blank">site du CROUS</a>` : ''}</p>
@@ -2106,7 +2128,7 @@ if (FJT) {
     searchCat: 'FJT',
     renderItem: (r) => `<li class="dir-item" id="r-${r.finess}">
   <h3>${esc(r.nom)}</h3>
-  <p class="dir-addr">${esc(adresseLigne(r))}${mapsLink(adresseLigne(r), placeIdDe('fjt', r.finess))}</p>
+  <p class="dir-addr">${esc(adresseLigne(r))}${mapsLink(adresseLigne(r), placeIdDe('fjt', r.finess), coordonneesDe('fjt', r.finess, r))}</p>
   ${r.tel ? `<p class="dir-meta">${esc(r.tel)}</p>` : ''}
 </li>`,
   });
@@ -2134,7 +2156,7 @@ if (RES_AUTONOMIE) {
     searchCat: 'Résidence autonomie',
     renderItem: (r) => `<li class="dir-item" id="r-${r.finess}">
   <h3>${esc(r.nom)}</h3>
-  <p class="dir-addr">${esc(adresseLigne(r))}${mapsLink(adresseLigne(r), placeIdDe('residences-autonomie', r.finess))}</p>
+  <p class="dir-addr">${esc(adresseLigne(r))}${mapsLink(adresseLigne(r), placeIdDe('residences-autonomie', r.finess), coordonneesDe('residences-autonomie', r.finess, r))}</p>
   ${r.tel ? `<p class="dir-meta">${esc(r.tel)}</p>` : ''}
 </li>`,
   });
@@ -2143,6 +2165,10 @@ if (RES_AUTONOMIE) {
 /* Toute fiche Google acceptée doit avoir servi dans un annuaire : une entrée orpheline
    signale un identifiant de résidence qui a changé entre l'appariement et les données
    (ré-ingestion FINESS ou CROUS), donc un lien qui ne serait plus vérifié. */
+if (MAPS_EXCEPTIONS_SERVIES.size !== MAPS_EXCEPTIONS.size) {
+  const orphelines = [...MAPS_EXCEPTIONS.keys()].filter((k) => !MAPS_EXCEPTIONS_SERVIES.has(k));
+  throw new Error(`maps-exceptions.json : ${orphelines.length} exception(s) sans résidence dans les annuaires (${orphelines.join(', ')}).`);
+}
 if (PLACE_IDS_SERVIS.size !== PLACE_IDS.size) {
   const orphelines = [...PLACE_IDS.keys()].filter((k) => !PLACE_IDS_SERVIS.has(k));
   throw new Error(`place-ids.json : ${orphelines.length} fiche(s) acceptée(s) sans résidence dans les annuaires (${orphelines.slice(0, 5).join(', ')}). Relancer node site/ingest/ingest-place-ids.js.`);

@@ -54,6 +54,8 @@ if (opt('limite') && !(LIMITE > 0)) { console.error('--limite doit être un enti
    humain jugent sur les mêmes règles. */
 const SEUILS = {
   distanceAccepteM: 150,   // fiche à moins de 150 m des coordonnées de la source officielle
+  distanceProcheM: 75,     // quand seul le nom entier concorde (adresse source inexploitable)
+  distanceMaxAccepteM: 300, // borne absolue d'une acceptation (nom retrouvé dans l'adresse de la fiche, site étendu) ; build.js la relit
   distanceVerifierM: 300,  // au-delà, aucune fiche n'est proposée, même homonyme
   similariteNom: 0.34,     // part des mots significatifs du nom retrouvés dans le titre Google
   similariteNomSeule: 0.5, // exigée quand l'adresse ne concorde pas au numéro près
@@ -193,7 +195,16 @@ function juger(res, fiche) {
   const titreAutreEtablissement = RE_TITRE_AUTRE.test(titreNorm) || (RE_CAT_AUTRE.test(catNorm) && !titreHebergement);
   // Sans mot commun, un titre d'un seul mot sans marqueur d'hébergement (« Maison ») ne
   // désigne rien de vérifiable : la catégorie seule ne suffit pas.
-  const titreTropGenerique = !nomOk && titreNorm.split(' ').filter(Boolean).length < 2 && !titreHebergement;
+  // ... sauf si ce mot unique est celui de notre voie ou de notre nom : « Fournières »,
+  // résidence de la rue des Fournières, est bien nommée par sa rue (relu le 10/09/2026).
+  const motsTitre = titreNorm.split(' ').filter(Boolean);
+  const titreTropGenerique = !nomOk && motsTitre.length < 2 && !titreHebergement && !(motsTitre[0] && (aRes.mots.includes(motsTitre[0]) || normaliser(res.nom).split(' ').includes(motsTitre[0])));
+  // Le nom entier de la résidence, mot distinctif compris, retrouvé dans le titre ou dans la
+  // ligne d'adresse de la fiche (Google y écrit le nom du lieu sur un campus ou un parc :
+  // « Résidence la Boissière, Parc la Boissière, D449 »).
+  const nomEntier = nomRes.length > 0 && similarite >= 1 && distinctif;
+  const motsAdresseG = new Set(normaliser(fiche.adresse).split(' '));
+  const nomDansAdresse = nomRes.length > 0 && nomRes.filter((m) => m.length >= 5 && motsAdresseG.has(m)).length >= Math.max(1, Math.ceil(nomRes.length / 2));
   let verdict = 'aucun', motif = '';
   if (d <= SEUILS.distanceAccepteM && adresseForte && (nomOk || catResidentielle) && !titreAutreEtablissement && !titreTropGenerique) {
     verdict = 'accepte'; motif = `adresse au numéro près, ${nomOk ? 'nom concordant' : 'catégorie résidentielle'}, ${d} m`;
@@ -202,6 +213,13 @@ function juger(res, fiche) {
     // voie reste exigée : un homonyme dans une autre rue est un autre établissement
     // (relu le 10/09/2026 : une résidence privée et un EHPAD homonymes à 130 et 149 m).
     verdict = 'accepte'; motif = `nom concordant, catégorie d'hébergement, même voie, ${d} m`;
+  } else if (d <= SEUILS.distanceProcheM && nomEntier && catResidentielle && !titreAutreEtablissement) {
+    // Adresse source inexploitable (« Domaine de l'Université, Bâtiment 470, Aile C ») : le nom
+    // ENTIER dans le titre, une catégorie résidentielle et moins de 75 m suffisent (relu le
+    // 10/09/2026 : la résidence CROUS Georges Charpak à 43 m, écartée faute de voie commune).
+    verdict = 'accepte'; motif = `nom entier concordant, catégorie résidentielle, ${d} m`;
+  } else if (d <= SEUILS.distanceMaxAccepteM && nomDansAdresse && catResidentielle && !titreAutreEtablissement) {
+    verdict = 'accepte'; motif = `nom retrouvé dans l'adresse de la fiche, catégorie résidentielle, ${d} m`;
   } else if (d <= SEUILS.distanceVerifierM && (adresseForte || voieCommune || nomOk || catHebergement)) {
     verdict = 'a_verifier'; motif = `${d} m, adresse ${adresseForte ? 'forte' : voieCommune ? 'même voie' : 'non concordante'}, nom ${similarite}${distinctif ? ' (mot distinctif)' : ''}, catégorie ${catHebergement ? 'hébergement' : 'autre'}`;
   }

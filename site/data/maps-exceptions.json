@@ -1,0 +1,19 @@
+{
+ "_meta": {
+  "objet": "Résidences dont le lien « voir sur Google Maps » ne peut porter ni une fiche vérifiée (place-ids.json) ni l'adresse affichée, parce que Google ne résout pas cette adresse : il rend une liste de résultats sans rapport. Pour elles, la requête porte les coordonnées de la source officielle : repère exact, titre en degrés. Chaque entrée porte sa preuve et sa date ; build.js refuse une entrée qui ne correspond à aucune résidence ou qui doublonne une fiche acceptée.",
+  "modes": {
+   "coordonnees": "query=lat,lon (coordonnées du jeu de données source)"
+  },
+  "controle": "node site/check-liens-maps.js --ids=<id> rejoue le lien et lit ce que Google affiche"
+ },
+ "items": [
+  {
+   "jeu": "residences-autonomie",
+   "id": "910807023",
+   "nom": "Résidence Autonomie Edouard Gauraz",
+   "mode": "coordonnees",
+   "motif": "Google Maps rend une liste de résultats (le parc de Villeroy) pour « 14 avenue du Parc de Villeroy, 91540 Mennecy », avec ou sans la commune ; la Base Adresse Nationale ne connaît que « Parc de Villeroy » à 510 m du point FINESS ; aucune fiche Google à moins de 300 m (le plus proche est un collège).",
+   "mesure": "2026-09-10"
+  }
+ ]
+}
