@@ -370,7 +370,7 @@
       {
         "h2": "APL et ALS : l'aide mensuelle de la CAF",
         "paragraphs": [
-          "L'aide personnalisée au logement (APL) ou l'allocation de logement sociale (ALS) est calculée sur vos ressources, votre loyer et la zone du logement. Les étudiants y ont droit même rattachés fiscalement à leurs parents. Attention : si vos parents touchent des prestations familiales pour vous, votre demande peut les faire perdre ; faites la simulation familiale globale avant.",
+          "L'aide personnalisée au logement (APL) ou l'allocation de logement sociale (ALS) est calculée sur vos ressources, votre loyer et la zone du logement. Son montant est revalorisé chaque 1er octobre selon l'indice de référence des loyers du deuxième trimestre : +1,15 % annoncé au 1er octobre 2026, sauf décision contraire du gouvernement. Les étudiants y ont droit même rattachés fiscalement à leurs parents. Attention : si vos parents touchent des prestations familiales pour vous, votre demande peut les faire perdre ; faites la simulation familiale globale avant.",
           "La demande se fait sur caf.fr APRÈS l'emménagement, avec bail et attestation de loyer. L'aide n'est pas rétroactive au-delà du mois de demande : ne tardez pas."
         ]
       },
@@ -434,6 +434,10 @@
       {
         "label": "Calendrier des candidatures pour un logement Crous, sur Service-public.fr (9 juin 2026)",
         "url": "https://www.service-public.gouv.fr/particuliers/actualites/A18327"
+      },
+      {
+        "label": "L'APL revalorisée au 1er octobre, sur Service-public.fr (11 septembre 2026)",
+        "url": "https://www.service-public.gouv.fr/particuliers/actualites/A16807"
       }
     ],
     "tldr": [
