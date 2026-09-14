@@ -147,6 +147,10 @@
         "a": "Il n'y a pas de délai garanti : à Paris, l'attente moyenne dépasse souvent plusieurs années selon la typologie demandée. Activer les canaux parallèles (AL'in pour les salariés, Bienvéo, candidatures directes bailleurs) et signaler les critères de priorité raccourcit réellement le parcours."
       },
       {
+        "q": "L'APL couvre-t-elle le loyer d'un logement social ?",
+        "a": "Pas entièrement, et de moins en moins. L'aide est calculée sur un loyer plafonné, et selon le Haut Comité pour le droit au logement (avis du 1er septembre 2026, données du ministère chargé du logement), la part des logements sociaux dont le loyer dépasse ce plafond est passée de 39 % en 2012 à 55 % en 2020 et approche 60 % en 2024. Avant d'accepter une proposition, simulez votre APL sur caf.fr avec le loyer réel du logement."
+      },
+      {
         "q": "Faut-il refaire sa demande chaque année ?",
         "a": "Oui, le renouvellement annuel est obligatoire. Sans renouvellement, la demande est radiée et l'ancienneté, critère majeur d'attribution, est perdue."
       },
@@ -175,6 +179,10 @@
       {
         "label": "Demander un logement social à la Ville de Paris",
         "url": "https://www.paris.fr/pages/demander-un-logement-social-37"
+      },
+      {
+        "label": "Avis du Haut Comité pour le droit au logement sur les loyers du parc social et les plafonds de l'APL (1er septembre 2026)",
+        "url": "https://www.hclpd.gouv.fr/avis-relatif-au-decrochage-entre-les-plafonds-de-l-a342.html"
       }
     ],
     "tldr": [
