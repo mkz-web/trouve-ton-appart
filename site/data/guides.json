@@ -1159,13 +1159,14 @@
     "title": "Encadrement des loyers à Paris : vérifier et faire respecter",
     "metaDescription": "Loyer de référence, complément de loyer, recours en cas de dépassement : comment vérifier que votre loyer parisien respecte l'encadrement.",
     "h1": "Encadrement des loyers à Paris : vérifiez avant de signer",
-    "intro": "À Paris, le loyer de la plupart des locations est plafonné par un « loyer de référence majoré » fixé par arrêté, quartier par quartier. Beaucoup d'annonces le dépassent pourtant, en comptant sur l'ignorance des candidats, en particulier les nouveaux arrivants et les profils en mobilité. Vérifier prend cinq minutes et peut faire économiser des centaines d'euros par mois.",
+    "intro": "À Paris, le loyer de la plupart des locations est plafonné par un « loyer de référence majoré » fixé par arrêté, quartier par quartier. Beaucoup d'annonces le dépassent pourtant : selon le 6e baromètre de la Fondation pour le Logement (septembre 2026), 46 % des loyers proposés à Paris étaient au-dessus du plafond, contre 31 % un an plus tôt. Elles comptent sur l'ignorance des candidats, en particulier les nouveaux arrivants et les profils en mobilité. Vérifier prend cinq minutes et peut faire économiser des centaines d'euros par mois.",
     "sections": [
       {
         "h2": "Comment fonctionne l'encadrement parisien",
         "paragraphs": [
           "Pour chaque quartier, type de logement (nombre de pièces, époque de construction, meublé ou non), un arrêté préfectoral fixe trois valeurs : loyer de référence, loyer de référence majoré (+20 %) et loyer de référence minoré (-30 %). Le loyer au mètre carré de votre bail ne peut pas dépasser la référence majorée.",
-          "Le dispositif s'applique aux baux d'habitation classiques, meublés (avec des références spécifiques, plus élevées) et aux baux mobilité. Le bail doit mentionner le loyer de référence majoré applicable."
+          "Le dispositif s'applique aux baux d'habitation classiques, meublés (avec des références spécifiques, plus élevées) et aux baux mobilité. Le bail doit mentionner le loyer de référence majoré applicable.",
+          "L'encadrement est une expérimentation : la loi ELAN de 2018 l'a prévue pour huit ans, jusqu'au 24 novembre 2026. Son avenir après cette date dépend du Parlement : une proposition de loi pour le pérenniser a été adoptée en séance publique en décembre 2025, mais au 14 septembre 2026 aucune loi de prolongation n'est définitivement votée. Jusque-là, la règle s'applique, et les dépassements ne reculent pas : sur l'ensemble des villes encadrées, 37 % des annonces dépassent le plafond (5 points de plus qu'en 2025), pour un dépassement moyen de 159 € par mois, contre 192 € un an plus tôt."
         ]
       },
       {
@@ -1227,6 +1228,14 @@
       {
         "label": "L'ADIL de Paris, conseil juridique gratuit",
         "url": "https://www.adil75.org"
+      },
+      {
+        "label": "Article 140 de la loi ELAN : l'expérimentation et sa durée, sur Légifrance",
+        "url": "https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000043977071"
+      },
+      {
+        "label": "6e baromètre de l'encadrement des loyers, Fondation pour le Logement (septembre 2026)",
+        "url": "https://www.fondationpourlelogement.fr/6e-barometre-de-lencadrement-des-loyers-proche-de-la-fin-de-lexperimentation-lencadrement-des-loyers-est-moins-respecte-surtout-a-paris/"
       }
     ],
     "tldr": [

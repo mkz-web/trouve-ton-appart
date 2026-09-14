@@ -333,13 +333,14 @@
       "title": "Paris rent control: check your rent before you sign",
       "metaDescription": "Most Paris rents are legally capped. How to check yours against the official reference rent, spot an unjustified rent supplement, and take action.",
       "h1": "Rent control in Paris: check before you sign",
-      "intro": "In Paris, the rent of most leases is capped by a maximum reference rent (loyer de référence majoré) set by decree, neighbourhood by neighbourhood. Yet many listings exceed it, counting on tenants who do not know the rules, starting with newcomers and internationals. Checking takes five minutes and can save hundreds of euros per month.",
+      "intro": "In Paris, the rent of most leases is capped by a maximum reference rent (loyer de référence majoré) set by decree, neighbourhood by neighbourhood. Yet many listings exceed it: according to the Fondation pour le Logement's 6th rent-control barometer (September 2026), 46% of the rents advertised in Paris were above the cap, up from 31% a year earlier. They count on tenants who do not know the rules, starting with newcomers and internationals. Checking takes five minutes and can save hundreds of euros per month.",
       "sections": [
         {
           "h2": "How Paris rent control works",
           "paragraphs": [
             "For each neighbourhood and each type of home (number of rooms, construction period, furnished or not), a prefectural decree sets three values: the reference rent, the maximum reference rent (+20%) and the minimum reference rent (-30%). The rent per square metre in your lease cannot exceed the maximum reference.",
-            "The scheme applies to standard residential leases, to furnished leases (with specific, higher references) and to mobility leases. The lease must state the applicable maximum reference rent."
+            "The scheme applies to standard residential leases, to furnished leases (with specific, higher references) and to mobility leases. The lease must state the applicable maximum reference rent.",
+            "Rent control is an experiment: the 2018 ELAN law set it up for eight years, until 24 November 2026. What happens next is up to Parliament: a bill to make it permanent was passed in a public sitting in December 2025, but as of 14 September 2026 no extension has been definitively enacted. Until then the rule applies, and breaches are not receding: across all the cities under rent control, 37% of listings exceed the cap (5 points more than in 2025), by an average of €159 per month, down from €192 a year earlier."
           ]
         },
         {
@@ -392,7 +393,9 @@
       "sourcesOfficielles": [
         { "label": "Rent control on Paris.fr (in French)", "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712" },
         { "label": "Paris capped rents on Service-public.fr (in French)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34407" },
-        { "label": "The ADIL of Paris, free housing-law advice", "url": "https://www.adil75.org" }
+        { "label": "The ADIL of Paris, free housing-law advice", "url": "https://www.adil75.org" },
+        { "label": "Article 140 of the ELAN law: the experiment and its duration, on Légifrance (in French)", "url": "https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000043977071" },
+        { "label": "6th rent-control barometer, Fondation pour le Logement (September 2026, in French)", "url": "https://www.fondationpourlelogement.fr/6e-barometre-de-lencadrement-des-loyers-proche-de-la-fin-de-lexperimentation-lencadrement-des-loyers-est-moins-respecte-surtout-a-paris/" }
       ]
     }
   ]
