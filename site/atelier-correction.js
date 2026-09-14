@@ -4,7 +4,7 @@
  * de répercussion du projet, passe la barrière, et S'ARRÊTE avant toute publication.
  *
  * Exécution : node site/atelier-correction.js --lot _veille/lots/mon-lot.json
- *             node site/atelier-correction.js --lot ... --sans-ecrire   (balayage seul)
+ *             node site/atelier-correction.js --lot ... --sans-ecrire   (balayage et contrôle des ancres, sans écrire)
  *             node site/atelier-correction.js --autotest
  * Runtime minimal : Node >= 14 natif (fs, path, child_process). Dépendances : aucune.
  *
@@ -256,8 +256,6 @@ function main() {
     console.log('');
   }
 
-  if (a('sans-ecrire')) { console.log('Mode balayage seul : rien n\'a été écrit.'); return; }
-
   /* 2. Contrôle préalable de TOUS les remplacements, avant d'écrire quoi que ce soit. */
   const parFichier = new Map();
   for (const r of remplacements) {
@@ -284,6 +282,7 @@ function main() {
   }
   console.log('2/6  Contrôle préalable : ' + projets.length + ' fichier(s) prêt(s), ' + refuse + ' refus');
   if (refuse) { console.error('\nRien n\'a été écrit. Corriger le lot, puis relancer.'); process.exit(1); }
+  if (a('sans-ecrire')) { console.log('Mode sans écriture : ancres contrôlées, rien n\'a été écrit.'); return; }
 
   /* 3. Écriture, avec l'original gardé en mémoire pour restauration. */
   for (const p of projets) fs.writeFileSync(p.abs, p.contenu, 'utf8');
