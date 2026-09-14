@@ -2086,7 +2086,7 @@ if (CROUS) {
     h1: "Les résidences CROUS d'Île-de-France",
     intro: `${CROUS.records.length} résidences universitaires publiques, aux loyers les plus bas du marché francilien. Voici la liste officielle complète, avec adresses, services et liens de candidature.`,
     comment: `<h2>Comment obtenir une chambre CROUS&nbsp;?</h2>
-  <p>On ne candidate pas auprès d'une résidence&nbsp;: tout passe par le <strong>Dossier social étudiant (DSE)</strong>, à constituer entre mars et mai sur messervices.etudiant.gouv.fr, puis par les vœux sur <a href="https://trouverunlogement.lescrous.fr" rel="noopener" target="_blank">trouverunlogement.lescrous.fr</a>. Une phase complémentaire ouvre en juillet pour les logements restés vacants, accessible aussi aux non-boursiers.</p>`,
+  <p>On ne candidate pas auprès d'une résidence&nbsp;: tout passe par le <strong>Dossier social étudiant (DSE)</strong>, à constituer entre mars et mai sur messervices.etudiant.gouv.fr, puis par les vœux sur <a href="https://trouverunlogement.lescrous.fr" rel="noopener" target="_blank">trouverunlogement.lescrous.fr</a>. Une phase complémentaire ouvre début juillet (le 7 juillet en 2026) pour les logements restés vacants, accessible à tous, non-boursiers et étudiants internationaux compris.</p>`,
     guides: ['aide-logement-etudiant', 'visale', 'dossierfacile'],
     searchCat: 'Résidence CROUS',
     /* « Demander un logement » vise toujours la plateforme nationale : c'est le seul endroit

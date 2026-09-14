@@ -389,7 +389,7 @@
       {
         "h2": "Les autres leviers franciliens",
         "bullets": [
-          "Le [logement CROUS](/residences-crous/) : loyers très inférieurs au marché ; demande via le Dossier Social Étudiant (DSE) sur messervices.etudiant.gouv.fr entre mars et mai, et phase complémentaire ensuite sur trouverunlogement.lescrous.fr.",
+          "Le [logement CROUS](/residences-crous/) : loyers très inférieurs au marché ; demande via le Dossier Social Étudiant (DSE) sur messervices.etudiant.gouv.fr entre mars et mai (au plus tard le 31 mai en 2026), puis vœux sur trouverunlogement.lescrous.fr : phase principale de mai à fin juin (du 5 mai au 29 juin en 2026, en trois cycles, en priorité pour les boursiers et fermée aux étudiants internationaux), puis phase complémentaire ouverte à tous dès début juillet (le 7 juillet en 2026).",
           "Le [FSL (Fonds de Solidarité Logement)](/guides/fonds-solidarite-logement/) de votre département : aide ponctuelle pour le dépôt de garantie, le premier loyer ou les dettes locatives, selon ressources.",
           "La [garantie Visale](/guides/visale/) (voir notre guide) : pas une aide financière directe, mais elle débloque les dossiers sans garant, souvent le vrai obstacle.",
           "Les aides locales et d'écoles : certaines collectivités et établissements ont leurs propres coups de pouce. Renseignez-vous auprès du service vie étudiante."
@@ -411,7 +411,7 @@
       },
       {
         "q": "Comment obtenir un logement CROUS en Île-de-France ?",
-        "a": "Constituez votre Dossier Social Étudiant (DSE) entre mars et mai sur messervices.etudiant.gouv.fr, puis candidatez sur les logements via trouverunlogement.lescrous.fr, y compris en phase complémentaire l'été."
+        "a": "Constituez votre Dossier Social Étudiant (DSE) entre mars et mai sur messervices.etudiant.gouv.fr (au plus tard le 31 mai en 2026), puis candidatez sur trouverunlogement.lescrous.fr. La phase principale va de mai à fin juin (du 5 mai au 29 juin en 2026), en trois cycles de vœux, jusqu'à 10 vœux par cycle, en priorité pour les boursiers et fermée aux étudiants internationaux ; la phase complémentaire, ouverte à tous, boursiers ou non, français ou internationaux, démarre début juillet (le 7 juillet en 2026) et des offres sont mises en ligne tout l'été au fil des désistements. Un logement attribué se confirme sous 5 jours, avec une avance sur loyer de 70 € déduite du premier loyer."
       }
     ],
     "sourcesOfficielles": [
@@ -430,6 +430,10 @@
       {
         "label": "Mon Logement Étudiant, la plateforme publique",
         "url": "https://monlogementetudiant.beta.gouv.fr"
+      },
+      {
+        "label": "Calendrier des candidatures pour un logement Crous, sur Service-public.fr (9 juin 2026)",
+        "url": "https://www.service-public.gouv.fr/particuliers/actualites/A18327"
       }
     ],
     "tldr": [
