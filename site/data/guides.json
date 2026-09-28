@@ -644,7 +644,7 @@
     "title": "Recours DALO : obliger l'État à vous reloger (guide 2026)",
     "metaDescription": "Sans logement malgré vos démarches ? Le recours DALO oblige le préfet à vous reloger. Conditions, formulaire, délais : procédure gratuite, sans avocat.",
     "h1": "Recours DALO : le droit au logement opposable, mode d'emploi",
-    "intro": "Depuis la loi du 5 mars 2007, l'État est garant du droit au logement. Si vos démarches n'aboutissent pas alors que votre situation est prioritaire, le recours DALO vous permet de saisir une commission qui peut obliger le préfet à vous reloger. C'est un droit, gratuit et sans avocat. L'Île-de-France concentre la majorité des recours du pays : autant le faire dans les règles.",
+    "intro": "Depuis la loi du 5 mars 2007, l'État est garant du droit au logement. Si vos démarches n'aboutissent pas alors que votre situation est prioritaire, le recours DALO vous permet de saisir une commission qui peut obliger le préfet à vous reloger. C'est un droit, gratuit et sans avocat. Paris est le premier département de France par le nombre de recours, devant la Seine-Saint-Denis (DRIHL, 2025) : autant le faire dans les règles.",
     "sections": [
       {
         "h2": "Le DALO, c'est quoi exactement ?",
@@ -687,6 +687,14 @@
           "Refuser une proposition de logement adaptée : cela fait perdre le bénéfice du DALO.",
           "Confondre DALO et DAHO : le DAHO est le recours équivalent pour obtenir un hébergement (sans condition de logement autonome). En urgence immédiate, [appelez d'abord le 115](/guides/siao-115-hebergement-urgence/)."
         ]
+      },
+      {
+        "h2": "Le DALO à Paris en chiffres (2025)",
+        "paragraphs": [
+          "La commission de médiation de Paris a reçu 17 574 recours en 2025 (16 126 au titre du DALO et 1 448 au titre du DAHO), soit 22,5 % des recours reçus en Île-de-France. Elle a reconnu 6 058 ménages prioritaires au titre du DALO, un taux de reconnaissance de 42 %, contre 31,7 % au niveau national (DRIHL, bilan 2025 publié en septembre 2026).",
+          "Le motif qui pèse le plus n'est pas celui qu'on croit : à Paris, le « délai anormalement long » ne représente que 5,7 % des décisions favorables DALO de 2025, loin derrière l'absence de logement (30,6 %). Documentez chaque motif qui s'applique à votre situation, pas seulement l'ancienneté de votre demande.",
+          "Être reconnu prioritaire n'est pas encore être relogé. En 2025, 3 144 ménages reconnus par la commission de Paris ont été relogés ; fin 2025, 18 012 ménages parisiens reconnus au titre du DALO attendaient toujours, avec une demande de logement social active, dont 1 568 reconnus entre 2008 et 2017. Le délai de 3 à 6 mois laissé au préfet est une obligation, pas un délai constaté : s'il est dépassé, le recours devant le tribunal administratif existe pour ça."
+        ]
       }
     ],
     "faq": [
@@ -700,7 +708,7 @@
       },
       {
         "q": "Le DALO fonctionne-t-il vraiment en Île-de-France ?",
-        "a": "C'est la région qui concentre le plus de recours et les délais les plus tendus, mais un dossier bien documenté sur un motif prioritaire reste l'outil juridique le plus puissant pour obtenir un relogement."
+        "a": "Oui, mais l'attente y est longue : à Paris, des milliers de ménages reconnus prioritaires attendent encore un relogement. Un dossier bien documenté sur un motif prioritaire reste l'outil juridique le plus puissant pour l'obtenir."
       },
       {
         "q": "Quelle différence entre DALO et DAHO ?",
@@ -719,6 +727,10 @@
       {
         "label": "Trouver son ADIL (conseil juridique logement gratuit)",
         "url": "https://www.anil.org"
+      },
+      {
+        "label": "Bilan 2025 de la commission de médiation et du bureau DALO de Paris (DRIHL, septembre 2026)",
+        "url": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/bilan-2025-de-la-commission-de-mediation-et-du-a1544.html"
       }
     ],
     "tldr": [
