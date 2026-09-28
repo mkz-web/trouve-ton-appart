@@ -313,11 +313,16 @@
         {
           "q": "Which housing benefits can I receive with a mobility lease?",
           "a": "France's housing benefits (APL or ALS, paid by the CAF) are possible if the home is your main residence, depending on your resources, and the Visale guarantee covers this lease with no age condition."
+        },
+        {
+          "q": "Does the new lease template of 1 October 2026 apply to the mobility lease?",
+          "a": "No. The official lease templates that take effect on 1 October 2026 (decree of 6 July 2026) cover unfurnished lets, furnished lets and single-lease flatshares, but the furnished template does not apply to the mobility lease. If you later switch to a standard furnished lease signed from that date, the new template does apply."
         }
       ],
       "sourcesOfficielles": [
         { "label": "The mobility lease on Service-public.fr (in French)", "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F34759" },
-        { "label": "Rent control on Paris.fr (in French)", "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712" }
+        { "label": "Rent control on Paris.fr (in French)", "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712" },
+        { "label": "New lease templates from 1 October 2026, on Service-public.fr (in French)", "url": "https://www.service-public.gouv.fr/particuliers/actualites/A19067" }
       ]
     },
     {

@@ -253,6 +253,10 @@
       {
         "q": "Quelles aides puis-je toucher avec un bail mobilité ?",
         "a": "Les aides au logement (APL/ALS) sont possibles si le logement est votre résidence principale et selon vos ressources, et la garantie Visale couvre ce bail sans condition d'âge."
+      },
+      {
+        "q": "Le nouveau modèle de bail du 1er octobre 2026 s'applique-t-il au bail mobilité ?",
+        "a": "Non. Les modèles de bail réglementaires qui entrent en vigueur au 1er octobre 2026 (décret du 6 juillet 2026) concernent les locations vides, les locations meublées et les colocations à bail unique, mais le modèle des locations meublées ne s'applique pas au bail mobilité. Si vous passez ensuite à un bail meublé classique conclu à partir de cette date, c'est en revanche ce nouveau modèle qui s'applique."
       }
     ],
     "sourcesOfficielles": [
@@ -263,6 +267,10 @@
       {
         "label": "L'encadrement des loyers sur Paris.fr",
         "url": "https://www.paris.fr/pages/l-encadrement-des-loyers-parisiens-en-vigueur-le-1er-aout-2712"
+      },
+      {
+        "label": "Nouveaux modèles de bail au 1er octobre 2026, sur Service-public.fr (23 septembre 2026)",
+        "url": "https://www.service-public.gouv.fr/particuliers/actualites/A19067"
       }
     ],
     "tldr": [
@@ -962,7 +970,7 @@
           "3. La commission FSL du département statue et notifie l'aide accordée (subvention, prêt, ou les deux)."
         ],
         "paragraphs": [
-          "Pour une dette de loyer, n'attendez pas l'assignation : plus la demande part tôt, plus la commission a de marges pour éviter la spirale de l'expulsion."
+          "Pour une dette de loyer, n'attendez pas l'assignation : plus la demande part tôt, plus la commission a de marges pour éviter la spirale de l'expulsion. Le calendrier est court : tout bail conclu ou renouvelé depuis le 29 juillet 2023 doit comporter une clause résolutoire, qui permet de le résilier de plein droit en cas de loyer ou de charges impayés après un commandement de payer resté sans effet pendant 6 semaines. Les modèles de bail en vigueur à partir du 1er octobre 2026 l'intègrent."
         ]
       },
       {
@@ -1055,6 +1063,10 @@
       {
         "q": "Où trouver le FSL de mon département ?",
         "a": "Le tableau de ce guide donne la page officielle des huit départements franciliens, de Paris au Val-d'Oise. Chaque département publie son propre règlement intérieur, qui fixe les plafonds et les montants de l'année."
+      },
+      {
+        "q": "Combien de temps après un commandement de payer le bail peut-il être résilié ?",
+        "a": "Six semaines. Tout bail conclu ou renouvelé depuis le 29 juillet 2023 doit comporter une clause résolutoire : si le loyer, les charges ou le dépôt de garantie ne sont pas payés, le bail peut être résilié de plein droit après un commandement de payer resté sans effet pendant 6 semaines. N'attendez pas ce commandement pour saisir le FSL : la demande passe par un travailleur social, et plus elle part tôt, plus la commission a de marges."
       }
     ],
     "sourcesOfficielles": [
@@ -1069,6 +1081,10 @@
       {
         "label": "Demander un logement social (à maintenir en parallèle)",
         "url": "https://www.demande-logement-social.gouv.fr"
+      },
+      {
+        "label": "Nouveaux modèles de bail et clause résolutoire au 1er octobre 2026, sur Service-public.fr (23 septembre 2026)",
+        "url": "https://www.service-public.gouv.fr/particuliers/actualites/A19067"
       }
     ],
     "tldr": [
