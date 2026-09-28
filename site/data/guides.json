@@ -385,7 +385,7 @@
       {
         "h2": "Avance Loca-Pass : le dépôt de garantie prêté à 0 %",
         "paragraphs": [
-          "Action Logement [avance votre dépôt de garantie](/guides/avance-loca-pass/) (prêt à taux zéro, remboursable sur 25 mois maximum). Étudiants boursiers, alternants et jeunes de moins de 30 ans en activité y sont éligibles. La demande se fait en ligne avant ou juste après la signature du bail."
+          "Action Logement [avance votre dépôt de garantie](/guides/avance-loca-pass/) (prêt à taux zéro, remboursable sur 25 mois maximum). Étudiants boursiers, alternants et jeunes de moins de 30 ans en activité y sont éligibles. La demande se fait en ligne avant ou juste après la signature du bail, et au plus tard 2 mois après l'entrée dans le logement."
         ]
       },
       {
@@ -866,11 +866,11 @@
         "h2": "Comment faire la demande",
         "bullets": [
           "1. Rassemblez bail signé (ou promesse), pièce d'identité et justificatif de situation (contrat, attestation de bourse…).",
-          "2. Déposez la demande en ligne sur actionlogement.fr, rubrique avance Loca-Pass, dès la signature du bail.",
+          "2. Déposez la demande en ligne sur actionlogement.fr, rubrique avance Loca-Pass, dès la signature du bail et au plus tard 2 mois après l'entrée dans le logement.",
           "3. Action Logement verse le montant, à vous ou directement selon le circuit, et le remboursement démarre après le différé."
         ],
         "paragraphs": [
-          "Faites la demande au plus près de l'entrée dans les lieux : le dispositif est conçu pour accompagner l'installation, pas pour refinancer un dépôt payé de longue date. Déposez le dossier dès la signature du bail, sans attendre."
+          "La demande doit être faite au plus tard 2 mois après votre entrée dans le logement : le dispositif est conçu pour accompagner l'installation, pas pour refinancer un dépôt payé de longue date. Déposez le dossier dès la signature du bail, sans attendre."
         ]
       },
       {
@@ -897,6 +897,10 @@
       {
         "q": "Loca-Pass fonctionne-t-il avec un bail mobilité ?",
         "a": "Le bail mobilité interdit le dépôt de garantie, donc l'avance n'a pas d'objet dans ce cas. C'est un avantage du bail mobilité, pas une limite de Loca-Pass."
+      },
+      {
+        "q": "Jusqu'à quand peut-on demander l'avance Loca-Pass ?",
+        "a": "Au plus tard 2 mois après votre entrée dans le logement, et la démarche se fait entièrement en ligne. Déposez-la dès la signature du bail : après acceptation, Action Logement vous adresse une fiche de dialogue puis une offre de prêt, chacune à signer dans les 15 jours, et verse l'avance dans les 10 jours qui suivent la signature de l'offre."
       }
     ],
     "sourcesOfficielles": [
@@ -912,7 +916,7 @@
     "tldr": [
       "L'avance Loca-Pass d'Action Logement finance le dépôt de garantie par un prêt à taux zéro, pour les salariés du privé et, sous conditions, les jeunes de moins de 30 ans.",
       "L'avance Loca-Pass est plafonnée à 1 200 €, sans intérêt ni frais de dossier, et se rembourse par mensualités de 20 € minimum sur une durée allant jusqu'à 25 mois.",
-      "La demande d'avance Loca-Pass se dépose en ligne sur actionlogement.fr, dès la signature du bail et au plus près de l'entrée dans les lieux."
+      "La demande d'avance Loca-Pass se dépose en ligne sur actionlogement.fr, dès la signature du bail et au plus tard 2 mois après l'entrée dans le logement."
     ]
   },
   {
