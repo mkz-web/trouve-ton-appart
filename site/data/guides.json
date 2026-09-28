@@ -1139,9 +1139,9 @@
         "h2": "Qui peut y vivre ?",
         "bullets": [
           "Les jeunes de 16 à 25 ans, et jusqu'à 30 ans dans de nombreuses résidences : salariés, alternants, stagiaires, intérimaires, demandeurs d'emploi.",
-          "Les étudiants peuvent être admis dans certaines résidences, en général en minorité du public accueilli.",
+          "Les étudiants peuvent être admis dans certaines résidences, en minorité : au moins 65 % des places vont aux jeunes actifs de 16 à 25 ans, et les 26 à 30 ans comme les étudiants non salariés se partagent au plus 35 % des places (DRIHL, guide régional 2026).",
           "Pas de condition de [garant](/guides/garant-location/) dans la plupart des résidences : le contrat est une convention d'occupation, plus souple qu'un bail classique.",
-          "Durée d'accueil : de quelques mois à deux ans environ, le temps de stabiliser sa situation."
+          "Durée d'accueil : un contrat d'un mois renouvelable, pour une durée indicative de deux ans, le temps de stabiliser sa situation ; le séjour cumulé est limité à 3 ans (DRIHL, guide régional 2026, d'après une circulaire de la CNAF de 2020)."
         ]
       },
       {
@@ -1150,7 +1150,8 @@
           "L'ALJT, principal opérateur francilien, gère des dizaines de résidences en région parisienne : candidature directe en ligne sur aljt.com.",
           "Le réseau national Habitat Jeunes (UNHAJ) recense les résidences par ville sur habitatjeunes.org.",
           "Certaines résidences sont accessibles via AL'in (Action Logement) si vous êtes salarié d'une entreprise cotisante.",
-          "Candidatez sur plusieurs résidences à la fois : les listes d'attente varient fortement d'un site à l'autre."
+          "Candidatez sur plusieurs résidences à la fois : les listes d'attente varient fortement d'un site à l'autre.",
+          "30 % des places de chaque FJT sont réservées à l'État et attribuées sur orientation du SIAO : si un travailleur social vous accompagne, demandez-lui d'activer ce canal."
         ],
         "paragraphs": [
           "Préparez les mêmes pièces qu'une location classique (identité, situation, ressources) : un dossier complet accélère nettement l'admission."
@@ -1179,7 +1180,7 @@
       },
       {
         "q": "Combien de temps peut-on rester en FJT ?",
-        "a": "L'accueil est transitoire : de quelques mois à deux ans environ, avec un accompagnement pour préparer le logement suivant."
+        "a": "L'accueil est transitoire : le contrat est d'un mois renouvelable, la durée indicative est de deux ans et le séjour cumulé est limité à 3 ans, avec un accompagnement pour préparer le logement suivant."
       }
     ],
     "sourcesOfficielles": [
@@ -1194,11 +1195,15 @@
       {
         "label": "Les FJT sur Service-public.fr",
         "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F2018"
+      },
+      {
+        "label": "Guide régional du logement social en Île-de-France 2026 (DRIHL)",
+        "url": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/guide-regional-du-logement-social-en-idf-2026-a1387.html"
       }
     ],
     "tldr": [
       "Le foyer de jeunes travailleurs (FJT), rebaptisé résidence Habitat Jeunes, loge en meublé les jeunes en début de vie active : redevance tout compris, éligible à l'APL.",
-      "Les FJT accueillent les jeunes de 16 à 25 ans, et jusqu'à 30 ans dans de nombreuses résidences, pour une durée d'accueil de quelques mois à deux ans environ.",
+      "Les FJT accueillent les jeunes de 16 à 25 ans, et jusqu'à 30 ans dans de nombreuses résidences, pour une durée indicative de deux ans et un séjour cumulé limité à 3 ans.",
       "Candidature directe en ligne sur aljt.com (principal opérateur francilien), résidences recensées sur habitatjeunes.org : viser plusieurs résidences à la fois."
     ]
   },
@@ -1759,7 +1764,7 @@
         "h2": "Comment obtenir une place : les trois canaux réels",
         "bullets": [
           "1. La candidature directe auprès des gestionnaires. Adoma, opérateur de référence du logement accompagné rattaché au groupe CDC Habitat, avec plus de 83 500 logements, prend les demandes entièrement en ligne sur [ddl.adoma.cdc-habitat.fr](https://ddl.adoma.cdc-habitat.fr/homepage) ; la demande reste valable 6 mois, renouvelable (adoma.cdc-habitat.fr, 2026). D'autres gestionnaires associatifs, comme Coallia ou les Apprentis d'Auteuil, reçoivent les candidatures résidence par résidence.",
-          "2. Le travailleur social et le SIAO. Dans chaque résidence, 30 % des places relèvent du contingent de l'État et sont attribuées uniquement sur orientation du SIAO, le service qui centralise les demandes d'hébergement et de logement accompagné (ministère chargé du Logement, 2021). Si vous êtes hébergé, à l'hôtel ou à la rue, c'est le canal principal : prenez rendez-vous avec un travailleur social (CCAS, service social départemental) et lisez notre [guide du SIAO et du 115](/guides/siao-115-hebergement-urgence/).",
+          "2. Le travailleur social et le SIAO. Dans chaque résidence, au moins 30 % des places relèvent du contingent de l'État et sont attribuées uniquement sur orientation du SIAO, le service qui centralise les demandes d'hébergement et de logement accompagné (ministère chargé du Logement, 2021). Si vous êtes hébergé, à l'hôtel ou à la rue, c'est le canal principal : prenez rendez-vous avec un travailleur social (CCAS, service social départemental) et lisez notre [guide du SIAO et du 115](/guides/siao-115-hebergement-urgence/).",
           "3. Action Logement, si vous êtes salarié. La plateforme [logement-actionlogement.fr](https://logement-actionlogement.fr/) référence des logements temporaires meublés, dont des places en résidences sociales, pour les salariés des entreprises privées de 10 salariés et plus, ou agricoles de 50 salariés et plus (CDI, CDD, intérim, alternance, stage rémunéré). Le service est gratuit (actionlogement.fr, 2026)."
         ],
         "paragraphs": [
@@ -1769,7 +1774,7 @@
       {
         "h2": "Combien de temps peut-on rester ?",
         "paragraphs": [
-          "Le contrat d'occupation est signé pour un mois et se renouvelle par tacite reconduction. La réglementation n'impose aucune durée maximale ; dans les faits, l'accueil varie selon les situations de un mois à deux ans (ministère chargé du Logement, fiche de mai 2021).",
+          "Le contrat d'occupation est signé pour un mois et se renouvelle par tacite reconduction. La réglementation n'impose aucune durée maximale ; dans les faits, l'accueil varie selon les situations de un mois à deux ans (ministère chargé du Logement, fiche de mai 2021). En Île-de-France, l'État recommande une durée maximale d'occupation de 2 ans (DRIHL, guide régional 2026).",
           "La logique du dispositif reste le passage : la résidence sociale vous loge le temps de stabiliser votre situation, pas définitivement. D'où l'importance d'anticiper la sortie dès le premier mois, comme détaillé plus bas."
         ]
       },
@@ -1868,6 +1873,10 @@
       {
         "label": "Le logement temporaire d'Action Logement",
         "url": "https://www.actionlogement.fr/logement-temporaire"
+      },
+      {
+        "label": "Guide régional du logement social en Île-de-France 2026 (DRIHL)",
+        "url": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/guide-regional-du-logement-social-en-idf-2026-a1387.html"
       }
     ],
     "tldr": [
