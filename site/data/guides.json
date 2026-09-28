@@ -124,7 +124,7 @@
         "h2": "Délais réels et leviers d'accélération",
         "paragraphs": [
           "Soyons honnêtes : en Île-de-France, l'attente se compte en années, car le parc tourne peu (environ 5 % des logements sociaux changent de locataire chaque année). D'où l'importance d'activer tous les canaux en parallèle :",
-          "Un repère chiffré avant de choisir vos communes : la moitié des ménages logés en 2025 avaient déposé leur demande depuis 31 mois ou moins, mais ce délai médian varie de 10 à 57 mois selon la ville (DRIHL, Infocentre SNE). Nous publions [le détail commune par commune](/logement-social/delais/) : à situation égale, viser les bons secteurs pèse réellement sur votre attente."
+          "Un repère chiffré avant de choisir vos communes : la moitié des ménages logés en 2025 avaient déposé leur demande depuis 31 mois ou moins, mais ce délai médian varie de 10 à 57 mois selon la ville (DRIHL, Infocentre SNE). Nous publions [le détail commune par commune](/logement-social/delais/) : à situation égale, viser les bons secteurs pèse réellement sur votre attente. Les ménages prioritaires pèsent lourd, eux aussi : en 2025, 35 % des attributions franciliennes, soit 23 776 ménages, sont allées à des ménages reconnus DALO ou labellisés prioritaires par l'État (DRIHL). Si votre situation relève d'un critère de priorité, faites-le reconnaître."
         ],
         "bullets": [
           "AL'in (al-in.fr) : si vous êtes salarié d'une entreprise privée cotisante, Action Logement dispose de son propre contingent de logements réservés, un canal souvent plus rapide que le circuit classique.",
@@ -144,7 +144,7 @@
     "faq": [
       {
         "q": "Combien de temps faut-il pour obtenir un logement social à Paris ?",
-        "a": "Il n'y a pas de délai garanti : à Paris, l'attente moyenne dépasse souvent plusieurs années selon la typologie demandée. Activer les canaux parallèles (AL'in pour les salariés, Bienvéo, candidatures directes bailleurs) et signaler les critères de priorité raccourcit réellement le parcours."
+        "a": "Il n'y a pas de délai garanti. À Paris, la moitié des ménages logés en 2025 avaient déposé leur demande depuis 2 ans et 10 mois ou moins, mais 29 % d'entre eux avaient attendu 5 ans ou plus, et l'on compte une attribution pour 22 demandes (DRIHL). Activer les canaux parallèles (AL'in pour les salariés, Bienvéo, candidatures directes bailleurs) et signaler les critères de priorité raccourcit réellement le parcours."
       },
       {
         "q": "L'APL couvre-t-elle le loyer d'un logement social ?",
@@ -156,7 +156,7 @@
       },
       {
         "q": "Puis-je faire une demande si je travaille ?",
-        "a": "Oui. Les plafonds de ressources franciliens (PLUS, PLS) couvrent une large partie des salariés. Et au-dessus des plafonds HLM, le logement intermédiaire (LLI) prend le relais."
+        "a": "Oui. Les plafonds de ressources franciliens (PLUS, PLS) couvrent une large partie des salariés, et en 2025, 78 % des ménages qui ont obtenu un logement social en Île-de-France avaient un emploi (DRIHL). Et au-dessus des plafonds HLM, le logement intermédiaire (LLI) prend le relais."
       },
       {
         "q": "Qu'est-ce que le DALO ?",
@@ -183,6 +183,14 @@
       {
         "label": "Avis du Haut Comité pour le droit au logement sur les loyers du parc social et les plafonds de l'APL (1er septembre 2026)",
         "url": "https://www.hclpd.gouv.fr/avis-relatif-au-decrochage-entre-les-plafonds-de-l-a342.html"
+      },
+      {
+        "label": "Les attributions de logement social en 2025 en Île-de-France (DRIHL, septembre 2026)",
+        "url": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/infographie-les-attributions-de-logement-social-en-a1534.html"
+      },
+      {
+        "label": "Les attributions de logement social en 2025 à Paris (DRIHL, septembre 2026)",
+        "url": "https://www.drihl.ile-de-france.developpement-durable.gouv.fr/infographie-les-attributions-de-logement-social-en-a1535.html"
       }
     ],
     "tldr": [
