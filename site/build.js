@@ -2183,8 +2183,8 @@ if (LS_COMMUNES) {
   const nbCommunes = recs.filter(r => !r.arrondissement).length;
   const t = themeOf('logement-social');
 
-  const statut = (r) => (r.carencee ? '<span class="badge badge-car" title="Commune carencée au titre de la loi SRU : objectifs non tenus, sanctions renforcées">carencée</span>'
-    : r.deficitaire ? '<span class="badge badge-def" title="Commune en dessous de son objectif légal de logements sociaux (loi SRU)">déficitaire</span>' : '');
+  const statut = (r) => (r.carencee ? '<span class="badge badge-car" title="Commune carencée au titre de la loi SRU (inventaire au 1er janvier 2024) : objectifs non tenus, sanctions renforcées">carencée</span>'
+    : r.deficitaire ? '<span class="badge badge-def" title="Commune en dessous de son objectif légal de logements sociaux (loi SRU, inventaire au 1er janvier 2024)">déficitaire</span>' : '');
   const rowOf = (r) => {
     const tn = tensionOf(r.code);
     return `<tr id="c-${r.code}" data-n="${esc(r.nom.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''))}">
@@ -2207,7 +2207,7 @@ if (LS_COMMUNES) {
     <li><strong>Parc social (RPLS)</strong>&nbsp;: logements locatifs des bailleurs sociaux au 1ᵉʳ janvier 2024 (répertoire RPLS, Insee-SDES). Les communes sans découpage IRIS ne sont pas couvertes par ce fichier («&nbsp;n.d.&nbsp;»).</li>
     <li><strong>Loyer médian</strong>&nbsp;: en €/m² de surface habitable, charges non comprises, à comparer aux 25-35&nbsp;€/m² du parc privé parisien.</li>
     <li><strong>Vacance</strong>&nbsp;: part des logements vacants&nbsp;: sous 3&nbsp;%, le parc est saturé.</li>
-    <li><strong>Taux SRU</strong>&nbsp;: part de logements sociaux au sens de la loi SRU (inventaire au 1ᵉʳ janvier 2024, assiette plus large que le RPLS&nbsp;: ne pas additionner les deux). Une commune «&nbsp;déficitaire&nbsp;» est en dessous de son objectif légal&nbsp;; «&nbsp;carencée&nbsp;», elle est sanctionnée. Autant d'arguments utiles pour votre dossier.</li>
+    <li><strong>Taux SRU</strong>&nbsp;: part de logements sociaux au sens de la loi SRU (inventaire au 1ᵉʳ janvier 2024, assiette plus large que le RPLS&nbsp;: ne pas additionner les deux). Une commune «&nbsp;déficitaire&nbsp;» est en dessous de son objectif légal&nbsp;; «&nbsp;carencée&nbsp;», elle est sanctionnée. Ces statuts sont ceux de l'inventaire&nbsp;; la liste à jour des communes carencées est publiée par la DRIHL dans son <a href="https://www.drihl.ile-de-france.developpement-durable.gouv.fr/guide-regional-du-logement-social-en-idf-2026-a1387.html" rel="noopener" target="_blank">guide régional du logement social</a> (édition 2026). Autant d'arguments utiles pour votre dossier.</li>
     <li><strong>Zone</strong>&nbsp;: zonage ABC (Abis = Paris…)&nbsp;: il fixe les plafonds de loyers et de ressources de nombreux dispositifs.</li>
     ${TENSION ? `<li><strong>Délai médian</strong>&nbsp;: la moitié des ménages logés dans l'année avaient déposé leur demande depuis moins de ce délai, l'autre moitié depuis plus longtemps. C'est le chiffre le plus parlant sur l'attente réelle.</li>
     <li><strong>Demandes pour une attribution</strong>&nbsp;: nombre de demandes en cours (premier choix) rapporté aux attributions de l'année. C'est un <strong>rapport de pression, pas une durée</strong>&nbsp;: 20 demandes pour une attribution ne signifie pas 20 ans d'attente. «&nbsp;n.d.&nbsp;» quand la source masque la valeur (moins de 10 demandes ou attributions).</li>` : ''}
@@ -2514,7 +2514,7 @@ function rendreFiche(c){
   if(o.p!=null||o.s!=null){
     h+='<ul>';
     if(o.p!=null)h+='<li><strong>'+fnb(o.p)+' logements sociaux</strong> (RPLS)'+(o.lm!=null?', loyer médian <strong>'+fnb(o.lm,2)+' €/m²</strong>':'')+(o.v!=null?', vacance '+fnb(o.v,1)+'&nbsp;%':'')+'.</li>';
-    if(o.s!=null)h+='<li>Taux SRU&nbsp;: <strong>'+fnb(o.s,1)+'&nbsp;%</strong> de logements sociaux'+(o.ca?', commune <strong>carencée</strong>':(o.df?', commune <strong>déficitaire</strong> (sous les 25&nbsp;% attendus)':''))+'.</li>';
+    if(o.s!=null)h+='<li>Taux SRU&nbsp;: <strong>'+fnb(o.s,1)+'&nbsp;%</strong> de logements sociaux'+(o.ca?', commune <strong>carencée</strong> (inventaire SRU au 1er janvier 2024)':(o.df?', commune <strong>déficitaire</strong> (sous les 25&nbsp;% attendus)':''))+'.</li>';
     h+='<li><a href="'+uCh+(c.c==='75056'?'':'#c-'+c.c)+'">Le détail dans les chiffres du département</a></li></ul>';
   }else{
     h+='<p>Pas de ligne RPLS pour cette commune dans nos données&nbsp;: voir <a href="'+uCh+'">les chiffres du département</a>.</p>';
@@ -4233,7 +4233,7 @@ if (LS_COMMUNES) {
       r.txVacance != null ? `vacance ${fmt(r.txVacance, 1)} %` : null,
       r.tauxSRU != null ? `taux SRU ${fmt(r.tauxSRU, 1)} %` : null,
       r.zone ? `zone ${r.zone}` : null,
-      r.carencee ? 'commune carencée (SRU)' : (r.deficitaire ? 'commune déficitaire (SRU)' : null),
+      r.carencee ? 'commune carencée (inventaire SRU au 1er janvier 2024)' : (r.deficitaire ? 'commune déficitaire (inventaire SRU au 1er janvier 2024)' : null),
       tn && tn.delaiMois != null ? `délai médian d'attribution ${fmt(tn.delaiMois)} mois (${TENSION._meta.millesime})` : null,
       tn && tn.tension != null ? `${fmt(tn.tension, 1)} demandes en cours pour une attribution` : null,
     ].filter(Boolean).join(', ');
