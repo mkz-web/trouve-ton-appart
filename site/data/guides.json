@@ -2412,9 +2412,9 @@
       "demande-logement-social"
     ],
     "title": "Aides au logement de la Ville de Paris : montants 2026",
-    "metaDescription": "Paris Logement, Familles, Familles Monoparentales, AILE : qui y a droit, combien par mois, comment déposer le dossier. Barèmes au 1er juin 2026.",
+    "metaDescription": "Paris Logement, Familles, Familles Monoparentales, AILE : qui y a droit, combien par mois, comment déposer le dossier. Barèmes au 1er juillet 2026.",
     "h1": "Les aides au logement de la Ville de Paris, montant par montant",
-    "intro": "Paris verse ses propres aides au logement, en plus de l'aide de la CAF. Trois allocations mensuelles qui ne se cumulent jamais entre elles, et une aide d'installation réservée aux étudiants boursiers. Voici qui a droit à quoi, combien exactement, et où déposer le dossier. Les plafonds de ressources de Paris Logement et de Paris Logement Familles Monoparentales sont ceux affichés par la Ville au 1er juin 2026.",
+    "intro": "Paris verse ses propres aides au logement, en plus de l'aide de la CAF. Trois allocations mensuelles qui ne se cumulent jamais entre elles, et une aide d'installation réservée aux étudiants boursiers. Voici qui a droit à quoi, combien exactement, et où déposer le dossier. Les plafonds de ressources de Paris Logement et de Paris Logement Familles Monoparentales sont ceux affichés par la Ville au 1er juillet 2026.",
     "sections": [
       {
         "h2": "Quatre aides, deux logiques à ne pas confondre",
@@ -2424,7 +2424,7 @@
           "Toutes viennent après l'aide au logement de la CAF, jamais à sa place. Il faut avoir fait valoir ses droits à l'[APL ou à l'ALS](/guides/aide-logement-etudiant/) avant de déposer la demande, et l'allocation municipale ne peut pas dépasser ce qui reste à votre charge une fois l'aide de la CAF déduite."
         ],
         "table": {
-          "caption": "Les trois allocations logement de la Ville de Paris, avec les plafonds de ressources en vigueur au 1er juin 2026",
+          "caption": "Les trois allocations logement de la Ville de Paris, avec les plafonds de ressources en vigueur au 1er juillet 2026",
           "headers": [
             "Allocation",
             "Pour qui",
@@ -2461,7 +2461,7 @@
         ],
         "bullets": [
           "Montant maximum : 84 € par mois pour une personne seule, 95 € pour un couple sans enfant, 116 € pour un couple avec 1 enfant à charge.",
-          "Ressources mensuelles du foyer : 1 480 € au plus pour une personne seule ou un couple sans enfant, 1 600 € pour un couple avec 1 enfant (plafonds au 1er juin 2026). Toutes les personnes vivant au foyer comptent, y compris celles qui y sont hébergées.",
+          "Ressources mensuelles du foyer : 1 480 € au plus pour une personne seule ou un couple sans enfant, 1 600 € pour un couple avec 1 enfant (plafonds au 1er juillet 2026). Toutes les personnes vivant au foyer comptent, y compris celles qui y sont hébergées.",
           "Être locataire en titre et titulaire du bail, dans un logement occupé à titre principal. Contrairement aux deux autres allocations, elle n'est pas ouverte aux propriétaires.",
           "Consacrer au moins 30 % de ses ressources aux charges de logement, appréciées selon un taux d'effort. Ce sont les charges forfaitaires retenues par la CAF qui servent de base, pas vos charges réelles.",
           "Habiter Paris et y avoir résidé au moins 3 ans sur les 5 dernières années. Pour un couple avec enfant muté par son employeur, le délai tombe à 1 an.",
@@ -2508,7 +2508,7 @@
       {
         "h2": "Paris Logement Familles Monoparentales : 128 ou 150 € par mois",
         "paragraphs": [
-          "Si vous élevez seul un ou plusieurs enfants à charge fiscale, c'est cette allocation qui s'applique, et le nombre d'enfants ne change rien au montant. Deux tranches seulement, calculées sur le revenu mensuel déclaré au dernier avis d'imposition : 150 € par mois jusqu'à 1 480 € de revenu, et 128 € par mois entre 1 481 € et 1 600 € (plafonds au 1er juin 2026).",
+          "Si vous élevez seul un ou plusieurs enfants à charge fiscale, c'est cette allocation qui s'applique, et le nombre d'enfants ne change rien au montant. Deux tranches seulement, calculées sur le revenu mensuel déclaré au dernier avis d'imposition : 150 € par mois jusqu'à 1 480 € de revenu, et 128 € par mois entre 1 481 € et 1 600 € (plafonds au 1er juillet 2026).",
           "Comme Paris Logement Familles, elle est ouverte aux locataires, aux propriétaires et aux accédants à la propriété. En cas de garde alternée, elle est versée pour moitié à chaque parent demandeur."
         ]
       },
