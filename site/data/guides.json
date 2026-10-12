@@ -998,6 +998,21 @@
         ]
       },
       {
+        "h2": "Trêve hivernale : ce qu'elle suspend, ce qu'elle laisse courir",
+        "paragraphs": [
+          "Chaque année, du 1er novembre au 31 mars de l'année suivante (hiver 2026-2027 : du 1er novembre 2026 au 31 mars 2027), un propriétaire ne peut pas faire expulser son locataire, même s'il a obtenu une décision de justice, et quel que soit le motif, loyers impayés compris. C'est la trêve hivernale, prévue par l'[article L412-6 du code des procédures civiles d'exécution](https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000047900053).",
+          "La trêve suspend l'expulsion, pas la dette : les loyers impayés restent dus, et le locataire doit poursuivre ou engager pendant cette période les démarches de remboursement. À la fin de la trêve, une expulsion ordonnée par un juge peut reprendre et être exécutée par un commissaire de justice. L'hiver est donc le moment de saisir le FSL avec un travailleur social, pas une raison d'attendre. Une menace d'expulsion sans solution de relogement fait aussi partie des situations qui permettent un [recours DALO](/guides/recours-dalo/).",
+          "Pendant la même période, les coupures de gaz et d'électricité pour facture impayée sont interdites. Dans le cas général, la puissance de l'électricité peut toutefois être réduite, et les coupures redeviennent possibles d'avril à octobre (EDF maintient l'électricité de ses clients toute l'année). Selon les départements, le FSL peut aussi prendre en charge ces factures d'énergie.",
+          "La trêve ne protège pas tout le monde. En sont exclus :"
+        ],
+        "bullets": [
+          "Les personnes dont le relogement est assuré dans des conditions adaptées à leurs besoins familiaux.",
+          "Les occupants d'un immeuble frappé d'un arrêté de mise en sécurité.",
+          "Les squatteurs d'un domicile, résidence principale ou secondaire. Pour un garage ou un terrain occupé sans droit, le juge peut supprimer ou réduire la trêve.",
+          "Le conjoint dont l'expulsion du domicile conjugal a été ordonnée par le juge aux affaires familiales dans une procédure de divorce, et le conjoint, partenaire de Pacs ou concubin violent expulsé par une ordonnance de protection."
+        ]
+      },
+      {
         "h2": "Le FSL de votre département en Île-de-France",
         "paragraphs": [
           "Le FSL est départemental : le règlement intérieur, les plafonds de ressources, les montants et jusqu'au nom du dispositif changent d'un département à l'autre. Voici la porte d'entrée officielle des huit départements franciliens, chaque page vérifiée le 14 août 2026.",
@@ -1091,6 +1106,14 @@
       {
         "q": "Combien de temps après un commandement de payer le bail peut-il être résilié ?",
         "a": "Six semaines. Tout bail conclu ou renouvelé depuis le 29 juillet 2023 doit comporter une clause résolutoire : si le loyer, les charges ou le dépôt de garantie ne sont pas payés, le bail peut être résilié de plein droit après un commandement de payer resté sans effet pendant 6 semaines. N'attendez pas ce commandement pour saisir le FSL : la demande passe par un travailleur social, et plus elle part tôt, plus la commission a de marges."
+      },
+      {
+        "q": "La trêve hivernale efface-t-elle les dettes de loyer ?",
+        "a": "Non. Du 1er novembre au 31 mars, le propriétaire ne peut pas faire exécuter une expulsion, même ordonnée par un juge, mais les loyers impayés restent dus et l'expulsion peut reprendre à la fin de la trêve. C'est le moment de saisir le FSL avec un travailleur social pour traiter la dette."
+      },
+      {
+        "q": "Qui n'est pas protégé par la trêve hivernale ?",
+        "a": "Les personnes dont le relogement est assuré dans des conditions adaptées à leurs besoins familiaux, les occupants d'un immeuble frappé d'un arrêté de mise en sécurité, les squatteurs d'un domicile, et le conjoint ou partenaire dont l'expulsion a été ordonnée par le juge aux affaires familiales, dans une procédure de divorce ou par une ordonnance de protection pour violences. Pour un garage ou un terrain occupé sans droit, le juge peut supprimer ou réduire la trêve."
       }
     ],
     "sourcesOfficielles": [
@@ -1109,6 +1132,18 @@
       {
         "label": "Nouveaux modèles de bail et clause résolutoire au 1er octobre 2026, sur Service-public.fr (23 septembre 2026)",
         "url": "https://www.service-public.gouv.fr/particuliers/actualites/A19067"
+      },
+      {
+        "label": "Trêve hivernale 2026-2027, sur Service-public.fr (2 octobre 2026)",
+        "url": "https://www.service-public.gouv.fr/particuliers/actualites/A14632"
+      },
+      {
+        "label": "Article L412-6 du code des procédures civiles d'exécution : la trêve hivernale, sur Légifrance",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000047900053"
+      },
+      {
+        "label": "Impayés de factures d'énergie et trêve hivernale, sur Service-public.fr",
+        "url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F20055"
       }
     ],
     "tldr": [
