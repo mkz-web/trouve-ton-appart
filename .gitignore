@@ -6,6 +6,11 @@ site/_illus-work/
 
 # Secrets locaux (cle API Clarity...)
 .env
+.env.*
+.dev.vars
+*.pem
+*.key
+node_modules/
 
 # Journal prive et dossiers de travail : sur ce poste et OneDrive seulement (scission du 09/09/2026)
 CLAUDE-prive.md

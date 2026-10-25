@@ -4383,5 +4383,23 @@ https://:version.:project.pages.dev/*
 const INDEXNOW_KEY = require('./indexnow-cle.js');
 fs.writeFileSync(path.join(DIST, `${INDEXNOW_KEY}.txt`), INDEXNOW_KEY);
 
+/* security.txt (RFC 9116, durcissement du 25/10/2026) : l'adresse où signaler
+ * une faille, servie à l'URL que les chercheurs et les outils réclament. Le
+ * contact est celui déjà publié aux mentions légales. Expires est obligatoire
+ * et doit rester à moins d'un an : il est recalculé à chaque build, à 180 jours
+ * de la date civile de Paris, donc identique pour deux builds du même jour quel
+ * que soit le fuseau de la machine (invariant du 10/09). Un site qu'on cesse de
+ * publier voit son fichier expirer de lui-même, et c'est voulu. */
+const EXPIRES_SECURITY = (() => {
+  const [a, m, j] = DATE_ISO.split('-').map(Number);
+  return new Date(Date.UTC(a, m - 1, j + 180)).toISOString();
+})();
+fs.mkdirSync(path.join(DIST, '.well-known'), { recursive: true });
+fs.writeFileSync(path.join(DIST, '.well-known', 'security.txt'), `Contact: mailto:mickael@trouve-ton-appart.fr
+Expires: ${EXPIRES_SECURITY}
+Preferred-Languages: fr, en
+Canonical: ${SITE.baseUrl}/.well-known/security.txt
+`);
+
 console.log(`OK : ${pages.length} pages générées dans dist/ (+ sitemap.xml, robots.txt, llms.txt)`);
 pages.forEach(p => console.log('  ' + p.urlPath));

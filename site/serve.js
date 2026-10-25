@@ -3,6 +3,8 @@
  * serve.js : serveur statique de développement pour dist/.
  * Dépendances : aucune. Node 14+. Exécution : node serve.js [port]
  * (Outil de dev local uniquement, la production est servie par l'hébergeur statique.)
+ * Écoute 127.0.0.1 seulement : sans hôte, Node écoute toutes les interfaces et
+ * le site de dev serait joignable depuis le réseau local (durcissement du 25/10/2026).
  */
 'use strict';
 const http = require('http');
@@ -20,4 +22,4 @@ http.createServer((req, res) => {
   if (!fs.existsSync(file)) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end('404'); }
   res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream' });
   fs.createReadStream(file).pipe(res);
-}).listen(PORT, () => console.log(`Serveur de dev : http://localhost:${PORT}`));
+}).listen(PORT, '127.0.0.1', () => console.log(`Serveur de dev : http://localhost:${PORT}`));

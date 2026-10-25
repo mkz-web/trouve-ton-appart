@@ -20,9 +20,10 @@ const DIST = path.join(__dirname, 'dist');
  * du web, réclamées par le navigateur ou le robot à une URL fixe. Tout ajout
  * ici doit être une convention documentée, jamais un fichier qu'on n'arrive
  * plus à rattacher. La clé IndexNow en fait partie : les moteurs la
- * réclament à la racine pour accepter les pings (voir indexnow-cle.js). */
+ * réclament à la racine pour accepter les pings (voir indexnow-cle.js).
+ * security.txt (RFC 9116) est réclamé à /.well-known/security.txt. */
 const INDEXNOW_KEY = require('./indexnow-cle.js');
-const CONVENTIONS = new Set(['/404.html', '/robots.txt', `/${INDEXNOW_KEY}.txt`]);
+const CONVENTIONS = new Set(['/404.html', '/robots.txt', `/${INDEXNOW_KEY}.txt`, '/.well-known/security.txt']);
 
 /* Configuration de l'hébergeur : Cloudflare Pages CONSOMME ces fichiers au
  * déploiement et ne les sert jamais, donc ils ne font pas partie du site
