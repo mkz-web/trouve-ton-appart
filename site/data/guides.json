@@ -2029,7 +2029,7 @@
         "h2": "L'AIP : jusqu'à 1 500 € pour financer votre installation",
         "paragraphs": [
           "L'aide à l'installation des personnels de l'État (AIP) rembourse une partie de vos frais d'entrée dans une location, vide ou meublée : premier mois de loyer avec charges, frais d'agence et de rédaction de bail, dépôt de garantie, frais de déménagement (SRIAS Île-de-France, 2026). Elle s'ajoute aux aides au logement de la CAF, ouvertes quel que soit votre statut.",
-          "Point d'attention : le site aip-fonctionpublique.fr a rouvert, et le dépôt des dossiers est de nouveau possible depuis le 7 octobre 2026. Le service annonce un traitement d'environ un mois à compter du dépôt, en raison de l'afflux de demandes attendu, et autorise à titre dérogatoire l'envoi du dossier par voie postale ; les délais prolongés ci-dessous restent valables le temps du rattrapage. L'AIP reste cumulable avec un prêt d'installation (préfecture de région, 2026)."
+          "Point d'attention : le site aip-fonctionpublique.fr a rouvert, et le dépôt des dossiers est de nouveau possible depuis le 7 octobre 2026. Le service annonce un traitement d'environ un mois à compter du dépôt, en raison de l'afflux de demandes attendu, et autorise à titre dérogatoire l'envoi du dossier par voie postale, à l'adresse DGAFP AIP, Service Back Office, TSA 51235, 57070 Metz (formulaire téléchargeable sur le site, ou envoyé par courrier sur demande), avec une plateforme téléphonique au 09 70 25 10 16 (AIP Fonction publique, octobre 2026) ; les délais prolongés ci-dessous restent valables le temps du rattrapage. L'AIP reste cumulable avec un prêt d'installation (préfecture de région, 2026)."
         ],
         "bullets": [
           "Jusqu'à 1 500 € en zone tendue dite « ALUR », ce qui couvre l'agglomération parisienne, et pour l'AIP-Ville (quartiers prioritaires) ; jusqu'à 700 € ailleurs (préfecture de région, 2026).",
@@ -2102,6 +2102,10 @@
       {
         "label": "SRIAS Île-de-France : l'aide à l'installation des personnels (AIP)",
         "url": "https://srias.ile-de-france.gouv.fr/fre/LOGEMENT/Aide-a-l-installation-AIP"
+      },
+      {
+        "label": "AIP Fonction publique, le site officiel de la demande en ligne ou papier",
+        "url": "https://www.aip-fonctionpublique.fr/"
       },
       {
         "label": "Le CGOS et le logement des agents hospitaliers (portail officiel)",
