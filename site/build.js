@@ -1273,11 +1273,12 @@ function barreIa(urlPath, en) {
     : `Lis ${url} et fais-m'en un résumé clair : qui est concerné, les montants, les démarches pas à pas. Puis réponds à mes questions dessus.`;
   const q = encodeURIComponent(invite);
   const nt = en ? 'new tab' : 'nouvel onglet';
-  /* Patterns mesurés en navigateur (skill `barre-resume-ia`) : Mistral accepte
-   * ?q=, ENVOIE la requête et lit l'URL sans connexion (le meilleur parcours
-   * des cinq) ; « Gemini » passe par le Mode IA de Google (udm=50), car
-   * gemini.google.com/app?q= n'est pas pré-rempli, mesuré connecté comme
-   * anonyme : un bouton qui ouvre un composer vide trahirait la promesse.
+  /* Patterns mesurés en navigateur (skill `barre-resume-ia`).
+   * ⚠️ PAS de puce Mistral (décision du 01/11/2026, Mickaël, sur les trois
+   * sites) : chat.mistral.ai renvoie désormais vers sa page de connexion dès
+   * qu'une invite arrive par ?q= (mesuré dans deux navigateurs ; sans ?q=,
+   * l'accueil reste ouvert sans compte), et rien ne garantit que l'invite
+   * revienne après connexion. Il était le meilleur parcours en 08/2026.
    * ⚠️ PAS de puce Gemini (décision du 08/08/2026, Mickaël) : aucun envoi
    * d'invite par URL n'existe côté gemini.google.com, ni ?q= ni ?prompt= ne
    * remplissent le composer (remesuré dans un Chrome connecté au compte
@@ -1290,13 +1291,12 @@ function barreIa(urlPath, en) {
    * SEUL, jamais hints=search (ChatGPT le consomme, réécrit l'URL pour l'en
    * retirer et emporte q au passage), ET un rel contenant noreferrer (avec un
    * referrer tiers il refuse de soumettre, garde anti-abus). D'où le rel réglé
-   * par assistant : les quatre autres sont mesurés verts SANS noreferrer, le
+   * par assistant : les deux autres sont mesurés verts SANS noreferrer, le
    * généraliser changerait les conditions de mesures déjà vertes. */
   const chips = [
     ['Claude', `https://claude.ai/new?q=${q}`],
     ['ChatGPT', `https://chatgpt.com/?q=${q}`, 'noopener noreferrer nofollow'],
     ['Perplexity', `https://www.perplexity.ai/search?q=${q}`],
-    ['Mistral', `https://chat.mistral.ai/chat?q=${q}`],
   ].map(([nom, href, rel]) => `<a class="chip-ia" href="${href}" target="_blank" rel="${rel || 'noopener nofollow'}" aria-label="${en ? `Summarize with ${nom} (${nt})` : `Résumer avec ${nom} (${nt})`}">${nom}</a>`).join('\n  ');
   return `<div class="barre-ia" role="group" aria-label="${en ? 'Summarize this guide with an AI assistant' : 'Résumer ce guide avec une intelligence artificielle'}">
   <span class="barre-ia-titre">${en ? 'In a hurry? Have your AI assistant read it:' : 'Pressé&nbsp;? Faites-le lire à votre assistant IA&nbsp;:'}</span>
