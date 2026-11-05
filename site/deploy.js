@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * deploy.js — Déploiement direct upload de site/dist/ vers Cloudflare Pages.
+ * deploy.js : déploiement direct upload de site/dist/ vers Cloudflare Pages.
  *
  * Exécution : node site/deploy.js
  * Prérequis : variable d'environnement CLOUDFLARE_API_TOKEN_TTA (token API du projet)
@@ -58,21 +58,23 @@ function walk(dir, base = '') {
   const out = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const rel = base + '/' + entry.name;
-    if (entry.isDirectory()) out.push(...walk(path.join(dir, entry.name), rel));
+    const p = path.join(dir, entry.name);
+    // Sous OneDrive, readdir rend un dossier en point de reparse comme un lien ; lstat le voit dossier (mesure le 05/11/2026).
+    if (entry.isDirectory() || (entry.isSymbolicLink() && fs.lstatSync(p).isDirectory())) out.push(...walk(p, rel));
     else out.push(rel);
   }
   return out;
 }
 
 // Hash de contenu : 32 hex. Wrangler utilise blake3(base64+ext) ; le backend
-// traite le hash comme une clé de cache — sha256 tronqué fonctionne aussi.
+// traite le hash comme une clé de cache : sha256 tronqué fonctionne aussi.
 function hashFile(b64, ext) {
   return crypto.createHash('sha256').update(b64 + ext).digest('hex').slice(0, 32);
 }
 
 async function main() {
   if (!TOKEN) throw new Error('Variable CLOUDFLARE_API_TOKEN_TTA absente');
-  if (!fs.existsSync(DIST)) throw new Error('site/dist/ introuvable — lancer node site/build.js');
+  if (!fs.existsSync(DIST)) throw new Error('site/dist/ introuvable : lancer node site/build.js');
 
   const files = walk(DIST).map((rel) => {
     const ext = path.extname(rel);

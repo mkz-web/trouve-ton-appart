@@ -87,7 +87,9 @@ for (const [jeu, dossier] of Object.entries(DOSSIERS)) {
   const base = path.join(DIST, dossier);
   if (!fs.existsSync(base)) { console.error(`site/dist/${dossier}/ absent : lancer node site/build.js`); process.exit(2); }
   for (const e of fs.readdirSync(base, { withFileTypes: true })) {
-    if (!e.isDirectory()) continue;
+    const p = path.join(base, e.name);
+    // Sous OneDrive, readdir rend un dossier en point de reparse comme un lien ; lstat le voit dossier (mesure le 05/11/2026).
+    if (!(e.isDirectory() || (e.isSymbolicLink() && fs.lstatSync(p).isDirectory()))) continue;
     const page = `/${dossier}/${e.name}/`;
     const s = fs.readFileSync(path.join(base, e.name, 'index.html'), 'utf8');
     const re = /<li class="dir-item" id="r-([^"]+)">([\s\S]*?)<\/li>/g;

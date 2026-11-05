@@ -25,7 +25,8 @@ const htmlFiles = [];
 (function walk(dir) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
-    if (e.isDirectory()) walk(p);
+    // Sous OneDrive, readdir rend un dossier en point de reparse comme un lien ; lstat le voit dossier (mesure le 05/11/2026).
+    if (e.isDirectory() || (e.isSymbolicLink() && fs.lstatSync(p).isDirectory())) walk(p);
     else if (e.name.endsWith('.html')) htmlFiles.push(p);
   }
 })(dist);

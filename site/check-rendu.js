@@ -310,9 +310,13 @@ function client(url) {
   const pages = UNE_PAGE ? [normaliser(UNE_PAGE)]
     : process.argv.includes('--toutes')
       ? (function liste(d, base = '') {
-        return fs.readdirSync(d, { withFileTypes: true }).flatMap(e => e.isDirectory()
-          ? liste(path.join(d, e.name), base + '/' + e.name)
-          : e.name === 'index.html' ? [base + '/'] : e.name.endsWith('.html') ? [base + '/' + e.name] : []);
+        return fs.readdirSync(d, { withFileTypes: true }).flatMap(e => {
+          const p = path.join(d, e.name);
+          // Sous OneDrive, readdir rend un dossier en point de reparse comme un lien ; lstat le voit dossier (mesure le 05/11/2026).
+          return e.isDirectory() || (e.isSymbolicLink() && fs.lstatSync(p).isDirectory())
+            ? liste(p, base + '/' + e.name)
+            : e.name === 'index.html' ? [base + '/'] : e.name.endsWith('.html') ? [base + '/' + e.name] : [];
+        });
       })(DIST)
       : GABARITS;
 
