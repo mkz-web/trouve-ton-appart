@@ -3736,6 +3736,9 @@ li a:not(.pill):not(.btn),td a,.dir-links a,.dir-meta a,.result-list a{display:i
 .rappel{background:var(--fond2);border-left:4px solid var(--bleu2);border-radius:10px;padding:12px 18px;margin:1.7rem 0;max-width:72ch}
 .rappel p{margin:0;max-width:none}
 .avert{border-left-color:#b4573c;background:#fff6f3}
+/* Dans un outil, l'avertissement prend la largeur du formulaire (le plafond de
+ * 72ch le faisait finir 100 px avant les champs a 768 px, vu au controle design). */
+.tool .rappel{max-width:none}
 .rappel-haut{margin:1.1rem 0 0}
 /* Sommaire des annuaires groupés + intertitres de commune. */
 .dir-sommaire{margin:1.2rem 0 0}
