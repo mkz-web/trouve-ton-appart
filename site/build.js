@@ -67,7 +67,21 @@ const ENCADREMENT_VIGUEUR = ENCADREMENT ? {
   finIso: '2026-11-24',
   arreteUrl: 'https://cdn.paris.fr/paris/2026/06/17/arrete-prefectoral-encadrement-des-loyers-12-06-2026-publie-n4wk.pdf',
   pageUrl: 'https://www.paris.fr/pages/l-encadrement-des-loyers-comprendre-le-dispositif-29091',
+  /* Loi qui prolongerait l'experimentation au-dela du 24 novembre 2026 (article 140
+   * de la loi ELAN : huit ans a compter de sa publication au JO du 24/11/2018).
+   * null tant qu'aucune loi n'est PUBLIEE au Journal officiel : un vote ne suffit
+   * pas. Le jour de la publication, poser par exemple
+   *   { nom: "loi n° 2026-XXX du JJ mois 2026", url: "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT...", fin: "24 novembre 2028" }
+   * (fin = nouveau terme ecrit par la loi, lu dans le texte publie). La phrase
+   * d'apres echeance change alors partout, cote build comme cote navigateur. */
+  prolongation: null,
 } : null;
+if (ENCADREMENT_VIGUEUR && ENCADREMENT_VIGUEUR.prolongation) {
+  const p = ENCADREMENT_VIGUEUR.prolongation;
+  if (!p.nom || !/^https:\/\/www\.legifrance\.gouv\.fr\//.test(p.url || '') || !/^\d{1,2} \S+ \d{4}$/.test(p.fin || '')) {
+    throw new Error("encadrement : prolongation mal renseignee (nom, url Legifrance et fin du type « 24 novembre 2028 » exiges).");
+  }
+}
 if (ENCADREMENT && ENCADREMENT._meta.millesime !== ENCADREMENT_VIGUEUR.grilleMillesime) {
   throw new Error("encadrement : le millesime ingere (" + ENCADREMENT._meta.millesime +
     ") ne correspond plus a ENCADREMENT_VIGUEUR.grilleMillesime (" + ENCADREMENT_VIGUEUR.grilleMillesime +
@@ -81,12 +95,29 @@ function encadrementEchue() {
 /* Phrase unique, reprise partout : page, JSON servi, llms.txt, llms-full.txt.
  * Elle enonce la PERIODE d'application au lieu d'affirmer qu'on est dedans :
  * elle reste donc vraie meme si le site n'est pas reconstruit le jour dit. */
-function encadrementAvertissement() {
+/* Le parametre force la variante (true : apres echeance) : le vérificateur en
+ * a besoin cote navigateur, pour basculer le jour dit sans attendre un build.
+ * La phrase d'apres echeance reste vraie quelle que soit l'issue du Parlement :
+ * elle dit que la prolongation depend d'une loi, jamais qu'aucune n'existe
+ * (un build lance par la veille apres une publication au JO, champ
+ * prolongation encore vide, ne doit pas pouvoir servir une phrase fausse). */
+function encadrementAvertissement(echue = encadrementEchue()) {
   const v = ENCADREMENT_VIGUEUR;
   const base = "Grille de l'" + v.arrete + ", applicable du " + v.debut + " au " + v.fin + ".";
-  return encadrementEchue()
-    ? base + " Cette période est échue depuis le " + v.fin + " : vérifiez l'arrêté en vigueur sur la page officielle de la Ville de Paris avant toute démarche."
-    : base;
+  if (!echue) return base;
+  const p = v.prolongation;
+  return p
+    ? base + " Cette période a pris fin le " + v.fin + ". La " + p.nom + " a prolongé l'expérimentation de l'encadrement des loyers jusqu'au " + p.fin + " : vérifiez l'arrêté qui fixe les loyers de référence en vigueur sur la page officielle de la Ville de Paris avant toute démarche."
+    : base + " Cette période a pris fin le " + v.fin + ", terme de l'expérimentation prévue par la loi ELAN, et sa prolongation dépend d'une loi : pour un bail signé après cette date, vérifiez sur la page officielle de la Ville de Paris si un plafond s'applique avant toute démarche.";
+}
+/* Bloc de periode du vérificateur, dans ses deux etats. L'identifiant
+ * enc-periode permet au navigateur de remplacer l'un par l'autre. */
+function encadrementPeriodeHtml(echue) {
+  const v = ENCADREMENT_VIGUEUR;
+  const liens = `<a href="${v.arreteUrl}" rel="noopener" target="_blank">Le texte de l'arrêté (PDF)</a> · <a href="${v.pageUrl}" rel="noopener" target="_blank">page officielle de la Ville de Paris</a>.`;
+  return echue
+    ? `<div class="rappel avert" id="enc-periode" role="note"><p><strong>${esc(encadrementAvertissement(true))}</strong> ${liens}</p></div>`
+    : `<p class="maj" id="enc-periode">${esc(encadrementAvertissement(false))} ${liens}</p>`;
 }
 /* Barèmes de plafonds de ressources (revalorisés par arrêté chaque 1er janvier :
  * re-vérifier site/data/plafonds.json début janvier). */
@@ -2808,9 +2839,7 @@ function encadrementWidget() {
 <section class="tool" id="verifier" data-clarity-mask="true">
   <h2>Vérifiez votre loyer&nbsp;: les références ${esc(m.millesime)}, quartier par quartier</h2>
   <p>Les loyers de référence officiels (arrêté préfectoral, références ${esc(m.millesime)}) pour chacun des 80 quartiers de Paris. Sélectionnez les caractéristiques du logement&nbsp;:</p>
-  ${encadrementEchue()
-    ? `<div class="rappel avert"><p><strong>${esc(encadrementAvertissement())}</strong> <a href="${ENCADREMENT_VIGUEUR.arreteUrl}" rel="noopener" target="_blank">Le texte de l'arrêté (PDF)</a> · <a href="${ENCADREMENT_VIGUEUR.pageUrl}" rel="noopener" target="_blank">page officielle de la Ville de Paris</a>.</p></div>`
-    : `<p class="maj">${esc(encadrementAvertissement())} <a href="${ENCADREMENT_VIGUEUR.arreteUrl}" rel="noopener" target="_blank">Le texte de l'arrêté (PDF)</a> · <a href="${ENCADREMENT_VIGUEUR.pageUrl}" rel="noopener" target="_blank">page officielle de la Ville de Paris</a>.</p>`}
+  ${encadrementPeriodeHtml(encadrementEchue())}
   <div class="tool-form">
     <div><label for="enc-q">Quartier</label><select id="enc-q"><option value="">Choisir…</option>${optQ}</select></div>
     <div><label for="enc-p">Pièces</label><select id="enc-p"><option value="">Choisir…</option><option value="1">1 pièce</option><option value="2">2 pièces</option><option value="3">3 pièces</option><option value="4">4 pièces et plus</option></select></div>
@@ -2828,6 +2857,13 @@ function encadrementWidget() {
 (function(){
 var G=null,Gq=false;
 function $(i){return document.getElementById(i)}
+/* Bascule du lendemain du dernier jour d'application, jugee sur la date CIVILE
+ * de Paris du visiteur : la page servie peut dater d'avant l'echeance. Les deux
+ * textes viennent du build (une seule source pour la page, le JSON et llms). */
+var FIN=${ldEsc(ENCADREMENT_VIGUEUR.finIso)},APRES=${ldEsc(encadrementPeriodeHtml(true))},NOTE=${ldEsc("Ce verdict compare votre loyer à la grille applicable du " + ENCADREMENT_VIGUEUR.debut + " au " + ENCADREMENT_VIGUEUR.fin + " : pour un bail signé après cette date, lisez l'avertissement au-dessus du formulaire.")};
+function jourParis(){try{return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}catch(x){return new Date().toISOString().slice(0,10)}}
+var ECHUE=jourParis()>FIN;
+if(ECHUE){var per=$('enc-periode');if(per&&per.tagName==='P')per.outerHTML=APRES}
 function num(v){var n=parseFloat(String(v).replace(',','.'));return isFinite(n)&&n>0?n:null}
 function fr(n,d){return n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function upd(){
@@ -2859,6 +2895,7 @@ function upd(){
  if(s){h+='<p>Pour '+fr(s,1)+' m²&nbsp;: plafond de <strong>'+fr(v[1]*s,0)+' € hors charges par mois</strong> (hors complément de loyer).</p>'}
  if(verd==='ok'){h+='<p class="enc-ok'+stamp+'">✓ Votre loyer ('+fr(pm2,2)+' €/m²) respecte le plafond.</p>'}
  if(verd==='ko'){h+='<p class="enc-ko'+stamp+'">✗ Votre loyer ('+fr(pm2,2)+' €/m²) dépasse le plafond d\\'environ '+fr(l-v[1]*s,0)+' € par mois. Sans complément de loyer justifié au bail, ce dépassement est contestable (voir les recours ci-dessous).</p>'}
+ if(ECHUE){h+='<p class="enc-note">'+NOTE+'</p>'}
  lastV=verd;
  res.hidden=false;res.innerHTML=h;
 }
@@ -3936,6 +3973,7 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .pill:hover{background:var(--fond2)}
 .stats-bloc{background:linear-gradient(160deg,#182534,#131b23 120%);border-color:var(--bord)}
 .stat{background:var(--surface)}
+.avert{background:#2d2220;border-left-color:var(--accent2)}
 .stat-l,.outil-quoi,.pl-aide,.pl-note{color:var(--gris)}
 .data th{background:linear-gradient(var(--fond2),var(--surface));border-bottom-color:var(--bord)}
 .data tbody tr:nth-child(even) td{background:#19232e}
