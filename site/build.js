@@ -764,6 +764,7 @@ ${ld}
 ${SPECULATION}
 </head>
 <body>
+<a class="evitement" href="#contenu">Aller au contenu</a>
 <header class="site-header">
   <div class="container header-lang"><a class="lang-link" href="${enPath || '/en/'}" lang="en" hreflang="en">English</a></div>
   <div class="container">
@@ -771,7 +772,7 @@ ${SPECULATION}
     <nav class="main-nav">${nav}${navLink('/outils/', 'Outils')}${navLink('/annuaire/', 'Annuaire')}${navLink('/recherche/', 'Rechercher')}</nav>
   </div>
 </header>
-<main class="container">
+<main class="container" id="contenu" tabindex="-1">
 ${content}
 </main>
 <svg class="roofline" viewBox="0 0 640 22" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path fill="#1c2733" d="M0 22V13h26l7-7 7 7h46V7h34l9-5 9 5h50v7h38l11-9 11 9h56V6h42l8-6 8 6h46v9h40l9-7 9 7h52V8h38l9-6 9 6h66v14z"/></svg>
@@ -787,13 +788,13 @@ ${content}
       <details class="foot-acc" open><summary class="footer-title">Données &amp; annuaires</summary>
       <ul>${footData}</ul></details>
     </div>
-    <div>
+    <div class="foot-guides">
       <details class="foot-acc" open><summary class="footer-title">Guides pratiques</summary>
       <ul>${footGuides}</ul></details>
     </div>
   </div>
   <div class="container footer-legal">
-    <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/">Mentions légales</a> · <a href="/presse/">Presse</a>${A_PROPOS_ACTIF ? ' · <a href="/a-propos/">Qui fait ce site&nbsp;?</a>' : ''} · <button type="button" class="js-cookies">Gérer les cookies</button></p>
+    <p>© ${SITE.annee} ${esc(SITE.name)} <a href="/mentions-legales/">Mentions légales</a> <a href="/mentions-legales/#donnees-personnelles">Données personnelles</a> <a href="mailto:mickael@trouve-ton-appart.fr">Contact</a> <a href="/presse/">Presse</a>${A_PROPOS_ACTIF ? ' <a href="/a-propos/">Qui fait ce site&nbsp;?</a>' : ''} <button type="button" class="js-cookies">Gérer les cookies</button></p>
     ${CREDIT}
   </div>
 </footer>
@@ -864,6 +865,7 @@ ${ld}
 ${SPECULATION}
 </head>
 <body>
+<a class="evitement" href="#contenu">Skip to content</a>
 <header class="site-header">
   <div class="container header-lang"><a class="lang-link" href="${frPath}" lang="fr" hreflang="fr">Français</a></div>
   <div class="container">
@@ -871,7 +873,7 @@ ${SPECULATION}
     <nav class="main-nav">${navLink('/en/', 'Home')}${navLink('/en/guides/', 'Guides')}</nav>
   </div>
 </header>
-<main class="container">
+<main class="container" id="contenu" tabindex="-1">
 ${content}
 </main>
 <svg class="roofline" viewBox="0 0 640 22" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path fill="#1c2733" d="M0 22V13h26l7-7 7 7h46V7h34l9-5 9 5h50v7h38l11-9 11 9h56V6h42l8-6 8 6h46v9h40l9-7 9 7h52V8h38l9-6 9 6h66v14z"/></svg>
@@ -897,7 +899,7 @@ ${content}
     </div>
   </div>
   <div class="container footer-legal">
-    <p>© ${SITE.annee} ${esc(SITE.name)} · <a href="/mentions-legales/" lang="fr">Legal notice (mentions légales)</a> · <button type="button" class="js-cookies">Manage cookies</button></p>
+    <p>© ${SITE.annee} ${esc(SITE.name)} <a href="/mentions-legales/" lang="fr">Legal notice (mentions légales)</a> <a href="/mentions-legales/#donnees-personnelles" lang="fr">Privacy (données personnelles)</a> <a href="mailto:mickael@trouve-ton-appart.fr">Contact</a> <button type="button" class="js-cookies">Manage cookies</button></p>
     ${CREDIT_EN}
   </div>
 </footer>
@@ -1356,7 +1358,7 @@ for (const g of GUIDES) {
     tocItems.push(`<li><a href="#${id}">${esc(s.h2)}</a></li>`);
     let html = `<h2 id="${id}">${esc(s.h2)}</h2>`;
     if (s.paragraphs) html += s.paragraphs.map(t => `<p>${inline(t)}</p>`).join('');
-    if (s.bullets) html += `<ul>${s.bullets.map(b => `<li>${inline(b)}</li>`).join('')}</ul>`;
+    if (s.bullets) html += listeHtml(s.bullets, inline);
     /* Les tableaux de guides sont COMPARATIFS : leur ordre porte du sens
      * (priorités P1→P4, dispositif générique avant ses déclinaisons…), le trier
      * détruirait l'information. Tri désactivé par défaut, activable au cas par
@@ -1537,7 +1539,7 @@ for (const g of EN.guides) {
     /* Même mécanique que les guides français : paragraphes puis puces. */
     let html = `<h2 id="${id}">${esc(s.h2)}</h2>`;
     if (s.paragraphs) html += s.paragraphs.map(t => `<p>${inline(t)}</p>`).join('');
-    if (s.bullets) html += `<ul>${s.bullets.map(b => `<li>${inline(b)}</li>`).join('')}</ul>`;
+    if (s.bullets) html += listeHtml(s.bullets, inline);
     return html;
   }).join('');
   tocItems.push('<li><a href="#faq">Frequently asked questions</a></li>');
@@ -2860,7 +2862,7 @@ function $(i){return document.getElementById(i)}
 /* Bascule du lendemain du dernier jour d'application, jugee sur la date CIVILE
  * de Paris du visiteur : la page servie peut dater d'avant l'echeance. Les deux
  * textes viennent du build (une seule source pour la page, le JSON et llms). */
-var FIN=${ldEsc(ENCADREMENT_VIGUEUR.finIso)},APRES=${ldEsc(encadrementPeriodeHtml(true))},NOTE=${ldEsc("Ce verdict compare votre loyer à la grille applicable du " + ENCADREMENT_VIGUEUR.debut + " au " + ENCADREMENT_VIGUEUR.fin + " : pour un bail signé après cette date, lisez l'avertissement au-dessus du formulaire.")};
+var FIN=${ldEsc(ENCADREMENT_VIGUEUR.finIso)},APRES=${ldEsc(typoFr(encadrementPeriodeHtml(true)))},NOTE=${ldEsc(typoFr("Ce verdict compare votre loyer à la grille applicable du " + ENCADREMENT_VIGUEUR.debut + " au " + ENCADREMENT_VIGUEUR.fin + " : pour un bail signé après cette date, lisez l'avertissement au-dessus du formulaire."))};
 function jourParis(){try{return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}catch(x){return new Date().toISOString().slice(0,10)}}
 var ECHUE=jourParis()>FIN;
 if(ECHUE){var per=$('enc-periode');if(per&&per.tagName==='P')per.outerHTML=APRES}
@@ -3290,7 +3292,7 @@ const HTML_404 = layout({
 <p><strong>Directeur de la publication</strong> : Mickaël Leclerc, représentant légal.</p>
 <p><strong>Contact</strong> : <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a></p>
 <p><strong>Hébergement</strong> : Cloudflare Pages, Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis.</p>
-<p><strong>Données personnelles</strong> : Ce site ne collecte aucune donnée personnelle en dehors de la mesure d'audience soumise à votre consentement (voir la section <a href="#cookies">Cookies et mesure d'audience</a>), et ne dépose aucun cookie sans votre accord. Ce que vous saisissez dans nos outils ne quitte pas votre navigateur. Pour exercer vos droits (accès, rectification, effacement, retrait du consentement), écrivez à <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a>.</p>
+<p id="donnees-personnelles"><strong>Données personnelles</strong> : Ce site ne collecte aucune donnée personnelle en dehors de la mesure d'audience soumise à votre consentement (voir la section <a href="#cookies">Cookies et mesure d'audience</a>), et ne dépose aucun cookie sans votre accord. Ce que vous saisissez dans nos outils ne quitte pas votre navigateur. Pour exercer vos droits (accès, rectification, effacement, retrait du consentement), écrivez à <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a>.</p>
 <p><strong>Nature du service</strong> : ${esc(SITE.name)} est un service d'information et d'orientation : nos <a href="/guides/">guides pratiques</a> expliquent les dispositifs, nos <a href="/annuaire/">annuaires</a> listent des adresses issues de données publiques. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>
 <h2 id="cookies">Cookies et mesure d'audience</h2>
 <p>Avec votre accord, et seulement avec lui, nous utilisons <strong>Microsoft Clarity</strong> (Microsoft Ireland Operations Limited) pour comprendre comment le site est utilisé : pages consultées, zones cliquées, parcours de navigation. Tant que vous n'avez pas cliqué sur «&nbsp;Accepter&nbsp;» dans le bandeau, le script de mesure ne se charge pas et aucun cookie de mesure n'est déposé. Refuser ne change rien à votre navigation.</p>
@@ -3493,19 +3495,26 @@ a{color:var(--bleu2)}h1,h2,h3{line-height:1.25;color:var(--bleu)}
 h1{font-size:clamp(1.75rem,3.6vw,2.5rem);line-height:1.15;font-weight:800;letter-spacing:-.022em}
 h2{font-size:clamp(1.32rem,2.2vw,1.55rem);line-height:1.25;font-weight:700;letter-spacing:-.012em;margin-top:2.6rem}
 h3{font-size:1.08rem;line-height:1.35;font-weight:650}
-.lead{font-size:1.14rem;line-height:1.6;color:var(--gris)}
+.lead{font-size:1.14rem;line-height:1.6;color:var(--gris);max-width:62ch}
+h1,h2,h3,.faq summary{text-wrap:pretty}
 .kicker{font-size:.8125rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ttx,var(--bleu2));margin:0 0 .2rem}
 small{font-size:.8125rem}
 /* ---- Header ---- */
 .site-header{background:linear-gradient(135deg,#163a5c,var(--bleu) 60%,#26619a);padding:8px 0 0}
 .site-header .container.header-lang{justify-content:flex-end;margin-bottom:2px}
-.lang-link{color:#fff;text-decoration:none;font-size:.82rem;opacity:.92;padding:5px 12px;border:1px solid rgba(255,255,255,.38);border-radius:999px;transition:background .15s}
+.lang-link{display:inline-flex;align-items:center;min-height:44px;color:#fff;text-decoration:none;font-size:.82rem;opacity:.92;padding:0 14px;border:1px solid rgba(255,255,255,.38);border-radius:999px;transition:background .15s}
+/* Lien d'évitement : premier arrêt de la touche Tab, visible seulement au focus. */
+.evitement{position:absolute;left:12px;top:-80px;z-index:40;background:#fff;color:var(--bleu);font-weight:600;text-decoration:none;padding:12px 18px;border-radius:12px;box-shadow:0 8px 22px -10px rgba(28,39,51,.55)}
+.evitement:focus{top:12px}
+.evitement:hover{text-decoration:underline}
+main:focus{outline:none}
 .lang-link:hover{background:rgba(255,255,255,.14);opacity:1}
 .lang-link:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .site-header::after{content:"";display:block;height:4px;margin-top:14px;background:linear-gradient(90deg,var(--bleu2) 0 34%,var(--accent) 34% 67%,#3d8b6e 67%)}
 .main-nav a:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .site-header .container{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none}
+.brand{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none;transition:color .2s}
+.brand:hover{color:#ffe3da}
 .brand-mark{width:38px;height:38px;flex:none;transition:transform .25s}
 .brand:hover .brand-mark{transform:rotate(-4deg) scale(1.06)}
 .brand .brand-door{transition:fill .25s}
@@ -3522,7 +3531,7 @@ small{font-size:.8125rem}
 .main-nav a[aria-current]::after{content:"";position:absolute;left:12px;right:12px;bottom:2px;height:2px;border-radius:1px;background:#f3a18b;transform-origin:left;animation:nav-actif .26s ease-out .15s both}
 .main-nav a:hover{background:rgba(255,255,255,.14);opacity:1}
 /* ---- Hero ---- */
-.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px 36px;align-items:end;background:radial-gradient(420px 260px at 84% 22%,rgba(224,122,95,.12),transparent 70%),linear-gradient(160deg,#e8f1f9,#f7fbfe 60%,#fdfbf7 120%);border:1px solid #dbe7f1;border-radius:22px;box-shadow:0 18px 44px -28px rgba(31,78,121,.35);padding:40px 42px 28px;margin:1.6rem 0 .6rem}
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px 36px;align-items:end;background:radial-gradient(420px 260px at 84% 22%,rgba(224,122,95,.12),transparent 70%),linear-gradient(160deg,#e8f1f9,#f7fbfe 60%,#fdfbf7 120%);border:1px solid #dbe7f1;border-radius:16px;box-shadow:0 18px 44px -28px rgba(31,78,121,.35);padding:40px 42px 28px;margin:1.6rem 0 .6rem}
 .hero h1{margin:.2rem 0 .8rem}
 .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:1.4rem}
 .hero-illo svg{display:block;width:100%;max-width:330px;height:auto;margin:0 0 .2rem auto}
@@ -3543,7 +3552,7 @@ small{font-size:.8125rem}
 .porte-lueur{opacity:0;transition:opacity .4s ease-out}
 .hero:has(.hero-actions .btn:not(.btn-ghost):hover) .porte,.hero:has(.hero-actions .btn:not(.btn-ghost):focus-visible) .porte{filter:brightness(1.45) saturate(1.15);transition-duration:.25s}
 .hero:has(.hero-actions .btn:not(.btn-ghost):hover) .porte-lueur,.hero:has(.hero-actions .btn:not(.btn-ghost):focus-visible) .porte-lueur{opacity:.5;transition-duration:.25s}
-.btn{display:inline-block;background:var(--cta);color:#fff;font-weight:600;text-decoration:none;padding:11px 22px;border-radius:10px;font-size:.97rem;box-shadow:0 8px 20px -10px rgba(176,74,48,.55);transition:background .15s,transform .15s,box-shadow .15s}
+.btn{display:inline-block;background:var(--cta);color:#fff;font-weight:600;text-decoration:none;padding:11px 22px;border-radius:12px;font-size:.97rem;box-shadow:0 8px 20px -10px rgba(176,74,48,.55);transition:background .15s,transform .15s,box-shadow .15s}
 .btn:hover{background:#9a3f27;transform:translateY(-1px)}
 /* Press state : descente rapide (80 ms), remontée douce (150 ms de base). */
 .btn:active{transform:translateY(1px) scale(.985);box-shadow:0 3px 8px -6px rgba(176,74,48,.55);transition-duration:.15s,.08s,.15s}
@@ -3570,7 +3579,7 @@ small{font-size:.8125rem}
 .grid-accueil .card-parcours::before{animation:drawx .35s ease-out .32s backwards}
 .grid-accueil .card-parcours:nth-child(2)::before{animation-delay:.4s}
 .grid-accueil .card-parcours:nth-child(3)::before{animation-delay:.48s}
-.card-icon{display:inline-flex;width:42px;height:42px;border-radius:11px;background:var(--tbg,var(--ciel));padding:8px;margin-bottom:10px}
+.card-icon{display:inline-flex;width:42px;height:42px;border-radius:12px;background:var(--tbg,var(--ciel));padding:8px;margin-bottom:10px}
 .card-icon svg{width:100%;height:100%}
 .card-cta{display:inline-block;margin-top:.9rem;color:var(--ttx,var(--bleu2));font-weight:650;font-size:.9rem}
 /* Flèche autonome : seule la flèche glisse, seul le LIBELLÉ (.cta-label) se
@@ -3581,12 +3590,12 @@ small{font-size:.8125rem}
 .card:hover .cta-arrow,.card:focus-visible .cta-arrow,a:hover>.cta-arrow,a:focus-visible>.cta-arrow{transform:translateX(5px)}
 .grid-guides{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 .card-guide{display:flex;gap:14px;align-items:flex-start}
-.card-icon-sm{flex:none;width:36px;height:36px;border-radius:10px;padding:7px;margin:2px 0 0}
+.card-icon-sm{flex:none;width:36px;height:36px;border-radius:12px;padding:7px;margin:2px 0 0}
 /* ---- Têtes de page illustrées ---- */
-.page-head{display:flex;gap:18px;align-items:flex-start;background:linear-gradient(135deg,var(--tbg,var(--ciel)),#fff 85%);border:1px solid var(--bord);border-left:6px solid var(--t,var(--bleu2));border-radius:18px;padding:22px 26px;margin:0 0 1.8rem;box-shadow:0 14px 34px -24px var(--ts,rgba(31,78,121,.30))}
-.page-head-icon{flex:none;width:46px;height:46px;background:#fff;border-radius:12px;padding:9px;box-shadow:0 4px 12px var(--ts,rgba(31,78,121,.18));margin-top:4px}
+.page-head{display:flex;gap:18px;align-items:flex-start;background:linear-gradient(135deg,var(--tbg,var(--ciel)),#fff 85%);border:1px solid var(--bord);border-left:6px solid var(--t,var(--bleu2));border-radius:16px;padding:22px 26px;margin:0 0 1.8rem;box-shadow:0 14px 34px -24px var(--ts,rgba(31,78,121,.30))}
+.page-head-icon{flex:none;width:46px;height:46px;background:#fff;border-radius:12px;padding:9px;box-shadow:0 1px 2px rgba(22,51,82,.05),0 6px 18px -12px rgba(22,51,82,.10);margin-top:4px}
 .page-head-icon svg{width:100%;height:100%}
-.page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 17px 17px 0;margin:-22px -26px -22px 8px;box-shadow:-14px 0 24px -18px rgba(31,78,121,.25)}
+.page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 15px 15px 0;margin:-22px -26px -22px 8px;box-shadow:-14px 0 24px -18px rgba(31,78,121,.25)}
 #votre-commune>h2{margin-top:0}
 #delai-lookup{margin:0 0 .8rem}
 #votre-commune .lead{margin:1rem 0 0}
@@ -3595,11 +3604,11 @@ small{font-size:.8125rem}
 #delai-lookup input{width:100%;max-width:430px;min-height:48px;padding:.55rem .9rem;font-size:1.02rem;color:var(--encre);background:var(--surface);border:1.5px solid var(--bord);border-radius:12px}
 #delai-lookup input:focus-visible{outline:2px solid var(--bleu2);outline-offset:1px}
 .dl-aide{font-size:.88rem;color:var(--gris);margin:.45rem 0 .6rem}
-.dl-verdict{background:var(--surface);border:1px solid var(--bord);border-radius:14px;padding:1rem 1.2rem;margin-top:.7rem}
+.dl-verdict{background:var(--surface);border:1px solid var(--bord);border-radius:16px;padding:1rem 1.2rem;margin-top:.7rem}
 .dl-verdict p{margin:.35rem 0}
 .dl-garde{font-size:.92rem;color:var(--gris)}
 #dl-fiche{margin-top:.6rem}
-.dl-fiche{background:var(--surface);border:1px solid var(--bord);border-radius:14px;padding:1rem 1.2rem}
+.dl-fiche{background:var(--surface);border:1px solid var(--bord);border-radius:16px;padding:1rem 1.2rem}
 .dl-fiche h3{font-size:1.02rem;margin:.9rem 0 .35rem}
 .dl-fiche h3:first-child{margin-top:0}
 .dl-fiche ul{margin:.2rem 0 .5rem 1.1rem;padding:0}
@@ -3614,10 +3623,13 @@ small{font-size:.8125rem}
 .dl-pin.pop{animation:dl-pop .6s ease-out 2}
 @keyframes dl-pop{50%{transform:scale(1.7)}}
 .carte-delais{margin:1.2rem 0}
-.carte-delais img{display:block;width:100%;height:auto;border:1px solid var(--bord);border-radius:14px;background:#fff}
+.carte-delais img{display:block;width:100%;height:auto;border:1px solid var(--bord);border-radius:16px;background:#fff}
 .carte-delais figcaption{font-size:.88rem;color:var(--gris);margin-top:.6rem;line-height:1.55}
 .carte-delais figcaption a{display:inline-block;padding:.3rem 0;margin:-.3rem 0}
 .page-head h1{margin:.1rem 0 .5rem}.page-head .lead{margin:0}
+/* La colonne de texte remplit l'en-tête : sans cela, le chapeau borné à 62ch
+ * la rétrécissait et décentrait le bloc (MEP-14 sur /outils/ à 1 280 px). */
+.page-head>div{flex:1;min-width:0}
 /* ---- Hub des outils ---- */
 .grid-outils{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin:1.6rem 0}
 /* Les CTA des cartes outils tombent sur la meme ligne quelle que soit la longueur
@@ -3683,11 +3695,11 @@ th[aria-sort="descending"] .th-ind{opacity:1;--ind:url('data:image/svg+xml;utf8,
 th[aria-sort="ascending"],th[aria-sort="descending"]{color:var(--bleu2)}
 
 /* ---- Bloc de chiffres (Observatoire, accueil et hub parcours) ---- */
-.stats-bloc{background:linear-gradient(160deg,#eef5fb,#fdfbf7 120%);border:1px solid #dbe7f1;border-radius:20px;padding:30px 32px 24px;margin:2rem 0}
+.stats-bloc{background:linear-gradient(160deg,#eef5fb,#fdfbf7 120%);border:1px solid #dbe7f1;border-radius:16px;padding:30px 32px 24px;margin:2rem 0}
 .stats-head h2{margin:.2rem 0 .5rem}
 .stats-head p{margin:0 0 1.2rem;max-width:62ch}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;margin:1.2rem 0}
-.stat{background:#fff;border:1px solid var(--bord);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:2px}
+.stat{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:2px}
 .stat-n{font-size:2.3rem;line-height:1.05;font-weight:700;color:var(--bleu2);font-variant-numeric:tabular-nums}
 .stat-sep{font-size:1.3rem;margin:0 .12em;color:var(--accent)}
 .stat-u{font-size:.9rem;font-weight:650;color:var(--bleu)}
@@ -3697,7 +3709,7 @@ th[aria-sort="ascending"],th[aria-sort="descending"]{color:var(--bleu2)}
 
 /* ---- Étapes numérotées ---- */
 .steps{counter-reset:etape}
-.step{position:relative;border:1px solid var(--bord);border-radius:14px;padding:18px 22px 16px 64px;margin:1.2rem 0;counter-increment:etape;background:var(--surface)}
+.step{position:relative;border:1px solid var(--bord);border-radius:16px;padding:18px 22px 16px 64px;margin:1.2rem 0;counter-increment:etape;background:var(--surface)}
 .step::before{content:counter(etape);position:absolute;left:18px;top:20px;width:30px;height:30px;border-radius:50%;background:var(--ttx,var(--bleu2));color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:.95rem;box-shadow:0 0 0 5px var(--tbg,var(--ciel))}
 .step:not(:last-child)::after{content:"";position:absolute;left:31px;top:54px;bottom:-1.3rem;width:3px;border-radius:2px;background:linear-gradient(180deg,var(--ts,rgba(46,116,181,.30)),transparent)}
 .step h2{margin:.1rem 0 .5rem;font-size:1.2rem}
@@ -3732,13 +3744,28 @@ li a:not(.pill):not(.btn),td a,.dir-links a,.dir-meta a,.result-list a{display:i
  * largeur. */
 .guide-body p,.guide-body ul,.guide-body ol,.step p,.notice p,.stats-head p,.section-intro,.sources li,.maj{max-width:62ch}
 .tldr ul{max-width:none}
+/* Le texte des boîtes pleine largeur garde la mesure de 62ch (le contrôle
+ * design relevait 89 caractères par ligne dans L'essentiel et 82 dans un
+ * rappel à 1 280 px, au-delà des 80 du critère WCAG 1.4.8). */
+.tldr li,.rappel p{max-width:62ch}
+/* Une puce ou un numéro suit la PREMIÈRE ligne d'un lien sur plusieurs
+ * lignes : un inline-block posé sur la ligne de base y mettait le marqueur
+ * sur sa dernière ligne (sources, sommaire). */
+li a:not(.pill):not(.btn){vertical-align:top}
 /* Rappels d'action (cadence du parcours, tenue par les gabarits). */
-.rappel{background:var(--fond2);border-left:4px solid var(--bleu2);border-radius:10px;padding:12px 18px;margin:1.7rem 0;max-width:72ch}
-.rappel p{margin:0;max-width:none}
+.rappel{background:var(--fond2);border-left:4px solid var(--bleu2);border-radius:12px;padding:12px 18px;margin:1.7rem 0;max-width:72ch}
+.rappel p{margin:0}
 .avert{border-left-color:#b4573c;background:#fff6f3}
 /* Dans un outil, l'avertissement prend la largeur du formulaire (le plafond de
  * 72ch le faisait finir 100 px avant les champs a 768 px, vu au controle design). */
 .tool .rappel{max-width:none}
+/* Liens sur le fond bleu ciel de l'outil : bleu foncé (le bleu des liens n'y
+ * contrastait qu'à 4,29 pour 1, sous les 4,5 du critère WCAG 1.4.3). */
+.tool a:not([class]){color:var(--bleu)}
+/* Téléphone : texte de lecture à 16 px. Le contrôle design mesurait 20 % des
+ * mots sous 16 px (période de la grille, libellés du formulaire, cartes de
+ * suite, pied de page), au-delà du plafond de 15 %. */
+@media(max-width:767px){.tool .maj,.card p,.tool-form label,.site-footer{font-size:1rem}}
 .rappel-haut{margin:1.1rem 0 0}
 /* Sommaire des annuaires groupés + intertitres de commune. */
 .dir-sommaire{margin:1.2rem 0 0}
@@ -3753,6 +3780,9 @@ body:has(.consent:not([hidden])) .haut-page{display:none}
 /* Chevron accent commun FAQ + sommaire de guide (le marker natif saute). */
 .faq summary,.toc-box summary{cursor:pointer;font-weight:600;color:var(--bleu);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .faq summary::-webkit-details-marker,.toc-box summary::-webkit-details-marker{display:none}
+.faq summary,.toc-box summary,.foot-acc summary{transition:color .15s}
+.faq summary:hover,.toc-box summary:hover{color:var(--bleu2)}
+.foot-acc summary:hover{color:#cfe3f4}
 .faq summary::after,.toc-box summary::after{content:"";flex:none;width:9px;height:9px;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg);transition:transform .25s ease-out}
 .faq details[open] summary::after,.toc-box[open] summary::after{transform:rotate(225deg)}
 /* ---- Sommaire de guide + barre de lecture ---- */
@@ -3761,9 +3791,13 @@ body:has(.consent:not([hidden])) .haut-page{display:none}
 .toc-box summary{font-size:.92rem;padding:11px 0}
 .toc-box ol{margin:.15rem 0 .8rem;padding-left:1.3rem;font-size:.88rem}
 .toc-box li{margin:.32rem 0}
-.toc-box a{color:var(--gris);text-decoration:none;display:inline-block;padding:1px 7px;margin-left:-7px;border-radius:6px;transition:background .2s,color .2s}
+.toc-box a{color:var(--gris);text-decoration:none;display:inline-block;padding:1px 7px;margin-left:-7px;border-radius:8px;transition:background .2s,color .2s}
+/* La règle des cibles de listes (padding .3rem 0) annulait le retrait de 7 px :
+ * le texte de l'entrée active touchait le bord de sa pastille (MEP-16). */
+.toc-box li a:not(.pill):not(.btn){padding:.3rem 7px;margin:-.3rem 0}
 .toc-box a:hover{color:var(--bleu2)}
 .toc-box a.on{background:var(--ciel);color:var(--bleu);font-weight:600}
+.toc-box a.on:hover{color:var(--bleu2)}
 /* Filet de progression de lecture (guides) : scroll-driven, Chromium.
  * Ailleurs (et sous reduced-motion) : scaleX(0), invisible, assumé. */
 .lecture-bar{position:fixed;top:0;left:0;width:100%;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:left;pointer-events:none;z-index:9}
@@ -3776,6 +3810,15 @@ body:has(.consent:not([hidden])) .haut-page{display:none}
 .roofline{display:block;width:100%;height:22px;margin-top:3.5rem}
 .site-footer{background:linear-gradient(180deg,#1c2733,#16202a);color:#cdd6de;margin-top:0;padding:2.4rem 0 1rem;font-size:.88rem}
 .footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px}
+/* La longue liste des guides passe sur deux colonnes : seule, elle laissait un
+ * grand vide sous les deux autres groupes (vu au contrôle design). */
+.site-footer .foot-guides li{break-inside:avoid;margin:0;padding:.19rem 0}
+@media(min-width:768px) and (max-width:1019px){.footer-grid:has(.foot-guides)>div{grid-column:1/-1}.footer-grid:has(.foot-guides)>div:nth-child(2){display:grid;grid-template-columns:1fr 1fr;gap:0 24px}}
+/* Téléphone : groupes repliés empilés à intervalle régulier (l'écart de grille
+ * s'ajoutait à la marge des accordions entre deux colonnes). */
+@media(max-width:767px){.footer-grid{row-gap:0}}
+@media(min-width:768px) and (max-width:1019px){.foot-guides{grid-column:1/-1}.foot-guides ul{columns:2;column-gap:24px}}
+@media(min-width:1020px){.footer-grid:has(.foot-guides){grid-template-columns:1fr 1fr 2fr}.foot-guides ul{columns:2;column-gap:24px}}
 .footer-brand{color:#fff;font-weight:700;font-size:1.05rem}
 .footer-title{font-size:.8125rem;font-weight:650;text-transform:uppercase;letter-spacing:.08em;color:#9fb3c8;margin-bottom:.4rem}
 /* Groupes du pied de page en accordéons sous 768 px (le footer mesurait
@@ -3793,13 +3836,20 @@ body:has(.consent:not([hidden])) .haut-page{display:none}
  * paragraphes partagent la ligne et se décaleraient de quelques pixels. */
 .footer-legal a{text-decoration:underline;text-underline-offset:2px}
 .footer-legal p{margin:0}
+/* Liens légaux en rangée souple : l'écart entre deux lignes (.9rem) tient à
+ * distance la zone élargie du bouton des cookies, qui recouvrait le lien de la
+ * ligne voisine à 360 px (CMP-11) ; les liens, hors d'une phrase, prennent
+ * 37 px de cible (CMP-04) sans empiéter sur la ligne voisine (1.2rem d'écart). */
+.footer-legal p:first-child{display:flex;flex-wrap:wrap;align-items:baseline;gap:1.2rem 1.1rem}
+.footer-legal .js-cookies{color:#9fc1e0}
+.footer-legal p:first-child a{display:inline-block;padding:.45rem 0;margin:-.45rem 0}
 .consent{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:2px solid var(--bord);box-shadow:0 -10px 30px rgba(28,39,51,.18);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.6rem 1.6rem;padding:14px 16px calc(14px + env(safe-area-inset-bottom))}
 .consent[hidden]{display:none}
 .consent-txt{margin:0;font-size:.95rem;max-width:62ch}
 .consent-actions{margin:0;display:flex;gap:.8rem;flex-wrap:wrap}
-.consent-btn{background:#fff;color:var(--bleu);font:inherit;font-weight:600;font-size:.97rem;border:0;box-shadow:inset 0 0 0 2px var(--bleu2);border-radius:10px;padding:11px 22px;min-height:44px;min-width:110px;cursor:pointer}
+.consent-btn{background:#fff;color:var(--bleu);font:inherit;font-weight:600;font-size:.97rem;border:0;box-shadow:inset 0 0 0 2px var(--bleu2);border-radius:12px;padding:11px 22px;min-height:44px;min-width:110px;cursor:pointer}
 .consent-btn:hover{background:var(--ciel)}
-.js-cookies{background:none;border:0;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer;padding:12px 4px;margin:-12px -4px}
+.js-cookies{background:none;border:0;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:2px;cursor:pointer;padding:8px 4px;margin:-8px -4px}
 .barre-ia{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem .7rem;margin:1.1rem 0 .3rem;padding:.65rem .9rem;background:var(--fond2);border:1px solid var(--bord);border-radius:12px}
 .barre-ia-titre{font-size:.92rem;color:var(--gris);font-weight:600}
 .chip-ia{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;background:var(--surface);color:var(--bleu);font-weight:600;font-size:.93rem;text-decoration:none;border-radius:999px;box-shadow:inset 0 0 0 2px var(--bleu2)}
@@ -3812,12 +3862,12 @@ body:has(.consent:not([hidden])) .haut-page{display:none}
 [id]{scroll-margin-top:16px}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .dir-list{list-style:none;padding:0;margin:1.2rem 0}
-.dir-item{position:relative;border:1px solid var(--bord);border-left:5px solid var(--t,var(--bleu2));border-radius:14px;padding:14px 20px;margin:.8rem 0;background:var(--surface)}
+.dir-item{position:relative;border:1px solid var(--bord);border-left:5px solid var(--t,var(--bleu2));border-radius:16px;padding:14px 20px;margin:.8rem 0;background:var(--surface)}
 /* Projecteur : halo 1,5 s sur la fiche visée en arrivant de la recherche.
  * z-index:0 sur le parent crée le stacking context qui place le ::after
  * z-index:-1 AU-DESSUS du fond du parent mais SOUS son texte. */
 .dir-item:target{z-index:0}
-.dir-item:target::after{content:"";position:absolute;inset:-2px;border-radius:14px;background:var(--tbg,var(--ciel));opacity:0;pointer-events:none;z-index:-1;animation:spot 1.5s ease-out .15s both}
+.dir-item:target::after{content:"";position:absolute;inset:-2px;border-radius:16px;background:var(--tbg,var(--ciel));opacity:0;pointer-events:none;z-index:-1;animation:spot 1.5s ease-out .15s both}
 .dir-item h3{margin:.05rem 0 .3rem;font-size:1.05rem}
 .dir-addr{margin:.15rem 0;color:var(--gris)}
 .dir-meta{margin:.15rem 0;font-size:.92rem}
@@ -3825,7 +3875,7 @@ body:has(.consent:not([hidden])) .haut-page{display:none}
 .dir-tags span{display:inline-block;background:var(--fond2);border:1px solid var(--bord);border-radius:999px;padding:2px 10px;font-size:.76rem;margin:2px 5px 2px 0;color:var(--gris)}
 .dir-links{margin:.4rem 0 .1rem;font-size:.92rem}
 /* ---- Tableaux de données ---- */
-.table-wrap{overflow-x:auto;margin:1.2rem 0;border:1px solid var(--bord);border-radius:14px;box-shadow:0 1px 2px rgba(22,51,82,.05),0 6px 18px -12px rgba(22,51,82,.10)}
+.table-wrap{overflow-x:auto;margin:1.2rem 0;border:1px solid var(--bord);border-radius:16px;box-shadow:0 1px 2px rgba(22,51,82,.05),0 6px 18px -12px rgba(22,51,82,.10)}
 .table-wrap.deborde::before{content:"Faites glisser le tableau pour voir toutes les colonnes";display:block;position:sticky;left:0;font-size:.8rem;color:var(--gris);padding:6px 12px;border-bottom:1px solid var(--bord)}
 table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(--surface)}
 .data th{background:linear-gradient(#edf4fa,#dfecf7);border-bottom:2px solid #c9dcec;color:var(--bleu);text-align:left;padding:9px 10px;white-space:normal;vertical-align:bottom;line-height:1.2;font-size:.8125rem;text-transform:uppercase;letter-spacing:.05em}
@@ -3844,7 +3894,7 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .jauge-anim tbody tr:not(.in-view) td.bar{--pct:0%!important}
 .jauge-anim tbody tr:not(.in-view) .badge{opacity:0}
 .jauge-anim tbody tr.in-view .badge{animation:badgepop .45s .5s cubic-bezier(.34,1.56,.64,1) backwards}
-.badge{display:inline-block;border-radius:6px;padding:1px 8px;font-size:.8125rem;font-weight:650;white-space:nowrap}
+.badge{display:inline-block;border-radius:8px;padding:1px 8px;font-size:.8125rem;font-weight:650;white-space:nowrap}
 .badge-def{background:#fdecdd;color:#a8492f}
 .badge-car{background:#b04a30;color:#fff}
 /* ---- Outil encadrement ---- */
@@ -3874,7 +3924,7 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 /* Verdict « tampon » : ne rejoue qu'au CHANGEMENT de verdict (classe stamp
  * posée par le JS), pas à chaque frappe, sinon clignotement pendant la saisie.
  * Jamais de count-up sur un plafond légal : le chiffre s'affiche entier. */
-.enc-ok,.enc-ko{font-weight:650;padding:8px 14px;border-radius:10px;transform-origin:left center}
+.enc-ok,.enc-ko{font-weight:650;padding:8px 14px;border-radius:12px;transform-origin:left center}
 .enc-ok.stamp,.enc-ko.stamp{animation:tampon .38s cubic-bezier(.2,.8,.3,1.1) both}
 .enc-ok{color:#2e7050;background:#e9f4ef}.enc-ko{color:#b3261e;background:#fdecdd}
 /* ---- Recherche ---- */
@@ -3884,7 +3934,7 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .result-list{list-style:none;padding:0}
 .result-list li{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--bord);border-radius:12px;padding:10px 16px;margin:.55rem 0;background:var(--surface)}
 .result-list small{color:var(--gris)}
-.badge-cat{flex:none;background:var(--ciel);color:var(--bleu);border-radius:6px;padding:2px 8px;font-size:.8125rem;font-weight:650;margin-top:2px;white-space:nowrap}
+.badge-cat{flex:none;background:var(--ciel);color:var(--bleu);border-radius:8px;padding:2px 8px;font-size:.8125rem;font-weight:650;margin-top:2px;white-space:nowrap}
 /* ---- Animations (CSS pur, désactivées si reduced-motion) ---- */
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
@@ -3954,7 +4004,7 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 .hero{grid-template-columns:1fr;padding:24px 22px 20px;gap:8px}
 .hero-illo{margin-top:.6rem}
 .page-head{flex-direction:column;gap:12px;padding:20px}
-.page-illu{width:calc(100% + 40px);max-width:none;margin:0 -20px -20px;border-radius:0 0 17px 17px;max-height:240px}
+.page-illu{width:calc(100% + 40px);max-width:none;margin:0 -20px -20px;border-radius:0 0 15px 15px;max-height:240px}
 .step{padding-left:58px}
 .step:not(:last-child)::after{display:none}
 }
@@ -4026,6 +4076,62 @@ if (CARTE_DELAIS) {
  * partaient encore dans le source public de deux guides. Un <!-- en milieu
  * de ligne (chaîne JS, exemple dans du texte) n'est pas touché ; le site
  * n'émet aucun commentaire conditionnel. */
+/* Typographie française du texte servi (16/11/2026, contrôle design TYP-07) :
+ * insécable avant « ? ! ; : », à l'intérieur des guillemets, entre un nombre
+ * et « % » ou « € », dans les milliers ; apostrophe typographique entre deux
+ * lettres. Appliquée aux seuls NŒUDS DE TEXTE du HTML écrit, jamais aux
+ * attributs (URL, meta), ni à script, style, title, textarea, pre, code, svg :
+ * les données (guides.json, llms-full.txt, JSON-LD, index de recherche)
+ * gardent leur forme, donc ni empreinte de guide ni titre de page ne bougent.
+ * Règle MKZ du 28/10/2026 : la ponctuation haute ne prend l'insécable que si
+ * elle est suivie d'une espace ou de la fin, ce qui épargne URL et heures. */
+function typoFr(html) {
+  const NB = '&nbsp;';
+  const APOS = String.fromCharCode(0x2019);
+  // Trait d'union insécable dans « existe-t-il » : la question ne se coupe plus
+  // en « existe- » et « t-il » (vu à la lecture des captures à 360 px).
+  const TI = String.fromCharCode(0x2011);
+  // Apostrophe de Windows-1252 (code 0x92) restée dans des noms FINESS : elle
+  // s'affichait en carré (« Résidence D[carré]Antony »).
+  const C1_APOS = new RegExp(String.fromCharCode(0x92), 'g');
+  const texte = (t) => !/\S/.test(t) ? t : t
+    .replace(/(\p{L})'(?=\p{L}|$)/gu, '$1' + APOS)
+    .replace(/(^|\S) ([?!;:])(?=\s|$)/g, '$1' + NB + '$2')
+    .replace(/« /g, '«' + NB).replace(/ »/g, NB + '»')
+    .replace(/(\d) (?=%|€|\d{3}(?!\d))/g, '$1' + NB)
+    .replace(/(\p{L})-t-(?=(il|elle|on)s?(?!\p{L}))/gu, '$1' + TI + 't' + TI)
+    .replace(/(^|\s)([àÀ]) (?=\S)/g, '$1$2' + NB)
+    .replace(/Île-de-France|Seine-et-Marne|Hauts-de-Seine|Seine-Saint-Denis|Val-de-Marne|Val-d.Oise/g, (n) => n.split('-').join(TI))
+    .replace(C1_APOS, APOS);
+  const PROTEGE = /^(script|style|title|textarea|pre|code|svg)$/;
+  const re = /<!--[\s\S]*?-->|<(\/?)([a-zA-Z][a-zA-Z0-9-]*)[^>]*>/g;
+  // Dans une balise protégée, on saute directement à sa balise fermante : un
+  // « i<j.communes » de script ressemble à une balise et avalait le </script>
+  // (pied de page de l'Observatoire resté sans typographie, vu à la lecture).
+  let out = '', dernier = 0, m;
+  while ((m = re.exec(html))) {
+    out += texte(html.slice(dernier, m.index)) + m[0];
+    dernier = re.lastIndex;
+    const nom = m[2] && m[2].toLowerCase();
+    if (nom && !m[1] && PROTEGE.test(nom) && !m[0].endsWith('/>')) {
+      const fin = html.toLowerCase().indexOf('</' + nom, dernier);
+      const borne = fin < 0 ? html.length : fin;
+      out += html.slice(dernier, borne);
+      dernier = borne;
+      re.lastIndex = borne;
+    }
+  }
+  return out + texte(html.slice(dernier));
+}
+/* Liste de guide : des puces toutes numérotées « 1. », « 2. »… dans les
+ * données deviennent une liste ordonnée sans le numéro écrit (la page
+ * montrait une puce ET un numéro, vu au contrôle design du 16/11/2026). */
+function listeHtml(bullets, rendre) {
+  const ordonnee = bullets.length > 1 && bullets.every((b, i) => b.startsWith((i + 1) + '. '));
+  return ordonnee
+    ? `<ol>${bullets.map((b, i) => `<li>${rendre(b.slice(String(i + 1).length + 2))}</li>`).join('')}</ol>`
+    : `<ul>${bullets.map(b => `<li>${rendre(b)}</li>`).join('')}</ul>`;
+}
 const RE_COMMENTAIRE = /^[ \t]*\/\*[\s\S]*?\*\/[ \t]*\r?\n?/gm;
 const RE_COMMENTAIRE_HTML = /^[ \t]*<!--[\s\S]*?-->[ \t]*\r?\n?/gm;
 const sansCommentaires = (html) => html
@@ -4036,7 +4142,7 @@ const sansCommentaires = (html) => html
 for (const { urlPath, html } of pages) {
   const dir = path.join(DIST, ...urlPath.split('/').filter(Boolean));
   fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, 'index.html'), sansCommentaires(html));
+  fs.writeFileSync(path.join(dir, 'index.html'), typoFr(sansCommentaires(html)));
 }
 
 /* Données consommées côté client (outil encadrement, recherche) */
@@ -4156,7 +4262,7 @@ if (TENSION && TENSION._meta.region && CONTOURS) {
 }
 fs.writeFileSync(path.join(DIST, 'search-index.json'), JSON.stringify(SEARCH_INDEX));
 
-fs.writeFileSync(path.join(DIST, '404.html'), sansCommentaires(HTML_404));
+fs.writeFileSync(path.join(DIST, '404.html'), typoFr(sansCommentaires(HTML_404)));
 
 /* ---------------- GEO : llms.txt et llms-full.txt -------------------- */
 /* llms.txt (llmstxt.org) : index du site pour les moteurs IA : qui nous
