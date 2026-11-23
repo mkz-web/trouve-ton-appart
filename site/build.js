@@ -74,7 +74,7 @@ const ENCADREMENT_VIGUEUR = ENCADREMENT ? {
    *   { nom: "loi n° 2026-XXX du JJ mois 2026", url: "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT...", fin: "24 novembre 2028" }
    * (fin = nouveau terme ecrit par la loi, lu dans le texte publie). La phrase
    * d'apres echeance change alors partout, cote build comme cote navigateur. */
-  prolongation: null,
+  prolongation: { nom: "loi n° 2026-1072 du 21 novembre 2026", url: "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000055119241", fin: "24 novembre 2028" },
 } : null;
 if (ENCADREMENT_VIGUEUR && ENCADREMENT_VIGUEUR.prolongation) {
   const p = ENCADREMENT_VIGUEUR.prolongation;
