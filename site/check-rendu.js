@@ -141,6 +141,9 @@ const AUDIT = `(() => {
 
   /* 5. Texte coupé par une hauteur fixe. */
   [...document.querySelectorAll('main h1,main h2,main h3,main p,main li,main td')].forEach(e => {
+    /* Un titre réservé aux lecteurs d'écran (.visually-hidden, boîte de 1 px) est
+     * rogné à dessein : ce n'est pas un texte tronqué (24/11/2026). */
+    if (e.closest('.visually-hidden')) return;
     if (e.scrollHeight > e.clientHeight + 3 && getComputedStyle(e).overflow === 'hidden') {
       add('IMPORTANT', 'texte tronqué', nom(e) + ' : « ' + e.textContent.trim().slice(0, 40) + ' »');
     }

@@ -11,8 +11,8 @@
         { "v": "etudiant", "l": "Étudiant" },
         { "v": "alternant", "l": "Alternant ou apprenti" },
         { "v": "salarie", "l": "Salarié du secteur privé" },
-        { "v": "agent", "l": "Agent public (fonctionnaire ou contractuel)" },
-        { "v": "autre", "l": "En recherche d'emploi, indépendant ou autre" }
+        { "v": "agent", "l": "Agent public (titulaire, contractuel)" },
+        { "v": "autre", "l": "Sans emploi, indépendant ou autre" }
       ]
     },
     {

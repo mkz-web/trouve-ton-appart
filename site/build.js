@@ -248,6 +248,9 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 // Première phrase d'un texte, ponctuée une seule fois : couper sur « . » puis
 // ajouter un point donnait « .. » quand le texte n'avait qu'une phrase (vu le
 // 24/11/2026 sur 33 cartes) et « ?. » après une question.
+// Titre court d'une pastille : la partie avant les deux-points (une pastille
+// sur deux lignes à 360 px, CMP-09, 24/11/2026).
+const titreCourt = (s) => String(s).replace(/\s*:\s.*$/, '');
 const premierePhrase = (s) => { const p = String(s).split('. ')[0].replace(/[.\s]+$/, ''); return /[?!…]$/.test(p) ? p : p + '.'; };
 /* Liens [label](url) dans les contenus de guides, transformés APRÈS échappement.
  * Autorisés : chemins internes (/…) et https:// uniquement, tout le reste reste du texte. */
@@ -260,7 +263,12 @@ const inline = (s) => esc(s).replace(/\[([^\]]+)\]\((\/[^\s)]*|https:\/\/[^\s)]+
  * du watermark). Rendu vide si le fichier manque : le build n'en dépend pas. */
 function illu(name, alt, h = 952, chargement = 'lazy') {
   if (!fs.existsSync(path.join(ROOT, 'static', `${name}.webp`))) return '';
-  return `<img class="page-illu" src="/${name}.webp" alt="${esc(alt)}" width="1024" height="${h}" loading="${chargement}">`;
+  // Variante de 640 px quand elle existe : affichée sur 340 px en bureau, la seule
+  // 1024 px portait trois fois trop de pixels (IMG-07, 24/11/2026). Variantes faites
+  // par le skill compresser-images-webp, qualité 82.
+  const petite = fs.existsSync(path.join(ROOT, 'static', `${name}-640.webp`))
+    ? ` srcset="/${name}-640.webp 640w, /${name}.webp 1024w" sizes="(max-width:767px) 100vw, 340px"` : '';
+  return `<img class="page-illu" src="/${name}.webp"${petite} alt="${esc(alt)}" width="1024" height="${h}" loading="${chargement}">`;
 }
 const ILLUS = {
   etudiant: illu('illu-etudiant', 'Illustration : une étudiante avec ses cartons devant une résidence étudiante parisienne', 732),
@@ -285,11 +293,11 @@ const PAL = {
  * sur fond clair), bg = fond pâle, soft = ombre teintée (rgba précalculée :
  * changer une couleur de thème ⇒ régénérer sa rgba soft). */
 const THEMES = {
-  'etudiant':        { c: PAL.bleu2,       txt: PAL.bleu2,   bg: PAL.cielClair, soft: 'rgba(46,116,181,.30)' },
+  'etudiant':        { c: PAL.bleu2,       txt: '#2a6ca8',   bg: PAL.cielClair, soft: 'rgba(46,116,181,.30)' },
   'logement-social': { c: PAL.sauge,       txt: '#2e7050',   bg: PAL.saugeClair, soft: 'rgba(61,139,110,.28)' },
   'mobilite':        { c: PAL.accentFonce, txt: '#a8492f',   bg: '#fbeee9',     soft: 'rgba(194,86,60,.28)' },
 };
-const themeOf = (slug) => THEMES[slug] || { c: PAL.bleu, txt: PAL.bleu2, bg: PAL.cielClair, soft: 'rgba(31,78,121,.30)' };
+const themeOf = (slug) => THEMES[slug] || { c: PAL.bleu, txt: '#2a6ca8', bg: PAL.cielClair, soft: 'rgba(31,78,121,.30)' };
 const themeStyle = (t) => `--t:${t.c};--ttx:${t.txt};--tbg:${t.bg};--ts:${t.soft}`;
 
 /* Pictogrammes 48×48, flat, deux tons (couleur du thème + accent). */
@@ -1138,7 +1146,7 @@ for (const p of PARCOURS) {
   const etapes = p.etapes.map(e => {
     const links = e.guides.map(slug => {
       const g = GUIDES.find(x => x.slug === slug);
-      return g ? `<a class="pill" href="/guides/${g.slug}/">${esc(g.h1)}</a>` : '';
+      return g ? `<a class="pill" href="/guides/${g.slug}/">${esc(titreCourt(g.h1))}</a>` : '';
     }).join(' ');
     return `<div class="step"><h2>${esc(e.titre.replace(/^\d+\.\s*/, ''))}</h2><p>${esc(e.texte)}</p>${links ? `<p class="pills">${links}</p>` : ''}</div>`;
   }).join('');
@@ -1175,6 +1183,7 @@ for (const p of PARCOURS) {
   ${ILLUS[p.slug] || ''}
 </header>
 ${RAPPEL_HAUT}
+<h2 class="visually-hidden">Les étapes, dans l’ordre</h2>
 <div class="steps" style="${themeStyle(t)}">
 ${etapes}
 </div>
@@ -1511,6 +1520,7 @@ hp.addEventListener('click',function(){scrollTo(0,0);var h1=document.querySelect
   ${illu('illu-guides', 'Illustration : un personnage consulte une carte à un carrefour de panneaux indiquant différents logements', 952, 'eager')}
 </header>
 ${RAPPEL_HAUT}
+<h2 class="visually-hidden">Tous les guides</h2>
 <div class="grid grid-guides">${cards}</div>`;
   pushIndex('Les guides pratiques', '/guides/', `Les ${GUIDES.length} guides logement Île-de-France.`, 'Page');
   addPage('/guides/', layout({
@@ -1671,6 +1681,7 @@ hp.addEventListener('click',function(){scrollTo(0,0);var h1=document.querySelect
     <p class="lead">${esc(EN.hub.lead)}</p>
   </div>
 </header>
+<h2 class="visually-hidden">All guides in English</h2>
 <div class="grid grid-guides">${cards}</div>
 <section class="notice">
   <h2>Looking for more?</h2>
@@ -1717,7 +1728,7 @@ hp.addEventListener('click',function(){scrollTo(0,0);var h1=document.querySelect
 <section class="notice">
   <h2>The rest of the site is in French</h2>
   <p>${esc(EN.home.frenchSite)}</p>
-  <p class="pills"><a class="pill" href="/" lang="fr" hreflang="fr">Accueil en français</a> <a class="pill" href="/diagnostic/" lang="fr" hreflang="fr">Diagnostic logement (2 min)</a> <a class="pill" href="/outils/" lang="fr" hreflang="fr">Outils gratuits</a> <a class="pill" href="/logement-social/delais/" lang="fr" hreflang="fr">Observatoire des délais du logement social</a></p>
+  <p class="pills"><a class="pill" href="/" lang="fr" hreflang="fr">Accueil en français</a> <a class="pill" href="/diagnostic/" lang="fr" hreflang="fr">Diagnostic logement (2 min)</a> <a class="pill" href="/outils/" lang="fr" hreflang="fr">Outils gratuits</a> <a class="pill" href="/logement-social/delais/" lang="fr" hreflang="fr">Observatoire des délais</a></p>
 </section>
 <section class="notice">
   <h2>Who we are</h2>
@@ -1885,7 +1896,7 @@ function buildDirectory(cfg) {
   const byDep = new Map(DEPS_IDF.map(d => [d, data.records.filter(r => r.dep === d)]));
   const guidePills = (cfg.guides || []).map(slug => {
     const g = GUIDES.find(x => x.slug === slug);
-    return g ? `<a class="pill" href="/guides/${g.slug}/">${esc(g.h1)}</a>` : '';
+    return g ? `<a class="pill" href="/guides/${g.slug}/">${esc(titreCourt(g.h1))}</a>` : '';
   }).filter(Boolean).join(' ');
 
   /* Hub */
@@ -2103,6 +2114,18 @@ const MAPS_EXCEPTIONS = (() => {
 })();
 const MAPS_EXCEPTIONS_SERVIES = new Set();
 const coordonneesDe = (jeu, id, r) => { const cle = `${jeu}:${id}`; if (!MAPS_EXCEPTIONS.has(cle)) return null; if (r.lat == null || r.lon == null) throw new Error(`maps-exceptions.json : ${cle} sans coordonnées dans la source`); MAPS_EXCEPTIONS_SERVIES.add(cle); return `${r.lat},${r.lon}`; };
+// Numéro cliquable sur téléphone (LIE-06, 24/11/2026) : seul un numéro français
+// à 10 chiffres devient un lien tel:, tout autre format reste en texte.
+const telLien = (t) => { const d = String(t).replace(/\D/g, ''); return /^0[1-9]\d{8}$/.test(d) ? `<a href="tel:+33${d.slice(1)}">${esc(t)}</a>` : esc(t); };
+// Deux établissements FINESS d'un même département portent parfois le même nom
+// (trois « FJT - Résidence Sociale » à Clichy) : leur titre prend l'adresse, sans
+// rien inventer, pour qu'on les distingue (CON-04, 24/11/2026).
+const nomsEnDouble = new Map();
+const titreFiche = (r, data) => {
+  if (!nomsEnDouble.has(data)) { const n = new Map(); for (const x of data.records) { const k = x.dep + '|' + x.nom; n.set(k, (n.get(k) || 0) + 1); } nomsEnDouble.set(data, n); }
+  const double = nomsEnDouble.get(data).get(r.dep + '|' + r.nom) > 1;
+  return esc(r.nom) + (double && r.adresse ? ` <span class="dir-voie">(${esc(r.adresse)})</span>` : '');
+};
 const adresseLigne = (r) => [r.adresse, [r.cp, r.commune].filter(Boolean).join(' ')].filter(Boolean).join(', ');
 const mapsLink = (adresse, placeId, coordonnees) => (adresse ? ` · <a href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(coordonnees || adresse)}${placeId ? `&amp;query_place_id=${encodeURIComponent(placeId)}` : ''}" rel="noopener" target="_blank">voir sur Google Maps</a>` : '');
 
@@ -2136,7 +2159,7 @@ if (CROUS) {
     renderItem: (r) => `<li class="dir-item" id="r-${r.id}">
   <h3>${esc(r.nom)}</h3>
   <p class="dir-addr">${esc(r.adresse)}${mapsLink(r.adresse, placeIdDe('crous', r.id), coordonneesDe('crous', r.id, r))}</p>
-  ${(r.tel || r.mail) ? `<p class="dir-meta">${[r.tel && esc(r.tel), r.mail && `<a href="mailto:${esc(r.mail)}">${esc(r.mail)}</a>`].filter(Boolean).join(' · ')}</p>` : ''}
+  ${(r.tel || r.mail) ? `<p class="dir-meta">${[r.tel && telLien(r.tel), r.mail && `<a href="mailto:${esc(r.mail)}">${esc(r.mail)}</a>`].filter(Boolean).join(' · ')}</p>` : ''}
   ${r.services.length ? `<p class="dir-tags">${r.services.map(s => `<span>${esc(s)}</span>`).join('')}</p>` : ''}
   <p class="dir-links"><a href="https://trouverunlogement.lescrous.fr/" rel="noopener" target="_blank">Demander un logement</a>${r.url ? ` · <a href="${esc(safeUrl(r.url))}" rel="noopener" target="_blank">site du CROUS</a>` : ''}</p>
 </li>`,
@@ -2164,9 +2187,9 @@ if (FJT) {
     guides: ['foyer-jeune-travailleur', 'aide-mobili-jeune', 'visale'],
     searchCat: 'FJT',
     renderItem: (r) => `<li class="dir-item" id="r-${r.finess}">
-  <h3>${esc(r.nom)}</h3>
+  <h3>${titreFiche(r, FJT)}</h3>
   <p class="dir-addr">${esc(adresseLigne(r))}${mapsLink(adresseLigne(r), placeIdDe('fjt', r.finess), coordonneesDe('fjt', r.finess, r))}</p>
-  ${r.tel ? `<p class="dir-meta">${esc(r.tel)}</p>` : ''}
+  ${r.tel ? `<p class="dir-meta">${telLien(r.tel)}</p>` : ''}
 </li>`,
   });
 }
@@ -2192,9 +2215,9 @@ if (RES_AUTONOMIE) {
     guides: ['demande-logement-social', 'fonds-solidarite-logement'],
     searchCat: 'Résidence autonomie',
     renderItem: (r) => `<li class="dir-item" id="r-${r.finess}">
-  <h3>${esc(r.nom)}</h3>
+  <h3>${titreFiche(r, RES_AUTONOMIE)}</h3>
   <p class="dir-addr">${esc(adresseLigne(r))}${mapsLink(adresseLigne(r), placeIdDe('residences-autonomie', r.finess), coordonneesDe('residences-autonomie', r.finess, r))}</p>
-  ${r.tel ? `<p class="dir-meta">${esc(r.tel)}</p>` : ''}
+  ${r.tel ? `<p class="dir-meta">${telLien(r.tel)}</p>` : ''}
 </li>`,
   });
 }
@@ -2936,10 +2959,10 @@ var deb;['enc-s','enc-l'].forEach(function(i){$(i).addEventListener('input',func
   const content = `
 <style>
 .diag-box{border:1px solid var(--bord);border-radius:16px;padding:24px 22px;background:var(--surface);margin:1.4rem 0}
-.diag-progress{font-size:.82rem;font-weight:650;text-transform:uppercase;letter-spacing:.06em;color:var(--bleu2);margin:0 0 .5rem}
-.diag-q{font-size:1.3rem;line-height:1.35;font-weight:650;margin:.1rem 0 1rem;outline:none}
+.diag-progress{font-size:.82rem;font-weight:650;text-transform:uppercase;letter-spacing:.06em;color:var(--bleu2);margin:0 0 1.1rem}
+.diag-q{font-size:1.3rem;line-height:1.35;font-weight:650;margin:.1rem 0 .6rem;outline:none}
 .diag-opts{display:grid;gap:10px}
-.diag-opt{display:block;width:100%;text-align:left;padding:13px 16px;min-height:44px;border:1px solid var(--bord);border-radius:12px;background:#fff;font:inherit;font-size:1rem;color:var(--encre);cursor:pointer;transition:border-color .15s,background .15s}
+.diag-opt{display:block;width:100%;text-align:left;padding:13px 12px;min-height:44px;border:1px solid #c5d3e0;border-radius:12px;background:#fff;font:inherit;font-size:1rem;color:var(--encre);cursor:pointer;transition:border-color .15s,background .15s}
 .diag-opt:hover,.diag-opt:focus-visible{border-color:var(--bleu2);background:var(--ciel)}
 .diag-back{background:none;border:none;padding:6px 0;font:inherit;font-size:.9rem;color:var(--bleu2);cursor:pointer;text-decoration:underline}
 .diag-bloc{font-size:1.05rem;margin:1.6rem 0 .4rem;color:var(--bleu)}
@@ -3106,6 +3129,7 @@ rendQ();
     <p class="lead">${outils.length} simulateurs gratuits, construits sur les barèmes et les données officiels. Aucun compte à créer, et vos réponses ne quittent jamais votre navigateur&nbsp;: rien n'est stocké ni envoyé, même si vous avez accepté la mesure d'audience (les outils lui sont masqués).</p>
   </div>
 </header>
+<h2 class="visually-hidden">Les trois outils</h2>
 <div class="grid grid-outils">${cartes}</div>
 <section class="notice">
   <h2>Comment nous les construisons</h2>
@@ -3239,11 +3263,12 @@ inp.focus();
   <span class="page-head-icon">${icon('etudiant', t.c)}</span>
   <div>
     <p class="kicker">Étudiants &amp; alternants · spécial rentrée</p>
-    <h1>La check-list logement de la rentrée étudiante</h1>
+    <h1>La check-list logement de la rentrée&nbsp;étudiante</h1>
     <p class="lead">Les aides au logement ne se demandent pas «&nbsp;un jour&nbsp;»&nbsp;: chacune a son moment, et certaines fenêtres ne se rattrapent pas. Voici les démarches dans le bon ordre. Chaque étape renvoie au guide complet, vérifié sur les sources officielles.</p>
   </div>
 </header>
 ${RAPPEL_HAUT}
+<h2 class="visually-hidden">Les étapes, dans l’ordre</h2>
 <div class="steps" style="${themeStyle(t)}">
   <div class="step"><h3>Avant les visites&nbsp;: le dossier certifié</h3><p><a href="/guides/dossierfacile/">DossierFacile</a>, le service public gratuit du ministère du Logement, vérifie votre dossier de location sous 72&nbsp;heures ouvrées au maximum. Constituez-le avant de commencer les visites, pas le soir où un bailleur réclame vos pièces.</p></div>
   <div class="step"><h3>Avant de candidater&nbsp;: le garant</h3><p>Sans garant familial, la garantie <a href="/guides/visale/">Visale</a> est gratuite et le visa se demande en ligne sur visale.fr avant de candidater. En Île-de-France, elle couvre un loyer jusqu'à 1&nbsp;940&nbsp;€ charges comprises selon la situation (1&nbsp;000&nbsp;€ pour un étudiant ou alternant sans justificatifs de ressources). Un garant classique reste possible&nbsp;: <a href="/guides/garant-location/">toutes les solutions</a>.</p></div>
@@ -3296,7 +3321,7 @@ const HTML_404 = layout({
 <p><strong>Directeur de la publication</strong> : Mickaël Leclerc, représentant légal.</p>
 <p><strong>Contact</strong> : <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a></p>
 <p><strong>Hébergement</strong> : Cloudflare Pages, Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis.</p>
-<p id="donnees-personnelles"><strong>Données personnelles</strong> : Ce site ne collecte aucune donnée personnelle en dehors de la mesure d'audience soumise à votre consentement (voir la section <a href="#cookies">Cookies et mesure d'audience</a>), et ne dépose aucun cookie sans votre accord. Ce que vous saisissez dans nos outils ne quitte pas votre navigateur. Pour exercer vos droits (accès, rectification, effacement, retrait du consentement), écrivez à <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a>.</p>
+<p id="donnees-personnelles"><strong>Données personnelles</strong> : Ce site ne collecte aucune donnée personnelle en dehors de la mesure d'audience soumise à votre consentement (voir <a href="#cookies">la section sur les cookies</a>), et ne dépose aucun cookie sans votre accord. Ce que vous saisissez dans nos outils ne quitte pas votre navigateur. Pour exercer vos droits (accès, rectification, effacement, retrait du consentement), écrivez à <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a>.</p>
 <p><strong>Nature du service</strong> : ${esc(SITE.name)} est un service d'information et d'orientation : nos <a href="/guides/">guides pratiques</a> expliquent les dispositifs, nos <a href="/annuaire/">annuaires</a> listent des adresses issues de données publiques. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>
 <h2 id="cookies">Cookies et mesure d'audience</h2>
 <p>Avec votre accord, et seulement avec lui, nous utilisons <strong>Microsoft Clarity</strong> (Microsoft Ireland Operations Limited) pour comprendre comment le site est utilisé : pages consultées, zones cliquées, parcours de navigation. Tant que vous n'avez pas cliqué sur «&nbsp;Accepter&nbsp;» dans le bandeau, le script de mesure ne se charge pas et aucun cookie de mesure n'est déposé. Refuser ne change rien à votre navigation.</p>
@@ -3501,7 +3526,7 @@ h2{font-size:clamp(1.32rem,2.2vw,1.55rem);line-height:1.25;font-weight:700;lette
 h3{font-size:1.08rem;line-height:1.35;font-weight:650}
 .lead{font-size:1.14rem;line-height:1.6;color:var(--gris);max-width:62ch}
 h1,h2,h3,.faq summary{text-wrap:pretty}
-.kicker{font-size:.8125rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ttx,var(--bleu2));margin:0 0 .2rem}
+.kicker{font-size:.8125rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ttx,#2a6ca8);margin:0 0 .2rem}
 small{font-size:.8125rem}
 /* ---- Header ---- */
 .site-header{background:linear-gradient(135deg,#163a5c,var(--bleu) 60%,#26619a);padding:8px 0 0}
@@ -3594,12 +3619,15 @@ main:focus{outline:none}
 .card:hover .cta-arrow,.card:focus-visible .cta-arrow,a:hover>.cta-arrow,a:focus-visible>.cta-arrow{transform:translateX(5px)}
 .grid-guides{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
 .card-guide{display:flex;gap:14px;align-items:flex-start}
+/* Dans la grille des guides (accueil, hub), l'icône passe au-dessus du titre :
+ * à côté, elle laissait 210 px au titre, sur quatre lignes (TYP-06, 24/11/2026). */
+.grid-guides .card-guide{flex-direction:column;gap:10px}
 .card-icon-sm{flex:none;width:36px;height:36px;border-radius:12px;padding:7px;margin:2px 0 0}
 /* ---- Têtes de page illustrées ---- */
-.page-head{display:flex;gap:18px;align-items:flex-start;background:linear-gradient(135deg,var(--tbg,var(--ciel)),#fff 85%);border:1px solid var(--bord);border-left:6px solid var(--t,var(--bleu2));border-radius:16px;padding:22px 26px;margin:0 0 1.8rem;box-shadow:0 14px 34px -24px var(--ts,rgba(31,78,121,.30))}
+.page-head{display:flex;gap:18px;align-items:flex-start;background:linear-gradient(135deg,var(--tbg,var(--ciel)),#fff 85%);border:1px solid var(--bord);border-left:6px solid var(--t,var(--bleu2));border-radius:16px;padding:22px 31px 22px 26px;margin:0 0 1.8rem;box-shadow:0 14px 34px -24px var(--ts,rgba(31,78,121,.30))}
 .page-head-icon{flex:none;width:46px;height:46px;background:#fff;border-radius:12px;padding:9px;box-shadow:0 1px 2px rgba(22,51,82,.05),0 6px 18px -12px rgba(22,51,82,.10);margin-top:4px}
 .page-head-icon svg{width:100%;height:100%}
-.page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 15px 15px 0;margin:-22px -26px -22px 8px;box-shadow:-14px 0 24px -18px rgba(31,78,121,.25)}
+.page-illu{flex:none;width:340px;max-width:38%;align-self:stretch;height:auto;object-fit:cover;border-radius:0 15px 15px 0;margin:-22px -31px -22px 8px;box-shadow:-14px 0 24px -18px rgba(31,78,121,.25)}
 #votre-commune>h2{margin-top:0}
 #delai-lookup{margin:0 0 .8rem}
 #votre-commune .lead{margin:1rem 0 0}
@@ -3627,7 +3655,7 @@ main:focus{outline:none}
 .dl-pin.pop{animation:dl-pop .6s ease-out 2}
 @keyframes dl-pop{50%{transform:scale(1.7)}}
 .carte-delais{margin:1.2rem 0}
-.carte-delais img{display:block;width:100%;height:auto;border:1px solid var(--bord);border-radius:16px;background:#fff}
+.carte-delais img{display:block;width:100%;height:auto;max-height:85vh;object-fit:contain;border:1px solid var(--bord);border-radius:16px;background:#fff}
 .carte-delais figcaption{font-size:.88rem;color:var(--gris);margin-top:.6rem;line-height:1.55}
 .carte-delais figcaption a{display:inline-block;padding:.3rem 0;margin:-.3rem 0}
 .page-head h1{margin:.1rem 0 .5rem}.page-head .lead{margin:0}
@@ -3705,7 +3733,7 @@ th[aria-sort="ascending"],th[aria-sort="descending"]{color:var(--bleu2)}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;margin:1.2rem 0}
 .stat{background:#fff;border:1px solid var(--bord);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:2px}
 .stat-n{font-size:2.3rem;line-height:1.05;font-weight:700;color:var(--bleu2);font-variant-numeric:tabular-nums}
-.stat-sep{font-size:1.3rem;margin:0 .12em;color:var(--accent)}
+.stat-sep{font-size:1.3rem;margin:0 .12em;color:var(--accent2)}
 .stat-u{font-size:.9rem;font-weight:650;color:var(--bleu)}
 .stat-l{font-size:.88rem;color:#5a6b7c;margin-top:.25rem}
 .stats-cta{margin:1.2rem 0 .6rem}
@@ -3740,6 +3768,11 @@ main p a:not([class]):hover,main li a:not([class]):hover,main p a:not([class]):f
  * compensé par une marge négative, motif déjà toléré par check-rendu). Fil
  * d'Ariane à ~44 px, rangées de listes de liens à >= 30 px. */
 .breadcrumb a{display:inline-block;padding:.8rem 0;margin:-.8rem 0}
+/* Sur deux lignes, la zone élargie d'un lien recouvrait le lien de la ligne
+ * voisine (CMP-11, 24/11/2026) : l'interligne porte la hauteur de la cible. */
+.breadcrumb{line-height:3rem;margin:.6rem 0 .4rem}.breadcrumb a{padding:0;margin:0}
+main .js-cookies{padding:8px 0;margin:-8px 0}
+.js-cookies:hover,.consent-txt a:hover,.carte-delais figcaption a:hover{text-decoration-thickness:2px;text-decoration-color:var(--accent)}
 li a:not(.pill):not(.btn),td a,.dir-links a,.dir-meta a,.result-list a{display:inline-block;padding:.3rem 0;margin:-.3rem 0}
 /* Mesure de ligne. Piège de l'unité ch mesuré ici : le « 0 » de Segoe UI est
  * large (72ch ≈ 634 px, soit la largeur du conteneur, règle sans effet) ;
@@ -3748,6 +3781,11 @@ li a:not(.pill):not(.btn),td a,.dir-links a,.dir-meta a,.result-list a{display:i
  * largeur. Ramené à 60ch le 24/11/2026 : un paragraphe riche en lettres
  * étroites montait à 82 caractères (contrôle TYP-03, plafond de 80). */
 .guide-body p,.guide-body ul,.guide-body ol,.step p,.notice p,.stats-head p,.section-intro,.sources li,.maj{max-width:60ch}
+/* Même mesure pour la prose des autres pages (Observatoire, chiffres, outils,
+ * mentions, rentrée : lignes de 117 à 136 caractères, 24/11/2026). Les
+ * éléments à classe (cartes, fiches, pastilles) gardent leur largeur. */
+main p:not([class]),main li:not([class]){max-width:60ch}
+main p,main li{text-wrap:pretty}
 .tldr ul{max-width:none}
 /* Le texte des boîtes pleine largeur garde la mesure de 62ch (le contrôle
  * design relevait 89 caractères par ligne dans L'essentiel et 82 dans un
@@ -3758,7 +3796,7 @@ li a:not(.pill):not(.btn),td a,.dir-links a,.dir-meta a,.result-list a{display:i
  * sur sa dernière ligne (sources, sommaire). */
 li a:not(.pill):not(.btn){vertical-align:top}
 /* Rappels d'action (cadence du parcours, tenue par les gabarits). */
-.rappel{background:var(--fond2);border-left:4px solid var(--bleu2);border-radius:12px;padding:12px 18px;margin:1.7rem 0;max-width:72ch}
+.rappel{background:var(--fond2);border-left:4px solid var(--bleu2);border-radius:12px;padding:12px 22px 12px 18px;margin:1.7rem 0;max-width:72ch}
 .rappel p{margin:0}
 .avert{border-left-color:#b4573c;background:#fff6f3}
 /* Dans un outil, l'avertissement prend la largeur du formulaire (le plafond de
@@ -3770,7 +3808,10 @@ li a:not(.pill):not(.btn){vertical-align:top}
 /* Téléphone : texte de lecture à 16 px. Le contrôle design mesurait 20 % des
  * mots sous 16 px (période de la grille, libellés du formulaire, cartes de
  * suite, pied de page), au-delà du plafond de 15 %. */
-@media(max-width:767px){.tool .maj,.card p,.tool-form label,html .site-footer,html .consent-txt{font-size:1rem}}
+@media(max-width:767px){.tool .maj,.card p,.tool-form label,html .site-footer,html .consent-txt{font-size:1rem}
+/* Pages de données (24/11/2026) : tableaux, notes de source, pastilles, fiches
+ * d'annuaire et légendes faisaient 26 à 58 % des mots sous 16 px. */
+html table.data,html .data small,html .maj,html .pill,html .dir-meta,html .dir-compte,html .carte-delais figcaption,html .dl-aide,html .outil-quoi li,html .diag-progress,html .search-inline{font-size:1rem}}
 .rappel-haut{margin:1.1rem 0 0}
 /* Sommaire des annuaires groupés + intertitres de commune. */
 .dir-sommaire{margin:1.2rem 0 0}
@@ -3778,7 +3819,7 @@ li a:not(.pill):not(.btn){vertical-align:top}
 .dir-compte{color:var(--gris);font-weight:400;font-size:.9rem}
 /* Retour en haut (guides) : caché tant qu'on n'a pas défilé 2 écrans. */
 .haut-page{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:15;width:48px;height:48px;border-radius:50%;border:1px solid var(--bord);background:var(--encre);color:var(--fond);font-size:1.3rem;line-height:1;cursor:pointer;box-shadow:0 8px 22px -10px rgba(28,39,51,.55)}
-.haut-page:hover{transform:translateY(-2px)}
+.haut-page:hover{transform:translateY(-2px);background:var(--bleu)}
 body:has(.consent:not([hidden])) .haut-page{display:none}
 .faq details{border:1px solid var(--bord);border-radius:12px;padding:12px 18px;margin:.7rem 0;background:var(--surface);transition:border-color .15s}
 .faq details[open]{border-color:var(--bleu2);background:linear-gradient(180deg,var(--ciel),#fff 140%)}
@@ -3868,13 +3909,14 @@ body:has(.consent:not([hidden])) .guide-toc{position:static;max-height:none}
 [id]{scroll-margin-top:16px}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .dir-list{list-style:none;padding:0;margin:1.2rem 0}
-.dir-item{position:relative;border:1px solid var(--bord);border-left:5px solid var(--t,var(--bleu2));border-radius:16px;padding:14px 20px;margin:.8rem 0;background:var(--surface)}
+.dir-item{position:relative;border:1px solid var(--bord);border-left:5px solid var(--t,var(--bleu2));border-radius:16px;padding:14px 24px 14px 20px;margin:.8rem 0;background:var(--surface)}
 /* Projecteur : halo 1,5 s sur la fiche visée en arrivant de la recherche.
  * z-index:0 sur le parent crée le stacking context qui place le ::after
  * z-index:-1 AU-DESSUS du fond du parent mais SOUS son texte. */
 .dir-item:target{z-index:0}
 .dir-item:target::after{content:"";position:absolute;inset:-2px;border-radius:16px;background:var(--tbg,var(--ciel));opacity:0;pointer-events:none;z-index:-1;animation:spot 1.5s ease-out .15s both}
 .dir-item h3{margin:.05rem 0 .3rem;font-size:1.05rem}
+.dir-voie{font-weight:500;color:var(--gris)}
 .dir-addr{margin:.15rem 0;color:var(--gris)}
 .dir-meta{margin:.15rem 0;font-size:.92rem}
 .dir-tags{margin:.4rem 0 .1rem}
@@ -4009,8 +4051,8 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 @media(max-width:760px){
 .hero{grid-template-columns:1fr;padding:24px 22px 20px;gap:8px}
 .hero-illo{margin-top:.6rem}
-.page-head{flex-direction:column;gap:12px;padding:20px}
-.page-illu{width:calc(100% + 40px);max-width:none;margin:0 -20px -20px;border-radius:0 0 15px 15px;max-height:240px}
+.page-head{flex-direction:column;gap:12px;padding:20px 25px 20px 20px}
+.page-illu{width:calc(100% + 45px);max-width:none;margin:0 -25px -20px -20px;border-radius:0 0 15px 15px;max-height:240px}
 .step{padding-left:58px}
 .step:not(:last-child)::after{display:none}
 }
@@ -4027,6 +4069,7 @@ table.data{border-collapse:collapse;width:100%;font-size:.92rem;background:var(-
 :root{--bleu:#93c1e8;--bleu2:#82b5e6;--accent2:#f0967c;--encre:#e7edf3;--gris:#a9b6c2;--fond:#131b23;--surface:#1c2632;--fond2:#232f3c;--ciel:#243447;--creme:#2a2620;--bord:#354453;color-scheme:dark}
 .hero{background:radial-gradient(420px 260px at 84% 22%,rgba(224,122,95,.10),transparent 70%),linear-gradient(160deg,#182534,#131b23 60%);border-color:var(--bord)}
 .page-head{background:linear-gradient(135deg,var(--fond2),var(--surface) 85%)}
+html .diag-opt{background:var(--surface);border-color:var(--bord)}html .diag-carte{background:var(--surface)}
 .page-head-icon{background:var(--surface)}
 .kicker,.card-cta,.outil-accroche{color:var(--bleu2)}
 .pill:hover{background:var(--fond2)}
