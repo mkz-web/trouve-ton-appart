@@ -245,6 +245,10 @@ const DATA_SEARCH_CATS = ['Résidence CROUS', 'FJT', 'Résidence autonomie', 'Co
 const safeUrl = (u) => (/^(https?:|mailto:)/i.test(String(u || '')) ? u : '#');
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+// Première phrase d'un texte, ponctuée une seule fois : couper sur « . » puis
+// ajouter un point donnait « .. » quand le texte n'avait qu'une phrase (vu le
+// 24/11/2026 sur 33 cartes) et « ?. » après une question.
+const premierePhrase = (s) => { const p = String(s).split('. ')[0].replace(/[.\s]+$/, ''); return /[?!…]$/.test(p) ? p : p + '.'; };
 /* Liens [label](url) dans les contenus de guides, transformés APRÈS échappement.
  * Autorisés : chemins internes (/…) et https:// uniquement, tout le reste reste du texte. */
 const inline = (s) => esc(s).replace(/\[([^\]]+)\]\((\/[^\s)]*|https:\/\/[^\s)]+)\)/g,
@@ -1018,7 +1022,7 @@ function addPage(urlPath, html, priority, lastmod) {
   <a class="card card-parcours" href="/${p.slug}/" style="${themeStyle(t)}">
     <span class="card-icon">${icon(p.slug, t.c)}</span>
     <h3>${esc(p.nav)}</h3>
-    <p>${esc(p.intro.split('. ')[0])}.</p>
+    <p>${esc(premierePhrase(p.intro))}</p>
     <span class="card-cta"><span class="cta-label">Voir le parcours</span> <span class="cta-arrow" aria-hidden="true">→</span></span>
   </a>`;
   }).join('');
@@ -1028,7 +1032,7 @@ function addPage(urlPath, html, priority, lastmod) {
   <a class="card card-guide" href="/guides/${g.slug}/" style="${themeStyle(t)}">
     <span class="card-icon card-icon-sm">${icon(g.slug, t.c)}</span>
     <div><h3>${esc(g.h1)}</h3>
-    <p>${esc(g.metaDescription.split('. ')[0])}.</p></div>
+    <p>${esc(premierePhrase(g.metaDescription))}</p></div>
   </a>`;
   }).join('');
   const content = `
@@ -1284,7 +1288,7 @@ function suiteBloc(g) {
     const url = cible ? `/guides/${cible.slug}/` : c;
     const hors = cible ? null : SUITES_HORS_GUIDES[c];
     const titre = cible ? cible.h1 : hors.titre;
-    const resume = cible ? cible.metaDescription.split('. ')[0] + '.' : hors.resume;
+    const resume = cible ? premierePhrase(cible.metaDescription) : hors.resume;
     const th = themeOf(cible ? (cible.parcours && cible.parcours[0]) : hors.theme);
     return `
     <a class="card card-guide" href="${url}" style="${themeStyle(th)}">
@@ -1493,7 +1497,7 @@ hp.addEventListener('click',function(){scrollTo(0,0);var h1=document.querySelect
   <a class="card card-guide" href="/guides/${g.slug}/" style="${themeStyle(t)}">
     <span class="card-icon card-icon-sm">${icon(g.slug, t.c)}</span>
     <div><h3>${esc(g.h1)}</h3>
-    <p>${esc(g.metaDescription.split('. ')[0])}.</p></div>
+    <p>${esc(premierePhrase(g.metaDescription))}</p></div>
   </a>`;
   }).join('');
   const content = `
@@ -1555,7 +1559,7 @@ for (const g of EN.guides) {
     <a class="card card-guide" href="/en/guides/${x.slug}/" style="${themeStyle(th)}">
       <span class="card-icon card-icon-sm">${icon(x.frSlug, th.c)}</span>
       <div><h3>${esc(x.h1)}</h3>
-      <p>${esc(x.metaDescription.split('. ')[0])}.</p></div>
+      <p>${esc(premierePhrase(x.metaDescription))}</p></div>
     </a>`;
   }).join('');
   const t = guideTheme(g);
@@ -1584,7 +1588,7 @@ ${suiteCards ? `<section class="suite" aria-labelledby="suite-t">
 <h2 id="suite-t">What to read next</h2>
 <div class="grid">${suiteCards}</div>
 </section>` : ''}
-<p class="pills"><strong>En français&nbsp;:</strong> <a class="pill" href="${frUrl}" lang="fr" hreflang="fr">${esc(frGuide.h1)}</a></p>
+<p class="pills"><strong>En français&nbsp;:</strong> <a class="pill" href="${frUrl}" lang="fr" hreflang="fr">${esc(frGuide.h1.replace(/\s*:\s.*$/, ''))}</a></p>
 <section class="notice"><h2>Official sources</h2><ul class="sources">${srcHtml}</ul></section>
 </div>
 </div>
@@ -1655,7 +1659,7 @@ hp.addEventListener('click',function(){scrollTo(0,0);var h1=document.querySelect
   <a class="card card-guide" href="/en/guides/${g.slug}/" style="${themeStyle(t)}">
     <span class="card-icon card-icon-sm">${icon(g.frSlug, t.c)}</span>
     <div><h3>${esc(g.h1)}</h3>
-    <p>${esc(g.metaDescription.split('. ')[0])}.</p></div>
+    <p>${esc(premierePhrase(g.metaDescription))}</p></div>
   </a>`;
   }).join('');
   const content = `
@@ -1689,7 +1693,7 @@ hp.addEventListener('click',function(){scrollTo(0,0);var h1=document.querySelect
   <a class="card card-guide" href="/en/guides/${g.slug}/" style="${themeStyle(t)}">
     <span class="card-icon card-icon-sm">${icon(g.frSlug, t.c)}</span>
     <div><h3>${esc(g.h1)}</h3>
-    <p>${esc(g.metaDescription.split('. ')[0])}.</p></div>
+    <p>${esc(premierePhrase(g.metaDescription))}</p></div>
   </a>`;
   }).join('');
   const steps = EN.home.steps.map(s => `<div class="step"><h3>${esc(s.h3)}</h3><p>${esc(s.text)}</p></div>`).join('');
@@ -3504,7 +3508,7 @@ small{font-size:.8125rem}
 .site-header .container.header-lang{justify-content:flex-end;margin-bottom:2px}
 .lang-link{display:inline-flex;align-items:center;min-height:44px;color:#fff;text-decoration:none;font-size:.82rem;opacity:.92;padding:0 14px;border:1px solid rgba(255,255,255,.38);border-radius:999px;transition:background .15s}
 /* Lien d'évitement : premier arrêt de la touche Tab, visible seulement au focus. */
-.evitement{position:absolute;left:12px;top:-80px;z-index:40;background:#fff;color:var(--bleu);font-weight:600;text-decoration:none;padding:12px 18px;border-radius:12px;box-shadow:0 8px 22px -10px rgba(28,39,51,.55)}
+.evitement{position:absolute;left:12px;top:-80px;z-index:40;background:#fff;color:var(--bleu);font-weight:600;text-decoration:none;padding:12px 18px;border-radius:12px;box-shadow:0 1px 2px rgba(22,51,82,.05),0 6px 18px -12px rgba(22,51,82,.10)}
 .evitement:focus{top:12px}
 .evitement:hover{text-decoration:underline}
 main:focus{outline:none}
@@ -3741,8 +3745,9 @@ li a:not(.pill):not(.btn),td a,.dir-links a,.dir-meta a,.result-list a{display:i
  * large (72ch ≈ 634 px, soit la largeur du conteneur, règle sans effet) ;
  * 62ch ≈ 547 px donnent 75-78 caractères réels par ligne (mesurés 93-99
  * avant, cible 60-80). Les boîtes à cadre (tldr, rappel) gardent leur
- * largeur. */
-.guide-body p,.guide-body ul,.guide-body ol,.step p,.notice p,.stats-head p,.section-intro,.sources li,.maj{max-width:62ch}
+ * largeur. Ramené à 60ch le 24/11/2026 : un paragraphe riche en lettres
+ * étroites montait à 82 caractères (contrôle TYP-03, plafond de 80). */
+.guide-body p,.guide-body ul,.guide-body ol,.step p,.notice p,.stats-head p,.section-intro,.sources li,.maj{max-width:60ch}
 .tldr ul{max-width:none}
 /* Le texte des boîtes pleine largeur garde la mesure de 62ch (le contrôle
  * design relevait 89 caractères par ligne dans L'essentiel et 82 dans un
@@ -3765,7 +3770,7 @@ li a:not(.pill):not(.btn){vertical-align:top}
 /* Téléphone : texte de lecture à 16 px. Le contrôle design mesurait 20 % des
  * mots sous 16 px (période de la grille, libellés du formulaire, cartes de
  * suite, pied de page), au-delà du plafond de 15 %. */
-@media(max-width:767px){.tool .maj,.card p,.tool-form label,.site-footer{font-size:1rem}}
+@media(max-width:767px){.tool .maj,.card p,.tool-form label,html .site-footer,html .consent-txt{font-size:1rem}}
 .rappel-haut{margin:1.1rem 0 0}
 /* Sommaire des annuaires groupés + intertitres de commune. */
 .dir-sommaire{margin:1.2rem 0 0}
@@ -3805,6 +3810,7 @@ body:has(.consent:not([hidden])) .haut-page{display:none}
 @media(min-width:1020px){
 .guide-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:0 36px;align-items:start}
 .guide-toc{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+body:has(.consent:not([hidden])) .guide-toc{max-height:calc(100vh - 200px)}
 }
 /* ---- Footer ---- */
 .roofline{display:block;width:100%;height:22px;margin-top:3.5rem}
