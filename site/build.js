@@ -258,9 +258,9 @@ const inline = (s) => esc(s).replace(/\[([^\]]+)\]\((\/[^\s)]*|https:\/\/[^\s)]+
 
 /* Illustrations Gemini des pages piliers (site/static/illu-*.webp, recadrées
  * du watermark). Rendu vide si le fichier manque : le build n'en dépend pas. */
-function illu(name, alt, h = 952) {
+function illu(name, alt, h = 952, chargement = 'lazy') {
   if (!fs.existsSync(path.join(ROOT, 'static', `${name}.webp`))) return '';
-  return `<img class="page-illu" src="/${name}.webp" alt="${esc(alt)}" width="1024" height="${h}" loading="lazy">`;
+  return `<img class="page-illu" src="/${name}.webp" alt="${esc(alt)}" width="1024" height="${h}" loading="${chargement}">`;
 }
 const ILLUS = {
   etudiant: illu('illu-etudiant', 'Illustration : une étudiante avec ses cartons devant une résidence étudiante parisienne', 732),
@@ -1508,7 +1508,7 @@ hp.addEventListener('click',function(){scrollTo(0,0);var h1=document.querySelect
     <h1>Les guides pratiques du logement en Île-de-France</h1>
     <p class="lead">${GUIDES.length} guides pour activer les bons dispositifs dans le bon ordre&nbsp;: garanties, aides, logement social, encadrement des loyers. Chacun renvoie vers les sources officielles qui font foi.</p>
   </div>
-  ${illu('illu-guides', 'Illustration : un personnage consulte une carte à un carrefour de panneaux indiquant différents logements')}
+  ${illu('illu-guides', 'Illustration : un personnage consulte une carte à un carrefour de panneaux indiquant différents logements', 952, 'eager')}
 </header>
 ${RAPPEL_HAUT}
 <div class="grid grid-guides">${cards}</div>`;
@@ -3810,7 +3810,7 @@ body:has(.consent:not([hidden])) .haut-page{display:none}
 @media(min-width:1020px){
 .guide-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:0 36px;align-items:start}
 .guide-toc{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
-body:has(.consent:not([hidden])) .guide-toc{max-height:calc(100vh - 200px)}
+body:has(.consent:not([hidden])) .guide-toc{position:static;max-height:none}
 }
 /* ---- Footer ---- */
 .roofline{display:block;width:100%;height:22px;margin-top:3.5rem}
@@ -3849,7 +3849,7 @@ body:has(.consent:not([hidden])) .guide-toc{max-height:calc(100vh - 200px)}
 .footer-legal p:first-child{display:flex;flex-wrap:wrap;align-items:baseline;gap:1.2rem 1.1rem}
 .footer-legal .js-cookies{color:#9fc1e0}
 .footer-legal p:first-child a{display:inline-block;padding:.45rem 0;margin:-.45rem 0}
-.consent{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:2px solid var(--bord);box-shadow:0 -10px 30px rgba(28,39,51,.18);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.6rem 1.6rem;padding:14px 16px calc(14px + env(safe-area-inset-bottom))}
+.consent{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:2px solid var(--bord);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.6rem 1.6rem;padding:14px 16px calc(14px + env(safe-area-inset-bottom))}
 .consent[hidden]{display:none}
 .consent-txt{margin:0;font-size:.95rem;max-width:62ch}
 .consent-actions{margin:0;display:flex;gap:.8rem;flex-wrap:wrap}
