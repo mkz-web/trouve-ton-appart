@@ -49,6 +49,13 @@ const readOpen = (f) => {
 const CROUS = readOpen('crous-residences');
 const FJT = readOpen('fjt');
 const RES_AUTONOMIE = readOpen('residences-autonomie');
+/* Codes de contrôle Windows-1252 restés dans des noms FINESS (0x92 apostrophe,
+ * 0x96 tiret) : nettoyés au chargement, pour le HTML comme pour le JSON-LD et
+ * les fichiers llms (« FJT [carré] Esperem », vu le 24/11/2026). La donnée source
+ * n'est pas réécrite. */
+for (const jeu of [FJT, RES_AUTONOMIE]) for (const r of (jeu && jeu.records) || []) {
+  for (const k of ['nom', 'adresse']) if (typeof r[k] === 'string') r[k] = r[k].split(String.fromCharCode(0x92)).join(String.fromCharCode(0x2019)).split(String.fromCharCode(0x96)).join('-');
+}
 const LS_COMMUNES = readOpen('logement-social-communes');
 const ENCADREMENT = readOpen('encadrement-loyers-paris');
 /* Etat de la grille servie contre l'arrete en vigueur.
@@ -149,7 +156,7 @@ const statsMax = delaisTries.length ? Math.round(delaisTries[delaisTries.length 
  * présent) : une suite qui pointerait vers une page absente doit faire échouer
  * le build, pas produire un lien mort. */
 const SUITES_HORS_GUIDES = {
-  '/logement-social/delais/': { titre: "L'Observatoire des délais, commune par commune", resume: "Combien de mois d'attente et combien de demandes pour une attribution, dans chaque commune classable.", icone: 'demande-logement-social', theme: 'logement-social', dispo: () => !!TENSION },
+  '/logement-social/delais/': { titre: "L'Observatoire des délais, commune par commune", resume: "Combien de mois d'attente et combien de demandes pour une attribution, dans chaque commune classable.", icone: 'delais', theme: 'logement-social', dispo: () => !!TENSION },
   '/logement-social/chiffres/': { titre: 'Le logement social en chiffres', resume: 'Parc, loyer médian au m², vacance et taux SRU, commune par commune.', icone: 'logement-social', theme: 'logement-social', dispo: () => !!LS_COMMUNES },
   '/diagnostic/': { titre: 'Le diagnostic logement en 2 minutes', resume: 'Sept questions, et votre feuille de route : urgences, démarches, aides et pistes.', icone: 'diagnostic', theme: null, dispo: () => !!DIAG },
   '/outils/': { titre: 'Les trois outils gratuits du site', resume: 'Diagnostic, simulateur de plafonds et vérificateur de loyer, sans inscription.', icone: 'diagnostic', theme: null, dispo: () => true },
@@ -225,7 +232,8 @@ const compteur = (n) => n >= 10
  * et llms.txt une date de mise à jour de la veille). Invariant : deux builds
  * sous TZ=UTC et TZ=Europe/Paris rendent un dist identique octet pour octet. */
 const FUSEAU = 'Europe/Paris';
-const dateFrOf = (iso) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: FUSEAU });
+// « 1er janvier » et non « 1 janvier » (vu à la lecture des captures, 24/11/2026).
+const dateFrOf = (iso) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: FUSEAU }).replace(/^1 /, '1er ');
 const dateEnOf = (iso) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: FUSEAU });
 /* AAAA-MM-JJ dans le même fuseau que dateFrOf (heure de Paris) : le JSON-LD et
  * le texte visible doivent annoncer la même date d'extraction. */
@@ -329,6 +337,14 @@ function icon(name, c) {
     'bail-reel-solidaire': `<path d="M24 5L42 21h-4v13H10V21H6z" fill="${c}"/><rect x="19" y="24" width="10" height="10" rx="1.5" fill="#fff" opacity=".85"/><rect x="6" y="38" width="36" height="6" rx="2" fill="${A}"/><rect x="13" y="35" width="22" height="2.5" rx="1.25" fill="${c}" opacity=".45"/>`,
     diagnostic: `<rect x="10" y="8" width="28" height="34" rx="3" fill="${c}"/><rect x="17" y="5" width="14" height="7" rx="2" fill="${c}" style="filter:brightness(.8)"/>${[17, 23].map(y => `<line x1="16" y1="${y}" x2="32" y2="${y}" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".7"/>`).join('')}<circle cx="34" cy="33" r="9.5" fill="${A}"/><path d="M29.5 33l3 3 6-6.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`,
     'logement-fonctionnaire': `<rect x="8" y="12" width="26" height="27" rx="2" fill="${c}"/><polygon points="8,12 34,12 31,5 11,5" fill="${c}" opacity=".7"/>${[17, 24].map(y => [13, 21].map(x => `<rect x="${x}" y="${y}" width="5" height="4.5" rx="1" fill="#fff" opacity=".8"/>`).join('')).join('')}<circle cx="38" cy="33" r="9.5" fill="${A}"/><text x="38" y="37.5" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" font-family="system-ui,Arial">RF</text>`,
+    /* Trois cartes prenaient l'icône d'un autre sujet (boussole de repli,
+     * fiche de la demande) : vu à la lecture des captures du 24/11/2026. */
+    // Plafonds : trois barres de revenus sous une ligne de plafond.
+    'plafond-ressources-logement-social': `<rect x="8" y="26" width="8" height="14" rx="1.5" fill="${c}" opacity=".6"/><rect x="20" y="18" width="8" height="22" rx="1.5" fill="${c}"/><rect x="32" y="30" width="8" height="10" rx="1.5" fill="${c}" opacity=".6"/><rect x="5" y="12" width="38" height="3" rx="1.5" fill="${A}"/>`,
+    // Aides de la Ville de Paris : une pièce devant un immeuble.
+    'aides-logement-ville-de-paris': `<rect x="8" y="8" width="22" height="32" rx="2" fill="${c}"/>${[13, 20, 27].map(y => [12, 20].map(x => `<rect x="${x}" y="${y}" width="5" height="4.5" rx="1" fill="#fff" opacity=".8"/>`).join('')).join('')}<circle cx="33" cy="31" r="10" fill="${A}"/><path d="M36.5 26.5a5 5 0 1 0 0 9M28 29.5h7M28 32.5h7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>`,
+    // Observatoire des délais : un cadran d'horloge.
+    delais: `<circle cx="24" cy="24" r="17" fill="${c}"/><circle cx="24" cy="24" r="13" fill="#fff"/><path d="M24 15v9.5l6.5 4" fill="none" stroke="${A}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="24" r="2" fill="${c}"/>`,
   };
   return `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">${shapes[name] || shapes.annuaire}</svg>`;
 }
@@ -1685,7 +1701,7 @@ hp.addEventListener('click',function(){scrollTo(0,0);var h1=document.querySelect
 <div class="grid grid-guides">${cards}</div>
 <section class="notice">
   <h2>Looking for more?</h2>
-  <p>${esc(EN.home.frenchSite)} <a href="/guides/" lang="fr" hreflang="fr">Voir les ${GUIDES.length} guides en français</a>.</p>
+  <p>${esc(EN.home.frenchSite.replace(/\b\d+ practical guides\b/, `${GUIDES.length} practical guides`))} <a href="/guides/" lang="fr" hreflang="fr">Voir les ${GUIDES.length} guides en français</a>.</p>
 </section>`;
   addPage('/en/guides/', layoutEn({
     title: EN.hub.title,
@@ -1727,7 +1743,7 @@ hp.addEventListener('click',function(){scrollTo(0,0);var h1=document.querySelect
 </section>
 <section class="notice">
   <h2>The rest of the site is in French</h2>
-  <p>${esc(EN.home.frenchSite)}</p>
+  <p>${esc(EN.home.frenchSite.replace(/\b\d+ practical guides\b/, `${GUIDES.length} practical guides`))}</p>
   <p class="pills"><a class="pill" href="/" lang="fr" hreflang="fr">Accueil en français</a> <a class="pill" href="/diagnostic/" lang="fr" hreflang="fr">Diagnostic logement (2 min)</a> <a class="pill" href="/outils/" lang="fr" hreflang="fr">Outils gratuits</a> <a class="pill" href="/logement-social/delais/" lang="fr" hreflang="fr">Observatoire des délais</a></p>
 </section>
 <section class="notice">
@@ -2354,9 +2370,9 @@ ${(() => {
   if (!tn || tn.delaiMois == null) return '';
   const reg = TENSION._meta.region;
   const cmp = reg && reg.delaiMois != null
-    ? (tn.delaiMois < reg.delaiMois ? `, soit moins que la moyenne francilienne (${fmt(reg.delaiMois)} mois)`
-      : tn.delaiMois > reg.delaiMois ? `, soit plus que la moyenne francilienne (${fmt(reg.delaiMois)} mois)`
-        : `, comme la moyenne francilienne`) : '';
+    ? (tn.delaiMois < reg.delaiMois ? `, soit moins que la médiane francilienne (${fmt(reg.delaiMois)} mois)`
+      : tn.delaiMois > reg.delaiMois ? `, soit plus que la médiane francilienne (${fmt(reg.delaiMois)} mois)`
+        : `, comme la médiane francilienne`) : '';
   return `<p>Dans ce département, la moitié des ménages logés en ${TENSION._meta.millesime} avaient déposé leur demande depuis <strong>${fmt(tn.delaiMois)} mois ou moins</strong>${cmp}. On y compte <strong>${fmt(tn.tension, 1)} demandes en cours pour une attribution</strong>. Le détail commune par commune figure dans les colonnes «&nbsp;Délai médian&nbsp;» et «&nbsp;Demandes / attribution&nbsp;» du tableau, et <a href="/logement-social/delais/">l'Observatoire des délais</a> situe ces chiffres dans la région.</p>`;
 })()}
 <p><label for="filtre"><strong>Filtrer&nbsp;:</strong></label> <input id="filtre" type="search" placeholder="Nom de ${d === '75' ? "l'arrondissement" : 'la commune'}…" class="search-input search-inline"></p>
@@ -2842,7 +2858,7 @@ function plafondsTables() {
   return `
 <section id="baremes">
   <h2>Les barèmes ${esc(P._meta.millesime)} en Île-de-France, catégorie par catégorie</h2>
-  <p>Montants annuels de <strong>revenu fiscal de référence</strong> à ne pas dépasser, en vigueur depuis le ${esc(dateFrOf(P._meta.dateEffet))} (revalorisation de ${esc(P._meta.revalorisation)}). Le revenu pris en compte est celui de ${esc(P._meta.rfrAnnee)}, soit l'avis d'impôt reçu en ${esc(String(+P._meta.rfrAnnee + 1))}.</p>
+  <p>Montants annuels de <strong>revenu fiscal de référence</strong> à ne pas dépasser, en vigueur depuis le ${esc(dateFrOf(P._meta.dateEffet))}, après une revalorisation de ${esc(P._meta.revalorisation)}. Le revenu pris en compte est celui de ${esc(P._meta.rfrAnnee)}, soit l'avis d'impôt reçu en ${esc(String(+P._meta.rfrAnnee + 1))}.</p>
   ${P.hlm.types.map((t2, i2) => tableHlm(t2) + (i2 === 1 ? rappelBloc(`<p>Inutile de chercher votre ligne&nbsp;: <a href="#simulateur">remontez au simulateur</a>, il choisit la catégorie et la zone pour vous.</p>`) : '')).join('')}
   ${rappelBloc(`<p>Au-dessus du PLS&nbsp;? Avant de lire le barème intermédiaire, <a href="#simulateur">le simulateur</a> vous dit si le LLI vous concerne.</p>`)}
   <h3 id="bareme-lli">Au-dessus des plafonds : le logement intermédiaire (LLI)</h3>
@@ -3143,7 +3159,7 @@ rendQ();
 <section>
   <h2>Nos données publiques en accès libre</h2>
   <p>Au-delà des simulateurs, le site publie des données consolidées que personne d'autre ne réunit à l'échelle francilienne&nbsp;:</p>
-  <ul class="liens-data">${donnees.map(d => `<li><a href="${d.url}">${esc(d.t)}</a>&nbsp;: ${esc(d.d)}</li>`).join('')}</ul>
+  <ul class="liens-data">${donnees.map(d => `<li><a href="${d.url}">${esc(d.t)}</a>&nbsp;: ${esc(/^\p{Lu}\p{Ll}/u.test(d.d) ? d.d.charAt(0).toLowerCase() + d.d.slice(1) : d.d)}</li>`).join('')}</ul>
 </section>
 <section class="notice">
   <h2>Vous accompagnez du public&nbsp;?</h2>
@@ -3321,7 +3337,7 @@ const HTML_404 = layout({
 <p><strong>Directeur de la publication</strong> : Mickaël Leclerc, représentant légal.</p>
 <p><strong>Contact</strong> : <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a></p>
 <p><strong>Hébergement</strong> : Cloudflare Pages, Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis.</p>
-<p id="donnees-personnelles"><strong>Données personnelles</strong> : Ce site ne collecte aucune donnée personnelle en dehors de la mesure d'audience soumise à votre consentement (voir <a href="#cookies">la section sur les cookies</a>), et ne dépose aucun cookie sans votre accord. Ce que vous saisissez dans nos outils ne quitte pas votre navigateur. Pour exercer vos droits (accès, rectification, effacement, retrait du consentement), écrivez à <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a>.</p>
+<p id="donnees-personnelles"><strong>Données personnelles</strong> : ce site ne collecte aucune donnée personnelle en dehors de la mesure d'audience soumise à votre consentement (voir <a href="#cookies">la section sur les cookies</a>), et ne dépose aucun cookie sans votre accord. Ce que vous saisissez dans nos outils ne quitte pas votre navigateur. Pour exercer vos droits (accès, rectification, effacement, retrait du consentement), écrivez à <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a>.</p>
 <p><strong>Nature du service</strong> : ${esc(SITE.name)} est un service d'information et d'orientation : nos <a href="/guides/">guides pratiques</a> expliquent les dispositifs, nos <a href="/annuaire/">annuaires</a> listent des adresses issues de données publiques. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>
 <h2 id="cookies">Cookies et mesure d'audience</h2>
 <p>Avec votre accord, et seulement avec lui, nous utilisons <strong>Microsoft Clarity</strong> (Microsoft Ireland Operations Limited) pour comprendre comment le site est utilisé : pages consultées, zones cliquées, parcours de navigation. Tant que vous n'avez pas cliqué sur «&nbsp;Accepter&nbsp;» dans le bandeau, le script de mesure ne se charge pas et aucun cookie de mesure n'est déposé. Refuser ne change rien à votre navigation.</p>
@@ -3524,7 +3540,7 @@ a{color:var(--bleu2)}h1,h2,h3{line-height:1.25;color:var(--bleu)}
 h1{font-size:clamp(1.75rem,3.6vw,2.5rem);line-height:1.15;font-weight:800;letter-spacing:-.022em}
 h2{font-size:clamp(1.32rem,2.2vw,1.55rem);line-height:1.25;font-weight:700;letter-spacing:-.012em;margin-top:2.6rem}
 h3{font-size:1.08rem;line-height:1.35;font-weight:650}
-.lead{font-size:1.14rem;line-height:1.6;color:var(--gris);max-width:62ch}
+.lead{font-size:1.14rem;line-height:1.6;color:var(--gris);max-width:54ch}
 h1,h2,h3,.faq summary{text-wrap:pretty}
 .kicker{font-size:.8125rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--ttx,#2a6ca8);margin:0 0 .2rem}
 small{font-size:.8125rem}
@@ -3552,7 +3568,7 @@ main:focus{outline:none}
 .brand-text em{font-style:normal;color:#f3a18b}
 .brand-a{height:.78em;width:auto;margin-right:.02em}
 .brand-sub{display:block;font-size:.64rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#9fc1e0}
-.main-nav{display:flex;flex-wrap:wrap;gap:4px 6px}
+.main-nav{display:flex;flex-wrap:wrap;gap:4px 6px;margin-left:-12px}
 .main-nav a{color:#fff;text-decoration:none;font-size:.93rem;opacity:.92;padding:6px 12px;border-radius:8px;transition:background .15s}
 .main-nav a[aria-current]{background:rgba(255,255,255,.16);opacity:1;position:relative}
 /* État de repos = barre visible ; l'animation ne fait qu'ARRIVER dessus
@@ -3621,7 +3637,7 @@ main:focus{outline:none}
 .card-guide{display:flex;gap:14px;align-items:flex-start}
 /* Dans la grille des guides (accueil, hub), l'icône passe au-dessus du titre :
  * à côté, elle laissait 210 px au titre, sur quatre lignes (TYP-06, 24/11/2026). */
-.grid-guides .card-guide{flex-direction:column;gap:10px}
+.card-guide{flex-direction:column;gap:10px}
 .card-icon-sm{flex:none;width:36px;height:36px;border-radius:12px;padding:7px;margin:2px 0 0}
 /* ---- Têtes de page illustrées ---- */
 .page-head{display:flex;gap:18px;align-items:flex-start;background:linear-gradient(135deg,var(--tbg,var(--ciel)),#fff 85%);border:1px solid var(--bord);border-left:6px solid var(--t,var(--bleu2));border-radius:16px;padding:22px 31px 22px 26px;margin:0 0 1.8rem;box-shadow:0 14px 34px -24px var(--ts,rgba(31,78,121,.30))}
@@ -3770,8 +3786,11 @@ main p a:not([class]):hover,main li a:not([class]):hover,main p a:not([class]):f
 .breadcrumb a{display:inline-block;padding:.8rem 0;margin:-.8rem 0}
 /* Sur deux lignes, la zone élargie d'un lien recouvrait le lien de la ligne
  * voisine (CMP-11, 24/11/2026) : l'interligne porte la hauteur de la cible. */
-.breadcrumb{line-height:3rem;margin:.6rem 0 .4rem}.breadcrumb a{padding:0;margin:0}
-main .js-cookies{padding:8px 0;margin:-8px 0}
+.breadcrumb{line-height:1.9}.breadcrumb a{padding:.3rem 0;margin:-.3rem 0}
+main .js-cookies{padding:8px 0;margin:-8px 0;color:var(--bleu2)}
+.dl-aide,.carte-delais figcaption{max-width:60ch}
+.card-outil h3+.outil-accroche{margin-top:.35rem}
+@media(max-width:767px){.data td:first-child,.data th:first-child{min-width:8.5rem}}
 .js-cookies:hover,.consent-txt a:hover,.carte-delais figcaption a:hover{text-decoration-thickness:2px;text-decoration-color:var(--accent)}
 li a:not(.pill):not(.btn),td a,.dir-links a,.dir-meta a,.result-list a{display:inline-block;padding:.3rem 0;margin:-.3rem 0}
 /* Mesure de ligne. Piège de l'unité ch mesuré ici : le « 0 » de Segoe UI est
@@ -3866,7 +3885,8 @@ body:has(.consent:not([hidden])) .guide-toc{position:static;max-height:none}
 @media(max-width:767px){.footer-grid{row-gap:0}}
 @media(min-width:768px) and (max-width:1019px){.foot-guides{grid-column:1/-1}.foot-guides ul{columns:2;column-gap:24px}}
 @media(min-width:1020px){.footer-grid:has(.foot-guides){grid-template-columns:1fr 1fr 2fr}.foot-guides ul{columns:2;column-gap:24px}}
-.footer-brand{color:#fff;font-weight:700;font-size:1.05rem}
+.footer-brand{color:#fff;font-weight:700;font-size:1.05rem;margin-top:0}
+.footer-grid>div>.footer-title:first-child{margin-top:0}
 .footer-title{font-size:.8125rem;font-weight:650;text-transform:uppercase;letter-spacing:.08em;color:#9fb3c8;margin-bottom:.4rem}
 /* Groupes du pied de page en accordéons sous 768 px (le footer mesurait
  * 1 879 px à 375 px, 2,3 écrans de liens) : le HTML reste complet pour les
@@ -4143,12 +4163,24 @@ function typoFr(html) {
   // Apostrophe de Windows-1252 (code 0x92) restée dans des noms FINESS : elle
   // s'affichait en carré (« Résidence D[carré]Antony »).
   const C1_APOS = new RegExp(String.fromCharCode(0x92), 'g');
+  // Même famille, code 0x96 (tiret de Windows-1252) : « FJT [carré] Esperem ».
+  const C1_TIRET = new RegExp(String.fromCharCode(0x96), 'g');
+  // Un nombre reste collé à son unité ou à son mois, un intervalle à ses bornes,
+  // un pronom à son verbe, un point médian au mot qui le précède (lecture des
+  // captures du 24/11/2026 : « 36 / mois », « 16- / 25 ans », « est- / il »).
+  const UNITES = /(\d) (?=(?:mois|jours?|ans|semaines|heures|minutes|points|questions|guides|communes|logements|places|janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre|à )(?!\p{L}))/gu;
   const texte = (t) => !/\S/.test(t) ? t : t
     .replace(/(\p{L})'(?=\p{L}|$)/gu, '$1' + APOS)
     .replace(/(^|\S) ([?!;:])(?=\s|$)/g, '$1' + NB + '$2')
     .replace(/« /g, '«' + NB).replace(/ »/g, NB + '»')
     .replace(/(\d) (?=%|€|\d{3}(?!\d))/g, '$1' + NB)
     .replace(/(\p{L})-t-(?=(il|elle|on)s?(?!\p{L}))/gu, '$1' + TI + 't' + TI)
+    .replace(/(\p{L})-(?=(?:il|elle|on|ils|elles|je|tu|nous|vous)(?!\p{L}))/gu, '$1' + TI)
+    .replace(/(^|[^\d-])(\d{1,3})-(\d{1,3})(?![\d-])/g, '$1$2' + TI + '$3')
+    .replace(UNITES, '$1' + NB)
+    .replace(/n° (?=\d)/g, 'n°' + NB)
+    .replace(/ ·/g, NB + '·')
+    .replace(C1_TIRET, '-')
     .replace(/(^|\s)([àÀ]) (?=\S)/g, '$1$2' + NB)
     .replace(/Île-de-France|Seine-et-Marne|Hauts-de-Seine|Seine-Saint-Denis|Val-de-Marne|Val-d.Oise/g, (n) => n.split('-').join(TI))
     .replace(C1_APOS, APOS);
