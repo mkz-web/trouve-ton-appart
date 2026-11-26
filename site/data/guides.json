@@ -316,9 +316,10 @@
         ]
       },
       {
-        "h2": "Option 3 : les garants payants (GarantMe, Cautioneo, Unkle…)",
+        "h2": "Option 3 : les garants payants (Cautioneo, GarantMe, SmartGarant…)",
         "paragraphs": [
           "Des sociétés privées se portent garantes contre rémunération, typiquement 3 à 5 % du loyer annuel, renouvelable chaque année. C'est la solution des profils non éligibles à Visale et sans garant familial : indépendants, étrangers hors mobilité encadrée, revenus atypiques. Les certificats sont largement acceptés par les agences parisiennes.",
+          "Trois exemples, cités par ordre alphabétique : [Cautioneo](partenaire:cautioneo), [GarantMe](partenaire:garantme) et [SmartGarant](partenaire:smartgarant). Leurs conditions et leurs tarifs changent : lisez le contrat avant de payer.",
           "Comparez bien : le coût sur plusieurs années devient significatif, et certains bailleurs préfèrent encore un garant physique."
         ]
       },
@@ -2355,7 +2356,7 @@
       {
         "h2": "BRS, logement social ou rester locataire : comment arbitrer",
         "paragraphs": [
-          "Les acteurs qui commercialisent du BRS n'ont pas intérêt à vous dire quand il n'est pas la bonne solution. Nous ne vendons rien : voici les cas où il a du sens, et ceux où il en a moins.",
+          "Les acteurs qui commercialisent du BRS n'ont pas intérêt à vous dire quand il n'est pas la bonne solution. Nous ne vendons pas de BRS et aucun organisme qui en commercialise ne nous rémunère : voici les cas où il a du sens, et ceux où il en a moins.",
           "Le BRS a du sens si vos revenus dépassent les plafonds du logement social ou si l'attente y est trop longue pour vous, si vous êtes certain de rester plusieurs années dans le même secteur, et si vous cherchez d'abord à vous loger durablement plutôt qu'à revendre au prix du marché.",
           "Il en a beaucoup moins si votre situation professionnelle ou familiale est instable, car la revente est encadrée et le marché de seconde main étroit ; si vous comptez sur la revente pour financer un projet futur ; ou si vous êtes éligible au logement social dans une commune où l'attente reste raisonnable. Dans ce dernier cas, vérifiez d'abord vos plafonds avec notre [simulateur de plafonds de ressources](/guides/plafond-ressources-logement-social/) et regardez [les délais réels commune par commune](/logement-social/delais/) avant de vous engager.",
           "Rester locataire garde tout son sens dans trois situations : quand votre horizon dans la commune est inférieur à quelques années, les frais d'acquisition n'étant alors pas amortis ; quand votre apport est trop faible pour absorber le cumul crédit et redevance sans tension budgétaire ; et quand vous visez un secteur où le parc social se libère vite, la location y restant la voie la plus rapide vers un logement durable et bien moins chère à l'entrée.",

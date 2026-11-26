@@ -25,6 +25,7 @@ const PARCOURS = read('parcours.json');
 const ANNUAIRE = read('annuaire.json');
 const DIAG = read('diagnostic.json');
 const EN = read('en.json');
+const PARTENAIRES = read('partenaires.json');
 
 /* Dates réelles par guide (voir date-guides.js) : le build REFUSE un guide
  * dont le contenu a changé sans mise à jour de sa date (fail-closed : pas de
@@ -260,12 +261,83 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 // sur deux lignes à 360 px, CMP-09, 24/11/2026).
 const titreCourt = (s) => String(s).replace(/\s*:\s.*$/, '');
 const premierePhrase = (s) => { const p = String(s).split('. ')[0].replace(/[.\s]+$/, ''); return /[?!…]$/.test(p) ? p : p + '.'; };
+/* Partenaires (data/partenaires.json, décision de Mickaël du 26/11/2026 : liens
+ * rémunérés acceptés, affichés comme tels). Un lien [libellé](partenaire:id)
+ * d'un guide passe par /go/<id>/, une redirection 302 servie par Cloudflare
+ * (dist/_redirects) : chaque clic est compté dans les journaux de la zone, sans
+ * cookie ni script tiers sur nos pages, et la destination (adresse propre, puis
+ * lien d'affilié) change en un seul endroit.
+ *
+ * Cadre légal lu sur Légifrance le 26/11/2026 (code des assurances, L511-1 et
+ * R511-3) : signaler un assureur ou un garant payant, même contre commission,
+ * est permis sans immatriculation (« indicateur ») ; CLASSER des offres en
+ * comparant leurs prix, d'où le lecteur peut souscrire, est de la distribution
+ * d'assurance. D'où trois gardes plus bas : jamais de lien partenaire dans un
+ * tableau (les tableaux de guides sont comparatifs), jamais sur les pages
+ * d'urgence et de recours (ligne rouge de l'étude de monétisation), jamais
+ * hors des sections et de l'encadré « L'essentiel ».
+ *
+ * La mention « lien rémunéré » et rel=sponsored ne s'affichent que pour un
+ * partenaire dont remunere vaut true : écrire « rémunéré » avant que le
+ * programme soit validé serait faux. */
+const PARTENAIRES_PAR_ID = new Map();
+for (const p of PARTENAIRES.partenaires) {
+  if (!/^[a-z0-9-]+$/.test(p.id)) throw new Error(`partenaires.json : identifiant invalide « ${p.id} »`);
+  if (PARTENAIRES_PAR_ID.has(p.id)) throw new Error(`partenaires.json : identifiant en double « ${p.id} »`);
+  if (!p.nom || !p.categorie) throw new Error(`partenaires.json : nom ou catégorie manquant pour « ${p.id} »`);
+  for (const champ of ['site', 'destination']) {
+    if (!/^https:\/\/[^\s"<>]+$/.test(p[champ] || '')) throw new Error(`partenaires.json : ${champ} doit être une adresse https pour « ${p.id} »`);
+  }
+  if (typeof p.remunere !== 'boolean') throw new Error(`partenaires.json : remunere doit valoir true ou false pour « ${p.id} »`);
+  if (p.remunere && !/^\d{4}-\d{2}-\d{2}$/.test(p.remunereDepuis || '')) throw new Error(`partenaires.json : un partenaire rémunéré exige remunereDepuis (AAAA-MM-JJ) pour « ${p.id} »`);
+  if (!p.remunere && p.remunereDepuis) throw new Error(`partenaires.json : remunereDepuis sans remunere pour « ${p.id} »`);
+  PARTENAIRES_PAR_ID.set(p.id, p);
+}
+const RE_PARTENAIRE = /\[([^\]]+)\]\(partenaire:([a-z0-9-]+)\)/g;
+function lienPartenaire(label, id, en) {
+  const p = PARTENAIRES_PAR_ID.get(id);
+  if (!p) throw new Error(`lien partenaire inconnu « ${id} » : le déclarer dans data/partenaires.json`);
+  if (!p.remunere) return `<a href="/go/${p.id}/" rel="nofollow noopener" target="_blank">${label}</a>`;
+  return `<a href="/go/${p.id}/" rel="sponsored nofollow noopener" target="_blank">${label}</a> <span class="lien-remunere">(${en ? 'paid link' : 'lien rémunéré'})</span>`;
+}
 /* Liens [label](url) dans les contenus de guides, transformés APRÈS échappement.
- * Autorisés : chemins internes (/…) et https:// uniquement, tout le reste reste du texte. */
-const inline = (s) => esc(s).replace(/\[([^\]]+)\]\((\/[^\s)]*|https:\/\/[^\s)]+)\)/g,
-  (m, label, url) => (url.startsWith('/')
-    ? `<a href="${url}">${label}</a>`
-    : `<a href="${url}" rel="noopener" target="_blank">${label}</a>`));
+ * Autorisés : chemins internes (/…), https:// et partenaire:id, tout le reste reste du texte. */
+const inline = (s, en = false) => esc(s)
+  .replace(RE_PARTENAIRE, (m, label, id) => lienPartenaire(label, id, en))
+  .replace(/\[([^\]]+)\]\((\/[^\s)]*|https:\/\/[^\s)]+)\)/g,
+    (m, label, url) => (url.startsWith('/')
+      ? `<a href="${url}">${label}</a>`
+      : `<a href="${url}" rel="noopener" target="_blank">${label}</a>`));
+const inlineEn = (s) => inline(s, true);
+
+/* Partenaires rémunérés cités par un objet (guide entier) : alimente la
+ * mention en tête de page. */
+const remuneresDe = (objet) => [...new Set([...JSON.stringify(objet).matchAll(RE_PARTENAIRE)]
+  .map(m => PARTENAIRES_PAR_ID.get(m[2])).filter(p => p && p.remunere).map(p => p.nom))];
+function mentionRemuneration(g, en) {
+  const noms = remuneresDe(g);
+  if (!noms.length) return '';
+  const liste = noms.length === 1 ? noms[0] : noms.slice(0, -1).join(', ') + (en ? ' or ' : ' ou ') + noms[noms.length - 1];
+  return en
+    ? `<p class="mention-remuneration" role="note"><strong>This page contains paid links.</strong> If you sign up with ${esc(liste)} through a link marked as a paid link, the site receives a commission from that company. It changes neither our explanations nor the order in which we present the options. <a href="/financement/" lang="fr" hreflang="fr">How this site is funded (in French)</a>.</p>`
+    : `<p class="mention-remuneration" role="note"><strong>Cette page contient des liens rémunérés.</strong> Si vous souscrivez chez ${esc(liste)} par un lien marqué «&nbsp;lien rémunéré&nbsp;», le site perçoit une commission versée par ce service. Elle ne change ni nos explications ni l'ordre dans lequel nous présentons les solutions. <a href="/financement/">Comment ce site se finance</a>.</p>`;
+}
+
+/* Gardes des liens partenaires (fail-closed). */
+const PAGES_SANS_PARTENAIRE = ['siao-115-hebergement-urgence', 'recours-dalo', 'fonds-solidarite-logement', 'demande-logement-social'];
+for (const [g, langue] of GUIDES.map(x => [x, 'fr']).concat(EN.guides.map(x => [x, 'en']))) {
+  const tout = JSON.stringify(g);
+  if (!tout.includes('partenaire:')) continue;
+  const slugFr = langue === 'fr' ? g.slug : g.frSlug;
+  if (PAGES_SANS_PARTENAIRE.includes(slugFr)) throw new Error(`guide ${g.slug} : aucun lien partenaire sur une page d'urgence ou de recours (ligne rouge, PAGES_SANS_PARTENAIRE)`);
+  for (const champ of ['title', 'metaDescription', 'h1', 'intro', 'faq', 'sourcesOfficielles']) {
+    if (JSON.stringify(g[champ] || '').includes('partenaire:')) throw new Error(`guide ${g.slug} : lien partenaire interdit dans le champ ${champ} (rendu sans liens)`);
+  }
+  for (const s of g.sections || []) {
+    if (s.table && JSON.stringify(s.table).includes('partenaire:')) throw new Error(`guide ${g.slug} : lien partenaire interdit dans un tableau (un tableau de guide est comparatif, voir L511-1 du code des assurances)`);
+  }
+  for (const m of tout.matchAll(RE_PARTENAIRE)) if (!PARTENAIRES_PAR_ID.has(m[2])) throw new Error(`guide ${g.slug} : partenaire inconnu « ${m[2]} »`);
+}
 
 /* Illustrations Gemini des pages piliers (site/static/illu-*.webp, recadrées
  * du watermark). Rendu vide si le fichier manque : le build n'en dépend pas. */
@@ -460,7 +532,9 @@ const CREDIT_EN = '<p class="footer-credit">Website designed and published by <a
  * pré-rendue EXÉCUTE son JS avant d'être affichée, d'où la garde
  * document.prerendering posée sur le bootstrap consentement (ne jamais
  * charger Clarity ni afficher le bandeau pour une page jamais montrée). */
-const SPECULATION = '<script type="speculationrules">{"prerender":[{"where":{"href_matches":"/*"},"eagerness":"moderate"}]}</script>';
+/* /go/* exclu : ce sont les redirections vers les partenaires ; un prérendu au
+ * survol compterait un clic qui n'a pas eu lieu et chargerait le site tiers. */
+const SPECULATION = '<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/go/*"}}]},"eagerness":"moderate"}]}</script>';
 
 /* Page « Qui fait ce site ? » (E-E-A-T) : PRÊTE MAIS NON PUBLIÉE, décision du
  * 07/08/2026. Tant que ce drapeau est à false, la page n'est ni générée, ni
@@ -822,7 +896,7 @@ ${content}
     </div>
   </div>
   <div class="container footer-legal">
-    <p>© ${SITE.annee} ${esc(SITE.name)} <a href="/mentions-legales/">Mentions légales</a> <a href="/mentions-legales/#donnees-personnelles">Données personnelles</a> <a href="mailto:mickael@trouve-ton-appart.fr">Contact</a> <a href="/presse/">Presse</a>${A_PROPOS_ACTIF ? ' <a href="/a-propos/">Qui fait ce site&nbsp;?</a>' : ''} <button type="button" class="js-cookies">Gérer les cookies</button></p>
+    <p>© ${SITE.annee} ${esc(SITE.name)} <a href="/mentions-legales/">Mentions légales</a> <a href="/mentions-legales/#donnees-personnelles">Données personnelles</a> <a href="mailto:mickael@trouve-ton-appart.fr">Contact</a> <a href="/presse/">Presse</a> <a href="/financement/">Financement du site</a>${A_PROPOS_ACTIF ? ' <a href="/a-propos/">Qui fait ce site&nbsp;?</a>' : ''} <button type="button" class="js-cookies">Gérer les cookies</button></p>
     ${CREDIT}
   </div>
 </footer>
@@ -927,7 +1001,7 @@ ${content}
     </div>
   </div>
   <div class="container footer-legal">
-    <p>© ${SITE.annee} ${esc(SITE.name)} <a href="/mentions-legales/" lang="fr">Legal notice (mentions légales)</a> <a href="/mentions-legales/#donnees-personnelles" lang="fr">Privacy (données personnelles)</a> <a href="mailto:mickael@trouve-ton-appart.fr">Contact</a> <button type="button" class="js-cookies">Manage cookies</button></p>
+    <p>© ${SITE.annee} ${esc(SITE.name)} <a href="/mentions-legales/" lang="fr">Legal notice (mentions légales)</a> <a href="/mentions-legales/#donnees-personnelles" lang="fr">Privacy (données personnelles)</a> <a href="mailto:mickael@trouve-ton-appart.fr">Contact</a> <a href="/financement/" lang="fr" hreflang="fr">Funding (financement)</a> <button type="button" class="js-cookies">Manage cookies</button></p>
     ${CREDIT_EN}
   </div>
 </footer>
@@ -1297,7 +1371,7 @@ function tldrBloc(tldr, en) {
   if (!tldr || !tldr.length) return '';
   return `<div class="tldr" role="note" aria-label="${en ? 'Key facts' : "L'essentiel du guide"}">
 <p class="tldr-titre">${en ? 'In short' : "L'essentiel"}</p>
-<ul>${tldr.map(t => `<li>${inline(t)}</li>`).join('')}</ul>
+<ul>${tldr.map(t => `<li>${inline(t, en)}</li>`).join('')}</ul>
 </div>`;
 }
 
@@ -1442,7 +1516,7 @@ ${barreIa(`/guides/${g.slug}/`, false)}
 <nav class="guide-toc" aria-label="Sommaire du guide"><details class="toc-box" open><summary>Dans ce guide</summary><ol>${tocItems.join('')}</ol></details></nav>
 <script>if(!matchMedia('(min-width:1020px)').matches){var tocD=document.querySelector('.guide-toc details');if(tocD)tocD.removeAttribute('open')}</script>
 <div class="guide-body">
-${tldrBloc(g.tldr, false)}${outil}
+${mentionRemuneration(g, false)}${tldrBloc(g.tldr, false)}${outil}
 ${sections}
 ${rappelBloc(RAPPEL_AVANT_FAQ)}
 <section class="faq" id="faq"><h2>Questions fréquentes</h2>${faqHtml}</section>
@@ -1568,8 +1642,8 @@ for (const g of EN.guides) {
     tocItems.push(`<li><a href="#${id}">${esc(s.h2)}</a></li>`);
     /* Même mécanique que les guides français : paragraphes puis puces. */
     let html = `<h2 id="${id}">${esc(s.h2)}</h2>`;
-    if (s.paragraphs) html += s.paragraphs.map(t => `<p>${inline(t)}</p>`).join('');
-    if (s.bullets) html += listeHtml(s.bullets, inline);
+    if (s.paragraphs) html += s.paragraphs.map(t => `<p>${inlineEn(t)}</p>`).join('');
+    if (s.bullets) html += listeHtml(s.bullets, inlineEn);
     return html;
   }).join('');
   tocItems.push('<li><a href="#faq">Frequently asked questions</a></li>');
@@ -1608,7 +1682,7 @@ ${barreIa(`/en/guides/${g.slug}/`, true)}
 <nav class="guide-toc" aria-label="Guide contents"><details class="toc-box" open><summary>In this guide</summary><ol>${tocItems.join('')}</ol></details></nav>
 <script>if(!matchMedia('(min-width:1020px)').matches){var tocD=document.querySelector('.guide-toc details');if(tocD)tocD.removeAttribute('open')}</script>
 <div class="guide-body">
-${tldrBloc(g.tldr, true)}${sections}
+${mentionRemuneration(g, true)}${tldrBloc(g.tldr, true)}${sections}
 <section class="faq" id="faq"><h2>Frequently asked questions</h2>${faqHtml}</section>
 ${suiteCards ? `<section class="suite" aria-labelledby="suite-t">
 <h2 id="suite-t">What to read next</h2>
@@ -3338,7 +3412,7 @@ const HTML_404 = layout({
 <p><strong>Contact</strong> : <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a></p>
 <p><strong>Hébergement</strong> : Cloudflare Pages, Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, États-Unis.</p>
 <p id="donnees-personnelles"><strong>Données personnelles</strong> : ce site ne collecte aucune donnée personnelle en dehors de la mesure d'audience soumise à votre consentement (voir <a href="#cookies">la section sur les cookies</a>), et ne dépose aucun cookie sans votre accord. Ce que vous saisissez dans nos outils ne quitte pas votre navigateur. Pour exercer vos droits (accès, rectification, effacement, retrait du consentement), écrivez à <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a>.</p>
-<p><strong>Nature du service</strong> : ${esc(SITE.name)} est un service d'information et d'orientation : nos <a href="/guides/">guides pratiques</a> expliquent les dispositifs, nos <a href="/annuaire/">annuaires</a> listent des adresses issues de données publiques. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction.</p>
+<p><strong>Nature du service</strong> : ${esc(SITE.name)} est un service d'information et d'orientation : nos <a href="/guides/">guides pratiques</a> expliquent les dispositifs, nos <a href="/annuaire/">annuaires</a> listent des adresses issues de données publiques. Les candidatures et démarches s'effectuent exclusivement sur les sites officiels et plateformes tierces vers lesquels nous renvoyons ; nous ne sommes ni bailleur, ni agent immobilier, ni intermédiaire de transaction. Qui paie le site et quels liens peuvent lui rapporter une commission&nbsp;: voir <a href="/financement/">comment ce site se finance</a>.</p>
 <h2 id="cookies">Cookies et mesure d'audience</h2>
 <p>Avec votre accord, et seulement avec lui, nous utilisons <strong>Microsoft Clarity</strong> (Microsoft Ireland Operations Limited) pour comprendre comment le site est utilisé : pages consultées, zones cliquées, parcours de navigation. Tant que vous n'avez pas cliqué sur «&nbsp;Accepter&nbsp;» dans le bandeau, le script de mesure ne se charge pas et aucun cookie de mesure n'est déposé. Refuser ne change rien à votre navigation.</p>
 <p>Si vous acceptez, deux cookies internes sont déposés&nbsp;: <code>_clck</code> (identifiant pseudonyme propre à ce site, durée constatée de 12 mois) et <code>_clsk</code> (relie les pages d'une même visite, durée constatée de 1 jour). Nous refusons d'office le volet publicitaire de Microsoft (signal «&nbsp;ad storage&nbsp;» refusé). Ce que vous saisissez dans nos <a href="/outils/">outils</a> (<a href="/diagnostic/">diagnostic</a>, <a href="/guides/plafond-ressources-logement-social/#simulateur">simulateur de plafonds</a>, <a href="/guides/encadrement-des-loyers-paris/#verifier">vérificateur de loyer</a>) est masqué dans votre navigateur et n'est jamais transmis à Clarity. Pour en savoir plus&nbsp;: <a href="https://privacy.microsoft.com/fr-fr/privacystatement" rel="noopener" target="_blank">déclaration de confidentialité de Microsoft</a>.</p>
@@ -3350,6 +3424,71 @@ const HTML_404 = layout({
     content,
     breadcrumbs: [{ name: 'Mentions légales', url: '/mentions-legales/' }]
   }), '0.1');
+})();
+
+/* Comment ce site se finance (26/11/2026) : page de transparence qui
+ * accompagne la décision d'accepter des liens rémunérés (LCEN art. 20, code de
+ * la consommation L121-3 et L121-4 11°). Le tableau des services cités et de
+ * leur statut est tiré de data/partenaires.json et des guides : la page ne
+ * peut pas dire autre chose que ce que le build sert. Les règles de la
+ * section « Ce qui ne s'achète pas » sont tenues par les gardes du build
+ * (PAGES_SANS_PARTENAIRE, refus dans les tableaux), pas par la seule prose. */
+(function buildFinancement() {
+  const citations = (id) => {
+    const motif = `](partenaire:${id})`;
+    return GUIDES.filter(g => JSON.stringify(g).includes(motif)).map(g => `<a href="/guides/${g.slug}/">${esc(titreCourt(g.h1))}</a>`)
+      .concat(EN.guides.filter(g => JSON.stringify(g).includes(motif)).map(g => `<a href="/en/guides/${g.slug}/" lang="en" hreflang="en">${esc(titreCourt(g.h1))} (en anglais)</a>`));
+  };
+  const lignes = PARTENAIRES.partenaires.map(p => {
+    const ou = citations(p.id);
+    return { p, ou };
+  }).filter(x => x.ou.length);
+  const remuneres = lignes.filter(x => x.p.remunere);
+  const verifie = PARTENAIRES.partenaires.map(p => p.verifie).sort().pop();
+  const etat = remuneres.length
+    ? `À ce jour, ${remuneres.length === 1 ? 'un service nous rémunère' : `${remuneres.length} services nous rémunèrent`} : ${remuneres.map(x => esc(x.p.nom)).join(', ')}.`
+    : "À ce jour, aucun de ces liens n'est rémunéré : nous ne percevons aucune commission.";
+  const tableau = lignes.length ? `<div class="table-wrap"><table class="data nosort">
+  <caption class="visually-hidden">Services privés cités par nos guides et statut de rémunération</caption>
+  <thead><tr><th scope="col">Service</th><th scope="col">Cité dans</th><th scope="col">Lien rémunéré</th></tr></thead>
+  <tbody>${lignes.map(({ p, ou }) => `<tr><td><strong>${esc(p.nom)}</strong><br>${esc(p.categorie.toLowerCase())}</td><td>${ou.join('<br>')}</td><td>${p.remunere ? `Oui, depuis le ${dateFrOf(p.remunereDepuis)}` : 'Non'}</td></tr>`).join('')}</tbody>
+</table></div>` : '';
+  const content = `
+<nav class="breadcrumb"><a href="/">Accueil</a> › Comment ce site se finance</nav>
+<h1>Comment ce site se finance</h1>
+<p class="lead">${esc(SITE.name)} est gratuit, sans inscription et sans publicité. Voici qui le paie, ce qui peut nous rapporter de l'argent, et ce qui ne s'achète pas.</p>
+<section>
+<h2>Qui paie le site</h2>
+<p>Le site est édité et financé par MKZ, une société de conseil (voir les <a href="/mentions-legales/">mentions légales</a>). Il ne reçoit ni subvention ni don, n'affiche aucune publicité et ne vend rien aux personnes qui cherchent un logement.</p>
+</section>
+<section>
+<h2>Les liens vers des services privés</h2>
+<p>Quand une démarche publique ne suffit pas, nos guides citent parfois des services privés, par exemple les garants payants pour un locataire qui n'a pas droit à Visale. Ces liens passent par une adresse de notre site qui compte les clics, sans cookie et sans savoir qui clique. Une fois chez le service, ce sont ses propres conditions qui s'appliquent.</p>
+<p>Certains services rémunèrent les sites qui leur envoient des clients&nbsp;: une commission, versée par le service quand un lecteur souscrit par notre lien. Quand c'est le cas, le lien porte la mention «&nbsp;lien rémunéré&nbsp;» et la page l'annonce en tête. ${etat}</p>
+${tableau}
+<p class="maj">Liste à jour au ${dateFrOf(verifie)}.</p>
+</section>
+<section>
+<h2>Ce qui ne s'achète pas</h2>
+<ul>
+<li><strong>L'ordre des solutions.</strong> Les dispositifs publics et gratuits passent toujours en premier. Quand nous citons plusieurs services privés, c'est par ordre alphabétique&nbsp;: une commission ne fait jamais monter un service dans une liste.</li>
+<li><strong>Le contenu.</strong> Aucun service ne rédige, ne relit ni ne paie nos guides. Nous ne publions ni article sponsorisé ni avis payé.</li>
+<li><strong>Les pages d'urgence et de recours.</strong> Aucun lien vers un service privé sur nos guides d'urgence et de recours&nbsp;: <a href="/guides/siao-115-hebergement-urgence/">115 et SIAO</a>, <a href="/guides/recours-dalo/">recours DALO</a>, <a href="/guides/fonds-solidarite-logement/">fonds de solidarité pour le logement</a>, <a href="/guides/demande-logement-social/">demande de logement social</a>.</li>
+<li><strong>Le classement des offres payantes.</strong> Nous expliquons comment fonctionne un garant payant&nbsp;; nous ne classons pas les offres et ne comparons pas leurs prix.</li>
+<li><strong>Vos données.</strong> Ce que vous saisissez dans nos <a href="/outils/">outils</a> ne quitte pas votre navigateur. Nous ne collectons aucune coordonnée et n'en transmettons à personne.</li>
+</ul>
+</section>
+<section>
+<h2>Un lien mal signalé, un contenu orienté&nbsp;?</h2>
+<p>Écrivez à <a href="mailto:mickael@trouve-ton-appart.fr">mickael@trouve-ton-appart.fr</a>. Nous répondons et corrigeons sous 48 heures.</p>
+</section>`;
+  addPage('/financement/', layout({
+    title: `Comment ce site se finance | ${SITE.name}`,
+    metaDescription: `Qui paie ${SITE.name}, quels liens peuvent nous rapporter une commission, et ce qui ne s'achète pas : l'ordre des solutions, le contenu, vos données.`,
+    urlPath: '/financement/',
+    content,
+    breadcrumbs: [{ name: 'Comment ce site se finance', url: '/financement/' }]
+  }), '0.2');
 })();
 
 /* Qui fait ce site ? : voir le drapeau A_PROPOS_ACTIF (déclaré près des
@@ -3832,6 +3971,8 @@ li a:not(.pill):not(.btn){vertical-align:top}
  * d'annuaire et légendes faisaient 26 à 58 % des mots sous 16 px. */
 html table.data,html .data small,html .maj,html .pill,html .dir-meta,html .dir-compte,html .carte-delais figcaption,html .dl-aide,html .outil-quoi li,html .diag-progress,html .search-inline{font-size:1rem}}
 .rappel-haut{margin:1.1rem 0 0}
+.mention-remuneration{background:var(--fond2);border-left:4px solid var(--bleu2);border-radius:12px;padding:12px 18px;margin:0 0 1.4rem;max-width:72ch}
+.lien-remunere{color:var(--gris);white-space:nowrap}
 /* Sommaire des annuaires groupés + intertitres de commune. */
 .dir-sommaire{margin:1.2rem 0 0}
 .dir-commune{font-size:1.06rem;margin:2.2rem 0 .2rem}
@@ -4382,6 +4523,7 @@ llms.push(`- [Diagnostic logement](${B}/diagnostic/): 7 questions, une feuille d
 llms.push(`- [Recherche](${B}/recherche/): commune, résidence, dispositif. Index JSON : ${B}/search-index.json`);
 llms.push(`- [Contenu intégral pour les LLM](${B}/llms-full.txt)`);
 llms.push(`- [Espace presse](${B}/presse/): chiffres clés sourcés, méthode, visuels et contact pour les journalistes.`);
+llms.push(`- [Comment ce site se finance](${B}/financement/): qui paie le site, liens vers des services privés et leur statut, ce qui ne s'achète pas.`);
 llms.push(`- [Mentions légales](${B}/mentions-legales/)`);
 if (A_PROPOS_ACTIF) llms.push(`- [Qui fait ce site ?](${B}/a-propos/)`);
 fs.writeFileSync(path.join(DIST, 'llms.txt'), llms.join('\n') + '\n');
@@ -4390,7 +4532,11 @@ fs.writeFileSync(path.join(DIST, 'llms.txt'), llms.join('\n') + '\n');
  * Dans une page servie, le navigateur les résout ; dans llms-full.txt, non :
  * un moteur qui lit ce fichier ne peut pas reconstruire l'URL, donc il ne peut
  * pas la citer. On les absolutise ici, et là seulement. */
-const absolutiser = (t) => String(t).replace(/\]\((\/[^\s)]*)\)/g, (_, u) => `](${B}${u})`);
+/* Un lien partenaire devient l'adresse propre du service (jamais /go/ ni un
+ * lien d'affilié) : un moteur qui lit ce fichier cite le service, pas notre compteur. */
+const absolutiser = (t) => String(t)
+  .replace(RE_PARTENAIRE, (m, label, id) => `[${label}](${PARTENAIRES_PAR_ID.get(id).site})`)
+  .replace(/\]\((\/[^\s)]*)\)/g, (_, u) => `](${B}${u})`);
 
 const full = [];
 full.push(`# ${SITE.name} : contenu intégral (llms-full.txt)`);
@@ -4412,7 +4558,7 @@ for (const g of GUIDES) {
   full.push(`### ${g.h1} (${B}/guides/${g.slug}/)`);
   full.push(`Mis à jour le ${dateFrOf(DATES_GUIDES.fr[g.slug].modifie)}.`);
   full.push(g.intro);
-  if (g.tldr && g.tldr.length) full.push(`L'essentiel : ${g.tldr.join(' ')}`);
+  if (g.tldr && g.tldr.length) full.push(`L'essentiel : ${absolutiser(g.tldr.join(' '))}`);
   /* L'avertissement de millesime doit suivre le guide dans le corpus citable :
    * c'est llms-full.txt qu'un moteur de reponse reprend, pas le chrome de la page. */
   if (g.slug === 'encadrement-des-loyers-paris' && ENCADREMENT) full.push(encadrementAvertissement());
@@ -4434,7 +4580,7 @@ for (const g of EN.guides) {
   full.push(`### ${g.h1} (${B}/en/guides/${g.slug}/)`);
   full.push(`Updated ${dateEnOf(DATES_GUIDES.en[g.slug].modifie)}. French version: ${B}/guides/${g.frSlug}/`);
   full.push(g.intro);
-  if (g.tldr && g.tldr.length) full.push(`In short: ${g.tldr.join(' ')}`);
+  if (g.tldr && g.tldr.length) full.push(`In short: ${absolutiser(g.tldr.join(' '))}`);
   for (const s of g.sections) {
     full.push(`#### ${s.h2}`);
     if (s.paragraphs) for (const t of s.paragraphs) full.push(absolutiser(t));
@@ -4547,6 +4693,7 @@ fs.writeFileSync(path.join(DIST, 'robots.txt'), `# Content-Signal (contentsignal
 User-agent: *
 Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
+Disallow: /go/
 
 Sitemap: ${SITE.baseUrl}/sitemap.xml
 
@@ -4628,6 +4775,27 @@ Expires: ${EXPIRES_SECURITY}
 Preferred-Languages: fr, en
 Canonical: ${SITE.baseUrl}/.well-known/security.txt
 `);
+
+/* Redirections des liens partenaires (voir PARTENAIRES en tête) : Cloudflare
+ * Pages consomme _redirects et ne le sert pas. 302 et non 301 : la destination
+ * change le jour où un programme d'affiliation est validé, et un navigateur
+ * garde une 301 en cache. Les deux formes, avec et sans barre finale. */
+fs.writeFileSync(path.join(DIST, '_redirects'), PARTENAIRES.partenaires
+  .map(p => `/go/${p.id}/ ${p.destination} 302\n/go/${p.id} ${p.destination} 302`).join('\n') + '\n');
+
+/* Garde de sortie : la syntaxe source partenaire:id ne doit survivre dans
+ * aucun fichier servi (page, llms-full.txt, index de recherche…). */
+(function gardePartenairesSortie() {
+  const fautifs = [];
+  (function walk(d) {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory() || (e.isSymbolicLink() && fs.lstatSync(p).isDirectory())) walk(p);
+      else if (/\.(html|txt|json|xml)$/.test(e.name) && fs.readFileSync(p, 'utf8').includes('](partenaire:')) fautifs.push(path.relative(DIST, p));
+    }
+  })(DIST);
+  if (fautifs.length) throw new Error(`syntaxe partenaire non transformée dans : ${fautifs.join(', ')}`);
+})();
 
 console.log(`OK : ${pages.length} pages générées dans dist/ (+ sitemap.xml, robots.txt, llms.txt)`);
 pages.forEach(p => console.log('  ' + p.urlPath));

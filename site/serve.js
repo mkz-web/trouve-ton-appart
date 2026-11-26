@@ -14,8 +14,24 @@ const DIST = path.join(__dirname, 'dist');
 const PORT = Number(process.argv[2]) || 8787;
 const MIME = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.xml': 'application/xml', '.txt': 'text/plain', '.js': 'text/javascript', '.png': 'image/png', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
 
+/* Redirections de dist/_redirects (liens partenaires /go/<id>/), servies comme
+ * Cloudflare Pages le fait en production : sans elles, tout contrôle local
+ * voyait ces liens en 404. Relu à chaque requête : un build n'exige pas de
+ * relancer le serveur. */
+function redirection(urlPath) {
+  const f = path.join(DIST, '_redirects');
+  if (!fs.existsSync(f)) return null;
+  for (const l of fs.readFileSync(f, 'utf8').split('\n')) {
+    const [source, destination, code] = l.trim().split(/\s+/);
+    if (source === urlPath && destination) return { destination, code: Number(code) || 302 };
+  }
+  return null;
+}
+
 http.createServer((req, res) => {
   const urlPath = decodeURIComponent(req.url.split('?')[0]);
+  const r = redirection(urlPath);
+  if (r) { res.writeHead(r.code, { Location: r.destination }); return res.end(); }
   let file = path.normalize(path.join(DIST, urlPath));
   if (!file.startsWith(DIST)) { res.writeHead(403); return res.end('Forbidden'); }
   if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');

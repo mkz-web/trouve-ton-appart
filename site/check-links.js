@@ -31,7 +31,20 @@ const CONVENTIONS = new Set(['/404.html', '/robots.txt', `/${INDEXNOW_KEY}.txt`,
  * orphelin, c'est un fichier qui n'a pas vocation à être atteint. Distinct des
  * conventions ci-dessus, qui sont elles bien servies, à une URL fixe.
  * « _headers » porte le noindex du sous-domaine technique (voir build.js). */
-const CONFIG_HEBERGEUR = new Set(['/_headers']);
+const CONFIG_HEBERGEUR = new Set(['/_headers', '/_redirects']);
+
+/* Liens partenaires (/go/<id>/) : pas de page derrière, une redirection
+ * déclarée dans dist/_redirects (voir build.js). Le lien est valide si sa
+ * source y figure, sinon il est cassé comme n'importe quel lien interne. */
+const REDIRECTIONS = new Set();
+if (fs.existsSync(path.join(DIST, '_redirects'))) {
+  for (const l of fs.readFileSync(path.join(DIST, '_redirects'), 'utf8').split('\n')) {
+    const [source, destination, code] = l.trim().split(/\s+/);
+    if (!source) continue;
+    if (!/^https:\/\//.test(destination || '') || !/^30[12]$/.test(code || '')) { console.log('REDIRECTION INVALIDE dans _redirects : ' + l); process.exitCode = 1; }
+    REDIRECTIONS.add(source);
+  }
+}
 
 const fichiers = [];
 (function walk(d) {
@@ -54,6 +67,10 @@ for (const p of fichiers.filter((f) => f.endsWith('.html'))) {
     links++;
     const u = m[1].split('#')[0];
     if (!u) continue;
+    if (u.startsWith('/go/')) {
+      if (!REDIRECTIONS.has(u)) { console.log('CASSÉ dans ' + p.replace(DIST, '') + ' -> ' + u + ' (absent de _redirects)'); errs++; }
+      continue;
+    }
     /* Une URL à extension (/favicon.ico, /apple-touch-icon.png…) désigne un
      * fichier ; sinon c'est une page, donc un dossier + index.html. Toutes les
      * pages du site sont en URL à slash final, jamais à extension. */
@@ -88,4 +105,4 @@ for (const p of fichiers) {
 
 console.log(links + ' liens internes vérifiés, ' + (errs - orphelins) + ' cassé(s) ; '
   + (fichiers.length - orphelins) + ' fichiers publiés, ' + orphelins + ' orphelin(s)');
-process.exit(errs ? 1 : 0);
+process.exit(errs || process.exitCode ? 1 : 0);

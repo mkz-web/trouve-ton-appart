@@ -78,6 +78,16 @@ for (const p of pages) {
     liens.get(u).add(chemin);
   }
 }
+/* Destinations des liens partenaires : les pages ne les citent pas (elles
+ * pointent /go/<id>/), mais une destination morte casse le lien quand même. */
+if (!PAGE && fs.existsSync(path.join(DIST, '_redirects'))) {
+  for (const l of fs.readFileSync(path.join(DIST, '_redirects'), 'utf8').split('\n')) {
+    const [source, destination] = l.trim().split(/\s+/);
+    if (!source || !source.endsWith('/') || !/^https:\/\//.test(destination || '')) continue;
+    if (!liens.has(destination)) liens.set(destination, new Set());
+    liens.get(destination).add('redirection ' + source);
+  }
+}
 if (!liens.size) { console.error(PAGE ? `aucun lien sortant sur ${PAGE} (page inconnue ?)` : 'aucun lien sortant trouvé : dist vide ?'); process.exit(2); }
 
 /* ---------- mesure ---------- */

@@ -1,0 +1,35 @@
+{
+  "_lecture": "Services privés vers lesquels les guides renvoient par un lien [libellé](partenaire:id). Le build en tire les redirections /go/<id>/ (dist/_redirects, comptées par Cloudflare sans cookie) et la page /financement/. remunere passe à true seulement quand le programme du partenaire est validé et que destination porte notre identifiant d'affilié ; le lien affiche alors la mention et rel=sponsored. site est l'adresse propre, servie dans llms-full.txt et sur /financement/.",
+  "partenaires": [
+    {
+      "id": "cautioneo",
+      "nom": "Cautioneo",
+      "categorie": "Garant payant pour locataires",
+      "site": "https://www.cautioneo.com/garant-location/",
+      "destination": "https://www.cautioneo.com/garant-location/",
+      "remunere": false,
+      "remunereDepuis": null,
+      "verifie": "2026-11-26"
+    },
+    {
+      "id": "garantme",
+      "nom": "GarantMe",
+      "categorie": "Garant payant pour locataires",
+      "site": "https://garantme.fr/fr/",
+      "destination": "https://garantme.fr/fr/",
+      "remunere": false,
+      "remunereDepuis": null,
+      "verifie": "2026-11-26"
+    },
+    {
+      "id": "smartgarant",
+      "nom": "SmartGarant",
+      "categorie": "Garant payant pour locataires",
+      "site": "https://www.smart-garant.com/",
+      "destination": "https://www.smart-garant.com/",
+      "remunere": false,
+      "remunereDepuis": null,
+      "verifie": "2026-11-26"
+    }
+  ]
+}
